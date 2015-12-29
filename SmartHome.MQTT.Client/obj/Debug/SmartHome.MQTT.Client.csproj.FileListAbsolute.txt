@@ -1,0 +1,6 @@
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.dll
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
+C:\Aplomb\SmartHomeApp\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb

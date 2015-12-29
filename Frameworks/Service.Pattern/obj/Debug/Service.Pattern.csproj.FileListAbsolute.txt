@@ -1,0 +1,7 @@
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.dll
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.pdb
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.dll
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.pdb
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.dll
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.pdb
+C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.csprojResolveAssemblyReference.cache

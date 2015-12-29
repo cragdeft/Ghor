@@ -1,0 +1,217 @@
+﻿@model SmartHome.Web.Models.m2mMessageViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string displayCard = ViewBag.ReceivedMessage;
+}
+
+
+<div class="form-horizontal">
+    <br />
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"> Message publish and subscribe!!</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12 border-1 margin-1">
+                <br />
+                <div class="form-group">
+                    <b> <span class="control-label col-md-2">Connnection address</span></b>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="Address" />
+
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row ">
+
+                    <div class="col-md-4  margin-1 border-1">
+                        <br />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MessgeTopic, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.MessgeTopic, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.MessgeTopic, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PublishMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PublishMessage, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.PublishMessage, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PublishMessageStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.PublishMessageStatus, new { htmlAttributes = new { disabled = "disabled", @readonly = "readonly", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.PublishMessage, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-offset-2">
+                            <input type="submit" value="Publisher" class="btn btn-primary submitPublish" />
+                            <input type="submit" value="Clear" class="btn btn-default clearPublish" />
+
+                        </div>
+                        <br />
+
+                    </div>
+
+
+                    <div class="col-md-3 border-1">
+                        <br />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ReceivedMessage, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(e => e.ReceivedMessage, 3, 20, new { htmlAttributes = new { disabled = "disabled", @readonly = "readonly", @class = "form-control" } })
+                            </div>
+
+                        </div>
+                        <div class="col-lg-offset-2">
+                            <input type="submit" value="Refresh" class="btn btn-warning submitRefresh" />
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4   margin-1 border-1">
+                        <br />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SubscriberMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.SubscriberMessage, new { htmlAttributes = new { disabled = "disabled", @readonly = "readonly", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.SubscriberMessage, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SubscribehMessageStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.SubscribehMessageStatus, new { htmlAttributes = new { disabled = "disabled", @readonly = "readonly", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.SubscribehMessageStatus, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-offset-2 ">
+                            <input type="submit" value="Subscriber" class="btn btn-primary submitSubscribe" />
+                        </div>
+                        <br />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            $('.clearPublish').on('click', function () {
+                $('#MessgeTopic').val('');
+                $('#PublishMessage').val('');
+                $('#PublishMessageStatus').val('');
+
+            });
+
+            $('.submitPublish').on('click', function () {
+                var MessgeTopic = $('#MessgeTopic').val();
+                var PublishMessage = $('#PublishMessage').val();
+                var PublishMessageStatus = $('#PublishMessageStatus').val();
+
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: '@Url.Action("Publish", "Home")',
+                        data: { MessgeTopic: MessgeTopic, PublishMessage: PublishMessage, PublishMessageStatus: PublishMessageStatus },
+                        success: function (data) {
+
+                            $('#MessgeTopic').val(data.MessgeTopic);
+                            $('#PublishMessage').val(data.PublishMessage);
+                            $('#PublishMessageStatus').val(data.PublishMessageStatus);
+
+                        },
+                        error: function (xhr, AJAXOptions, thrownError) {
+                            alert('Failed to retrieve books.');
+                        }
+                    });
+
+
+            });
+
+            $('.submitSubscribe').on('click', function () {
+                var MessgeTopic = $('#MessgeTopic').val();
+                var SubscriberMessage = $('#SubscriberMessage').val();
+                var SubscribehMessageStatus = $('#SubscribehMessageStatus').val();
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: '@Url.Action("Subscribe", "Home")',
+                    data: { MessgeTopic: MessgeTopic, SubscriberMessage: SubscriberMessage, SubscribehMessageStatus: SubscribehMessageStatus },
+                    success: function (data) {
+
+                        $('#MessgeTopic').val(data.MessgeTopic);
+                        $('#SubscriberMessage').val(data.PublishMessage);
+                        $('#SubscribehMessageStatus').val(data.SubscribehMessageStatus);
+                      //  $("#ReceivedMessage").val($("#ReceivedMessage").val() + data.ReceivedMessage);
+
+                    },
+                    error: function (xhr, AJAXOptions, thrownError) {
+                        alert('Failed to retrieve books.');
+                    }
+                });
+
+
+            });
+
+
+            $('.submitRefresh').on('click', function () {
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: '@Url.Action("ServerResponce", "Home")',
+                    data: { },
+                    success: function (data) {
+                        alert();
+                        //$.each(data, function (SalesOrderID, ServerMessages) {
+                        //    $("#ReceivedMessage").val($("#ReceivedMessage").val() + ServerMessages.ResponceMessage);
+
+                        //});
+
+
+
+                    },
+                    error: function (xhr, AJAXOptions, thrownError) {
+                        alert('Failed to retrieve books.');
+                    }
+                });
+
+
+            });
+
+
+        });
+
+
+    </script>
+}

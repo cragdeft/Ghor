@@ -1,0 +1,16 @@
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\SmartHome.Model.dll.config
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\SmartHome.Model.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\SmartHome.Model.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\EntityFramework.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\LinqKit.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\EntityFramework.xml
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.xml
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
+C:\Aplomb\SmartHomeApp\SmartHome.Model\obj\Debug\SmartHome.Model.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\Repository.Pattern.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Model\bin\Debug\Repository.Pattern.pdb

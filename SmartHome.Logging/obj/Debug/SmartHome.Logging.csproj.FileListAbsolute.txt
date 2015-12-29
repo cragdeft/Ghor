@@ -1,0 +1,5 @@
+C:\Aplomb\SmartHomeApp\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Logging\bin\Debug\SmartHome.Logging.pdb
+C:\Aplomb\SmartHomeApp\SmartHome.Logging\bin\Debug\Elmah.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
+C:\Aplomb\SmartHomeApp\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb

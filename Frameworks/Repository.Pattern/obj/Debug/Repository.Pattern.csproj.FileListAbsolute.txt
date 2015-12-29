@@ -1,0 +1,11 @@
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\bin\Debug\Repository.Pattern.dll
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\obj\Debug\Repository.Pattern.dll
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
+C:\Users\lelong37\Source\Repos\uowrepo\main\Source\Repository.Pattern\obj\Debug\Repository.Pattern.csprojResolveAssemblyReference.cache
+C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
+C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
+C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
+C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
+C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
