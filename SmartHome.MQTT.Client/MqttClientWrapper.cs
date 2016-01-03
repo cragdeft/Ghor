@@ -11,12 +11,10 @@ namespace SmartHome.MQTT.Client
 {
     public static class MqttClientWrapper
     {
-
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
             //BrokerAddress= ConfigurationManager.AppSettings[" BrokerAddress"].ToString();
-
         }
 
         public static void MakeConnection(string brokerAddress) // the global controlled variable
@@ -30,7 +28,6 @@ namespace SmartHome.MQTT.Client
                 SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
                 SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             }
-
         }
 
         #region Properties
@@ -48,18 +45,13 @@ namespace SmartHome.MQTT.Client
 
         #region Methods
 
-
-
         public static string Publish(string messgeTopic, string publishMessage)
         {
-
             ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
                                           true);
             return "Success";
-
-
         }
 
         public static string Subscribe(string messgeTopic)
