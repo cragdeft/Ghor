@@ -53,7 +53,7 @@ namespace SmartHome.MQTT.Client
         public static string Publish(MqttClient client, string messgeTopic, string publishMessage)
         {
 
-            ushort msgId = client.Publish(messgeTopic, // topic
+            ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
                                           true);
@@ -64,7 +64,7 @@ namespace SmartHome.MQTT.Client
 
         public static string Subscribe(MqttClient client, string messgeTopic)
         {
-            ushort msgId = client.Subscribe(new string[] { messgeTopic, "/topic_2" },
+            ushort msgId = SmartHomeMQTT.Subscribe(new string[] { messgeTopic, "/topic_2" },
                 new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE }
                 );
             return "Success";
