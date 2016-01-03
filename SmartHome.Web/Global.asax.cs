@@ -14,11 +14,8 @@ namespace SmartHome.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-
-
         protected void Application_Start()
         {
-             
             MqttClientWrapper.MakeConnection(ConfigurationManager.AppSettings["BrokerAddress"]);// the global variable's bed
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
