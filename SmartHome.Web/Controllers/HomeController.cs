@@ -71,13 +71,13 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Publish(m2mMessageViewModel model)
         {
-            model.PublishMessageStatus = MqttClientWrapper.Publish(MqttClientWrapper.SmartHomeMQTT, model.MessgeTopic, model.PublishMessage);
+            model.PublishMessageStatus = MqttClientWrapper.Publish(model.MessgeTopic, model.PublishMessage);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Subscribe(m2mMessageViewModel model)
         {
-            model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(MqttClientWrapper.SmartHomeMQTT, model.MessgeTopic);
+            model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 

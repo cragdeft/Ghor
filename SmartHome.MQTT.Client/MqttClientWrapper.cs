@@ -50,7 +50,7 @@ namespace SmartHome.MQTT.Client
 
 
 
-        public static string Publish(MqttClient client, string messgeTopic, string publishMessage)
+        public static string Publish(string messgeTopic, string publishMessage)
         {
 
             ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
@@ -62,7 +62,7 @@ namespace SmartHome.MQTT.Client
 
         }
 
-        public static string Subscribe(MqttClient client, string messgeTopic)
+        public static string Subscribe(string messgeTopic)
         {
             ushort msgId = SmartHomeMQTT.Subscribe(new string[] { messgeTopic, "/topic_2" },
                 new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE }

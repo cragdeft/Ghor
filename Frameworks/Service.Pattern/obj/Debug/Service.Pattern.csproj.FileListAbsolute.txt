@@ -5,3 +5,10 @@ C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.p
 C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.dll
 C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.pdb
 C:\Aplomb\SmartHomeApp\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.pdb
