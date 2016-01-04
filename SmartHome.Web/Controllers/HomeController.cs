@@ -66,7 +66,6 @@ namespace SmartHome.Web.Controllers
                 Logger.LogError(ex, "This is test error " );
             }
             return View(new m2mMessageViewModel());
-
         }
 
         public ActionResult Publish(m2mMessageViewModel model)

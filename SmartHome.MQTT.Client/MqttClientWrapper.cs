@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
@@ -11,23 +13,39 @@ namespace SmartHome.MQTT.Client
 {
     public static class MqttClientWrapper
     {
+
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
             //BrokerAddress= ConfigurationManager.AppSettings[" BrokerAddress"].ToString();
+
         }
 
         public static void MakeConnection(string brokerAddress) // the global controlled variable
         {
             if (SmartHomeMQTT == null)
             {
-                SmartHomeMQTT = new MqttClient(brokerAddress);
-                SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+
+                //SmartHomeMQTT = new MqttClient(brokerAddress);
+                //SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+                //ssl
+                SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
+                SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
+
+
+
                 SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
                 SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
                 SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
                 SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             }
+
+        }
+
+        public static bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+            // logic for validation here
         }
 
         #region Properties
@@ -45,13 +63,18 @@ namespace SmartHome.MQTT.Client
 
         #region Methods
 
+
+
         public static string Publish(string messgeTopic, string publishMessage)
         {
+
             ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
                                           true);
             return "Success";
+
+
         }
 
         public static string Subscribe(string messgeTopic)
