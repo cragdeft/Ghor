@@ -16,7 +16,7 @@ namespace SmartHome.Model.ModelDataContext
             Database.SetInitializer<SmartHomeDataContext>(null);
         }
         public SmartHomeDataContext()
-            : base("database")
+            : base("SmartHome")
         {
         }
 
