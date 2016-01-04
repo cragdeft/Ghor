@@ -25,14 +25,8 @@ namespace SmartHome.MQTT.Client
         {
             if (SmartHomeMQTT == null)
             {
-
-                //SmartHomeMQTT = new MqttClient(brokerAddress);
-                //SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
-                //ssl
                 SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
                 SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
-
-
 
                 SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
                 SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation

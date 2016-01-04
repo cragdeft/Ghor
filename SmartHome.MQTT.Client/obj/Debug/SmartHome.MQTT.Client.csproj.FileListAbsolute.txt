@@ -40,3 +40,5 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQ
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.Resource.resources
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
