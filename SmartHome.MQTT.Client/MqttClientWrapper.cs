@@ -33,7 +33,6 @@ namespace SmartHome.MQTT.Client
                 SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
                 SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             }
-
         }
 
         public static bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
