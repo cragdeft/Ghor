@@ -13,7 +13,6 @@ namespace SmartHome.MQTT.Client
 {
     public static class MqttClientWrapper
     {
-
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
