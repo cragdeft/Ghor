@@ -1,4 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,18 +10,26 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class ChannelConfig : Entity
+    public class Channel : Entity
     {
+        public Channel()
+        {
+            NO_LOAD = LoadType.NO_LOAD;
+            NON_DIMMABLE_BULB = LoadType.NON_DIMMABLE_BULB;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChannelConfigId { get; set; }
         public int Id { get; set; }
         public int DId { get; set; }
         public int ChannelNo { get; set; }
-        public int LoadType { get; set; }
         public string LoadName { get; set; }
         public int Status { get; set; }
         public int Value { get; set; }
+        public LoadType LoadType { get; set; }
+        public LoadType NO_LOAD { get; set; }
+        public LoadType NON_DIMMABLE_BULB { get; set; }
         public AuditFields AuditField { get; set; }
         public virtual Device Device { get; set; }
 

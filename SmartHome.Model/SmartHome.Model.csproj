@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\DataType.cs" />
     <Compile Include="Migrations\201601060539329_initialcreateDB.cs" />
     <Compile Include="Migrations\201601060539329_initialcreateDB.Designer.cs">
       <DependentUpon>201601060539329_initialcreateDB.cs</DependentUpon>
@@ -58,12 +60,20 @@
     <Compile Include="Migrations\201601060825318_initialcreateDBForHome.Designer.cs">
       <DependentUpon>201601060825318_initialcreateDBForHome.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601061029218_deviceModelModified.cs" />
+    <Compile Include="Migrations\201601061029218_deviceModelModified.Designer.cs">
+      <DependentUpon>201601061029218_deviceModelModified.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601061042464_deviceModelModified2.cs" />
+    <Compile Include="Migrations\201601061042464_deviceModelModified2.Designer.cs">
+      <DependentUpon>201601061042464_deviceModelModified2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AuditFields.cs" />
-    <Compile Include="Models\ChannelConfig.cs" />
+    <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\CommType.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
@@ -102,6 +112,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601060825318_initialcreateDBForHome.resx">
       <DependentUpon>201601060825318_initialcreateDBForHome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601061029218_deviceModelModified.resx">
+      <DependentUpon>201601061029218_deviceModelModified.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601061042464_deviceModelModified2.resx">
+      <DependentUpon>201601061042464_deviceModelModified2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -33,7 +33,7 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<Device> Devices { get; set; }
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
-        public IDbSet<ChannelConfig> ChannelConfigs { get; set; }
+        public IDbSet<Channel> ChannelConfigs { get; set; }
 
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
