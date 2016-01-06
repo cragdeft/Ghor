@@ -24,6 +24,7 @@ namespace SmartHome.Model.Models
         public AuditFields AuditField { get; set; }
         public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
         public virtual ICollection<ChannelConfig> ChannelConfigs { get; set; }
+        public virtual Room Room { get; set; }
 
     }
 
