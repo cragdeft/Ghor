@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-
     public class Address
     {
         [Key]
