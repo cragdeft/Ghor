@@ -353,7 +353,6 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.Mi
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\ApplicationInsights.config
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\roslyn\csc.exe
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
@@ -469,5 +468,6 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.OAuth.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.Google.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.Twitter.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
