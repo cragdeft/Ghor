@@ -423,6 +423,11 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.Razor.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\WebActivatorEx.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\WebGrease.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\LinqKit.dll
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Service.Pattern.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Logging.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Model.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.MQTT.Client.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Service.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\M2Mqtt.Net.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.AI.DependencyCollector.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.AI.ServerTelemetryChannel.xml
@@ -438,11 +443,6 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.Mvc.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Repository.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Repository.Pattern.Ef6.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Service.Pattern.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Logging.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Model.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.MQTT.Client.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Service.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Helpers.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Mvc.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Optimization.xml

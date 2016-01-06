@@ -112,15 +112,6 @@
     <Reference Include="Repository.Pattern.Ef6">
       <HintPath>..\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll</HintPath>
     </Reference>
-    <Reference Include="SmartHome.Logging">
-      <HintPath>..\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="SmartHome.Model">
-      <HintPath>..\SmartHome.Model\bin\Debug\SmartHome.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="SmartHome.MQTT.Client">
-      <HintPath>..\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -344,6 +335,18 @@
     <ProjectReference Include="..\Frameworks\Service.Pattern\Service.Pattern.csproj">
       <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
       <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Logging\SmartHome.Logging.csproj">
+      <Project>{621f56a4-f36b-410d-ad8e-43154b2d7231}</Project>
+      <Name>SmartHome.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
+      <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
+      <Name>SmartHome.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.MQTT.Client\SmartHome.MQTT.Client.csproj">
+      <Project>{a7e4a6c5-5656-4f9a-a0d6-8501184f1293}</Project>
+      <Name>SmartHome.MQTT.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartHome.Service\SmartHome.Service.csproj">
       <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>

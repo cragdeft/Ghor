@@ -33,9 +33,6 @@
     <Reference Include="Repository.Pattern">
       <HintPath>..\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll</HintPath>
     </Reference>
-    <Reference Include="SmartHome.Model">
-      <HintPath>..\SmartHome.Model\bin\Debug\SmartHome.Model.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +51,10 @@
     <ProjectReference Include="..\Frameworks\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">
       <Project>{F68A1D19-93FB-47C1-A22B-42BEA3E4FD8C}</Project>
       <Name>Repository.Pattern.Ef6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
+      <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
+      <Name>SmartHome.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
