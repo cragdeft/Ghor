@@ -1,5 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
-using SmartHome.Model.Enums;
+using SmartHome.Model.SmartHome.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
