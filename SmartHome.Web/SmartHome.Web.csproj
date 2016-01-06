@@ -112,9 +112,6 @@
     <Reference Include="Repository.Pattern.Ef6">
       <HintPath>..\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll</HintPath>
     </Reference>
-    <Reference Include="Service.Pattern">
-      <HintPath>..\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.dll</HintPath>
-    </Reference>
     <Reference Include="SmartHome.Logging">
       <HintPath>..\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll</HintPath>
     </Reference>
@@ -123,9 +120,6 @@
     </Reference>
     <Reference Include="SmartHome.MQTT.Client">
       <HintPath>..\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="SmartHome.Service">
-      <HintPath>..\SmartHome.Service\bin\Debug\SmartHome.Service.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -345,6 +339,16 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frameworks\Service.Pattern\Service.Pattern.csproj">
+      <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
+      <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Service\SmartHome.Service.csproj">
+      <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>
+      <Name>SmartHome.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
