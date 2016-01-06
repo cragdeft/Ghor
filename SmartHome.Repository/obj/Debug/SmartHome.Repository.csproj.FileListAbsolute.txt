@@ -40,3 +40,4 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Mod
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
