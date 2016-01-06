@@ -21,10 +21,6 @@ namespace SmartHome.Model.Models
         public string PassPhrase { get; set; }
         public string MAC { get; set; }
         public AuditFields AuditField { get; set; }
-        public virtual ICollection<VersionDetail> VersionDetails { get; set; }
-
-        
-        
-        
+        public virtual ICollection<VersionDetail> VersionDetails { get; set; }        
     }
 }
