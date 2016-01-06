@@ -50,6 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201601060539329_initialcreateDB.cs" />
+    <Compile Include="Migrations\201601060539329_initialcreateDB.Designer.cs">
+      <DependentUpon>201601060539329_initialcreateDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
     <Compile Include="Models\AuditFields.cs" />
@@ -74,6 +79,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201601060539329_initialcreateDB.resx">
+      <DependentUpon>201601060539329_initialcreateDB.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

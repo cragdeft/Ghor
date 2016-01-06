@@ -20,10 +20,11 @@ namespace SmartHome.Model.Models
         public string AuthCode { get; set; }
         public string PassPhrase { get; set; }
         public string MAC { get; set; }
-
         public AuditFields AuditField { get; set; }
-        public virtual VersionDetail VersionDetail { get; set; }
-        [ForeignKey("VersionDetail")]
-        public int VersionDetailId { get; set; }
+        public virtual ICollection<VersionDetail> VersionDetails { get; set; }
+
+        
+        
+        
     }
 }

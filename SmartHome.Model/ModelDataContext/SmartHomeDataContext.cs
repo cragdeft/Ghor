@@ -28,6 +28,13 @@ namespace SmartHome.Model.ModelDataContext
         }
 
         public IDbSet<ServerResponce> ServerResponces { get; set; }
+        public IDbSet<Models.Version> Versions { get; set; }
+        public IDbSet<VersionDetail> VersionDetails { get; set; }
+
+        public IDbSet<Device> Devices { get; set; }
+        public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
+        public IDbSet<ChannelConfig> ChannelConfigs { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

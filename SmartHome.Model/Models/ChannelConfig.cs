@@ -13,8 +13,7 @@ namespace SmartHome.Model.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ChannelConfigId { get; set; }        
-        public int DeviceId { get; set; }
+        public int ChannelConfigId { get; set; }
         public int Id { get; set; }
         public int DId { get; set; }
         public int ChannelNo { get; set; }
@@ -23,7 +22,8 @@ namespace SmartHome.Model.Models
         public int Status { get; set; }
         public int Value { get; set; }
         public AuditFields AuditField { get; set; }
-        public virtual ICollection<Device> Devices { get; set; }
+        public virtual Device Device { get; set; }
+
     }
 
 }

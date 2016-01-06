@@ -13,13 +13,12 @@ namespace SmartHome.Model.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int VersionDetailId { get; set; }
-        public int VersionId { get; set; }
-        public int ID { get; set; }
-        public string VID { get; set; }
+        public int VersionDetailId { get; set; }        
+        public int Id { get; set; }
+        public string VId { get; set; }
         public string HardwareVersion { get; set; }
-
         public AuditFields AuditField { get; set; }
-        public virtual ICollection<Version> Versions { get; set; }
+
+        public virtual Version Version { get; set; }
     }
 }

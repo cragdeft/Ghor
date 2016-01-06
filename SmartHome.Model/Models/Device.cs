@@ -13,7 +13,7 @@ namespace SmartHome.Model.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DeviceID { get; set; }
+        public int DeviceId { get; set; }
         public int  Id { get; set; }
         public string DeviceName { get; set; }
         public string DeviceType { get; set; }
@@ -22,13 +22,9 @@ namespace SmartHome.Model.Models
         public int IsDeleted { get; set; }
         public string Mac { get; set; }
         public AuditFields AuditField { get; set; }
-        public virtual DeviceStatus DeviceStatus { get; set; }
-        [ForeignKey("DeviceStatus")]
-        public int DeviceStatusId { get; set; }
+        public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
+        public virtual ICollection<ChannelConfig> ChannelConfigs { get; set; }
 
-        public virtual ChannelConfig ChannelConfig { get; set; }
-        [ForeignKey("ChannelConfig")]
-        public int ChannelConfigId { get; set; }
     }
 
 }
