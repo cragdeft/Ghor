@@ -30,5 +30,7 @@ namespace SmartHome.Model.Models
         public virtual ICollection<CommType> CommTypes { get; set; }
         public virtual ICollection<HomeLink> HomeLinks { get; set; }
         public virtual ICollection<Room> Rooms { get; set; }
+
+        public virtual ICollection<SmartRouter> SmartRouters { get; set; }
     }
 }

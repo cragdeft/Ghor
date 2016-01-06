@@ -71,6 +71,10 @@
     <Compile Include="Migrations\201601061119101_initialModification.Designer.cs">
       <DependentUpon>201601061119101_initialModification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601061140589_InitialaddRouter.cs" />
+    <Compile Include="Migrations\201601061140589_InitialaddRouter.Designer.cs">
+      <DependentUpon>201601061140589_InitialaddRouter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="Models\LinkType.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\ServerResponce.cs" />
+    <Compile Include="Models\SmartRouter.cs" />
     <Compile Include="Models\SyncStatus.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserStatus.cs" />
@@ -125,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601061119101_initialModification.resx">
       <DependentUpon>201601061119101_initialModification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601061140589_InitialaddRouter.resx">
+      <DependentUpon>201601061140589_InitialaddRouter.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
