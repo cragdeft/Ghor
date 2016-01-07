@@ -18,6 +18,7 @@ namespace SmartHome.Model.Models
             NON_DIMMABLE_BULB = LoadType.NON_DIMMABLE_BULB;
         }
 
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChannelConfigId { get; set; }
@@ -30,8 +31,15 @@ namespace SmartHome.Model.Models
         public LoadType LoadType { get; set; }
         public LoadType NO_LOAD { get; set; }
         public LoadType NON_DIMMABLE_BULB { get; set; }
+        #endregion
+
+        #region Complex Properties
         public AuditFields AuditField { get; set; }
+        #endregion
+
+        #region Navigation Properties
         public virtual Device Device { get; set; }
+        #endregion
 
     }
 
