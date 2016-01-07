@@ -1,0 +1,19 @@
+﻿@model SmartHome.Entity.VersionManageEntity
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+    <div class="form-group">
+        <label>@Html.LabelFor(model => model.AppName)</label>
+        @Html.TextBoxFor(model => model.AppName, new { @placeholder = "Enter App Name", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>@Html.LabelFor(model => model.AppVersion)</label>
+        @Html.TextBoxFor(model => model.AppVersion, new { @placeholder = "Enter App Version", @class = "form-control" })
+    </div>
+    
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+}

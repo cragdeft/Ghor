@@ -1,5 +1,6 @@
 ﻿using Repository.Pattern.Infrastructure;
 using Repository.Pattern.UnitOfWork;
+using SmartHome.Entity;
 using SmartHome.Service.Interfaces;
 using SmartHome.Web.Models;
 using System;
@@ -25,18 +26,18 @@ namespace SmartHome.Web.Controllers
         {
             var viewModel = new VersionListViewModel();
             var versions = _versionService.Queryable();
-            return View(new VersionListViewModel(versions));
+            return View(new VersionListEntity(versions));
         }
 
         #region Create
         public ActionResult Create()
         {
 
-            return View(new VersionManageViewModel());
+            return View(new VersionManageEntity());
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(VersionManageViewModel model)
+        public async Task<ActionResult> Create(VersionManageEntity model)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +45,8 @@ namespace SmartHome.Web.Controllers
 
                 try
                 {
-                    var application = model.ToDalEntity();
+                    
+                    var application = model.ToDalEntity(model);
                     application.ObjectState = ObjectState.Added;
                     _versionService.Insert(application);
                     var changes = await _unitOfWorkAsync.SaveChangesAsync();
@@ -71,11 +73,11 @@ namespace SmartHome.Web.Controllers
                 //base.SetErrorMessage("Application with Id [{0}] does not exist", id.ToString());
                 return RedirectToAction("Index");
             }
-            return View(new VersionManageViewModel(application));
+            return View(new VersionManageEntity(application));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(VersionManageViewModel model)
+        public async Task<ActionResult> Edit(VersionManageEntity model)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +88,7 @@ namespace SmartHome.Web.Controllers
 
                 try
                 {
-                    model.ToDalEntity(application);
+                    //model.ToDalEntity(application);
                     application.ObjectState = ObjectState.Modified;
                     _versionService.Update(application);
                     var changes = await _unitOfWorkAsync.SaveChangesAsync();
@@ -116,11 +118,11 @@ namespace SmartHome.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(new VersionViewModel(application));
+            return View(new VersionEntity(application));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Delete(VersionViewModel model)
+        public async Task<ActionResult> Delete(VersionEntity model)
         {
             var application = await _versionService.FindAsync(model.VersionId);
             if (application == null) { throw new ArgumentException(string.Format("Application with Id [{0}] does not exist", model.VersionId)); }

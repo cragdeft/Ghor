@@ -1,28 +1,47 @@
-﻿@model IEnumerable<SmartHome.Web.Models.VersionListViewModel>
-
+﻿@model SmartHome.Entity.VersionListEntity
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List of customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th></th>
-    </tr>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Version List</strong>
+    </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
+    <table class="table table-hover">
+        <tr>
+            <th>
+                AppName
+            </th>
+            <th>
+                AppVersion
+            </th>
+            <th>
+                <a href="@Url.Action("Create", "Version")" class="btn btn-sm btn-primary data-modal" role="button">Create New</a>
+            </th>
+        </tr>
 
-</table>
+        @foreach (var item in Model.Versions)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.AppName, "Edit", new { VersionId = item.VersionId, page = Request.QueryString["page"] }, new { @class = "data-modal" })
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppVersion)
+                </td>
+                
+                
+                <td>
+                    <div class="col-md-4">
+                        <a class="btn btn-default btn-xs" href="@Url.Action("Edit", new { @VersionId = item.VersionId })"><span class="glyphicon glyphicon-edit"></span></a>
+                        <a class="btn btn-danger btn-xs" href="@Url.Action("Delete", new { @VersionId = item.VersionId })"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

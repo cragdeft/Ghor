@@ -22,6 +22,7 @@ namespace SmartHome.Web.Models
             {
                 this.Versions.Add(new VersionViewModel(modelItem));
             }
+
         }
 
         public List<VersionViewModel> Versions { get; set; }
