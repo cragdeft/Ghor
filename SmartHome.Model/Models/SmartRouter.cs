@@ -14,11 +14,11 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SmartRouterId { get; set; }
-        public string BrokerIp { get; set; }
-        public string BrokerMac { get; set; }
-        public string BrokerAssignPort { get; set; }
-        public string BrokerUserName { get; set; }
-        public string BrokerPassword { get; set; }
+        public string IP { get; set; }
+        public string MacAddress { get; set; }
+        public string Port { get; set; }
+        public string RouterUserName { get; set; }
+        public string RouterPassword { get; set; }
         public bool IsActive { get; set; }
         #endregion
 
