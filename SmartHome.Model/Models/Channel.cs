@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ChannelConfigId { get; set; }
+        public int ChannelId { get; set; }
         public int Id { get; set; }
         public int DId { get; set; }
         public int ChannelNo { get; set; }
