@@ -20,14 +20,13 @@ namespace SmartHome.Model.ModelDataContext
         {
         }
 
-        
+
 
         public new IDbSet<T> Set<T>() where T : class
         {
             return base.Set<T>();
         }
 
-        public IDbSet<ServerResponce> ServerResponces { get; set; }
         public IDbSet<Models.Version> Versions { get; set; }
         public IDbSet<VersionDetail> VersionDetails { get; set; }
 
@@ -38,10 +37,10 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
         public IDbSet<HomeVersion> HomeVersions { get; set; }
-        public IDbSet<HomeStatus> HomeStatuses { get; set; }
 
-        public IDbSet<CommType> CommTypes { get; set; }
-        public IDbSet<HomeLink> HomeLinks { get; set; }
+
+
+
         public IDbSet<Room> Rooms { get; set; }
         public IDbSet<UserProfile> UserProfiles { get; set; }
         public IDbSet<UserType> UserTypes { get; set; }

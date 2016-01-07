@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Pattern.Ef6;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class Address
+    public class Address:Entity
     {
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AddressId { get; set; }
@@ -19,9 +21,16 @@ namespace SmartHome.Model.Models
         public string OfficePhone { get; set; }
         public string WorkPhone { get; set; }
         public string ZipCode { get; set; }
+        #endregion
+
+        #region Complex Properties
         public AuditFields AuditField { get; set; }
+        #endregion
+
+        #region Navigation Properties
         public virtual Home Home { get; set; }
-        public virtual UserProfile UserProfile { get; set; }
+        public virtual UserProfile UserProfile { get; set; } 
+        #endregion
 
     }
 }

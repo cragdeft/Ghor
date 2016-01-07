@@ -11,6 +11,7 @@ namespace SmartHome.Model.Models
 {
     public class Version : Entity
     {
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VersionId { get; set; }
@@ -20,7 +21,14 @@ namespace SmartHome.Model.Models
         public string AuthCode { get; set; }
         public string PassPhrase { get; set; }
         public string MAC { get; set; }
+        #endregion
+
+        #region Complex Properties
         public AuditFields AuditField { get; set; }
-        public virtual ICollection<VersionDetail> VersionDetails { get; set; }        
+        #endregion
+
+        #region Navigation Properties
+        public virtual ICollection<VersionDetail> VersionDetails { get; set; }         
+        #endregion
     }
 }

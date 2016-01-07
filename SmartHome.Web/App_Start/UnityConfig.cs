@@ -46,10 +46,9 @@ namespace SmartHome.Web.App_Start
 
             // TODO: Register your types here
             // container.RegisterType<IProductRepository, ProductRepository>();
+
             container.RegisterType<IDataContextAsync, SmartHomeDataContext>(new PerRequestLifetimeManager());
-            container.RegisterType<IUnitOfWorkAsync, UnitOfWork>(new PerRequestLifetimeManager());
-            container.RegisterType<IRepositoryAsync<ServerResponce>, Repository<ServerResponce>>();
-            container.RegisterType<IServerResponceService, ServerResponceService>();
+            container.RegisterType<IUnitOfWorkAsync, UnitOfWork>(new PerRequestLifetimeManager());            
             container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
             container.RegisterType<IVersionService, VersionService>();
 

@@ -11,12 +11,20 @@ namespace SmartHome.Model.Models
 {
     public class UserType:Entity
     {
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserTypeId { get; set; }
         public string Type { get; set; }
         public bool IsActive { get; set; }
+        #endregion
+
+        #region Complex Properties
         public AuditFields AuditField { get; set; }
-        public virtual UserProfile UserProfile { get; set; }
+        #endregion
+
+        #region Navigation Properties
+        public virtual UserProfile UserProfile { get; set; } 
+        #endregion
     }
 }

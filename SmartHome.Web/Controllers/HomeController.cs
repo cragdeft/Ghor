@@ -20,113 +20,26 @@ namespace SmartHome.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        private readonly IServerResponceService _serverResponceService;
-
-        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IServerResponceService serverResponceService)
-        {
-            this._unitOfWorkAsync = unitOfWorkAsync;
-            this._serverResponceService = serverResponceService;
-        }
-
-        //public ActionResult Index()
-        //{
-        //    try
-        //    {
-        //        int a = Convert.ToInt32("test");
-        //        return View();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // log error
-        //        Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
-        //        //continue
-        //    }
-        //    return View();
-
-
-        //    //return View(_serverResponceService.Queryable());
-        //}
-
-        #region m2m
-
 
 
         public ActionResult Index()
         {
             try
             {
-                int a = Convert.ToInt32("test");
-                return View(new m2mMessageViewModel());
-                
+                //int a = Convert.ToInt32("test");
+                return View();
             }
             catch (Exception ex)
             {
-                // log this and continue
-                Logger.LogError(ex, "This is test error " );
+                // log error
+                Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                //continue
             }
-            return View(new m2mMessageViewModel());
-        }
-
-        public ActionResult Publish(m2mMessageViewModel model)
-        {
-            model.PublishMessageStatus = MqttClientWrapper.Publish(model.MessgeTopic, model.PublishMessage);
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Subscribe(m2mMessageViewModel model)
-        {
-            model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult ServerResponce()
-        {
-            //ServerResponce serverResponce = Session.GetsServerResponce("ServerResponce");
-            //return Json(serverResponce.ServerMessages, JsonRequestBehavior.AllowGet);
-
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
             return View();
+
+
+            //return View(_serverResponceService.Queryable());
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
-        public async Task<ActionResult> Create(ServerResponce model)
-        {
-            _serverResponceService.Insert(model);
-
-            try
-            {
-                await _unitOfWorkAsync.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ResponceExists(model.MessageId))
-                {
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
-                }
-                throw;
-            }
-
-            return View();
-        }
-
-        private bool ResponceExists(string key)
-        {
-            return _serverResponceService.Query(e => e.MessageId == key).Select().Any();
-        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
-using SmartHome.Model.SmartHome.Enums;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +12,6 @@ namespace SmartHome.Model.Models
 {
     public class Channel : Entity
     {
-        public Channel()
-        {
-            NO_LOAD = LoadType.NO_LOAD;
-            NON_DIMMABLE_BULB = LoadType.NON_DIMMABLE_BULB;
-        }
-
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -29,8 +23,6 @@ namespace SmartHome.Model.Models
         public int Status { get; set; }
         public int Value { get; set; }
         public LoadType LoadType { get; set; }
-        public LoadType NO_LOAD { get; set; }
-        public LoadType NON_DIMMABLE_BULB { get; set; }
         #endregion
 
         #region Complex Properties

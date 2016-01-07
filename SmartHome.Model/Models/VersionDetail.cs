@@ -11,14 +11,21 @@ namespace SmartHome.Model.Models
 {
     public class VersionDetail : Entity
     {
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int VersionDetailId { get; set; }        
+        public int VersionDetailId { get; set; }
         public int Id { get; set; }
         public string VId { get; set; }
         public string HardwareVersion { get; set; }
-        public AuditFields AuditField { get; set; }
+        #endregion
 
+        #region Complex Properties
+        public AuditFields AuditField { get; set; }
+        #endregion
+
+        #region Navigation Properties
         public virtual Version Version { get; set; }
+        #endregion
     }
 }

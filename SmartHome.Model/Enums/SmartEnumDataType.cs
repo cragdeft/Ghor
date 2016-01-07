@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHome.Model.SmartHome.Enums
+namespace SmartHome.Model.Enums
 {
     [DataContract]
     public enum LoadType
@@ -24,10 +23,8 @@ namespace SmartHome.Model.SmartHome.Enums
     public enum DeviceType
     {
         [EnumMember]
-        [Description("SMSW6G")]
         SMART_SWITCH_6G = 58,
         [EnumMember]
-        [Description("SMRB12")]
         SMART_RAINBOW_12 = 58,
         [EnumMember]
         CURTAIN = 2,

@@ -11,15 +11,23 @@ namespace SmartHome.Model.Models
 {
     public class DeviceStatus : Entity
     {
+        #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DeviceStatusId { get; set; }        
+        public int DeviceStatusId { get; set; }
         public int Id { get; set; }
         public int DId { get; set; }
         public int StatusType { get; set; }
         public int Status { get; set; }
+        #endregion
+
+        #region Complex Properties
         public AuditFields AuditField { get; set; }
-        public virtual Device Device { get; set; }
-       
+        #endregion
+
+        #region Navigation Properties
+        public virtual Device Device { get; set; } 
+        #endregion
+
     }
 }
