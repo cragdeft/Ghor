@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IServerResponceService.cs" />
+    <Compile Include="Interfaces\IVersionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerResponceService.cs" />
+    <Compile Include="VersionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Frameworks\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">

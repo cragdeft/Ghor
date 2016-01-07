@@ -1,4 +1,4 @@
-using System;
+
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 using Repository.Pattern.DataContext;
@@ -9,6 +9,7 @@ using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
 using SmartHome.Service;
 using SmartHome.Model.ModelDataContext;
+using System;
 
 namespace SmartHome.Web.App_Start
 {
@@ -49,6 +50,8 @@ namespace SmartHome.Web.App_Start
             container.RegisterType<IUnitOfWorkAsync, UnitOfWork>(new PerRequestLifetimeManager());
             container.RegisterType<IRepositoryAsync<ServerResponce>, Repository<ServerResponce>>();
             container.RegisterType<IServerResponceService, ServerResponceService>();
+            container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
+            container.RegisterType<IVersionService, VersionService>();
 
         }
     }
