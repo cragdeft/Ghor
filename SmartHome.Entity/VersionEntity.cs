@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 namespace SmartHome.Entity
 {
 
-    public class VersionEntity 
+    public class VersionEntity
     {
-      
-
         #region Primitive Properties
-        
         public int VersionId { get; set; }
         public int Id { get; set; }
         public string AppName { get; set; }
@@ -21,9 +18,6 @@ namespace SmartHome.Entity
         public string MAC { get; set; }
         #endregion
 
-        #region Complex Properties
-        //public AuditFields AuditField { get; set; }
-        #endregion
 
     }
 }
