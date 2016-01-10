@@ -107,6 +107,9 @@ namespace SmartHome.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(VersionEntity entity)
         {
+            var entity2 = await _versionService.GetAsync(VersionId);
+
+
             try
             {
                 _versionService.Remove(entity);
