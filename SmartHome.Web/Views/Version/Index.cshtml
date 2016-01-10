@@ -1,47 +1,64 @@
-﻿@model SmartHome.Entity.VersionListEntity
+﻿@model IEnumerable<SmartHome.Entity.VersionEntity>
+
 @{
-    ViewBag.Title = "List of customers";
+    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Index</h2>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <strong>Version List</strong>
-    </div>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.VersionId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AppName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AppVersion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuthCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PassPhrase)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MAC)
+        </th>
+        <th></th>
+    </tr>
 
-    <table class="table table-hover">
-        <tr>
-            <th>
-                AppName
-            </th>
-            <th>
-                AppVersion
-            </th>
-            <th>
-                <a href="@Url.Action("Create", "Version")" class="btn btn-sm btn-primary data-modal" role="button">Create New</a>
-            </th>
-        </tr>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.VersionId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AppName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AppVersion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuthCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PassPhrase)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MAC)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { VersionId=item.VersionId }) |
+            @Html.ActionLink("Details", "Details", new { VersionId=item.VersionId }) |
+            @Html.ActionLink("Delete", "Delete", new { VersionId=item.VersionId })
+        </td>
+    </tr>
+}
 
-        @foreach (var item in Model.Versions)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(item.AppName, "Edit", new { VersionId = item.VersionId, page = Request.QueryString["page"] }, new { @class = "data-modal" })
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.AppVersion)
-                </td>
-                
-                
-                <td>
-                    <div class="col-md-4">
-                        <a class="btn btn-default btn-xs" href="@Url.Action("Edit", new { @VersionId = item.VersionId })"><span class="glyphicon glyphicon-edit"></span></a>
-                        <a class="btn btn-danger btn-xs" href="@Url.Action("Delete", new { @VersionId = item.VersionId })"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                </td>
-            </tr>
-        }
-    </table>
-</div>
+</table>

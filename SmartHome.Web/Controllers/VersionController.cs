@@ -22,22 +22,21 @@ namespace SmartHome.Web.Controllers
             this._versionService = versionService;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var viewModel = new VersionListViewModel();
-            var versions = _versionService.Queryable();
-            return View(new VersionListEntity(versions));
+            var versions = await _versionService.GetsAsync();
+            return View(versions);
         }
 
         #region Create
         public ActionResult Create()
         {
-
-            return View(new VersionManageEntity());
+            return View(new VersionEntity());
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(VersionManageEntity model)
+        public async Task<ActionResult> Create(VersionEntity entity)
         {
             if (ModelState.IsValid)
             {
@@ -45,64 +44,52 @@ namespace SmartHome.Web.Controllers
 
                 try
                 {
-                    
-                    var application = model.ToDalEntity(model);
-                    application.ObjectState = ObjectState.Added;
-                    _versionService.Insert(application);
+                    _versionService.Add(entity);
                     var changes = await _unitOfWorkAsync.SaveChangesAsync();
                     _unitOfWorkAsync.Commit();
                     return RedirectToAction("Index");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Rollback transaction
                     _unitOfWorkAsync.Rollback();
                 }
             }
-            return View(model);
+            return View(entity);
         }
         #endregion
 
         #region Edit
         public async Task<ActionResult> Edit(int VersionId)
         {
-            var application = await _versionService.FindAsync(VersionId);
+            var application = await _versionService.GetAsync(VersionId);
 
             if (application == null)
             {
-                //base.SetErrorMessage("Application with Id [{0}] does not exist", id.ToString());
                 return RedirectToAction("Index");
             }
-            return View(new VersionManageEntity(application));
+            return View(application);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(VersionManageEntity model)
+        public async Task<ActionResult> Edit(VersionEntity entity)
         {
             if (ModelState.IsValid)
             {
-                var application = await _versionService.FindAsync(model.VersionId);
-                if (application == null) { throw new ArgumentException(string.Format("Application with Id [{0}] does not exist", model.VersionId)); }
-
                 _unitOfWorkAsync.BeginTransaction();
 
                 try
                 {
-                    //model.ToDalEntity(application);
-                    application.ObjectState = ObjectState.Modified;
-                    _versionService.Update(application);
+                    _versionService.Modify(entity);
                     var changes = await _unitOfWorkAsync.SaveChangesAsync();
-                    // Commit Transaction
                     _unitOfWorkAsync.Commit();
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    // Rollback transaction
                     _unitOfWorkAsync.Rollback();
                 }
             }
-            return View(model);
+            return View(entity);
         }
 
         #endregion
@@ -110,27 +97,20 @@ namespace SmartHome.Web.Controllers
         #region Delete
         public async Task<ActionResult> Delete(int VersionId)
         {
-            var application = await _versionService.FindAsync(VersionId);
-
-            if (application == null)
+            var entity = await _versionService.GetAsync(VersionId);
+            if (entity == null)
             {
-                // base.SetErrorMessage("Application with Id [{0}] does not exist", id.ToString());
                 return RedirectToAction("Index");
             }
-
-            return View(new VersionEntity(application));
+            return View(entity);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Delete(VersionEntity model)
+        public async Task<ActionResult> Delete(VersionEntity entity)
         {
-            var application = await _versionService.FindAsync(model.VersionId);
-            if (application == null) { throw new ArgumentException(string.Format("Application with Id [{0}] does not exist", model.VersionId)); }
-
             try
             {
-                application.ObjectState = ObjectState.Deleted;
-                _versionService.Delete(application);
+                _versionService.Remove(entity);
                 await _unitOfWorkAsync.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -139,7 +119,7 @@ namespace SmartHome.Web.Controllers
                 // base.SetErrorMessage("Whoops! Couldn't delete the application. The error was [{0}]", ex.Message);
             }
 
-            return View(model);
+            return View(entity);
         }
         #endregion
 

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using SmartHome.Model.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,15 +8,7 @@ namespace SmartHome.Entity
 
     public class VersionEntity 
     {
-        public VersionEntity()
-        {
-        }
-
-        public VersionEntity(Version model)
-        {
-            Mapper.CreateMap<VersionEntity, Version >();
-        }
-
+      
 
         #region Primitive Properties
         
@@ -32,7 +22,7 @@ namespace SmartHome.Entity
         #endregion
 
         #region Complex Properties
-        public AuditFields AuditField { get; set; }
+        //public AuditFields AuditField { get; set; }
         #endregion
 
     }

@@ -326,8 +326,8 @@
     <Content Include="Views\Version\Create.cshtml" />
     <Content Include="Views\Version\Delete.cshtml" />
     <Content Include="Views\Version\Edit.cshtml" />
-    <Content Include="Views\Version\Index.cshtml" />
     <Content Include="Views\Version\ManageApplicationPartial.cshtml" />
+    <Content Include="Views\Version\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

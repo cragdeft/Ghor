@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class Channel : Entity
+    public class ChannelConfig : Entity
     {
         #region Primitive Properties
         [Key]
@@ -30,7 +30,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-        public virtual Device Device { get; set; }
+        //public virtual Device Device { get; set; }
         #endregion
 
     }

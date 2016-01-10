@@ -32,7 +32,7 @@ namespace SmartHome.Model.Models
         #region  Navigation Properties
 
         public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
-        public virtual ICollection<Channel> Channels { get; set; }
+       // public virtual ICollection<Channel> Channels { get; set; }
         public virtual Room Room { get; set; } 
         #endregion
 

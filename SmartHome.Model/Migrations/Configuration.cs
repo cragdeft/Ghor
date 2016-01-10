@@ -5,14 +5,14 @@ namespace SmartHome.Model.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Model.ModelDataContext.SmartHomeDataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<SmartHome.Model.ModelDataContext.SmartHomeDataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Model.ModelDataContext.SmartHomeDataContext context)
+        protected override void Seed(SmartHome.Model.ModelDataContext.SmartHomeDataContext context)
         {
             //  This method will be called after migrating to the latest version.
 

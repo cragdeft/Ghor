@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialcreateDBForHome : DbMigration
+    public partial class initialCreate : DbMigration
     {
         public override void Up()
         {
@@ -19,9 +19,9 @@ namespace SmartHome.Model.Migrations
                         WorkPhone = c.String(),
                         ZipCode = c.String(),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         Home_HomeId = c.Int(),
                         UserProfile_UserProfileId = c.Int(),
                     })
@@ -43,94 +43,33 @@ namespace SmartHome.Model.Migrations
                         RegistrationKey = c.String(),
                         HardwareId = c.String(),
                         TrialCount = c.Int(nullable: false),
-                        AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
-                        AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
                         Comment = c.String(),
                         IsActive = c.Boolean(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                     })
                 .PrimaryKey(t => t.HomeId);
             
             CreateTable(
-                "dbo.CommTypes",
+                "dbo.HomeVersions",
                 c => new
                     {
-                        CommTypeId = c.Int(nullable: false, identity: true),
-                        Comm = c.String(),
-                        IsActive = c.Boolean(nullable: false),
-                        AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
-                        AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
-                        Home_HomeId = c.Int(),
-                    })
-                .PrimaryKey(t => t.CommTypeId)
-                .ForeignKey("dbo.Homes", t => t.Home_HomeId)
-                .Index(t => t.Home_HomeId);
-            
-            CreateTable(
-                "dbo.HomeLinks",
-                c => new
-                    {
-                        HomeLinkId = c.Int(nullable: false, identity: true),
+                        HomeVersionId = c.Int(nullable: false, identity: true),
                         Name = c.String(),
-                        Url = c.String(),
-                        IPAddress = c.String(),
-                        Port = c.Int(nullable: false),
-                        VideoQuality = c.String(),
-                        ChannelCount = c.Int(nullable: false),
-                        UserName = c.String(),
-                        Password = c.String(),
+                        Code = c.String(),
+                        Description = c.String(),
+                        LaunchDate = c.DateTime(nullable: false),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         Home_HomeId = c.Int(),
                     })
-                .PrimaryKey(t => t.HomeLinkId)
+                .PrimaryKey(t => t.HomeVersionId)
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId)
                 .Index(t => t.Home_HomeId);
-            
-            CreateTable(
-                "dbo.LinkTypes",
-                c => new
-                    {
-                        LinkTypeId = c.Int(nullable: false, identity: true),
-                        Link = c.String(),
-                        IsActive = c.Boolean(nullable: false),
-                        AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
-                        AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
-                        HomeLink_HomeLinkId = c.Int(),
-                    })
-                .PrimaryKey(t => t.LinkTypeId)
-                .ForeignKey("dbo.HomeLinks", t => t.HomeLink_HomeLinkId)
-                .Index(t => t.HomeLink_HomeLinkId);
-            
-            CreateTable(
-                "dbo.SyncStatus",
-                c => new
-                    {
-                        SyncStatusId = c.Int(nullable: false, identity: true),
-                        Status = c.String(),
-                        IsActive = c.Boolean(nullable: false),
-                        AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
-                        AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
-                        HomeLink_HomeLinkId = c.Int(),
-                        Room_RoomId = c.Int(),
-                        UserProfile_UserProfileId = c.Int(),
-                    })
-                .PrimaryKey(t => t.SyncStatusId)
-                .ForeignKey("dbo.HomeLinks", t => t.HomeLink_HomeLinkId)
-                .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
-                .ForeignKey("dbo.UserProfiles", t => t.UserProfile_UserProfileId)
-                .Index(t => t.HomeLink_HomeLinkId)
-                .Index(t => t.Room_RoomId)
-                .Index(t => t.UserProfile_UserProfileId);
             
             CreateTable(
                 "dbo.Rooms",
@@ -141,11 +80,11 @@ namespace SmartHome.Model.Migrations
                         RoomNumber = c.Int(nullable: false),
                         Comment = c.String(),
                         IsMasterRoom = c.Boolean(nullable: false),
-                        AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
-                        AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
                         IsActive = c.Boolean(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         Home_HomeId = c.Int(),
                     })
                 .PrimaryKey(t => t.RoomId)
@@ -153,11 +92,72 @@ namespace SmartHome.Model.Migrations
                 .Index(t => t.Home_HomeId);
             
             CreateTable(
+                "dbo.Devices",
+                c => new
+                    {
+                        DeviceId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        DeviceName = c.String(),
+                        DeviceHash = c.String(),
+                        DeviceVersion = c.String(),
+                        IsDeleted = c.Int(nullable: false),
+                        Mac = c.String(),
+                        DeviceType = c.Int(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Room_RoomId = c.Int(),
+                    })
+                .PrimaryKey(t => t.DeviceId)
+                .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
+                .Index(t => t.Room_RoomId);
+            
+            CreateTable(
+                "dbo.DeviceStatus",
+                c => new
+                    {
+                        DeviceStatusId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        DId = c.Int(nullable: false),
+                        StatusType = c.Int(nullable: false),
+                        Status = c.Int(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Device_DeviceId = c.Int(),
+                    })
+                .PrimaryKey(t => t.DeviceStatusId)
+                .ForeignKey("dbo.Devices", t => t.Device_DeviceId)
+                .Index(t => t.Device_DeviceId);
+            
+            CreateTable(
+                "dbo.SyncStatus",
+                c => new
+                    {
+                        SyncStatusId = c.Int(nullable: false, identity: true),
+                        Status = c.String(),
+                        IsActive = c.Boolean(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Room_RoomId = c.Int(),
+                        UserProfile_UserProfileId = c.Int(),
+                    })
+                .PrimaryKey(t => t.SyncStatusId)
+                .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
+                .ForeignKey("dbo.UserProfiles", t => t.UserProfile_UserProfileId)
+                .Index(t => t.Room_RoomId)
+                .Index(t => t.UserProfile_UserProfileId);
+            
+            CreateTable(
                 "dbo.UserProfiles",
                 c => new
                     {
                         UserProfileId = c.Int(nullable: false, identity: true),
-                        LocalID = c.String(),
+                        LocalId = c.String(),
                         UserName = c.String(),
                         FirstName = c.String(),
                         LastName = c.String(),
@@ -175,6 +175,10 @@ namespace SmartHome.Model.Migrations
                         IsSMSRecipient = c.Boolean(nullable: false),
                         LastLogIn = c.DateTime(),
                         IsActive = c.Boolean(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         Room_RoomId = c.Int(),
                     })
                 .PrimaryKey(t => t.UserProfileId)
@@ -189,9 +193,9 @@ namespace SmartHome.Model.Migrations
                         Status = c.String(),
                         IsActive = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         UserProfile_UserProfileId = c.Int(),
                     })
                 .PrimaryKey(t => t.UserStatusId)
@@ -206,9 +210,9 @@ namespace SmartHome.Model.Migrations
                         Type = c.String(),
                         IsActive = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         UserProfile_UserProfileId = c.Int(),
                     })
                 .PrimaryKey(t => t.UserTypeId)
@@ -216,50 +220,87 @@ namespace SmartHome.Model.Migrations
                 .Index(t => t.UserProfile_UserProfileId);
             
             CreateTable(
-                "dbo.HomeStatus",
+                "dbo.SmartRouters",
                 c => new
                     {
-                        HomeStatusId = c.Int(nullable: false, identity: true),
-                        Status = c.String(),
+                        SmartRouterId = c.Int(nullable: false, identity: true),
+                        IP = c.String(),
+                        MacAddress = c.String(),
+                        Port = c.String(),
+                        RouterUserName = c.String(),
+                        RouterPassword = c.String(),
                         IsActive = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                         Home_HomeId = c.Int(),
                     })
-                .PrimaryKey(t => t.HomeStatusId)
+                .PrimaryKey(t => t.SmartRouterId)
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId)
                 .Index(t => t.Home_HomeId);
             
             CreateTable(
-                "dbo.HomeVersions",
+                "dbo.ChannelConfigs",
                 c => new
                     {
-                        HomeVersionId = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        Code = c.String(),
-                        Description = c.String(),
-                        LaunchDate = c.DateTime(nullable: false),
+                        ChannelId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        DId = c.Int(nullable: false),
+                        ChannelNo = c.Int(nullable: false),
+                        LoadName = c.String(),
+                        Status = c.Int(nullable: false),
+                        Value = c.Int(nullable: false),
+                        LoadType = c.Int(nullable: false),
                         AuditField_InsertedBy = c.String(),
-                        AuditField_InsertedDateTime = c.DateTime(nullable: false),
+                        AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
-                        AuditField_LastUpdatedDateTime = c.DateTime(nullable: false),
-                        Home_HomeId = c.Int(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
                     })
-                .PrimaryKey(t => t.HomeVersionId)
-                .ForeignKey("dbo.Homes", t => t.Home_HomeId)
-                .Index(t => t.Home_HomeId);
+                .PrimaryKey(t => t.ChannelId);
             
-            AddColumn("dbo.Devices", "Room_RoomId", c => c.Int());
-            CreateIndex("dbo.Devices", "Room_RoomId");
-            AddForeignKey("dbo.Devices", "Room_RoomId", "dbo.Rooms", "RoomId");
+            CreateTable(
+                "dbo.VersionDetails",
+                c => new
+                    {
+                        VersionDetailId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        VId = c.String(),
+                        HardwareVersion = c.String(),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Version_VersionId = c.Int(),
+                    })
+                .PrimaryKey(t => t.VersionDetailId)
+                .ForeignKey("dbo.Versions", t => t.Version_VersionId)
+                .Index(t => t.Version_VersionId);
+            
+            CreateTable(
+                "dbo.Versions",
+                c => new
+                    {
+                        VersionId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        AppName = c.String(),
+                        AppVersion = c.String(),
+                        AuthCode = c.String(),
+                        PassPhrase = c.String(),
+                        MAC = c.String(),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.VersionId);
+            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.HomeVersions", "Home_HomeId", "dbo.Homes");
-            DropForeignKey("dbo.HomeStatus", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.VersionDetails", "Version_VersionId", "dbo.Versions");
+            DropForeignKey("dbo.SmartRouters", "Home_HomeId", "dbo.Homes");
             DropForeignKey("dbo.UserTypes", "UserProfile_UserProfileId", "dbo.UserProfiles");
             DropForeignKey("dbo.UserStatus", "UserProfile_UserProfileId", "dbo.UserProfiles");
             DropForeignKey("dbo.SyncStatus", "UserProfile_UserProfileId", "dbo.UserProfiles");
@@ -268,37 +309,34 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.SyncStatus", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.Rooms", "Home_HomeId", "dbo.Homes");
             DropForeignKey("dbo.Devices", "Room_RoomId", "dbo.Rooms");
-            DropForeignKey("dbo.SyncStatus", "HomeLink_HomeLinkId", "dbo.HomeLinks");
-            DropForeignKey("dbo.LinkTypes", "HomeLink_HomeLinkId", "dbo.HomeLinks");
-            DropForeignKey("dbo.HomeLinks", "Home_HomeId", "dbo.Homes");
-            DropForeignKey("dbo.CommTypes", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.DeviceStatus", "Device_DeviceId", "dbo.Devices");
+            DropForeignKey("dbo.HomeVersions", "Home_HomeId", "dbo.Homes");
             DropForeignKey("dbo.Addresses", "Home_HomeId", "dbo.Homes");
-            DropIndex("dbo.HomeVersions", new[] { "Home_HomeId" });
-            DropIndex("dbo.HomeStatus", new[] { "Home_HomeId" });
+            DropIndex("dbo.VersionDetails", new[] { "Version_VersionId" });
+            DropIndex("dbo.SmartRouters", new[] { "Home_HomeId" });
             DropIndex("dbo.UserTypes", new[] { "UserProfile_UserProfileId" });
             DropIndex("dbo.UserStatus", new[] { "UserProfile_UserProfileId" });
             DropIndex("dbo.UserProfiles", new[] { "Room_RoomId" });
-            DropIndex("dbo.Devices", new[] { "Room_RoomId" });
-            DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
             DropIndex("dbo.SyncStatus", new[] { "UserProfile_UserProfileId" });
             DropIndex("dbo.SyncStatus", new[] { "Room_RoomId" });
-            DropIndex("dbo.SyncStatus", new[] { "HomeLink_HomeLinkId" });
-            DropIndex("dbo.LinkTypes", new[] { "HomeLink_HomeLinkId" });
-            DropIndex("dbo.HomeLinks", new[] { "Home_HomeId" });
-            DropIndex("dbo.CommTypes", new[] { "Home_HomeId" });
+            DropIndex("dbo.DeviceStatus", new[] { "Device_DeviceId" });
+            DropIndex("dbo.Devices", new[] { "Room_RoomId" });
+            DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
+            DropIndex("dbo.HomeVersions", new[] { "Home_HomeId" });
             DropIndex("dbo.Addresses", new[] { "UserProfile_UserProfileId" });
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
-            DropColumn("dbo.Devices", "Room_RoomId");
-            DropTable("dbo.HomeVersions");
-            DropTable("dbo.HomeStatus");
+            DropTable("dbo.Versions");
+            DropTable("dbo.VersionDetails");
+            DropTable("dbo.ChannelConfigs");
+            DropTable("dbo.SmartRouters");
             DropTable("dbo.UserTypes");
             DropTable("dbo.UserStatus");
             DropTable("dbo.UserProfiles");
-            DropTable("dbo.Rooms");
             DropTable("dbo.SyncStatus");
-            DropTable("dbo.LinkTypes");
-            DropTable("dbo.HomeLinks");
-            DropTable("dbo.CommTypes");
+            DropTable("dbo.DeviceStatus");
+            DropTable("dbo.Devices");
+            DropTable("dbo.Rooms");
+            DropTable("dbo.HomeVersions");
             DropTable("dbo.Homes");
             DropTable("dbo.Addresses");
         }

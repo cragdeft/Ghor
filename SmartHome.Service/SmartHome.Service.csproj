@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,10 +61,17 @@
       <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
       <Name>Service.Pattern</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
+      <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
+      <Name>SmartHome.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
