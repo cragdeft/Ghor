@@ -256,9 +256,6 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\m2mMessageViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\VersionListViewModel.cs" />
-    <Compile Include="Models\VersionManageViewModel.cs" />
-    <Compile Include="Models\VersionViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

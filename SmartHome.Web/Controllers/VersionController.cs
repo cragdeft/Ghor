@@ -24,7 +24,6 @@ namespace SmartHome.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var viewModel = new VersionListViewModel();
             var versions = await _versionService.GetsAsync();
             return View(versions);
         }
