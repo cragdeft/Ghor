@@ -74,6 +74,7 @@ namespace SmartHome.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 _unitOfWorkAsync.BeginTransaction();
 
                 try

@@ -12,11 +12,12 @@ namespace SmartHome.Service.Interfaces
 
     public interface IVersionService : IService<Version>
     {
-        VersionEntity Add(VersionEntity model);
-        VersionEntity Modify(VersionEntity model);
-        //Task<VersionEntity> ManageEntity(int Id);
+        bool IsExists(int key);              
         Task<IEnumerable<VersionEntity>> GetsAsync();
         Task<VersionEntity> GetAsync(int id);
+
+        VersionEntity Add(VersionEntity model);
+        VersionEntity Modify(VersionEntity model);
         void Remove(string id);
         void Remove(VersionEntity entity);
 

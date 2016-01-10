@@ -25,6 +25,11 @@ namespace SmartHome.Service
             Mapper.CreateMap<VersionEntity, Version>();
         }
 
+        public bool IsExists(int key)
+        {
+            return base.Query(e => e.VersionId == key).Select().Any();
+        }
+
         public async Task<IEnumerable<VersionEntity>> GetsAsync()
         {
             try
@@ -57,7 +62,6 @@ namespace SmartHome.Service
             return entity;
         }
 
-
         public VersionEntity Modify(VersionEntity entity)
         {
             try
@@ -88,6 +92,8 @@ namespace SmartHome.Service
             model.ObjectState = ObjectState.Deleted;
             base.Delete(model);
         }
+
+       
 
 
     }
