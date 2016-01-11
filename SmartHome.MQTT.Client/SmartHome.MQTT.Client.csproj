@@ -64,6 +64,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SmartHome.Json\SmartHome.Json.csproj">
+      <Project>{c3c87ed1-3965-4be6-a92c-0a26ab4c84a8}</Project>
+      <Name>SmartHome.Json</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>

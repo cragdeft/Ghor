@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartHome.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -102,6 +103,7 @@ namespace SmartHome.MQTT.Client
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             //Debug.WriteLine("Received = " + Encoding.UTF8.GetString(e.Message) + " on topic " + e.Topic);
+            JsonManager.JsonProcess(Encoding.UTF8.GetString(e.Message));
         }
 
         #endregion

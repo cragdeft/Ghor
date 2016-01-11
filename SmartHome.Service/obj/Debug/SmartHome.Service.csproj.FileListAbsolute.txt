@@ -46,7 +46,6 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\AutoMapper.dll
@@ -64,5 +63,6 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\Service.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Entity.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\AutoMapper.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.pdb

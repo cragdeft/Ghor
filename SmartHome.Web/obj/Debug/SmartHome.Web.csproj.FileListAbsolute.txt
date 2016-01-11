@@ -356,7 +356,6 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Entity.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\bin\AutoMapper.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Entity.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\ApplicationInsights.config
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\roslyn\csc.exe
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
@@ -426,6 +425,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.Razor.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\WebActivatorEx.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\WebGrease.dll
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Json.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\AutoMapper.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\LinqKit.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Service.Pattern.pdb
@@ -447,6 +447,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.Configuration.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.Mvc.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Newtonsoft.Json.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Repository.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Repository.Pattern.Ef6.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Helpers.xml
@@ -457,7 +458,6 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.Deployment.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.WebPages.Razor.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Antlr3.Runtime.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Newtonsoft.Json.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Net.Http.Formatting.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Http.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Http.WebHost.xml
@@ -475,6 +475,8 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.OAuth.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.Google.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.Twitter.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Json.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\AutoMapper.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
