@@ -20,8 +20,6 @@ namespace SmartHome.Model.ModelDataContext
         {
         }
 
-
-
         public new IDbSet<T> Set<T>() where T : class
         {
             return base.Set<T>();
