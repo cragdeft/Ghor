@@ -41,13 +41,6 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<UserType> UserTypes { get; set; }
         public IDbSet<UserStatus> UserStatuses { get; set; }
 
-
-
-
-
-
-
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
