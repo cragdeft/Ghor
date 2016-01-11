@@ -20,8 +20,6 @@ namespace SmartHome.Model.ModelDataContext
         {
         }
 
-
-
         public new IDbSet<T> Set<T>() where T : class
         {
             return base.Set<T>();
@@ -32,30 +30,22 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<Device> Devices { get; set; }
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
-        public IDbSet<ChannelConfig> ChannelConfigs { get; set; }
+        public IDbSet<Channel> Channels { get; set; }
 
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
         public IDbSet<HomeVersion> HomeVersions { get; set; }
-
-
-
 
         public IDbSet<Room> Rooms { get; set; }
         public IDbSet<UserProfile> UserProfiles { get; set; }
         public IDbSet<UserType> UserTypes { get; set; }
         public IDbSet<UserStatus> UserStatuses { get; set; }
 
-
-
-
-
-
-
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
         }
 
         //public void ExecuteCommand(string command, params object[] parameters)
