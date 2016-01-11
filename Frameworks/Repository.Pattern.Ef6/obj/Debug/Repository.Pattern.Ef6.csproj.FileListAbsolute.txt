@@ -42,12 +42,3 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll.config
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.pdb
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\System.Net.Http.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.pdb
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
