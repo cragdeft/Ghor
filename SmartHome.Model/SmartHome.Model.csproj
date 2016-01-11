@@ -61,7 +61,7 @@
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AuditFields.cs" />
-    <Compile Include="Models\ChannelConfig.cs" />
+    <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\Home.cs" />
