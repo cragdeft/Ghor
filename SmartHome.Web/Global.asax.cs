@@ -16,7 +16,7 @@ namespace SmartHome.Web
     {
         protected void Application_Start()
         {
-           // MqttClientWrapper.MakeConnection(ConfigurationManager.AppSettings["BrokerAddress"]);// the global variable's bed
+            MqttClientWrapper.MakeConnection(ConfigurationManager.AppSettings["BrokerAddress"]);// the global variable's bed
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
