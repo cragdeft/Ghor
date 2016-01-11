@@ -47,12 +47,10 @@ namespace SmartHome.Json
                 using (IDataContextAsync context = new SmartHomeDataContext())
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-
                     IRepositoryAsync<Model.Models.Version> versionRepository = new Repository<Model.Models.Version>(context, unitOfWork);
                     item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
                     versionRepository.InsertOrUpdateGraph(item);
                     unitOfWork.SaveChanges();
-
                 }
             }
         }
