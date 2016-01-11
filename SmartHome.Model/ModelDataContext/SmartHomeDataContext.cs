@@ -30,7 +30,7 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<Device> Devices { get; set; }
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
-        public IDbSet<ChannelConfig> ChannelConfigs { get; set; }
+        public IDbSet<Channel> Channels { get; set; }
 
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
@@ -44,6 +44,8 @@ namespace SmartHome.Model.ModelDataContext
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
         }
 
         //public void ExecuteCommand(string command, params object[] parameters)

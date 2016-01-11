@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class ChannelConfig : Entity
+    public class Channel : Entity
     {
         #region Primitive Properties
         [Key]

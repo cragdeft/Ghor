@@ -64,3 +64,5 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.i
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
