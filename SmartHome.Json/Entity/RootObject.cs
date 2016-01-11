@@ -8,7 +8,7 @@ namespace SmartHome.Json.Entity
 {
     public class RootObject
     {
-        public List<Version> Version { get; set; }
+        public IEnumerable<Version> Version { get; set; }
         public List<VersionDetail> VersionDetails { get; set; }
         public List<Device> Device { get; set; }
         public List<DeviceStatus> DeviceStatus { get; set; }
