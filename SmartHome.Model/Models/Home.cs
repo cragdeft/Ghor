@@ -24,6 +24,7 @@ namespace SmartHome.Model.Models
         public int TrialCount { get; set; }        
         public string Comment { get; set; }
         public bool IsActive { get; set; }
+        public bool IsDefault { get; set; }
         #endregion
 
         #region Complex Properties
