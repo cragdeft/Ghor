@@ -23,7 +23,7 @@ namespace SmartHome.Model.Models
         public int IsDeleted { get; set; }
         public string Mac { get; set; }
         public string DType { get; set; }
-        public DeviceType DeviceType { get; set; }
+        public DeviceType? DeviceType { get; set; }
         #endregion
 
         #region  Complex Properties

@@ -64,6 +64,14 @@
     <Compile Include="Migrations\201601110900099_initialModityJsonParse.Designer.cs">
       <DependentUpon>201601110900099_initialModityJsonParse.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601111045297_initialModityEnum.cs" />
+    <Compile Include="Migrations\201601111045297_initialModityEnum.Designer.cs">
+      <DependentUpon>201601111045297_initialModityEnum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601111047304_initialModityEnum2.cs" />
+    <Compile Include="Migrations\201601111047304_initialModityEnum2.Designer.cs">
+      <DependentUpon>201601111047304_initialModityEnum2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
@@ -107,6 +115,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601110900099_initialModityJsonParse.resx">
       <DependentUpon>201601110900099_initialModityJsonParse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601111045297_initialModityEnum.resx">
+      <DependentUpon>201601111045297_initialModityEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601111047304_initialModityEnum2.resx">
+      <DependentUpon>201601111047304_initialModityEnum2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
