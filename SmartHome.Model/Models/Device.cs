@@ -21,7 +21,8 @@ namespace SmartHome.Model.Models
         public string DeviceHash { get; set; }
         public string DeviceVersion { get; set; }
         public int IsDeleted { get; set; }
-        public string Mac { get; set; }        
+        public string Mac { get; set; }
+        public string DType { get; set; }
         public DeviceType DeviceType { get; set; }
         #endregion
 
@@ -32,7 +33,7 @@ namespace SmartHome.Model.Models
         #region  Navigation Properties
 
         public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
-       // public virtual ICollection<Channel> Channels { get; set; }
+        public virtual ICollection<Channel> Channels { get; set; }
         public virtual Room Room { get; set; } 
         #endregion
 

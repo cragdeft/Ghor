@@ -23,7 +23,7 @@ namespace SmartHome.Model.Enums
     public enum DeviceType
     {
         [EnumMember]
-        SMART_SWITCH_6G = 58,
+        SMART_SWITCH_6G = 57,
         [EnumMember]
         SMART_RAINBOW_12 = 58,
         [EnumMember]
