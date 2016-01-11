@@ -241,7 +241,7 @@ namespace SmartHome.Model.Migrations
                 .Index(t => t.Home_HomeId);
             
             CreateTable(
-                "dbo.ChannelConfigs",
+                "dbo.Channels",
                 c => new
                     {
                         ChannelId = c.Int(nullable: false, identity: true),
@@ -327,7 +327,7 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
             DropTable("dbo.Versions");
             DropTable("dbo.VersionDetails");
-            DropTable("dbo.ChannelConfigs");
+            DropTable("dbo.Channels");
             DropTable("dbo.SmartRouters");
             DropTable("dbo.UserTypes");
             DropTable("dbo.UserStatus");
