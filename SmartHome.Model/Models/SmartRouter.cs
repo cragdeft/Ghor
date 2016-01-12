@@ -20,6 +20,8 @@ namespace SmartHome.Model.Models
         public string RouterUserName { get; set; }
         public string RouterPassword { get; set; }
         public bool IsActive { get; set; }
+
+        public bool IsDefault { get; set; }
         #endregion
 
         #region Complex Properties
