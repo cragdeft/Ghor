@@ -11,9 +11,9 @@ namespace SmartHome.Model.Enums
     public enum LoadType
     {
         [EnumMember]
-        NO_LOAD = 58,
+        NO_LOAD = 0,
         [EnumMember]
-        NON_DIMMABLE_BULB = 58,
+        NON_DIMMABLE_BULB = 1,
         [EnumMember]
         DIMMABLE_BULB = 2,
         [EnumMember]
@@ -23,12 +23,21 @@ namespace SmartHome.Model.Enums
     public enum DeviceType
     {
         [EnumMember]
-        SMART_SWITCH_6G = 57,
+        SMART_SWITCH_6G = 0,
         [EnumMember]
-        SMART_RAINBOW_12 = 58,
+        SMART_RAINBOW_12 = 1,
         [EnumMember]
         CURTAIN = 2,
         [EnumMember]
         CAMERA = 3
+    }
+
+    public enum MeshModeType
+    {
+        [EnumMember]
+        BLE = 0,
+        [EnumMember]
+        WIFI = 1
+        
     }
 }

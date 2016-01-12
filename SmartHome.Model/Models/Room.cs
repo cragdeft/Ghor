@@ -25,7 +25,8 @@ namespace SmartHome.Model.Models
         #region Navigation Properties
         public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<Device> Devices { get; set; }
-        public ICollection<UserProfile> UserProfiles { get; set; }
+        //public ICollection<UserProfile> UserProfiles { get; set; }
+        public virtual  UserInfo UserInfo { get; set; } 
         public virtual Home Home { get; set; } 
         #endregion
     }

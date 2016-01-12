@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace SmartHome.Json.Entity
 {
     public class Device
     {
+       // [JsonProperty("eighty_min_score")]
         public int ID { get; set; }
         public int DeviceHash { get; set; }
         public string DeviceType { get; set; }

@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties
         public virtual Room Room { get; set; }
-        public virtual UserProfile UserProfile { get; set; } 
+        public virtual UserInfo UserProfile { get; set; } 
         #endregion
     }
 }

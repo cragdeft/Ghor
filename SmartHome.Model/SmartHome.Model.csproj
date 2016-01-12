@@ -52,25 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201601100736357_initialCreate.cs" />
-    <Compile Include="Migrations\201601100736357_initialCreate.Designer.cs">
-      <DependentUpon>201601100736357_initialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601110829186_initialJsonParse.cs" />
-    <Compile Include="Migrations\201601110829186_initialJsonParse.Designer.cs">
-      <DependentUpon>201601110829186_initialJsonParse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601110900099_initialModityJsonParse.cs" />
-    <Compile Include="Migrations\201601110900099_initialModityJsonParse.Designer.cs">
-      <DependentUpon>201601110900099_initialModityJsonParse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601111045297_initialModityEnum.cs" />
-    <Compile Include="Migrations\201601111045297_initialModityEnum.Designer.cs">
-      <DependentUpon>201601111045297_initialModityEnum.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601111047304_initialModityEnum2.cs" />
-    <Compile Include="Migrations\201601111047304_initialModityEnum2.Designer.cs">
-      <DependentUpon>201601111047304_initialModityEnum2.cs</DependentUpon>
+    <Compile Include="Migrations\201601120716439_initialCreate.cs" />
+    <Compile Include="Migrations\201601120716439_initialCreate.Designer.cs">
+      <DependentUpon>201601120716439_initialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
@@ -81,11 +65,10 @@
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\Home.cs" />
-    <Compile Include="Models\HomeVersion.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SmartRouter.cs" />
     <Compile Include="Models\SyncStatus.cs" />
-    <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Models\UserType.cs" />
     <Compile Include="Models\Version.cs" />
@@ -107,20 +90,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201601100736357_initialCreate.resx">
-      <DependentUpon>201601100736357_initialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601110829186_initialJsonParse.resx">
-      <DependentUpon>201601110829186_initialJsonParse.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601110900099_initialModityJsonParse.resx">
-      <DependentUpon>201601110900099_initialModityJsonParse.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601111045297_initialModityEnum.resx">
-      <DependentUpon>201601111045297_initialModityEnum.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601111047304_initialModityEnum2.resx">
-      <DependentUpon>201601111047304_initialModityEnum2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601120716439_initialCreate.resx">
+      <DependentUpon>201601120716439_initialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

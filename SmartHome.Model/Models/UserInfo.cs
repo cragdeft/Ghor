@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class UserProfile : Entity
+    public class UserInfo : Entity
     {
         #region Primitive Properties
-        public int UserProfileId { get; set; }
+        public int UserInfoId { get; set; }
         public string LocalId { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
@@ -40,8 +40,10 @@ namespace SmartHome.Model.Models
         public virtual ICollection<UserType> UserTypes { get; set; }
         public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<UserStatus> UserStatuses { get; set; }
-        public virtual ICollection<Address> Addresses { get; set; }
-        public virtual Room Room { get; set; } 
+        //public virtual ICollection<Address> Addresses { get; set; }
+        //public virtual Room Room { get; set; } 
+
+        public ICollection<Room> Rooms { get; set; }
         #endregion
 
 

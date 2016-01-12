@@ -34,10 +34,10 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
-        public IDbSet<HomeVersion> HomeVersions { get; set; }
+       // public IDbSet<HomeVersion> HomeVersions { get; set; }
 
         public IDbSet<Room> Rooms { get; set; }
-        public IDbSet<UserProfile> UserProfiles { get; set; }
+        public IDbSet<UserInfo> UserInfos { get; set; }
         public IDbSet<UserType> UserTypes { get; set; }
         public IDbSet<UserStatus> UserStatuses { get; set; }
 

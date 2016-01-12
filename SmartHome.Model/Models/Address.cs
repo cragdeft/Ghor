@@ -17,9 +17,12 @@ namespace SmartHome.Model.Models
         public int AddressId { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
+        public string Zone { get; set; }
+        public string Block { get; set; }
         public string City { get; set; }
-        public string OfficePhone { get; set; }
-        public string WorkPhone { get; set; }
+        public string Country { get; set; }
+        //public string OfficePhone { get; set; }
+        //public string WorkPhone { get; set; }
         public string ZipCode { get; set; }
         #endregion
 
@@ -29,7 +32,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties
         public virtual Home Home { get; set; }
-        public virtual UserProfile UserProfile { get; set; } 
+        //public virtual UserProfile UserProfile { get; set; } 
         #endregion
 
     }
