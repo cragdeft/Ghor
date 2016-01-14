@@ -363,6 +363,10 @@
       <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>
       <Name>SmartHome.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Utility\SmartHome.Utility.csproj">
+      <Project>{84731c3c-32ee-4a7f-b31c-99deb598926d}</Project>
+      <Name>SmartHome.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

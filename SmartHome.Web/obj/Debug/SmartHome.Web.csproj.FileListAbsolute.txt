@@ -480,3 +480,5 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\AutoMapper.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.dll
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.pdb
