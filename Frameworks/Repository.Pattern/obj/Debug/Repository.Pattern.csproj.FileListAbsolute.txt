@@ -20,8 +20,3 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repo
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
-C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb

@@ -57,12 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\ChannelConfig.cs" />
-    <Compile Include="Entity\Device.cs" />
-    <Compile Include="Entity\DeviceStatus.cs" />
-    <Compile Include="Entity\RootObject.cs" />
-    <Compile Include="Entity\Version.cs" />
-    <Compile Include="Entity\VersionDetail.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -82,6 +76,10 @@
     <ProjectReference Include="..\Frameworks\Service.Pattern\Service.Pattern.csproj">
       <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
       <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
+      <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
+      <Name>SmartHome.Entity</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
