@@ -44,8 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInfoService.cs" />
     <Compile Include="VersionService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +70,10 @@
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Repository\SmartHome.Repository.csproj">
+      <Project>{d1269bfe-feef-4daf-81a5-e619e5f7b9c2}</Project>
+      <Name>SmartHome.Repository</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

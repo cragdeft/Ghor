@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -243,6 +247,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -325,6 +330,36 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frameworks\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">
+      <Project>{f68a1d19-93fb-47c1-a22b-42bea3e4fd8c}</Project>
+      <Name>Repository.Pattern.Ef6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Frameworks\Repository.Pattern\Repository.Pattern.csproj">
+      <Project>{6e682a14-c872-4813-b620-76e108dea683}</Project>
+      <Name>Repository.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Frameworks\Service.Pattern\Service.Pattern.csproj">
+      <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
+      <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
+      <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
+      <Name>SmartHome.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
+      <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
+      <Name>SmartHome.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Repository\SmartHome.Repository.csproj">
+      <Project>{d1269bfe-feef-4daf-81a5-e619e5f7b9c2}</Project>
+      <Name>SmartHome.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Service\SmartHome.Service.csproj">
+      <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>
+      <Name>SmartHome.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

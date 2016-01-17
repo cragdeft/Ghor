@@ -161,6 +161,7 @@ namespace SmartHome.Model.Migrations
                     {
                         UserInfoId = c.Int(nullable: false, identity: true),
                         LocalId = c.String(),
+                        Password = c.String(),
                         UserName = c.String(),
                         FirstName = c.String(),
                         LastName = c.String(),
@@ -230,6 +231,7 @@ namespace SmartHome.Model.Migrations
                         RouterUserName = c.String(),
                         RouterPassword = c.String(),
                         IsActive = c.Boolean(nullable: false),
+                        IsDefault = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),

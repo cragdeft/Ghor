@@ -49,6 +49,7 @@
     <Compile Include="DeviceStatusEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootObjectEntity.cs" />
+    <Compile Include="UserInfoEntity.cs" />
     <Compile Include="VersionDetailEntity.cs" />
     <Compile Include="VersionEntity.cs" />
   </ItemGroup>
