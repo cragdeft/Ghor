@@ -413,6 +413,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Logging.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Model.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.MQTT.Client.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Service.dll
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Net.Http.Formatting.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Helpers.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\System.Web.Http.dll
@@ -434,6 +435,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Logging.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Model.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.MQTT.Client.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Service.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\M2Mqtt.Net.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.AI.DependencyCollector.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\Microsoft.AI.ServerTelemetryChannel.xml
@@ -480,5 +482,3 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\AutoMapper.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.dll
-C:\SmartHome\SmartHomeWeb\SmartHome.Web\bin\SmartHome.Utility.pdb
