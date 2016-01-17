@@ -27,9 +27,14 @@ namespace SmartHome.WebAPI.Controllers
             {
                 Mapper.CreateMap<UserInfo, UserInfoEntity>();
                 IRepositoryAsync<UserInfo> userInfoRepository = new Repository<UserInfo>(context, unitOfWork);
-                var userInfos = userInfoRepository.GetsUserInfos();                
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(userInfos));
+                var userInfos = userInfoRepository.GetsUserInfos();
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(userInfos));                
                 return response;
+
+
+                //var userInfos = userInfoRepository.GetsUserInfos().ToList();                
+                //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, userInfos);
+                //return response;
             }
         }
     }
