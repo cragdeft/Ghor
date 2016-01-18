@@ -55,6 +55,14 @@
     @Scripts.Render("~/bundles/bootstrap")
 
     <script>
+        @functions{
+            public string TokenHeaderValue()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + ":" + formToken;
+            }
+        }
         $(document).ready(function () {
             var apiBaseUrl = "http://localhost:23023/";
 
@@ -64,8 +72,13 @@
                 var Password = $('#Password').val();
                 $('#updatePanel').html('');
                 $.ajax({
-                    url: apiBaseUrl + 'api/IsValidUser/' + Username,
-                    type: 'GET',
+                    url: apiBaseUrl + 'api/users',
+                    //url: apiBaseUrl + 'api/IsValidUser/' + Username,
+                    headers: {
+                        'RequestVerificationToken': '@TokenHeaderValue()'
+                    },
+                  
+                    type: 'POST',
                     dataType: 'json',
                     success: function (data) {
                         var $p = $('<p/>').addClass('text-danger');

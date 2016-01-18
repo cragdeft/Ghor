@@ -9,6 +9,7 @@ using SmartHome.Model.Models;
 using SmartHome.Repository.Repositories;
 using SmartHome.Service.Interfaces;
 using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.WebAPI.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         [Route("api/users")]
         public HttpResponseMessage Post()
         {
@@ -78,47 +79,6 @@ namespace SmartHome.WebAPI.Controllers
     }
 
 
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class ValidateAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
-    {
-        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
-        {
-            try
-            {
-                string cookieToken = "";
-                string formToken = "";
-
-                IEnumerable<string> tokenHeaders;
-                if (actionContext.Request.Headers.TryGetValues("RequestVerificationToken", out tokenHeaders))
-                {
-                    string[] tokens = tokenHeaders.First().Split(':');
-                    if (tokens.Length == 2)
-                    {
-                        cookieToken = tokens[0].Trim();
-                        formToken = tokens[1].Trim();
-                    }
-                }
-                AntiForgery.Validate(cookieToken, formToken);
-            }
-            catch (System.Web.Mvc.HttpAntiForgeryException e)
-            {
-                actionContext.Response = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.Forbidden,
-                    RequestMessage = actionContext.ControllerContext.Request
-                };
-                return FromResult(actionContext.Response);
-            }
-            return continuation();
-        }
-
-        private Task<HttpResponseMessage> FromResult(HttpResponseMessage result)
-        {
-            var source = new TaskCompletionSource<HttpResponseMessage>();
-            source.SetResult(result);
-            return source.Task;
-        }
-    }
 }
 
 
