@@ -9,12 +9,20 @@ using System.Threading.Tasks;
 namespace SmartHome.Repository.Repositories
 {
     public static class UserInfoRepository
-    {       
+    {
         public static IEnumerable<UserInfo> GetsUserInfos(this IRepositoryAsync<UserInfo> repository)
         {
             return repository
-                .Queryable()                
+                .Queryable()
                 .AsEnumerable();
+        }
+
+        public static bool UserValidatyCheckByUserName(this IRepositoryAsync<UserInfo> repository, string userName)
+        {
+            return repository
+                .Queryable()
+                .Where(u => u.UserName == userName)
+                .AsEnumerable().Count() == 0 ? false : true;
         }
     }
 }

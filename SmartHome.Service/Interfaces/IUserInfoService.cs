@@ -12,6 +12,8 @@ namespace SmartHome.Service.Interfaces
     public interface IUserInfoService : IService<UserInfo>
     {        
         IEnumerable<UserInfo> GetsUserInfos();
-        
+        bool UserValidatyCheckByUserName(string userName);
+
+
     }
 }

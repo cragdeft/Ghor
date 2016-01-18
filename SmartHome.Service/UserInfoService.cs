@@ -26,6 +26,9 @@ namespace SmartHome.Service
             
         }
 
-      
+        public bool UserValidatyCheckByUserName(string userName)
+        {
+            return _repository.UserValidatyCheckByUserName(userName);
+        }
     }
 }
