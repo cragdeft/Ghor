@@ -23,6 +23,7 @@ namespace SmartHome.Web.Controllers
             this._userInfoService = userInfoService;
         }
 
+        #region Login
         public ActionResult Login()
         {
             return View();
@@ -41,25 +42,7 @@ namespace SmartHome.Web.Controllers
 
                 if (user != null)
                 {
-                    var roles = user.WebPagesRoles.Select(p => p.RoleName).ToArray();
-                    CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
-                    serializeModel.UserId = user.UserInfoId;
-                    serializeModel.FirstName = user.FirstName;
-                    serializeModel.LastName = user.LastName;
-                    serializeModel.roles = roles;
-
-                    string userData = JsonConvert.SerializeObject(serializeModel);
-                    FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
-                             1,
-                            user.Email,
-                             DateTime.Now,
-                             DateTime.Now.AddMinutes(15),
-                             model.RememberMe,
-                             userData);
-
-                    string encTicket = FormsAuthentication.Encrypt(authTicket);                    
-                    HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                    Response.Cookies.Add(faCookie);
+                    SetCookieInfomation(model, user);
                     return Redirect(returnUrl);
                 }
 
@@ -67,7 +50,39 @@ namespace SmartHome.Web.Controllers
             }
             ModelState.Remove("Password");
             return View(model);
+        } 
+        #endregion
+
+        #region Cookie infomations
+
+        private void SetCookieInfomation(LoginEntity model, Model.Models.UserInfo user)
+        {
+            var roles = user.WebPagesRoles.Select(p => p.RoleName).ToArray();
+            CustomPrincipalSerializeModel serializeModel = FillCookieSerializedInformation(user, roles);
+
+            string userData = JsonConvert.SerializeObject(serializeModel);
+            FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
+                     1,
+                    user.Email,
+                     DateTime.Now,
+                     DateTime.Now.AddMinutes(15),
+                     model.RememberMe,
+                     userData);
+            string encTicket = FormsAuthentication.Encrypt(authTicket);
+            HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+            Response.Cookies.Add(faCookie);
         }
+
+        private static CustomPrincipalSerializeModel FillCookieSerializedInformation(Model.Models.UserInfo user, string[] roles)
+        {
+            CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
+            serializeModel.UserId = user.UserInfoId;
+            serializeModel.FirstName = user.FirstName;
+            serializeModel.LastName = user.LastName;
+            serializeModel.roles = roles;
+            return serializeModel;
+        } 
+        #endregion
 
         [AllowAnonymous]
         public ActionResult LogOut()
