@@ -32,6 +32,9 @@ namespace SmartHome.Model.Models
         public MeshModeType MeshMode { get; set; }
         public string Phone { get; set; }
         public string PassPhrase { get; set; }
+        public bool IsInternet { get; set; }
+
+        
         #endregion
 
         #region Complex Properties
