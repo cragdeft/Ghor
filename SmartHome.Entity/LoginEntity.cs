@@ -16,6 +16,8 @@ namespace SmartHome.Entity
         [Required(ErrorMessage = "Password required.", AllowEmptyStrings = false)]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
         #endregion
     }

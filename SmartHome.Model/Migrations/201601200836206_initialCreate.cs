@@ -41,6 +41,7 @@ namespace SmartHome.Model.Migrations
                         IsDefault = c.Boolean(nullable: false),
                         MeshMode = c.Int(nullable: false),
                         Phone = c.String(),
+                        PassPhrase = c.String(),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -221,6 +222,16 @@ namespace SmartHome.Model.Migrations
                 .Index(t => t.UserInfo_UserInfoId);
             
             CreateTable(
+                "dbo.WebPagesRoles",
+                c => new
+                    {
+                        RoleId = c.Int(nullable: false, identity: true),
+                        RoleName = c.String(nullable: false),
+                        Description = c.String(),
+                    })
+                .PrimaryKey(t => t.RoleId);
+            
+            CreateTable(
                 "dbo.SmartRouters",
                 c => new
                     {
@@ -278,6 +289,19 @@ namespace SmartHome.Model.Migrations
                     })
                 .PrimaryKey(t => t.VersionId);
             
+            CreateTable(
+                "dbo.UserRoles",
+                c => new
+                    {
+                        UserInfoId = c.Int(nullable: false),
+                        RoleId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.UserInfoId, t.RoleId })
+                .ForeignKey("dbo.UserInfoes", t => t.UserInfoId, cascadeDelete: true)
+                .ForeignKey("dbo.WebPagesRoles", t => t.RoleId, cascadeDelete: true)
+                .Index(t => t.UserInfoId)
+                .Index(t => t.RoleId);
+            
         }
         
         public override void Down()
@@ -285,6 +309,8 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.VersionDetails", "Version_VersionId", "dbo.Versions");
             DropForeignKey("dbo.Addresses", "Home_HomeId", "dbo.Homes");
             DropForeignKey("dbo.SmartRouters", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.UserRoles", "RoleId", "dbo.WebPagesRoles");
+            DropForeignKey("dbo.UserRoles", "UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserTypes", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserStatus", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.SyncStatus", "UserProfile_UserInfoId", "dbo.UserInfoes");
@@ -294,6 +320,8 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.Devices", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.DeviceStatus", "Device_DeviceId", "dbo.Devices");
             DropForeignKey("dbo.Channels", "Device_DeviceId", "dbo.Devices");
+            DropIndex("dbo.UserRoles", new[] { "RoleId" });
+            DropIndex("dbo.UserRoles", new[] { "UserInfoId" });
             DropIndex("dbo.VersionDetails", new[] { "Version_VersionId" });
             DropIndex("dbo.SmartRouters", new[] { "Home_HomeId" });
             DropIndex("dbo.UserTypes", new[] { "UserInfo_UserInfoId" });
@@ -306,9 +334,11 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.Rooms", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
+            DropTable("dbo.UserRoles");
             DropTable("dbo.Versions");
             DropTable("dbo.VersionDetails");
             DropTable("dbo.SmartRouters");
+            DropTable("dbo.WebPagesRoles");
             DropTable("dbo.UserTypes");
             DropTable("dbo.UserStatus");
             DropTable("dbo.UserInfoes");
