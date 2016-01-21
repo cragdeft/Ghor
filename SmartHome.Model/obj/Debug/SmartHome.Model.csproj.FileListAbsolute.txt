@@ -60,7 +60,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
-C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
-C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
+C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache

@@ -42,6 +42,8 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<UserStatus> UserStatuses { get; set; }        
         public IDbSet<WebPagesRole> WebPagesRoles { get; set; }
 
+        public IDbSet<TestTable> TestTables { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserInfo>()
@@ -59,9 +61,9 @@ namespace SmartHome.Model.ModelDataContext
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
         }
 
-        //public void ExecuteCommand(string command, params object[] parameters)
-        //{
-        //    base.Database.ExecuteSqlCommand(command, parameters);
-        //}
+        public void ExecuteCommand(string command, params object[] parameters)
+        {
+            base.Database.ExecuteSqlCommand(command, parameters);
+        }
     }
 }

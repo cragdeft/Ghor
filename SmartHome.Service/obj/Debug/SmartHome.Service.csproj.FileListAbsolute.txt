@@ -66,6 +66,7 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Entity.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Repository.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\AutoMapper.xml
+C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\EntityFramework.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\Newtonsoft.Json.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll

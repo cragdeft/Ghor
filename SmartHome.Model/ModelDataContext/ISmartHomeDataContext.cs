@@ -11,6 +11,6 @@ namespace SmartHome.Model.ModelDataContext
     {
         IDbSet<T> Set<T>() where T : class;
         int SaveChanges();
-        //void ExecuteCommand(string command, params object[] parameters);
+        void ExecuteCommand(string command, params object[] parameters);
     }
 }

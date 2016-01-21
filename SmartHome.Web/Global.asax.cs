@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using SmartHome.Model.ModelDataContext;
 using SmartHome.MQTT.Client;
 using SmartHome.Web.Filters;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
