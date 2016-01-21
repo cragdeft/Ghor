@@ -15,21 +15,23 @@ namespace SmartHome.Model.Migrations
 
         protected override void Seed(SmartHome.Model.ModelDataContext.SmartHomeDataContext context)
         {
-#if DEBUG
+
+
             //WebPagesRole role1 = new WebPagesRole { RoleName = "Admin" }; DbMigrationsConfiguration
             // WebPagesRole role2 = new WebPagesRole { RoleName = "User" };
             //UserInfo user1 = new UserInfo { UserName = "a", Email = "admin@ymail.com", FirstName = "Admin", LastName = "User", IsSMSRecipient = false, IsEmailRecipient = false, DateOfBirth = DateTime.Now, Password = "123", IsActive = true };
 
 
 
-            context.TestTables.AddOrUpdate(p => p.Name, new TestTable { Name = "test" });
+            context.TestTables.AddOrUpdate(p => p.Name, new TestTable { Name = "test", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added });
 
             //context.WebPagesRoles.AddOrUpdate(p => p.RoleName, new WebPagesRole { RoleName = "Admin" });
 
             //context.UserInfos.AddOrUpdate(p => p.FirstName,
             //    new UserInfo { UserName = "a", Email = "admin@ymail.com", FirstName = "Admin", LastName = "User", IsSMSRecipient = false, IsEmailRecipient = false, DateOfBirth = DateTime.Now, Password = "123", IsActive = true }     );
             // user1.WebPagesRoles.Add(role1);
-#endif
+
+
             context.SaveChanges();
 
         }
