@@ -69,7 +69,6 @@
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SmartRouter.cs" />
     <Compile Include="Models\SyncStatus.cs" />
-    <Compile Include="Models\TestTable.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Models\UserType.cs" />

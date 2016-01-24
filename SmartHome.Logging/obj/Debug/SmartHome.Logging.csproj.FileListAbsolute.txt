@@ -21,3 +21,4 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\Elmah.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb
+C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.csprojResolveAssemblyReference.cache

@@ -37,7 +37,7 @@ namespace SmartHome.Model.ModelDataContext
 
 
 
-            context.TestTables.AddOrUpdate(p => p.Name, new TestTable { Name = "test", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added });
+            //context.TestTables.AddOrUpdate(p => p.Name, new TestTable { Name = "test", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added });
 
             //context.WebPagesRoles.AddOrUpdate(p => p.RoleName, new WebPagesRole { RoleName = "Admin" });
 
