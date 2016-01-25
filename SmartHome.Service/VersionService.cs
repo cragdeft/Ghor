@@ -62,6 +62,20 @@ namespace SmartHome.Service
             return entity;
         }
 
+        public IEnumerable<Version> AddOrUpdateGraph(IEnumerable<Version> model)
+        {
+
+            foreach (var item in model)
+            {
+                base.InsertOrUpdateGraph(item);
+            }           
+           
+            return model;
+        }
+
+
+       
+
         public VersionEntity Modify(VersionEntity entity)
         {
             try

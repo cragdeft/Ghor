@@ -1,4 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,10 @@ namespace SmartHome.Model.Models
         public int Id { get; set; }
         public string VId { get; set; }
         public string HardwareVersion { get; set; }
+
+        public string DType { get; set; }
+        public DeviceType? DeviceType { get; set; }
+
         #endregion
 
         #region Complex Properties

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Repository.Pattern.DataContext;
 using Repository.Pattern.Ef6;
@@ -8,52 +9,80 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
+using SmartHome.Service;
+using SmartHome.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartHome.Json
 {
-    public static class JsonManager
+    public class JsonManager
     {
-        public static void JsonProcess(string JsonString)
+
+        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+        private readonly IVersionService _versionService;
+        private readonly IDeviceService _deviceService;
+
+        public JsonManager()
+        {
+            IUnityContainer container = new UnityContainer();
+            container.RegisterType<IDataContextAsync, SmartHomeDataContext>();
+            container.RegisterType<IUnitOfWorkAsync, UnitOfWork>();
+
+            container.RegisterType<IVersionService, VersionService>();
+            container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
+
+            container.RegisterType<IDeviceService, DeviceService>();
+            container.RegisterType<IRepositoryAsync<Model.Models.Device>, Repository<Model.Models.Device>>();
+
+            this._unitOfWorkAsync = container.Resolve<IUnitOfWorkAsync>();
+            this._versionService = container.Resolve<IVersionService>();
+            this._deviceService = container.Resolve<IDeviceService>();
+        }
+
+        public void JsonProcess(string JsonString)
         {
             try
             {
 
-                RootObjectEntity  oRootObject = JsonDesrialized(JsonString);
+                RootObjectEntity oRootObject = JsonDesrialized(JsonString);
 
                 IEnumerable<Model.Models.Version> oVersion = ConfigureVersion(oRootObject);
                 IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
-                StoreVersionAndVersionDetail(oVersion, oVersionDetail);
-
+                MergeVersionAndVersionDetail(oVersion, oVersionDetail);
+                StoreVersionAndVersionDetail(oVersion);
 
                 IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
                 IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
-                StoreDeviceAndChannel(oDevice, oChannel, oDeviceStatus);
+                MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oDeviceStatus);
+                StoreDeviceAndChannel(oDevice);
+
             }
             catch (Exception ex)
             {
 
-                throw;
             }
         }
 
 
+
+
+
         #region Version Conversion
-        private static IEnumerable<Model.Models.VersionDetail> ConfigureVersionDetail(RootObjectEntity oRootObject)
+        private IEnumerable<Model.Models.VersionDetail> ConfigureVersionDetail(RootObjectEntity oRootObject)
         {
             Mapper.CreateMap<VersionDetailEntity, Model.Models.VersionDetail>()
             //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
-           // .ForMember(dest => dest.VId, opt => opt.MapFrom(src => src.VersionID));
+                                                                                         // .ForMember(dest => dest.VId, opt => opt.MapFrom(src => src.VersionID));
             IEnumerable<Model.Models.VersionDetail> oVersionDetail = Mapper.Map<IEnumerable<Entity.VersionDetailEntity>, IEnumerable<Model.Models.VersionDetail>>(oRootObject.VersionDetails);
             return oVersionDetail;
         }
 
-        private static IEnumerable<Model.Models.Version> ConfigureVersion(RootObjectEntity myObj)
+        private IEnumerable<Model.Models.Version> ConfigureVersion(RootObjectEntity myObj)
         {
             Mapper.CreateMap<VersionEntity, Model.Models.Version>()
                         //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
@@ -68,8 +97,36 @@ namespace SmartHome.Json
         #endregion
 
 
+        #region Merge
+
+        private void MergeVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion, IEnumerable<VersionDetail> oVersionDetail)
+        {
+            foreach (var item in oVersion)
+            {
+                item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
+            }
+        }
+
+        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel, IEnumerable<DeviceStatus> oDeviceStatus)
+        {
+
+            foreach (var item in oDevice)
+            {
+                item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+            }
+
+
+        }
+
+
+
+
+        #endregion
+
+
         #region Device conversion
-        private static IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
+        private IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
         {
             Mapper.CreateMap<DeviceEntity, Model.Models.Device>()
             //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
@@ -83,7 +140,7 @@ namespace SmartHome.Json
             return oDevice;
         }
 
-        private static IEnumerable<Model.Models.Channel> ConfigureChannel(RootObjectEntity myObj)
+        private IEnumerable<Model.Models.Channel> ConfigureChannel(RootObjectEntity myObj)
         {
 
             Mapper.CreateMap<ChannelEntity, Model.Models.Channel>()
@@ -97,7 +154,7 @@ namespace SmartHome.Json
             return oDevice;
         }
 
-        private static IEnumerable<Model.Models.DeviceStatus> ConfigureDeviceStatus(RootObjectEntity myObj)
+        private IEnumerable<Model.Models.DeviceStatus> ConfigureDeviceStatus(RootObjectEntity myObj)
         {
             Mapper.CreateMap<DeviceStatusEntity, Model.Models.DeviceStatus>()
             //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
@@ -110,51 +167,46 @@ namespace SmartHome.Json
         #endregion
 
         #region Store
-        private static void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice, IEnumerable<Model.Models.Channel> oChannel, IEnumerable<Model.Models.DeviceStatus> oDeviceStatus)
+        private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice)
         {
 
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+
+            _unitOfWorkAsync.BeginTransaction();
+            try
             {
-                foreach (var item in oDevice)
-                {
-                    IRepositoryAsync<Model.Models.Device> versionRepository = new Repository<Model.Models.Device>(context, unitOfWork);
-                    item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                    item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
-                    versionRepository.InsertOrUpdateGraph(item);
-                    unitOfWork.SaveChanges();
-                }
+                _deviceService.AddOrUpdateGraph(oDevice);
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWorkAsync.Rollback();
             }
 
         }
 
-        private static void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion, IEnumerable<Model.Models.VersionDetail> oVersionDetail)
+        private async void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
         {
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            _unitOfWorkAsync.BeginTransaction();
+            try
             {
-                foreach (var item in oVersion)
-                {
-                    IRepositoryAsync<Model.Models.Version> versionRepository = new Repository<Model.Models.Version>(context, unitOfWork);
-                    item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
-                    versionRepository.InsertOrUpdateGraph(item);
-                    unitOfWork.SaveChanges();
-                }
+                _versionService.AddOrUpdateGraph(oVersion);
+                var changes = await _unitOfWorkAsync.SaveChangesAsync();
+                _unitOfWorkAsync.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWorkAsync.Rollback();
             }
         }
         #endregion
 
-        private static RootObjectEntity JsonDesrialized(string JsonString)
+        private RootObjectEntity JsonDesrialized(string JsonString)
         {
             return JsonConvert.DeserializeObject<RootObjectEntity>(JsonString);
         }
-
-
-
-
-
-
-
 
     }
 }

@@ -17,6 +17,7 @@ namespace SmartHome.Service.Interfaces
         Task<VersionEntity> GetAsync(int id);
 
         VersionEntity Add(VersionEntity model);
+        IEnumerable<Version> AddOrUpdateGraph(IEnumerable<Version> model);
         VersionEntity Modify(VersionEntity model);
         void Remove(string id);
         void Remove(VersionEntity entity);

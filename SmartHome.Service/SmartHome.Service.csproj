@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeviceService.cs" />
+    <Compile Include="Interfaces\IDeviceService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
