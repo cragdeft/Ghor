@@ -17,15 +17,13 @@ namespace SmartHome.MQTT.Client
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
-            //BrokerAddress= ConfigurationManager.AppSettings[" BrokerAddress"].ToString();
-
         }
 
         public static void MakeConnection(string brokerAddress) // the global controlled variable
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.11.109")
+                if (brokerAddress == "192.168.11.112")
                 {
                     SmartHomeMQTT = new MqttClient(brokerAddress);
                     SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
@@ -104,14 +102,11 @@ namespace SmartHome.MQTT.Client
 
         public static void client_MqttMsgUnsubscribed(object sender, MqttMsgUnsubscribedEventArgs e)
         {
-            //ushort msgId = e.MessageId;
-            // write your code
             ClientResponce = "Success";
         }
 
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            //Debug.WriteLine("Received = " + Encoding.UTF8.GetString(e.Message) + " on topic " + e.Topic);
             new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
         }
 

@@ -26,21 +26,7 @@ namespace SmartHome.Json
 
         public JsonManager()
         {
-            //IUnityContainer container = new UnityContainer();
-            //container.RegisterType<IDataContextAsync, SmartHomeDataContext>();
-            //container.RegisterType<IUnitOfWorkAsync, UnitOfWork>();
-
-            //container.RegisterType<IVersionService, VersionService>();
-            //container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
-
-            //container.RegisterType<IDeviceService, DeviceService>();
-            //container.RegisterType<IRepositoryAsync<Model.Models.Device>, Repository<Model.Models.Device>>();
-
-            //this._unitOfWorkAsync = container.Resolve<IUnitOfWorkAsync>();
-            //this._versionService = container.Resolve<IVersionService>();
-            //this._deviceService = container.Resolve<IDeviceService>();
-
-            IDataContextAsync context = new SmartHomeDataContext ();
+            IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
 
             IRepositoryAsync<Model.Models.Version> versionrepo = new Repository<Model.Models.Version>(context, _unitOfWorkAsync);
@@ -76,9 +62,6 @@ namespace SmartHome.Json
         }
 
 
-
-
-
         #region Version Conversion
         private IEnumerable<Model.Models.VersionDetail> ConfigureVersionDetail(RootObjectEntity oRootObject)
         {
@@ -105,7 +88,6 @@ namespace SmartHome.Json
 
         #endregion
 
-
         #region Merge
 
         private void MergeVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion, IEnumerable<VersionDetail> oVersionDetail)
@@ -114,22 +96,18 @@ namespace SmartHome.Json
             {
                 item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
             }
+
+            //oVersion.ToList().ForEach(p => p.VersionDetails = oVersionDetail.Where(q => q.VId == p.Id).ToList());
         }
 
         private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel, IEnumerable<DeviceStatus> oDeviceStatus)
         {
-
             foreach (var item in oDevice)
             {
                 item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
                 item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
             }
-
-
         }
-
-
-
 
         #endregion
 
@@ -178,8 +156,6 @@ namespace SmartHome.Json
         #region Store
         private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice)
         {
-
-
             _unitOfWorkAsync.BeginTransaction();
             try
             {
@@ -192,7 +168,6 @@ namespace SmartHome.Json
             {
                 _unitOfWorkAsync.Rollback();
             }
-
         }
 
         private async void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)

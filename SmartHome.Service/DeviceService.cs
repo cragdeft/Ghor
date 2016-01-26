@@ -22,14 +22,10 @@ namespace SmartHome.Service
             //Mapper.CreateMap<VersionEntity, Version>();
         }
 
-        public IEnumerable<Device> AddOrUpdateGraph(IEnumerable<Device> model)
+        public void AddOrUpdateGraph(IEnumerable<Device> model)
         {
-            foreach (var item in model)
-            {
-                base.InsertOrUpdateGraph(item);
-            }
-
-            return model;
+            base.InsertGraphRange(model);
+           
         }
     }
 }
