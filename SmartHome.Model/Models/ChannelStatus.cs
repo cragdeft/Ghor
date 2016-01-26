@@ -9,26 +9,26 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class Version : Entity
+    public class ChannelStatus : Entity
     {
-        #region Primitive Properties
+        #region  Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int VersionId { get; set; }
-        public string Id { get; set; }
-        public string AppName { get; set; }
-        public string AppVersion { get; set; }
-        public string AuthCode { get; set; }
-        public string PassPhrase { get; set; }
-        public string Mac { get; set; }
+        public int ChannelStatusId { get; set; }
+        public int Id { get; set; }
+        public int DId { get; set; }
+        public int ChannelNo { get; set; }
+        public int Status { get; set; }
+        public int Value { get; set; }
         #endregion
 
         #region Complex Properties
         public AuditFields AuditField { get; set; }
         #endregion
 
-        #region Navigation Properties
-        public virtual ICollection<VersionDetail> VersionDetails { get; set; }         
+        #region  Navigation Properties
+        public virtual Channel Channel { get; set; }
         #endregion
+
     }
 }

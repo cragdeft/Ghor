@@ -20,8 +20,8 @@ namespace SmartHome.Model.Models
         public int DId { get; set; }
         public int ChannelNo { get; set; }
         public string LoadName { get; set; }
-        public int Status { get; set; }
-        public int Value { get; set; }
+        //public int Status { get; set; }
+        //public int Value { get; set; }
         public LoadType? LoadType { get; set; }
         #endregion
 
@@ -31,6 +31,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties
         //public virtual Device Device { get; set; }
+        public virtual ICollection<ChannelStatus> ChannelStatuses { get; set; }
         #endregion
 
     }

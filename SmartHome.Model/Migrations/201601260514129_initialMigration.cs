@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialCreate : DbMigration
+    public partial class initialMigration : DbMigration
     {
         public override void Up()
         {
@@ -39,6 +39,7 @@ namespace SmartHome.Model.Migrations
                         Comment = c.String(),
                         IsActive = c.Boolean(nullable: false),
                         IsDefault = c.Boolean(nullable: false),
+                        IsAdmin = c.Boolean(nullable: false),
                         MeshMode = c.Int(nullable: false),
                         Phone = c.String(),
                         PassPhrase = c.String(),
@@ -83,6 +84,7 @@ namespace SmartHome.Model.Migrations
                         DeviceHash = c.String(),
                         DeviceVersion = c.String(),
                         IsDeleted = c.Int(nullable: false),
+                        Watt = c.String(),
                         Mac = c.String(),
                         DType = c.String(),
                         DeviceType = c.Int(),
@@ -105,8 +107,6 @@ namespace SmartHome.Model.Migrations
                         DId = c.Int(nullable: false),
                         ChannelNo = c.Int(nullable: false),
                         LoadName = c.String(),
-                        Status = c.Int(nullable: false),
-                        Value = c.Int(nullable: false),
                         LoadType = c.Int(),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
@@ -117,6 +117,26 @@ namespace SmartHome.Model.Migrations
                 .PrimaryKey(t => t.ChannelId)
                 .ForeignKey("dbo.Devices", t => t.Device_DeviceId)
                 .Index(t => t.Device_DeviceId);
+            
+            CreateTable(
+                "dbo.ChannelStatus",
+                c => new
+                    {
+                        ChannelStatusId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
+                        DId = c.Int(nullable: false),
+                        ChannelNo = c.Int(nullable: false),
+                        Status = c.Int(nullable: false),
+                        Value = c.Int(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Channel_ChannelId = c.Int(),
+                    })
+                .PrimaryKey(t => t.ChannelStatusId)
+                .ForeignKey("dbo.Channels", t => t.Channel_ChannelId)
+                .Index(t => t.Channel_ChannelId);
             
             CreateTable(
                 "dbo.DeviceStatus",
@@ -255,15 +275,6 @@ namespace SmartHome.Model.Migrations
                 .Index(t => t.Home_HomeId);
             
             CreateTable(
-                "dbo.TestTables",
-                c => new
-                    {
-                        TestTableId = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                    })
-                .PrimaryKey(t => t.TestTableId);
-            
-            CreateTable(
                 "dbo.VersionDetails",
                 c => new
                     {
@@ -271,6 +282,8 @@ namespace SmartHome.Model.Migrations
                         Id = c.Int(nullable: false),
                         VId = c.String(),
                         HardwareVersion = c.String(),
+                        DType = c.String(),
+                        DeviceType = c.Int(),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -291,13 +304,26 @@ namespace SmartHome.Model.Migrations
                         AppVersion = c.String(),
                         AuthCode = c.String(),
                         PassPhrase = c.String(),
-                        MAC = c.String(),
+                        Mac = c.String(),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
                         AuditField_LastUpdatedDateTime = c.DateTime(),
                     })
                 .PrimaryKey(t => t.VersionId);
+            
+            CreateTable(
+                "dbo.UserInfoHomes",
+                c => new
+                    {
+                        UserInfo_UserInfoId = c.Int(nullable: false),
+                        Home_HomeId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.UserInfo_UserInfoId, t.Home_HomeId })
+                .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId, cascadeDelete: true)
+                .ForeignKey("dbo.Homes", t => t.Home_HomeId, cascadeDelete: true)
+                .Index(t => t.UserInfo_UserInfoId)
+                .Index(t => t.Home_HomeId);
             
             CreateTable(
                 "dbo.UserRoles",
@@ -325,13 +351,18 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.UserStatus", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.SyncStatus", "UserProfile_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.Rooms", "UserInfo_UserInfoId", "dbo.UserInfoes");
+            DropForeignKey("dbo.UserInfoHomes", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.UserInfoHomes", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.SyncStatus", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.Rooms", "Home_HomeId", "dbo.Homes");
             DropForeignKey("dbo.Devices", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.DeviceStatus", "Device_DeviceId", "dbo.Devices");
             DropForeignKey("dbo.Channels", "Device_DeviceId", "dbo.Devices");
+            DropForeignKey("dbo.ChannelStatus", "Channel_ChannelId", "dbo.Channels");
             DropIndex("dbo.UserRoles", new[] { "RoleId" });
             DropIndex("dbo.UserRoles", new[] { "UserInfoId" });
+            DropIndex("dbo.UserInfoHomes", new[] { "Home_HomeId" });
+            DropIndex("dbo.UserInfoHomes", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.VersionDetails", new[] { "Version_VersionId" });
             DropIndex("dbo.SmartRouters", new[] { "Home_HomeId" });
             DropIndex("dbo.UserTypes", new[] { "UserInfo_UserInfoId" });
@@ -339,15 +370,16 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.SyncStatus", new[] { "UserProfile_UserInfoId" });
             DropIndex("dbo.SyncStatus", new[] { "Room_RoomId" });
             DropIndex("dbo.DeviceStatus", new[] { "Device_DeviceId" });
+            DropIndex("dbo.ChannelStatus", new[] { "Channel_ChannelId" });
             DropIndex("dbo.Channels", new[] { "Device_DeviceId" });
             DropIndex("dbo.Devices", new[] { "Room_RoomId" });
             DropIndex("dbo.Rooms", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
             DropTable("dbo.UserRoles");
+            DropTable("dbo.UserInfoHomes");
             DropTable("dbo.Versions");
             DropTable("dbo.VersionDetails");
-            DropTable("dbo.TestTables");
             DropTable("dbo.SmartRouters");
             DropTable("dbo.WebPagesRoles");
             DropTable("dbo.UserTypes");
@@ -355,6 +387,7 @@ namespace SmartHome.Model.Migrations
             DropTable("dbo.UserInfoes");
             DropTable("dbo.SyncStatus");
             DropTable("dbo.DeviceStatus");
+            DropTable("dbo.ChannelStatus");
             DropTable("dbo.Channels");
             DropTable("dbo.Devices");
             DropTable("dbo.Rooms");
