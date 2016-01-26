@@ -41,13 +41,13 @@ namespace SmartHome.Json
             //this._deviceService = container.Resolve<IDeviceService>();
 
             IDataContextAsync context = new SmartHomeDataContext ();
-            IUnitOfWorkAsync _unitOfWorkAsync = new UnitOfWork(context);
+            _unitOfWorkAsync = new UnitOfWork(context);
 
             IRepositoryAsync<Model.Models.Version> versionrepo = new Repository<Model.Models.Version>(context, _unitOfWorkAsync);
             IRepositoryAsync<Model.Models.Device> deviceRepo = new Repository<Model.Models.Device>(context, _unitOfWorkAsync);
 
-            IVersionService _versionService = new VersionService(versionrepo);
-            IDeviceService _deviceService = new DeviceService(deviceRepo);
+            _versionService = new VersionService(versionrepo);
+            _deviceService = new DeviceService(deviceRepo);
         }
 
         public void JsonProcess(string JsonString)
