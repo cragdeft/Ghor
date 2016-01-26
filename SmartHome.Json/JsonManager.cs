@@ -26,19 +26,28 @@ namespace SmartHome.Json
 
         public JsonManager()
         {
-            IUnityContainer container = new UnityContainer();
-            container.RegisterType<IDataContextAsync, SmartHomeDataContext>();
-            container.RegisterType<IUnitOfWorkAsync, UnitOfWork>();
+            //IUnityContainer container = new UnityContainer();
+            //container.RegisterType<IDataContextAsync, SmartHomeDataContext>();
+            //container.RegisterType<IUnitOfWorkAsync, UnitOfWork>();
 
-            container.RegisterType<IVersionService, VersionService>();
-            container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
+            //container.RegisterType<IVersionService, VersionService>();
+            //container.RegisterType<IRepositoryAsync<Model.Models.Version>, Repository<Model.Models.Version>>();
 
-            container.RegisterType<IDeviceService, DeviceService>();
-            container.RegisterType<IRepositoryAsync<Model.Models.Device>, Repository<Model.Models.Device>>();
+            //container.RegisterType<IDeviceService, DeviceService>();
+            //container.RegisterType<IRepositoryAsync<Model.Models.Device>, Repository<Model.Models.Device>>();
 
-            this._unitOfWorkAsync = container.Resolve<IUnitOfWorkAsync>();
-            this._versionService = container.Resolve<IVersionService>();
-            this._deviceService = container.Resolve<IDeviceService>();
+            //this._unitOfWorkAsync = container.Resolve<IUnitOfWorkAsync>();
+            //this._versionService = container.Resolve<IVersionService>();
+            //this._deviceService = container.Resolve<IDeviceService>();
+
+            IDataContextAsync context = new SmartHomeDataContext ();
+            IUnitOfWorkAsync _unitOfWorkAsync = new UnitOfWork(context);
+
+            IRepositoryAsync<Model.Models.Version> versionrepo = new Repository<Model.Models.Version>(context, _unitOfWorkAsync);
+            IRepositoryAsync<Model.Models.Device> deviceRepo = new Repository<Model.Models.Device>(context, _unitOfWorkAsync);
+
+            IVersionService _versionService = new VersionService(versionrepo);
+            IDeviceService _deviceService = new DeviceService(deviceRepo);
         }
 
         public void JsonProcess(string JsonString)
