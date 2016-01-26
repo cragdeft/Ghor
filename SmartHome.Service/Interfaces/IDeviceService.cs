@@ -10,6 +10,6 @@ namespace SmartHome.Service.Interfaces
 {
     public interface IDeviceService : IService<Device>
     {
-        void AddOrUpdateGraph(IEnumerable<Device> model);
+        IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model);
     }
 }

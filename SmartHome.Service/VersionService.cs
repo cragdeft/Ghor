@@ -62,19 +62,11 @@ namespace SmartHome.Service
             return entity;
         }
 
-        public IEnumerable<Version> AddOrUpdateGraph(IEnumerable<Version> model)
+        public IEnumerable<Version> AddOrUpdateGraphRange(IEnumerable<Version> model)
         {
-
-            foreach (var item in model)
-            {
-                base.InsertOrUpdateGraph(item);
-            }           
-           
+            base.InsertGraphRange(model);
             return model;
         }
-
-
-       
 
         public VersionEntity Modify(VersionEntity entity)
         {
@@ -107,7 +99,7 @@ namespace SmartHome.Service
             base.Delete(model);
         }
 
-       
+
 
 
     }

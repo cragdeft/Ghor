@@ -159,7 +159,7 @@ namespace SmartHome.Json
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                _deviceService.AddOrUpdateGraph(oDevice);
+                _deviceService.AddOrUpdateGraphRange(oDevice);
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
 
@@ -175,7 +175,7 @@ namespace SmartHome.Json
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                _versionService.AddOrUpdateGraph(oVersion);
+                _versionService.AddOrUpdateGraphRange(oVersion);
                 var changes = await _unitOfWorkAsync.SaveChangesAsync();
                 _unitOfWorkAsync.Commit();
 

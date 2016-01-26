@@ -14,7 +14,7 @@ namespace SmartHome.Service
 {
     public class DeviceService : Service<Device>, IDeviceService
     {
-         private readonly IRepositoryAsync<Device> _repository;
+        private readonly IRepositoryAsync<Device> _repository;
 
         public DeviceService(IRepositoryAsync<Device> repository) : base(repository)
         {
@@ -22,10 +22,10 @@ namespace SmartHome.Service
             //Mapper.CreateMap<VersionEntity, Version>();
         }
 
-        public void AddOrUpdateGraph(IEnumerable<Device> model)
+        public IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model)
         {
             base.InsertGraphRange(model);
-           
+            return model;
         }
     }
 }
