@@ -46,6 +46,7 @@ namespace SmartHome.Model.Models
         public virtual ICollection<UserType> UserTypes { get; set; }
         public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<UserStatus> UserStatuses { get; set; }
+        public virtual ICollection<Home> Homes { get; set; }
         //public virtual ICollection<Address> Addresses { get; set; }
         //public virtual Room Room { get; set; } 
         public virtual ICollection<WebPagesRole> WebPagesRoles { get; set; }

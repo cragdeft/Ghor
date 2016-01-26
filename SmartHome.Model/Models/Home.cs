@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class Home:Entity
+    public class Home : Entity
     {
         public Home()
         {
@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HomeId { get; set; }
         public string Name { get; set; }
-      
+
         public string TimeZone { get; set; }
         //public string RegistrationKey { get; set; }
         //public string HardwareId { get; set; }
@@ -29,12 +29,13 @@ namespace SmartHome.Model.Models
         public string Comment { get; set; }
         public bool IsActive { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsAdmin { get; set; }//used to defined which home admin is current user.
         public MeshModeType MeshMode { get; set; }
         public string Phone { get; set; }
         public string PassPhrase { get; set; }
         public bool IsInternet { get; set; }
 
-        
+
         #endregion
 
         #region Complex Properties
@@ -45,8 +46,10 @@ namespace SmartHome.Model.Models
         #region Navigation Properties
         //public virtual ICollection<Address> Addresses { get; set; }
         //public virtual ICollection<HomeVersion> HomeVersions { get; set; }        
+
+        public virtual ICollection<UserInfo> UserInfos { get; set; }
         public virtual ICollection<Room> Rooms { get; set; }
-        public virtual ICollection<SmartRouter> SmartRouters { get; set; } 
+        public virtual ICollection<SmartRouter> SmartRouters { get; set; }
         #endregion
     }
 }
