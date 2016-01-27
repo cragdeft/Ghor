@@ -64,3 +64,21 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.i
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\SmartHome.Model.dll.config
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\SmartHome.Model.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\SmartHome.Model.pdb
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Repository.Pattern.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\LinqKit.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.pdb
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Repository.Pattern.pdb
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.xml
+F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.dll
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCrate.resources
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache

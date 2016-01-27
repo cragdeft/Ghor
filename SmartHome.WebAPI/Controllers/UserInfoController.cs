@@ -86,6 +86,7 @@ namespace SmartHome.WebAPI.Controllers
             if (isEmailExists)
             {
                 UserInfo userinfo = new UserInfo();
+                userinfo.Email = Email;
                 //insert into DB
                 response = Request.CreateResponse(HttpStatusCode.OK, userinfo);
             }

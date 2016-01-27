@@ -25,3 +25,8 @@ C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pat
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb

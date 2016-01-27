@@ -55,3 +55,18 @@ C:\SmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\EntityFramework.xml
 C:\SmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Repository.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Repository.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Repository.Pattern.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Model.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\EntityFramework.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\LinqKit.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Model.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Repository.Pattern.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\EntityFramework.xml
+F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
+F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
