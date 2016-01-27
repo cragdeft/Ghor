@@ -25,3 +25,10 @@ C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pat
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
 C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
+C:\SmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.csprojResolveAssemblyReference.cache
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.csprojResolveAssemblyReference.cache
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
+C:\AplombSmart\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb

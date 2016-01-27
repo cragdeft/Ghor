@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChannelEntity.cs" />
+    <Compile Include="ChannelStatusEntity.cs" />
     <Compile Include="DeviceEntity.cs" />
     <Compile Include="DeviceStatusEntity.cs" />
     <Compile Include="LoginEntity.cs" />
+    <Compile Include="NextAssociatedDeviceEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootObjectEntity.cs" />
     <Compile Include="UserInfoEntity.cs" />

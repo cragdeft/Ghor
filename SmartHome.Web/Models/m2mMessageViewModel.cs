@@ -16,6 +16,7 @@ namespace SmartHome.Web.Models
         public string PublishMessageStatus { get; set; }
 
         [Display(Name = "Publish")]
+        [DataType(DataType.MultilineText)]
         public string PublishMessage { get; set; }
 
 
@@ -23,6 +24,7 @@ namespace SmartHome.Web.Models
         public string SubscriberMessage { get; set; }
 
         [Display(Name = "Status")]
+        [DataType(DataType.MultilineText)]
         public string SubscribehMessageStatus { get; set; }
 
         [Display(Name = "Responce")]
