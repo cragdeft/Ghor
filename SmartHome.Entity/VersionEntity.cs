@@ -11,7 +11,7 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties
         public int VersionId { get; set; }
-        [JsonProperty("ID")]
+        [JsonProperty("VId")]
         public int Id { get; set; }
         
         public string AppName { get; set; }
@@ -21,7 +21,5 @@ namespace SmartHome.Entity
         public string PassPhrase { get; set; }
         public string Mac { get; set; }
         #endregion
-
-
     }
 }

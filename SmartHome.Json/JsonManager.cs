@@ -50,8 +50,9 @@ namespace SmartHome.Json
 
                 IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
                 IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
+                IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
-                MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oDeviceStatus);
+                MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oChannelStatus, oDeviceStatus);
                 StoreDeviceAndChannel(oDevice);
 
             }
@@ -100,12 +101,17 @@ namespace SmartHome.Json
             //oVersion.ToList().ForEach(p => p.VersionDetails = oVersionDetail.Where(q => q.VId == p.Id).ToList());
         }
 
-        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel, IEnumerable<DeviceStatus> oDeviceStatus)
+        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel,IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
         {
+            foreach (var item in oChannel)
+            {
+                item.ChannelStatuses = oChannelStatus.Where(p => p.Id == item.Id).ToArray();
+            }
+
             foreach (var item in oDevice)
             {
                 item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.DeviceId).ToArray();
             }
         }
 
@@ -140,6 +146,17 @@ namespace SmartHome.Json
             IEnumerable<Model.Models.Channel> oDevice = Mapper.Map<IEnumerable<ChannelEntity>, IEnumerable<Model.Models.Channel>>(myObj.Channel);
             return oDevice;
         }
+
+        private IEnumerable<Model.Models.ChannelStatus> ConfigureChannelStatus(RootObjectEntity myObj)
+        {
+            Mapper.CreateMap<ChannelStatusEntity, Model.Models.ChannelStatus>()
+                   .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+                   .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
+            IEnumerable<Model.Models.ChannelStatus> oDevice = Mapper.Map<IEnumerable<ChannelStatusEntity>, IEnumerable<Model.Models.ChannelStatus>>(myObj.ChannelStatus);
+            return oDevice;
+        }
+
+
 
         private IEnumerable<Model.Models.DeviceStatus> ConfigureDeviceStatus(RootObjectEntity myObj)
         {

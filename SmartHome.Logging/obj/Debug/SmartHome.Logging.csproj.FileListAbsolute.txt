@@ -16,9 +16,16 @@ C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Logging\bin\Debug\Elmah.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.pdb
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\bin\Debug\Elmah.dll
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.csprojResolveAssemblyReference.cache
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
+C:\AplombSmart\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.pdb
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\Elmah.dll
+C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.csprojResolveAssemblyReference.cache
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
 C:\SmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb
 F:\Projects\Smart Home Web\SmartHome.Logging\bin\Debug\SmartHome.Logging.dll

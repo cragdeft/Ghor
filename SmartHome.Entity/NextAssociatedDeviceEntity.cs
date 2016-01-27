@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Pattern
+namespace SmartHome.Entity
 {
-    public class Class1
+    public class NextAssociatedDeviceEntity
     {
+        public int NextDeviceId { get; set; }
     }
 }

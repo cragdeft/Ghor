@@ -20,7 +20,7 @@ namespace SmartHome.Model.Models
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
         public string DeviceVersion { get; set; }
-        public int IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public string Watt { get; set; }
         public string Mac { get; set; }
         public string DType { get; set; }

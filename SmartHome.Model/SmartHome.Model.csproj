@@ -52,10 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201601262334549_initialCrate.cs" />
-    <Compile Include="Migrations\201601262334549_initialCrate.Designer.cs">
-      <DependentUpon>201601262334549_initialCrate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
@@ -67,6 +63,7 @@
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\Home.cs" />
+    <Compile Include="Models\NextAssociatedDevice.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\SmartRouter.cs" />
     <Compile Include="Models\SyncStatus.cs" />
@@ -91,11 +88,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201601262334549_initialCrate.resx">
-      <DependentUpon>201601262334549_initialCrate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

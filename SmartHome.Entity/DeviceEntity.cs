@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Entity
 {
+
     public class DeviceEntity
     {
-        #region Primitive Properties
-        
+        #region Primitive Properties        
         public int DeviceId { get; set; }
-        [JsonProperty("ID")]
+        [JsonProperty("DeviceId")]
         public int Id { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
         [JsonProperty("Version")]
         public string DeviceVersion { get; set; }
-        public int IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public string Mac { get; set; }
         [JsonProperty("DeviceType")]
         public string DType { get; set; }
