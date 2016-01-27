@@ -24,5 +24,13 @@ namespace SmartHome.Repository.Repositories
                 .Where(u => u.UserName == userName)
                 .AsEnumerable().Count() == 0 ? false : true;
         }
+
+        public static bool IsLoginIdUnique(this IRepositoryAsync<UserInfo> repository, string email)
+        {
+            return repository
+                .Queryable()
+                .Where(u => u.Email == email)
+                .AsEnumerable().Count() == 0 ? false : true;
+        }
     }
 }
