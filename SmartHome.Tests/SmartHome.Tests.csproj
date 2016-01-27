@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="TestUserInfoController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestVersionController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
