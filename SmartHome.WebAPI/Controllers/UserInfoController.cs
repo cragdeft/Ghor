@@ -76,6 +76,24 @@ namespace SmartHome.WebAPI.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "");
             return response;
         }
+        
+        [Route("api/RegisterUser")]
+        public HttpResponseMessage RegisterUser(string FirstName, string LastName, string Email, string PhoneNumber, string Password, string Country, int Sex)
+        {
+            HttpResponseMessage response;
+
+            var isEmailExists = _userInfoService.IsLoginIdUnique(Email);
+            if (isEmailExists)
+            {
+                UserInfo userinfo = new UserInfo();
+                //insert into DB
+                response = Request.CreateResponse(HttpStatusCode.OK, userinfo);
+            }
+            else
+                response = Request.CreateResponse(HttpStatusCode.OK, isEmailExists);
+
+            return response;
+        }
     }
 
 
