@@ -1,6 +1,5 @@
 namespace SmartHome.Model.Migrations
 {
-    using Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -15,25 +14,18 @@ namespace SmartHome.Model.Migrations
 
         protected override void Seed(SmartHome.Model.ModelDataContext.SmartHomeDataContext context)
         {
+            //  This method will be called after migrating to the latest version.
 
-
-            //WebPagesRole role1 = new WebPagesRole { RoleName = "Admin" }; DbMigrationsConfiguration
-            // WebPagesRole role2 = new WebPagesRole { RoleName = "User" };
-            //UserInfo user1 = new UserInfo { UserName = "a", Email = "admin@ymail.com", FirstName = "Admin", LastName = "User", IsSMSRecipient = false, IsEmailRecipient = false, DateOfBirth = DateTime.Now, Password = "123", IsActive = true };
-
-
-
-            //context.TestTables.AddOrUpdate(p => p.Name, new TestTable { Name = "test", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added });
-
-            //context.WebPagesRoles.AddOrUpdate(p => p.RoleName, new WebPagesRole { RoleName = "Admin" });
-
-            //context.UserInfos.AddOrUpdate(p => p.FirstName,
-            //    new UserInfo { UserName = "a", Email = "admin@ymail.com", FirstName = "Admin", LastName = "User", IsSMSRecipient = false, IsEmailRecipient = false, DateOfBirth = DateTime.Now, Password = "123", IsActive = true }     );
-            // user1.WebPagesRoles.Add(role1);
-
-
-            context.SaveChanges();
-
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data. E.g.
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SmartHome.Entity;
 
 namespace SmartHome.Service.Interfaces
 {
@@ -15,6 +16,8 @@ namespace SmartHome.Service.Interfaces
         bool UserValidatyCheckByUserName(string userName);
 
         bool IsLoginIdUnique(string email);
+
+        UserInfoEntity Add(UserInfoEntity model);
 
 
     }

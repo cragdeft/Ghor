@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Repository.Pattern.Infrastructure;
+using SmartHome.Entity;
 
 namespace SmartHome.Service
 {
@@ -34,6 +37,15 @@ namespace SmartHome.Service
         public bool IsLoginIdUnique(string email)
         {
             return _repository.IsLoginIdUnique(email);
+        }
+
+        public UserInfoEntity Add(UserInfoEntity entity)
+        {
+            UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
+            model.AuditField = new AuditFields();
+            model.ObjectState = ObjectState.Added;
+            base.Insert(model);
+            return entity;
         }
     }
 }

@@ -78,20 +78,39 @@ namespace SmartHome.WebAPI.Controllers
         }
         
         [Route("api/RegisterUser")]
-        public HttpResponseMessage RegisterUser(string FirstName, string LastName, string Email, string PhoneNumber, string Password, string Country, int Sex)
+        public HttpResponseMessage RegisterUser(string FirstName, string LastName, string Email, string PhoneNumber, string Password, string Country, string Sex)
         {
             HttpResponseMessage response;
 
             var isEmailExists = _userInfoService.IsLoginIdUnique(Email);
-            if (isEmailExists)
+            if (!isEmailExists)
             {
-                UserInfo userinfo = new UserInfo();
+                UserInfoEntity userinfo = new UserInfoEntity();
                 userinfo.Email = Email;
-                //insert into DB
+                userinfo.FirstName = FirstName;
+                userinfo.LastName = LastName;
+                userinfo.CellPhone = PhoneNumber;
+                userinfo.Password = Password;
+                userinfo.Gender = Sex;
+
+                _unitOfWorkAsync.BeginTransaction();
+                try
+                {
+                    _userInfoService.Add(userinfo);
+                    var changes = _unitOfWorkAsync.SaveChangesAsync();
+                    _unitOfWorkAsync.Commit();
+                }
+                catch (Exception)
+                {
+                    
+                    _unitOfWorkAsync.Rollback();
+                }
+               
+
                 response = Request.CreateResponse(HttpStatusCode.OK, userinfo);
             }
             else
-                response = Request.CreateResponse(HttpStatusCode.OK, isEmailExists);
+                response = Request.CreateResponse(HttpStatusCode.OK, true);
 
             return response;
         }

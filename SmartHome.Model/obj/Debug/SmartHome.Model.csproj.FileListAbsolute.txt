@@ -96,5 +96,3 @@ F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.x
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
-F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCrate.resources
-F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache

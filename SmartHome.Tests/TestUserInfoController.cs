@@ -1,44 +1,51 @@
 ﻿using System;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Repository.Pattern.Ef6;
+using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
+using SmartHome.Entity;
 using SmartHome.Service.Interfaces;
 using SmartHome.WebAPI.Controllers;
 using SmartHome.Model.Models;
+using SmartHome.Service;
 
 namespace SmartHome.Tests
 {
     [TestClass]
     public class TestUserInfoController
     {
-        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        private readonly IUserInfoService _userInfoService;
-
-        public TestUserInfoController(IUnitOfWorkAsync unitOfWorkAsync, IUserInfoService userInfoService)
-        {
-            this._unitOfWorkAsync = unitOfWorkAsync;
-            this._userInfoService = userInfoService;
-        }
         [TestMethod]
         public void RegisterUser_ShouldReturnRegisteredUser()
         {
-            IUnityContainer myContainer = new UnityContainer();
-            //myContainer.RegisterType<_unitOfWorkAsync, >();
+            var uow = new Mock<IUnitOfWorkAsync>();
+            var us = new Mock<IUserInfoService>();
             // Arrange
-            var controller = new UserInfoController(_unitOfWorkAsync, _userInfoService);   
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            var controller = new UserInfoController(uow.Object, us.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             // Act
-            var response = controller.RegisterUser("","","asd@email.com","","","",0);
-
+            var response = controller.RegisterUser("", "", "asd@emaiyl.com", "", "", "", "");
+            System.Diagnostics.Trace.WriteLine(response.Content);
             // Assert
-            UserInfo userInfo;
-            Assert.IsTrue(response.TryGetContentValue<UserInfo>(out userInfo));
-            Assert.AreEqual("asd@email.com", userInfo.Email);
+            bool isEmailExists = false;
+            if (!response.TryGetContentValue(out isEmailExists))
+            {
+                UserInfoEntity userInfo;
+                Assert.IsTrue(response.TryGetContentValue(out userInfo));
+                Assert.AreEqual("asd@emaiyl.com", userInfo.Email);
+            } 
+            else
+                Assert.AreEqual(true, isEmailExists);
         }
+
+
     }
 }
