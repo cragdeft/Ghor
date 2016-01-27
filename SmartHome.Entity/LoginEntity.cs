@@ -11,9 +11,7 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties
         [Required(ErrorMessage = "Username required.", AllowEmptyStrings = false)]
-
         public string Username { get; set; }
-
 
         [Required(ErrorMessage = "Password required.", AllowEmptyStrings = false)]
         [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
@@ -22,5 +20,7 @@ namespace SmartHome.Entity
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
         #endregion
+
+
     }
 }
