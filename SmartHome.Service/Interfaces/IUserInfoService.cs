@@ -14,6 +14,8 @@ namespace SmartHome.Service.Interfaces
         IEnumerable<UserInfo> GetsUserInfos();
         bool UserValidatyCheckByUserName(string userName);
 
+        bool IsLoginIdUnique(string email);
+
 
     }
 }
