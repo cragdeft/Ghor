@@ -10,8 +10,8 @@ namespace SmartHome.Utility.EncriptionAndDecryption
     {
         static SecurityManager()
         {
-            RandomString = CryptLib.GenerateRandomIV(16);
-            CypherKey = CryptLib.getHashSha256("SNJnjnnd43u84u3", 32);
+            RandomString = "0123456789ABCDEF";//CryptLib.GenerateRandomIV(16);
+            CypherKey = CryptLib.getHashSha256("7=BMCJrxW8tX_H%X", 32);
         }
 
         public static string Encrypt(string plainText)
