@@ -25,7 +25,13 @@ namespace SmartHome.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var versions = await _versionService.GetsAsync();
-            return View(versions);
+            return View(versions.ToList());
+        }
+
+        public ActionResult Index2()
+        {
+            var versions = _versionService.Queryable();
+            return View(versions.ToList());
         }
 
         #region Create
