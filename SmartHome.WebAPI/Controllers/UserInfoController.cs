@@ -92,6 +92,7 @@ namespace SmartHome.WebAPI.Controllers
                 userinfo.CellPhone = PhoneNumber;
                 userinfo.Password = Password;
                 userinfo.Gender = Sex;
+             
 
                 _unitOfWorkAsync.BeginTransaction();
                 try

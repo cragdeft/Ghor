@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Practices.ServiceLocation;
@@ -46,6 +48,6 @@ namespace SmartHome.Tests
                 Assert.AreEqual(true, isEmailExists);
         }
 
-
+        
     }
 }
