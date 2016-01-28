@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Web.Http;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Repository.Pattern.Ef6;
-using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Service.Interfaces;
 using SmartHome.WebAPI.Controllers;
-using SmartHome.Model.Models;
-using SmartHome.Service;
 
 namespace SmartHome.Tests
 {
@@ -49,5 +40,7 @@ namespace SmartHome.Tests
         }
 
         
+
+
     }
 }
