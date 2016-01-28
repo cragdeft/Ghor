@@ -45,9 +45,6 @@ namespace SmartHome.Tests
             _versionServiceMock.Setup(x => x.Query().Select()).Returns(listVersion);
 
             //Act
-
-
-
             var result = (( objController.Index().Result as ViewResult).Model) as List<Model.Models.Version>;
 
             ////Assert
