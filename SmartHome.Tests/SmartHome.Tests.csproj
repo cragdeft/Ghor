@@ -95,11 +95,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\TestVersionController.cs" />
     <Compile Include="Services\TestVersionService.cs" />
     <Compile Include="TestUserInfoController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
-    <Compile Include="TestVersionController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
