@@ -4,6 +4,7 @@ using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
 using SmartHome.Model.Models;
+using SmartHome.Service;
 using SmartHome.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,10 @@ namespace SmartHome.Tests.Services
         [TestInitialize]
         public void Initialize()
         {
+
             _mockRepository = new Mock<IRepositoryAsync<Model.Models.Version>>();
+            _service = new VersionService(_mockRepository.Object);
+
             listVersion = new List<Model.Models.Version>() {
              new Model.Models.Version() { AppName="App 1",ObjectState=ObjectState.Added,AuditField=new AuditFields()},
              new Model.Models.Version() { AppName="App 2",AppVersion="1.0",ObjectState=ObjectState.Added,AuditField=new AuditFields()},
@@ -46,5 +50,6 @@ namespace SmartHome.Tests.Services
                 Assert.AreEqual(executionResult.Count(), 3);
             }).GetAwaiter().GetResult();
         }
+
     }
 }
