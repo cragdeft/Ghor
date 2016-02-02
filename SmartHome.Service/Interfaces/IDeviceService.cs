@@ -12,7 +12,6 @@ namespace SmartHome.Service.Interfaces
     public interface IDeviceService : IService<Device>
     {
         IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model);
-
-        Task<DeviceEntity> GetAsync(int id);
+        
     }
 }
