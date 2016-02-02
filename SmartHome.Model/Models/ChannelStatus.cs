@@ -16,6 +16,7 @@ namespace SmartHome.Model.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChannelStatusId { get; set; }
         public int Id { get; set; }
+        public int CId { get; set; }
         public int DId { get; set; }
         public int ChannelNo { get; set; }
         public int Status { get; set; }

@@ -10,13 +10,14 @@ namespace SmartHome.Entity
     public class DeviceStatusEntity
     {
         #region Primitive Properties
-        
-        public int DeviceStatusId { get; set; }
-        [JsonProperty("ID")]
+
+       
+        //[JsonProperty("ID")]
         public int Id { get; set; }
-        [JsonProperty("DeviceID")]
+        [JsonProperty("DeviceTableId")]
         public string DId { get; set; }
         public int StatusType { get; set; }
+        [JsonProperty("StatusValue")]
         public int Status { get; set; }
         #endregion
     }

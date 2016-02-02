@@ -11,11 +11,11 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties
         public int VersionId { get; set; }
-        [JsonProperty("VId")]
+        //[JsonProperty("Id")]
         public int Id { get; set; }
-        
+
         public string AppName { get; set; }
-        [JsonProperty("Version")]
+        //[JsonProperty("Version")]
         public string AppVersion { get; set; }
         public string AuthCode { get; set; }
         public string PassPhrase { get; set; }

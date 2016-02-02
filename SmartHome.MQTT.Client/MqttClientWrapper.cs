@@ -23,7 +23,7 @@ namespace SmartHome.MQTT.Client
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.11.112")
+                if (brokerAddress == "192.168.11.195")
                 {
                     SmartHomeMQTT = new MqttClient(brokerAddress);
                     SmartHomeMQTT.Connect(Guid.NewGuid().ToString());

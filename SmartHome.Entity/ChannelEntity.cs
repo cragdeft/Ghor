@@ -11,16 +11,19 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties
         
-        public int ChannelId { get; set; }
-        [JsonProperty("ChannelNo")]
+        
+        //[JsonProperty("ChannelNo")]
         public int Id { get; set; }
-        [JsonProperty("DeviceID")]        
+        [JsonProperty("DeviceTableId")]        
         public int DId { get; set; }
-        //public int ChannelNo { get; set; }
+        public int ChannelNo { get; set; }
         public string LoadName { get; set; }
         //public int Status { get; set; }
         //public int Value { get; set; }
         public int LoadType { get; set; }
+
+        public int LoadWatt { get; set; }
         #endregion
+        
     }
 }
