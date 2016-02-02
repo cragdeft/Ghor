@@ -19,13 +19,20 @@ namespace SmartHome.Service
         public DeviceService(IRepositoryAsync<Device> repository) : base(repository)
         {
             _repository = repository;
-            //Mapper.CreateMap<VersionEntity, Version>();
         }
 
         public IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model)
         {
             base.InsertGraphRange(model);
             return model;
+        }
+
+        public async Task<DeviceEntity> GetAsync(int Id)
+        {
+            var SyncList = await _repository.FindAsync(Id);
+            return Mapper.Map<Device, DeviceEntity>(SyncList);
+
+
         }
     }
 }
