@@ -10,6 +10,18 @@ namespace SmartHome.Model.Models
     [ComplexType]
     public class AuditFields
     {
+        public AuditFields()
+        {
+                
+        }
+
+        public AuditFields(string insertedBy, DateTime? insertedDateTime, string lastUpdatedBy, DateTime? lastUpdatedDateTime)
+        {
+            this.LastUpdatedBy = lastUpdatedBy;
+            this.InsertedBy = insertedBy;
+            this.InsertedDateTime = insertedDateTime;
+            this.LastUpdatedDateTime = lastUpdatedDateTime;
+        }
         #region Primitive Properties
         public string InsertedBy { get; set; }
         public DateTime? InsertedDateTime { get; set; }
