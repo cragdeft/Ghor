@@ -7,13 +7,13 @@ namespace SmartHome.Model.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class initialJsonModelUpdate : IMigrationMetadata
+    public sealed partial class initialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(initialJsonModelUpdate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201602010633141_initialJsonModelUpdate"; }
+            get { return "201602020826271_initialCreate"; }
         }
         
         string IMigrationMetadata.Source
