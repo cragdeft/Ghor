@@ -96,6 +96,7 @@ namespace SmartHome.Model.Enums
     public enum TopicType
     {
         Command,
-        Configuration
+        Configuration,
+        Feedback
     }
 }

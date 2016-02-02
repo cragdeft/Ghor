@@ -19,6 +19,7 @@ namespace SmartHome.Model.Models
         public int DId { get; set; }
         public int StatusType { get; set; }
         public int Status { get; set; }
+        public int Value { get; set; }
         #endregion
 
         #region Complex Properties
@@ -26,7 +27,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-        public virtual Device Device { get; set; } 
+       // public virtual Device Device { get; set; } 
         #endregion
 
     }

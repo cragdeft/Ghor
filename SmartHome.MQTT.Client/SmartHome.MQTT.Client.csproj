@@ -70,9 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelConfigurationLoads.cs" />
     <Compile Include="CommandAttributes.cs" />
-    <Compile Include="FeedbackParser.cs" />
     <Compile Include="MqttClientWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">

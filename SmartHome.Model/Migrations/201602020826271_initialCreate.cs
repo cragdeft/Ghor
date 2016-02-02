@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialMigration : DbMigration
+    public partial class initialCreate : DbMigration
     {
         public override void Up()
         {
@@ -80,10 +80,11 @@ namespace SmartHome.Model.Migrations
                     {
                         DeviceId = c.Int(nullable: false, identity: true),
                         Id = c.Int(nullable: false),
+                        DId = c.Int(nullable: false),
                         DeviceName = c.String(),
                         DeviceHash = c.String(),
                         DeviceVersion = c.String(),
-                        IsDeleted = c.Int(nullable: false),
+                        IsDeleted = c.Boolean(nullable: false),
                         Watt = c.String(),
                         Mac = c.String(),
                         DType = c.String(),
@@ -124,6 +125,7 @@ namespace SmartHome.Model.Migrations
                     {
                         ChannelStatusId = c.Int(nullable: false, identity: true),
                         Id = c.Int(nullable: false),
+                        CId = c.Int(nullable: false),
                         DId = c.Int(nullable: false),
                         ChannelNo = c.Int(nullable: false),
                         Status = c.Int(nullable: false),
