@@ -42,8 +42,6 @@ namespace SmartHome.Tests
         [TestMethod]
         public void CommandPerser_ShouldSaveCommand()
         {
-            byte[] command = new byte[] { 1, 2, 2, 1};
-            CommandParser ft = new CommandParser(command);
         }
     }
 }
