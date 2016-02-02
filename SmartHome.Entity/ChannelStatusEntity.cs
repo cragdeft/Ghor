@@ -14,7 +14,9 @@ namespace SmartHome.Entity
         //public int DeviceId { get; set; }
         public int Id { get; set; }
         public int ChannelNo { get; set; }
-        public int StatusType { get; set; }
-        public string StatusValue { get; set; }
+        [JsonProperty("StatusType")]
+        public int Status { get; set; }
+        [JsonProperty("StatusValue")]
+        public string Value { get; set; }
     }
 }

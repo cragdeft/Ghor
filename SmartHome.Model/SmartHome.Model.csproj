@@ -52,13 +52,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201602010633141_initialJsonModelUpdate.cs" />
-    <Compile Include="Migrations\201602010633141_initialJsonModelUpdate.Designer.cs">
-      <DependentUpon>201602010633141_initialJsonModelUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\201602020826271_initialCreate.cs" />
+    <Compile Include="Migrations\201602020826271_initialCreate.Designer.cs">
+      <DependentUpon>201602020826271_initialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201602010656534_updateJsonTables.cs" />
-    <Compile Include="Migrations\201602010656534_updateJsonTables.Designer.cs">
-      <DependentUpon>201602010656534_updateJsonTables.cs</DependentUpon>
+    <Compile Include="Migrations\201602020840047_initialCreate2.cs" />
+    <Compile Include="Migrations\201602020840047_initialCreate2.Designer.cs">
+      <DependentUpon>201602020840047_initialCreate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602020910188_initialCreate3.cs" />
+    <Compile Include="Migrations\201602020910188_initialCreate3.Designer.cs">
+      <DependentUpon>201602020910188_initialCreate3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
@@ -98,11 +102,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201602010633141_initialJsonModelUpdate.resx">
-      <DependentUpon>201602010633141_initialJsonModelUpdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602020826271_initialCreate.resx">
+      <DependentUpon>201602020826271_initialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602010656534_updateJsonTables.resx">
-      <DependentUpon>201602010656534_updateJsonTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602020840047_initialCreate2.resx">
+      <DependentUpon>201602020840047_initialCreate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602020910188_initialCreate3.resx">
+      <DependentUpon>201602020910188_initialCreate3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

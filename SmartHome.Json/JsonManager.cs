@@ -46,14 +46,14 @@ namespace SmartHome.Json
                 IEnumerable<Model.Models.Version> oVersion = ConfigureVersion(oRootObject);
                 IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
                 MergeVersionAndVersionDetail(oVersion, oVersionDetail);
-                StoreVersionAndVersionDetail(oVersion);
+               // StoreVersionAndVersionDetail(oVersion);
 
                 IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
                 IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
                 IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
                 MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oChannelStatus, oDeviceStatus);
-                //StoreDeviceAndChannel(oDevice);
+                StoreDeviceAndChannel(oDevice);
 
             }
             catch (Exception ex)

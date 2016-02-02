@@ -18,7 +18,7 @@ namespace SmartHome.Entity
         public string DId { get; set; }
         public int StatusType { get; set; }
         [JsonProperty("StatusValue")]
-        public int Status { get; set; }
+        public int Value { get; set; }
         #endregion
     }
 }
