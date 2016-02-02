@@ -22,7 +22,7 @@ namespace SmartHome.Tests
             {
                 commandArray[index] = Convert.ToByte(values[index]);
             }
-            CommandParser fp = new CommandParser(commandArray);
+           // CommandParser fp = new CommandParser(commandArray);
         }
     }
 }

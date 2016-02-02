@@ -87,7 +87,7 @@ namespace SmartHome.Json
                 {
                     DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
                     deviceStatus.StatusType = (int)StatusType.SmartSwitchThermalShutdown;
-                    deviceStatus.Status = value;
+                    deviceStatus.Value = value;
                     deviceStatus.DId = _commandJson.DeviceID.ToString();
                     DeviceStatusList.Add(deviceStatus);
 
@@ -120,22 +120,22 @@ namespace SmartHome.Json
                 }
                 else if (i % 5 == 0)
                 {
-                    channelStatus.StatusType = (int)StatusType.DeviceActive;
-                    channelStatus.StatusValue = value.ToString();
+                    channelStatus.Status = (int)StatusType.DeviceActive;
+                    channelStatus.Value = value.ToString();
                 }
                 else if (i % 6 == 0)
                 {
-                    channelStatus.StatusType = (int)StatusType.DeviceActive;
-                    channelStatus.StatusValue = value.ToString();
+                    channelStatus.Status = (int)StatusType.DeviceActive;
+                    channelStatus.Value = value.ToString();
                 }
                 else if (i % 7 == 0)
                 {
-                    channelStatus.StatusType = (int)StatusType.DeviceActive;
-                    channelStatus.StatusValue = value.ToString();
+                    channelStatus.Status = (int)StatusType.DeviceActive;
+                    channelStatus.Value = value.ToString();
 
                     DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
                     deviceStatus.StatusType = (int)StatusType.SmartSwitchIndicator;
-                    deviceStatus.Status = Convert.ToInt32(values[i]);
+                    deviceStatus.Value = Convert.ToInt32(values[i]);
                     deviceStatus.DId = _commandJson.DeviceID.ToString();
                     DeviceStatusList.Add(deviceStatus);
                     ChannelStatusList.Add(channelStatus);
@@ -160,7 +160,7 @@ namespace SmartHome.Json
                     if (deviceStatus != null)
                     {
                         deviceStatus.StatusType = ds.StatusType;
-                        deviceStatus.Status = ds.Status;
+                        deviceStatus.Status = ds.Value;
                         _commandPerserService.UpdateDeviceStatus(deviceStatus);
                     }
                     else
@@ -168,7 +168,7 @@ namespace SmartHome.Json
                         deviceStatus = new DeviceStatus();
                         deviceStatus.DId = entity.DeviceId;
                         deviceStatus.StatusType = ds.StatusType;
-                        deviceStatus.Status = ds.Status;
+                        deviceStatus.Status = ds.Value;
 
                         _commandPerserService.AddDeviceStatus(deviceStatus);
                     }
@@ -186,7 +186,7 @@ namespace SmartHome.Json
                     DeviceStatus deviceStatus = new DeviceStatus();
                     deviceStatus.DId = entity.DeviceId;
                     deviceStatus.StatusType = ds.StatusType;
-                    deviceStatus.Status = ds.Status;
+                    deviceStatus.Status = ds.Value;
 
                     _commandPerserService.AddDeviceStatus(deviceStatus);
                 }
