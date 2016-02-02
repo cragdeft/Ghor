@@ -8,10 +8,11 @@ namespace SmartHome.Entity
 {
     public class CommandJson
     {
+        public int CommandID { get; set; }
         public String Command { get; set; }
-        public string DeviceID { get; set; }
-        public string DeviceUUID { get; set; }
-        public string Response { get; set; }
+        public int DeviceID { get; set; }
+        public int DeviceUUID { get; set; }
+        public bool Response { get; set; }
         public string DeviceVersion { get; set; }
         public string MacID { get; set; }
         public string EmailAddress { get; set; }

@@ -20,14 +20,16 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
         private readonly IRepositoryAsync<Device> _deviceRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
+        private string _email;
 
-        public CommandParserService(IUnitOfWorkAsync unitOfWorkAsync)
+        public CommandParserService(IUnitOfWorkAsync unitOfWorkAsync,string email)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
             _deviceStatusRepository = _unitOfWorkAsync.RepositoryAsync<DeviceStatus>();
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
             _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
+            _email = email;
         }
 
         public DeviceStatus UpdateDeviceStatus(DeviceStatus deviceStatus)
@@ -37,7 +39,7 @@ namespace SmartHome.Service
             try
             {
 
-                deviceStatus.AuditField = new AuditFields();
+                deviceStatus.AuditField = new AuditFields(deviceStatus.AuditField.InsertedBy, deviceStatus.AuditField.InsertedDateTime, _email,DateTime.Now);
                 deviceStatus.ObjectState = ObjectState.Added;
                 _deviceStatusRepository.Update(deviceStatus);
                 var changes = _unitOfWorkAsync.SaveChangesAsync();
@@ -57,7 +59,7 @@ namespace SmartHome.Service
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                deviceStatus.AuditField = new AuditFields();
+                deviceStatus.AuditField = new AuditFields(_email, DateTime.Now,null,null);
                 deviceStatus.ObjectState = ObjectState.Added;
                 _deviceStatusRepository.Insert(deviceStatus);
                 var changes = _unitOfWorkAsync.SaveChangesAsync();
@@ -121,7 +123,7 @@ namespace SmartHome.Service
             try
             {
 
-                device.AuditField = new AuditFields();
+                device.AuditField = new AuditFields( _email, DateTime.Now,null,null);
                 device.ObjectState = ObjectState.Added;
                 _deviceRepository.Insert(device);
                 var changes = _unitOfWorkAsync.SaveChangesAsync();

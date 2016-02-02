@@ -107,9 +107,14 @@ namespace SmartHome.MQTT.Client
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
 
-            if (e.Topic == TopicType.Command.ToString())
+            if (e.Topic == TopicType.Feedback.ToString())
             {
-                CommandJsonManager commandJsonManager = new CommandJsonManager(new JsonManager().JsonProcess<CommandJson>(Encoding.UTF8.GetString(e.Message)));
+                JsonManager jsonManager = new JsonManager();
+
+                CommandJson josnObject = jsonManager.JsonProcess<CommandJson>(Encoding.UTF8.GetString(e.Message));
+                CommandJsonManager commandJsonManager = new CommandJsonManager(josnObject);
+                commandJsonManager.Parse();
+                commandJsonManager.SaveOrUpDateStatus();
             }
            
         }
