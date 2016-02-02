@@ -203,6 +203,20 @@ namespace Repository.Pattern.Ef6
             _dbSet.Attach(entity);
         }
 
+        
+        public virtual void InsertOrUpdateGraphRange(IEnumerable<TEntity> entities)
+        {
+            foreach (TEntity entity in entities)
+            {
+                SyncObjectGraph(entity);
+                _entitesChecked = null;
+               
+            }
+
+            _dbSet.AddRange(entities);
+
+        }
+
         HashSet<object> _entitesChecked; // tracking of all process entities in the object graph when calling SyncObjectGraph
 
         private void SyncObjectGraph(object entity) // scan object graph for all 

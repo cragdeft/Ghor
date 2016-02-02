@@ -18,6 +18,8 @@ namespace SmartHome.Service.Interfaces
 
         VersionEntity Add(VersionEntity model);
         IEnumerable<Version> AddOrUpdateGraphRange(IEnumerable<Version> model);
+
+       // IEnumerable<Version> AddOrUpdateGraph(IEnumerable<Version> model);             
         VersionEntity Modify(VersionEntity model);
         void Remove(string id);
         void Remove(VersionEntity entity);

@@ -53,7 +53,7 @@ namespace SmartHome.Json
                 IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
                 MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oChannelStatus, oDeviceStatus);
-                StoreDeviceAndChannel(oDevice);
+                //StoreDeviceAndChannel(oDevice);
 
             }
             catch (Exception ex)
@@ -111,17 +111,17 @@ namespace SmartHome.Json
             //oVersion.ToList().ForEach(p => p.VersionDetails = oVersionDetail.Where(q => q.VId == p.Id).ToList());
         }
 
-        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel,IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
+        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
         {
             foreach (var item in oChannel)
             {
-                item.ChannelStatuses = oChannelStatus.Where(p => p.Id == item.Id).ToArray();
+                item.ChannelStatuses = oChannelStatus.Where(p => p.CId == item.Id).ToArray();
             }
 
             foreach (var item in oDevice)
             {
                 item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.DeviceId).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
             }
         }
 

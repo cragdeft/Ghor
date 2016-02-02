@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,10 @@ namespace SmartHome.Entity
 {
     public class ChannelStatusEntity
     {
-        public int DeviceId { get; set; }
+        [JsonProperty("ChannelTableId")]
+        public int CId { get; set; }
+        //public int DeviceId { get; set; }
+        public int Id { get; set; }
         public int ChannelNo { get; set; }
         public int StatusType { get; set; }
         public string StatusValue { get; set; }

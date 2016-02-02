@@ -10,13 +10,20 @@ namespace SmartHome.Entity
     public class VersionDetailEntity
     {
         #region Primitive Properties
-        
+
         public int VersionDetailId { get; set; }
-        [JsonProperty("ID")]
+        //[JsonProperty("ID")]
         public int Id { get; set; }
-        [JsonProperty("VersionID")]        
+        [JsonProperty("VersionId")]
         public string VId { get; set; }
         public string HardwareVersion { get; set; }
+        public int DeviceType { get; set; }
         #endregion
+
+
+
+
+
+
     }
 }

@@ -17,6 +17,7 @@ namespace SmartHome.Model.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeviceId { get; set; }
         public int Id { get; set; }
+        public int DId { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
         public string DeviceVersion { get; set; }
