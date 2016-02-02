@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ChannelEntity.cs" />
     <Compile Include="ChannelStatusEntity.cs" />
+    <Compile Include="CommandJson.cs" />
     <Compile Include="DeviceEntity.cs" />
     <Compile Include="DeviceStatusEntity.cs" />
     <Compile Include="LoginEntity.cs" />
