@@ -62,6 +62,16 @@ namespace SmartHome.Json
             }
         }
 
+        public T JsonProcess<T>(string JsonString)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonString);
+        }
+
+        private RootObjectEntity JsonDesrialized(string JsonString)
+        {
+            return JsonConvert.DeserializeObject<RootObjectEntity>(JsonString);
+        }
+
 
         #region Version Conversion
         private IEnumerable<Model.Models.VersionDetail> ConfigureVersionDetail(RootObjectEntity oRootObject)
@@ -204,9 +214,9 @@ namespace SmartHome.Json
         }
         #endregion
 
-        private RootObjectEntity JsonDesrialized(string JsonString)
+        private T JsonDesrialized<T>(string JsonString)
         {
-            return JsonConvert.DeserializeObject<RootObjectEntity>(JsonString);
+            return JsonConvert.DeserializeObject<T>(JsonString);
         }
 
     }

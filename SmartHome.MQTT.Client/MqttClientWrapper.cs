@@ -1,12 +1,10 @@
 ﻿using SmartHome.Json;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
+using SmartHome.Entity;
+using SmartHome.Model.Enums;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -14,6 +12,7 @@ namespace SmartHome.MQTT.Client
 {
     public static class MqttClientWrapper
     {
+        
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
@@ -107,8 +106,15 @@ namespace SmartHome.MQTT.Client
 
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
+
+            if (e.Topic == TopicType.Command.ToString())
+            {
+                CommandJsonManager commandJsonManager = new CommandJsonManager(new JsonManager().JsonProcess<CommandJson>(Encoding.UTF8.GetString(e.Message)));
+            }
+           
         }
+
+        
 
         #endregion
     }

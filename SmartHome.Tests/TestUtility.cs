@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartHome.MQTT.Client;
 using SmartHome.Utility.EncriptionAndDecryption;
 
 namespace SmartHome.Tests
@@ -36,6 +37,13 @@ namespace SmartHome.Tests
             //Assert for Android
             Assert.AreEqual(encryptedTextForAndroid, encryptedValueAndroid);
             Assert.AreEqual(plainTextForAndroid, decryptedValueAndroid);
+        }
+
+        [TestMethod]
+        public void CommandPerser_ShouldSaveCommand()
+        {
+            byte[] command = new byte[] { 1, 2, 2, 1};
+            CommandParser ft = new CommandParser(command);
         }
     }
 }

@@ -95,6 +95,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestCommandParser.cs" />
     <Compile Include="Controllers\TestVersionController.cs" />
     <Compile Include="Services\TestVersionService.cs" />
     <Compile Include="TestUserInfoController.cs" />
@@ -125,6 +126,10 @@
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.MQTT.Client\SmartHome.MQTT.Client.csproj">
+      <Project>{A7E4A6C5-5656-4F9A-A0D6-8501184F1293}</Project>
+      <Name>SmartHome.MQTT.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartHome.Repository\SmartHome.Repository.csproj">
       <Project>{d1269bfe-feef-4daf-81a5-e619e5f7b9c2}</Project>
