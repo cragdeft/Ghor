@@ -19,7 +19,6 @@ namespace SmartHome.Service
         public DeviceService(IRepositoryAsync<Device> repository) : base(repository)
         {
             _repository = repository;
-            //Mapper.CreateMap<VersionEntity, Version>();
         }
 
         public IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model)
@@ -177,7 +176,5 @@ namespace SmartHome.Service
         {
             return base.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y=>y.ChannelStatuses)).Select();
         }
-
-       
     }
 }
