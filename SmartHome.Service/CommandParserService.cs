@@ -82,11 +82,11 @@ namespace SmartHome.Service
             throw new NotImplementedException();
         }
 
-        public DeviceStatus FindDeviceStatus(int deviceid,int statusId)
+        public DeviceStatus FindDeviceStatus(int deviceid,int Id)
         {
             return _deviceStatusRepository
                 .Queryable()
-                .Where(u => u.DId == deviceid && u.Id == statusId)
+                .Where(u => u.DId == deviceid && u.Id == Id)
                 .FirstOrDefault();
         }
 
@@ -98,11 +98,11 @@ namespace SmartHome.Service
                 .FirstOrDefault();
         }
 
-        public ChannelStatus FindChannelStatus(int deviceid)
+        public ChannelStatus FindChannelStatus(int deviceid, int Id)
         {
             return _channelStatusRepository
                 .Queryable()
-                .Where(u => u.DId == deviceid)
+                .Where(u => u.DId == deviceid && u.Id == Id)
                 .FirstOrDefault();
         }
 
