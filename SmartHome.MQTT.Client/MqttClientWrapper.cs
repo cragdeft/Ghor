@@ -106,6 +106,7 @@ namespace SmartHome.MQTT.Client
 
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
+             new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
 
             if (e.Topic == TopicType.Feedback.ToString())
             {
