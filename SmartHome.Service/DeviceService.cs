@@ -26,13 +26,6 @@ namespace SmartHome.Service
             base.InsertGraphRange(model);
             return model;
         }
-
-        public async Task<DeviceEntity> GetAsync(int Id)
-        {
-            var SyncList = await _repository.FindAsync(Id);
-            return Mapper.Map<Device, DeviceEntity>(SyncList);
-
-
-        }
+        
     }
 }
