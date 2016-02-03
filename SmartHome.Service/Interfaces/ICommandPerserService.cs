@@ -19,9 +19,7 @@ namespace SmartHome.Service.Interfaces
 
         ChannelStatus AddChannelStatus(ChannelStatus channelStatus);
 
-        Device FindDevice(int id);
-
-        Device AdddDevice(Device device);
+        Device FindDevice(int deviceHash);
 
         DeviceStatus FindDeviceStatus(int deviceid, int Id);
 
@@ -29,5 +27,7 @@ namespace SmartHome.Service.Interfaces
         Channel FindChannel(int deviceId,int channelNo);
 
         List<ChannelStatus> GetAllChannelStatus(int deviceId);
+
+        Channel AdddChannel(Channel channel);
     }
 }
