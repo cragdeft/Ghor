@@ -5,6 +5,7 @@ using Repository.Pattern.Repositories;
 using Service.Pattern;
 using SmartHome.Entity;
 using SmartHome.Model.Models;
+using SmartHome.Repository.Repositories;
 using SmartHome.Service.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,99 +61,18 @@ namespace SmartHome.Service
             model.ObjectState = ObjectState.Added;
             base.Insert(model);
             return entity;
-        }
-
-        //public IEnumerable<Version> AddOrUpdateGraphRange(IEnumerable<Version> model)
-        //{
-        //    base.InsertGraphRange(model);
-        //    return model;
-        //}
+        }       
 
         #region AddOrUpdateGraphRange
         public IEnumerable<Version> AddOrUpdateGraphRange(IEnumerable<Version> model)
         {
             List<Version> versionModel = new List<Version>();
-            versionModel = FillVersionInformations(model, versionModel);
+            versionModel = _repository.FillVersionInformations(model, versionModel);
             base.InsertOrUpdateGraphRange(versionModel);
             return versionModel;
         }
 
-        private List<Version> FillVersionInformations(IEnumerable<Version> model, List<Version> versionModel)
-        {
-            foreach (var item in model)
-            {
-                //check already exist or not.
-                IEnumerable<Version> temp = IsVersionExists(item.Id, item.Mac);
-                if (temp.Count() == 0)
-                {
-                    //new item
-                    versionModel.Add(item);
-                    continue;
-                }
-                else
-                {
-                    //existing item               
 
-                    foreach (var existingItem in temp.ToList())
-                    {
-                        //modify version                    
-                        FillExistingVersionInfo(item, existingItem);
-
-                        if (item.VersionDetails != null && item.VersionDetails.Count > 0)
-                        {
-                            AddOrEditExistingVDetailItems(item, existingItem);
-                        }
-
-                    }
-                }
-            }
-
-            return versionModel;
-        }
-
-        private void AddOrEditExistingVDetailItems(Version item, Version existingItem)
-        {
-            foreach (var nextVDetail in item.VersionDetails)
-            {
-                var tempExistingVDetail = existingItem.VersionDetails.Where(p => p.Id == nextVDetail.Id).FirstOrDefault();
-                if (tempExistingVDetail != null)
-                {
-                    //modify
-                    FillExistingVDetailInfo(nextVDetail, tempExistingVDetail);
-                }
-                else
-                {
-                    //add
-                    existingItem.VersionDetails.Add(nextVDetail);
-                }
-            }
-        }
-
-        private void FillExistingVDetailInfo(VersionDetail nextVDetail, VersionDetail tempExistingVDetail)
-        {
-            tempExistingVDetail.ObjectState = ObjectState.Modified;
-            tempExistingVDetail.Id = nextVDetail.Id;
-            tempExistingVDetail.VId = nextVDetail.VId;
-            tempExistingVDetail.HardwareVersion = nextVDetail.HardwareVersion;
-            tempExistingVDetail.DeviceType = nextVDetail.DeviceType;
-            tempExistingVDetail.AuditField = new AuditFields();
-        }
-
-        private void FillExistingVersionInfo(Version item, Version existingItem)
-        {
-            existingItem.AppName = item.AppName;
-            existingItem.AppVersion = item.AppVersion;
-            existingItem.AuditField = new AuditFields();
-            existingItem.AuthCode = item.AuthCode;
-            existingItem.Mac = item.Mac;
-            existingItem.Id = item.Id;
-            existingItem.ObjectState = ObjectState.Modified;
-        }
-
-        private IEnumerable<Version> IsVersionExists(string key, string Mac)
-        {
-            return base.Query(e => e.Id == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
-        }
 
         #endregion
 
@@ -188,6 +108,12 @@ namespace SmartHome.Service
         }
 
 
+
+        public IEnumerable<VersionInfoEntity> GetsAllVersion()
+        {
+            // add business logic here
+            return _repository.GetsAllVersion();
+        }
 
 
     }

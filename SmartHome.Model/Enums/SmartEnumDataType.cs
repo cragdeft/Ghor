@@ -100,6 +100,16 @@ namespace SmartHome.Model.Enums
 
     }
 
+    public enum ChannelStatusType
+    {
+        channelSwitchable=1,
+        channelDimmable=2,
+        channelHardwareDimSwitchable=3 
+
+    }
+
+
+
     public enum TopicType
     {
         Command,

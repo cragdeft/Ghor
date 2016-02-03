@@ -96,23 +96,3 @@ F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.x
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\SmartHome.Model.dll.config
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\SmartHome.Model.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\SmartHome.Model.pdb
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\LinqKit.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Microsoft.Practices.ServiceLocation.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.Ef6.pdb
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.pdb
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.xml
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.xml
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate2.resources
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate3.resources
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb

@@ -1,8 +1,8 @@
-﻿@model IEnumerable<SmartHome.Model.Models.Version>
+﻿@model IEnumerable<SmartHome.Entity.VersionInfoEntity>
 
 @{
     ViewBag.Title = "Simple";
-    
+    IEnumerable<SmartHome.Entity.DeviceInfoEntity> displayDevice = ViewBag.DeviceInfo;
 }
 
 <style>
@@ -55,9 +55,21 @@
     <div class="treeview">
         @if (Model != null && Model.Count() > 0)
         {
+            <ul>                
+                @Html.Partial("Treeview", Model)
+            </ul>
+        }
+    </div>
+</div>
+
+<h2>Device tree</h2>
+<div style="border:solid 1px black; padding:10px; background-color:#FAFAFA">
+    <div class="treeview">
+        @if (displayDevice != null && displayDevice.Count() > 0)
+        {
             <ul>
                 
-                @Html.Partial("Treeview", Model)
+                @Html.Partial("TreeviewDevice", displayDevice)
             </ul>
         }
     </div>

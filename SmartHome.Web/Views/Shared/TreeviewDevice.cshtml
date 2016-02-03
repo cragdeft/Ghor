@@ -1,7 +1,7 @@
-﻿@model IEnumerable<SmartHome.Entity.VersionInfoEntity>
+﻿@model IEnumerable<SmartHome.Entity.DeviceInfoEntity>
 @GetTreeView(Model, Model.FirstOrDefault().ParentId)
 
-@helper GetTreeView(IEnumerable<SmartHome.Entity.VersionInfoEntity> siteMenu, int parentID)
+@helper GetTreeView(IEnumerable<SmartHome.Entity.DeviceInfoEntity> siteMenu, int parentID)
 {
 foreach (var i in siteMenu.Where(a => a.ParentId.Equals(parentID)))
 {
@@ -28,11 +28,3 @@ foreach (var i in siteMenu.Where(a => a.ParentId.Equals(parentID)))
         </li>
                 }
 }
-
-
-
-
-
-
-
-

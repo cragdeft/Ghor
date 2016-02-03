@@ -1,4 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,7 @@ namespace SmartHome.Model.Models
         public int CId { get; set; }
         public int DId { get; set; }
         public int ChannelNo { get; set; }
-        public int Status { get; set; }
+        public ChannelStatusType Status { get; set; }
         public int Value { get; set; }
         #endregion
 
