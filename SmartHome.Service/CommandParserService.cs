@@ -10,6 +10,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
+using SmartHome.Model.Enums;
 
 namespace SmartHome.Service
 {
@@ -88,7 +89,7 @@ namespace SmartHome.Service
         {
             return _deviceStatusRepository
                 .Queryable()
-                .Where(u => u.DId == deviceid && u.StatusType == Id)
+                .Where(u => u.DId == deviceid && u.StatusType == (StatusType)Id)
                 .FirstOrDefault();
         }
 
