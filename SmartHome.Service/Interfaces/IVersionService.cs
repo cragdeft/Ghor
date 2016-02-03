@@ -24,5 +24,8 @@ namespace SmartHome.Service.Interfaces
         void Remove(string id);
         void Remove(VersionEntity entity);
 
+        IEnumerable<VersionInfoEntity> GetsAllVersion();
+
+
     }
 }

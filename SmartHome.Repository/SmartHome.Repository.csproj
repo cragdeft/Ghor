@@ -53,6 +53,10 @@
       <Project>{F68A1D19-93FB-47C1-A22B-42BEA3E4FD8C}</Project>
       <Name>Repository.Pattern.Ef6</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
+      <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
+      <Name>SmartHome.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>

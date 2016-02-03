@@ -89,11 +89,14 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Reposit
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Repository.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Entity.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Model.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\EntityFramework.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\LinqKit.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Newtonsoft.Json.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Entity.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Model.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\EntityFramework.xml

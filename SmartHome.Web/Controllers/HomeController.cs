@@ -27,6 +27,7 @@ namespace SmartHome.Web.Controllers
     {
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IVersionService _versionService;
+        private readonly IDeviceService _deviceService;
 
         //public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IServerResponceService serverResponceService)
         //{
@@ -53,10 +54,11 @@ namespace SmartHome.Web.Controllers
         //    //return View(_serverResponceService.Queryable());
         //}
 
-        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService)
+        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService, IDeviceService deviceService)
         {
             this._unitOfWorkAsync = unitOfWorkAsync;
             this._versionService = versionService;
+            this._deviceService = deviceService;
         }
 
         #region m2m
@@ -129,11 +131,9 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Contact()
         {
-
-            var temp = _versionService.Query().Include(x => x.VersionDetails).Select().ToList();
+            ViewBag.DeviceInfo = _deviceService.GetsDeviceAllInfo();
             ViewBag.Message = "Your contact page.";
-
-            return View(temp);
+            return View(_versionService.GetsAllVersion());
         }
 
         //public async Task<ActionResult> Create(ServerResponce model)
@@ -161,7 +161,7 @@ namespace SmartHome.Web.Controllers
         //    return _serverResponceService.Query(e => e.MessageId == key).Select().Any();
         //}
 
-       
+
 
         [HttpPost]
         public ActionResult PublishMessage(m2mMessageViewModel model)

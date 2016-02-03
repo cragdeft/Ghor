@@ -113,6 +113,7 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate2.resources
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate3.resources
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialDeviceStatus.resources
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb

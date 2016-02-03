@@ -342,6 +342,7 @@
     <Content Include="Views\Version\Index.cshtml" />
     <Content Include="Views\UserInfo\Login.cshtml" />
     <Content Include="Views\Shared\Treeview.cshtml" />
+    <Content Include="Views\Shared\TreeviewDevice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

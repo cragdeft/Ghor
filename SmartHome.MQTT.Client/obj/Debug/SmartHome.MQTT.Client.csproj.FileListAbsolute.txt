@@ -143,9 +143,6 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.Resource.resources
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.dll
@@ -182,5 +179,8 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practi
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.Resource.resources
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb

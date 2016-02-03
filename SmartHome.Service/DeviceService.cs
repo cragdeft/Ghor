@@ -4,6 +4,7 @@ using Repository.Pattern.Repositories;
 using Service.Pattern;
 using SmartHome.Entity;
 using SmartHome.Model.Models;
+using SmartHome.Repository.Repositories;
 using SmartHome.Service.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -175,6 +176,13 @@ namespace SmartHome.Service
         private IEnumerable<Device> IsDeviceExists(int key, string deviceHash)
         {
             return base.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y=>y.ChannelStatuses)).Select();
+        }
+
+
+        public IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo()
+        {
+            // add business logic here
+            return _repository.GetsAllDevice();
         }
     }
 }

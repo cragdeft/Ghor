@@ -49,6 +49,7 @@
     <Compile Include="ChannelStatusEntity.cs" />
     <Compile Include="CommandJson.cs" />
     <Compile Include="DeviceEntity.cs" />
+    <Compile Include="DeviceInfoEntity.cs" />
     <Compile Include="DeviceStatusEntity.cs" />
     <Compile Include="LoginEntity.cs" />
     <Compile Include="NextAssociatedDeviceEntity.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="UserInfoEntity.cs" />
     <Compile Include="VersionDetailEntity.cs" />
     <Compile Include="VersionEntity.cs" />
+    <Compile Include="VersionInfoEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

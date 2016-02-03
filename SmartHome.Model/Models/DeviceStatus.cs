@@ -1,4 +1,5 @@
 ﻿using Repository.Pattern.Ef6;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace SmartHome.Model.Models
         public int DeviceStatusId { get; set; }
         public int Id { get; set; }
         public int DId { get; set; }
-        public int StatusType { get; set; }
+        //public int StatusType { get; set; }
+        public StatusType StatusType { get; set; }
         public int Status { get; set; }
         public int Value { get; set; }
         #endregion
@@ -27,7 +29,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-       // public virtual Device Device { get; set; } 
+        // public virtual Device Device { get; set; } 
         #endregion
 
     }

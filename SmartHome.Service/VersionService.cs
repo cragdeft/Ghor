@@ -5,6 +5,7 @@ using Repository.Pattern.Repositories;
 using Service.Pattern;
 using SmartHome.Entity;
 using SmartHome.Model.Models;
+using SmartHome.Repository.Repositories;
 using SmartHome.Service.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,6 +189,12 @@ namespace SmartHome.Service
         }
 
 
+
+        public IEnumerable<VersionInfoEntity> GetsAllVersion()
+        {
+            // add business logic here
+            return _repository.GetsAllVersion();
+        }
 
 
     }

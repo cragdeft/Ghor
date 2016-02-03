@@ -39,3 +39,4 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\SmartHome.Logging.pd
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Logging\bin\Debug\Elmah.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Logging\obj\Debug\SmartHome.Logging.csprojResolveAssemblyReference.cache
