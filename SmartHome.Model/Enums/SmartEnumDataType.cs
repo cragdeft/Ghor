@@ -57,37 +57,44 @@ namespace SmartHome.Model.Enums
     {
 
 
-        DeviceOnOffRequestCommandId = 1,
-        DeviceOnOffFeedbackCommandId = 2,
-        DeviceCurrentLoadStatusRequestCommandId = 5,
-        DeviceCurrentLoadStatusFeedbackCommandId = 6,
-        DevicePingRequestCommandId = 25,
-        SmartSwitchIndicatorPowerRequestCommandId = 53, //calls constructor with value 53
-        SmartSwitchIndicatorPowerFeedbackCommandId = 54,
-        SmartSwitchThermalShutdownNotificationRequestCommandId = 55,
-        SmartSwitchThermalShutdownNotificationFeedbackCommandId = 56,
+        DeviceOnOffRequest = 1,
+        DeviceOnOffFeedback = 2,
+        DeviceCurrentLoadStatusRequest = 5,
+        DeviceCurrentLoadStatusFeedback = 6,
+        DevicePingRequest= 25,
+        SmartSwitchIndicatorPowerRequest = 53, //calls constructor with value 53
+        SmartSwitchIndicatorPowerFeedback = 54,
+        SmartSwitchThermalShutdownNotificationRequest = 55,
+        SmartSwitchThermalShutdownNotificationFeedback = 56,
 
-        SmartSwitchLoadTypeSelectRequestCommandId = 57,
-        SmartSwitchLoadTypeSelectFeedbackCommandId = 58,
+        SmartSwitchLoadTypeSelectRequest = 57,
+        SmartSwitchLoadTypeSelectFeedback = 58,
 
-        SmartSwitchDimmingRequestCommandId = 51,
-        SmartSwitchDimmingFeedbackCommandId = 52,
-        SmartSwitchHardwareDimmingRequestCommandId = 63,
-        SmartSwitchHardwareDimmingFeedbackCommandId = 64,
-        DeviceHardResetRequestCommandId = 17,
-        DeviceHardResetFeedbackCommandId = 18,
-        DevicePowerCommandId = 200,
-        DeviceRgbwStatusCommandId = 201,
-        DeviceRgbwSetCommandId = 202
+        SmartSwitchDimmingRequest = 51,
+        SmartSwitchDimmingFeedback = 52,
+        SmartSwitchHardwareDimmingRequest = 63,
+        SmartSwitchHardwareDimmingFeedback = 64,
+        DeviceHardResetRequest = 17,
+        DeviceHardResetFeedback = 18,
+        DevicePower = 200,
+        DeviceRgbwStatus = 201,
+        DeviceRgbwSet = 202
 
     }
 
     public enum StatusType
     {
         DeviceSwitchable = 1,
-        SmartSwitchIndicator = 53,  
+        SmartSwitchIndicator = 53, 
+        DimmingFeedback = 52,
+        OnOffFeedback = 2,
+        CurrentLoadStatus = 6, 
         DeviceActive = 5,
+        IndicatorOnOffFeedback = 54,
         SmartSwitchThermalShutdown = 55,
+        ThermalShutDownResponse = 56,
+        LoadTypeSelectFeedback = 58,
+        DimmingEnableDisableFeedback = 64,
         RgbwStatus = 200,
         RgbwCustomColor = 201
 

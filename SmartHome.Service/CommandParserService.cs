@@ -40,7 +40,7 @@ namespace SmartHome.Service
             {
 
                 deviceStatus.AuditField = new AuditFields(deviceStatus.AuditField.InsertedBy, deviceStatus.AuditField.InsertedDateTime, _email,DateTime.Now);
-                deviceStatus.ObjectState = ObjectState.Added;
+                deviceStatus.ObjectState = ObjectState.Modified;
                 _deviceStatusRepository.Update(deviceStatus);
                 var changes = _unitOfWorkAsync.SaveChangesAsync();
                 _unitOfWorkAsync.Commit();
@@ -88,7 +88,7 @@ namespace SmartHome.Service
         {
             return _deviceStatusRepository
                 .Queryable()
-                .Where(u => u.DId == deviceid && u.Id == Id)
+                .Where(u => u.DId == deviceid && u.StatusType == Id)
                 .FirstOrDefault();
         }
 
@@ -108,12 +108,19 @@ namespace SmartHome.Service
                 .FirstOrDefault();
         }
 
-        public Channel FindChannel(int id)
+        public Channel FindChannel(int deviceId, int channelNo)
         {
             return _channelRepository
                 .Queryable()
-                .Where(u => u.DId == id)
+                .Where(u => u.DId == deviceId && u.ChannelNo == channelNo)
                 .FirstOrDefault();
+        }
+
+        public List<ChannelStatus> GetAllChannelStatus(int deviceId)
+        {
+            return _channelStatusRepository
+                .Queryable()
+                .Where(u => u.DId == deviceId).ToList();
         }
 
         public Device AdddDevice(Device device)

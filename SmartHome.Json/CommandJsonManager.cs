@@ -24,6 +24,8 @@ namespace SmartHome.Json
         private static IDeviceService _deviceService;
         private static ICommandPerserService _commandPerserService;
         private CommandJson _commandJson { get; set; }
+
+        private string[] CommandArray { get; set; }
         #endregion
 
         #region Public
@@ -40,172 +42,280 @@ namespace SmartHome.Json
         #region Constructor
         public CommandJsonManager(CommandJson commandJson)
         {
+            InitializeParameters(commandJson);
+
+            InitializeList();
+        }
+
+        private void InitializeParameters(CommandJson commandJson)
+        {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
-            _commandPerserService = new CommandParserService(_unitOfWorkAsync,commandJson.EmailAddress);
+            _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
+            _commandJson = commandJson;
+            CommandArray = _commandJson.Command.Replace("[{", string.Empty).Replace("}]", string.Empty).Split(',');
+            Length = CommandArray.Length;
+        }
 
+        private void InitializeList()
+        {
             DeviceStatusList = new List<DeviceStatusEntity>();
             ChannelStatusList = new List<ChannelStatusEntity>();
-            _commandJson = commandJson;
         }
+
         #endregion
 
         #region Methods
+
         public void Parse()
         {
-            #region Parse
 
-            var values = _commandJson.Command.Replace("[{", string.Empty).Replace("}]", string.Empty).Split(',');
-            int loopLength;
+            Initiator = GetInitiator();
 
-            for (int index = 0; index < values.Length; index++)
+            CommandId = GetCommandId();
+
+            switch (CommandId)
             {
-                int value = Convert.ToInt32(values[index]);
-
-                if (value < 0)
-                {
-                    value += 255;
-                }
-
-
-                if (index == 0)
-                {
-                    Initiator = Convert.ToInt32(values[index]);
-                }
-
-                else if (index == 1)
-                {
-                    CommandId = (CommandId)Enum.ToObject(typeof(CommandId), Convert.ToInt32(values[index]));
-                }
-                else if (index == 2)
-                {
-
-                    Length = Convert.ToInt32(values[index]);
-                }
-                else if (index == 3)
-                {
-                    DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
-                    deviceStatus.StatusType = (int)StatusType.SmartSwitchThermalShutdown;
-                    deviceStatus.Value = value;
-                    deviceStatus.DId = _commandJson.DeviceID.ToString();
-                    DeviceStatusList.Add(deviceStatus);
-
+                case CommandId.DeviceOnOffFeedback:
+                    OnOffFeedbackCommandParse();
                     break;
-                }
-
+                case CommandId.DeviceCurrentLoadStatusFeedback:
+                    CurrentLoadStatusParse();
+                    break;
+                case CommandId.SmartSwitchDimmingFeedback:
+                    DimmingFeedbackCommandParse();
+                    break;
+                case CommandId.SmartSwitchThermalShutdownNotificationFeedback:
+                    ThermalShutDownCommandParse();
+                    SaveOrUpDateStatus();
+                    break;
+                case CommandId.SmartSwitchLoadTypeSelectFeedback:
+                    LoadTypeSelectCommandParse();
+                    break;
+                case CommandId.SmartSwitchHardwareDimmingFeedback:
+                    DimmingFeedbackEnableDisableCommandParse();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            if (Length == 32)
-                loopLength = 28;
-            else
-                loopLength = 8;
+            SaveOrUpDateStatus();
 
-            ChannelStatusEntity channelStatus = new ChannelStatusEntity(); ;
-            for (int i = 4; i < loopLength; i++)
+        }
+
+        private CommandId GetCommandId()
+        {
+            return (CommandId) Enum.ToObject(typeof (CommandId), GetValue(CommandArray[1]));
+        }
+
+        private int GetInitiator()
+        {
+            return Convert.ToInt32(GetValue(CommandArray[0]));
+        }
+
+        private int GetValue(string arg)
+        {
+            int value = Convert.ToInt32(arg);
+
+            if (value < 0)
+                value += 255;
+
+            return value;
+        }
+
+        private void CurrentLoadStatusParse()
+        {
+            GetDeviceStatus(StatusType.SmartSwitchThermalShutdown);
+
+            if (CommandArray.Length > 30)
             {
-                int value = Convert.ToInt32(values[i]);
+                ParseCurrentLoadStatusCommand(28);
+            }
+            else
+            {
+                ParseCurrentLoadStatusCommand(8);
+            }
+        }
 
-                if (value < 0)
+        private void ParseCurrentLoadStatusCommand(int length)
+        {
+
+            for (int i = 4; i < length; i++)
+            {
+                if (i % 5 == 0)
                 {
-                    value += 255;
-                }
-
-                if (i % 4 == 0)
-                {
-
-                    channelStatus = new ChannelStatusEntity();
-                    channelStatus.CId = (int)((ChannelId)Enum.ToObject(typeof(ChannelId), value));
-
-                }
-                else if (i % 5 == 0)
-                {
-                    channelStatus.Status = (int)StatusType.DeviceActive;
-                    channelStatus.Value = value.ToString();
+                    AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.OnOffFeedback, GetValue(CommandArray[i]));
                 }
                 else if (i % 6 == 0)
                 {
-                    channelStatus.Status = (int)StatusType.DeviceActive;
-                    channelStatus.Value = value.ToString();
+                    AddChannelStatusToList(GetValue(CommandArray[i - 2]), StatusType.DimmingFeedback, GetValue(CommandArray[i]));
+                    AddDeviceStatusToList(StatusType.DimmingFeedback, GetValue(CommandArray[i]));
                 }
                 else if (i % 7 == 0)
                 {
-                    channelStatus.Status = (int)StatusType.DeviceActive;
-                    channelStatus.Value = value.ToString();
-
-                    DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
-                    deviceStatus.StatusType = (int)StatusType.SmartSwitchIndicator;
-                    deviceStatus.Value = Convert.ToInt32(values[i]);
-                    deviceStatus.DId = _commandJson.DeviceID.ToString();
-                    DeviceStatusList.Add(deviceStatus);
-                    ChannelStatusList.Add(channelStatus);
+                    AddChannelStatusToList(GetValue(CommandArray[i - 3]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i]));
+                    AddDeviceStatusToList(StatusType.SmartSwitchIndicator, GetValue(CommandArray[i]));
                 }
 
 
             }
-            #endregion
+        }
+
+        private void AddChannelStatusToList(int channelNo,StatusType type,int value)
+        {
+            ChannelStatusEntity channelStatus = new ChannelStatusEntity
+            {
+                ChannelNo = channelNo,
+                Status = (int) type,
+                Value = value.ToString()
+            };
+
+            ChannelStatusList.Add(channelStatus);
 
         }
 
-        public void SaveOrUpDateStatus()
+        private void AddDeviceStatusToList( StatusType type, int value)
+        {
+            DeviceStatusEntity deviceStatus = new DeviceStatusEntity
+            {
+                DId = _commandJson.DeviceID.ToString(),
+                StatusType = (int)type,
+                Value = value
+            };
+
+            DeviceStatusList.Add(deviceStatus);
+
+        }
+
+
+        private void OnOffFeedbackCommandParse()
+        {
+            GetChannelStatus(StatusType.OnOffFeedback);
+        }
+
+        private void DimmingFeedbackCommandParse()
+        {
+            GetChannelStatus(StatusType.DimmingFeedback);
+
+        }
+
+        private void DimmingFeedbackEnableDisableCommandParse()
+        {
+            GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
+
+        }
+
+        private void LoadTypeSelectCommandParse()
+        {
+            GetChannelStatus(StatusType.LoadTypeSelectFeedback);
+        }
+
+        private void ThermalShutDownCommandParse()
+        {
+            GetDeviceStatus(StatusType.ThermalShutDownResponse);
+        }
+
+        private void SaveOrUpDateStatus()
+        {
+
+            var device = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceID)));
+
+            if (device == null)
+                device = AddNewDevice();
+
+
+            SaveDeviceStatus(device);
+
+            
+            SaveChannelStatus();
+        }
+
+        private void SaveChannelStatus()
+        {
+            foreach (var channelValue in ChannelStatusList)
+            {
+                var channel = _commandPerserService.FindChannel(_commandJson.DeviceID,channelValue.ChannelNo);
+
+                if (channel != null)
+                {
+                     
+                }
+            }
+        }
+
+        private void SaveDeviceStatus(Device entity)
         {
             foreach (var ds in DeviceStatusList)
             {
-                Device entity = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceID)));
+                DeviceStatus deviceStatus = _commandPerserService.FindDeviceStatus(entity.DeviceId, ds.StatusType);
 
-                if (entity != null)
+                if (deviceStatus != null)
                 {
-                    DeviceStatus deviceStatus = _commandPerserService.FindDeviceStatus(entity.DeviceId, entity.Id);
-
-                    if (deviceStatus != null)
-                    {
-                        deviceStatus.StatusType =(StatusType)ds.StatusType;
-                        deviceStatus.Status = ds.Value;
-                        _commandPerserService.UpdateDeviceStatus(deviceStatus);
-                    }
-                    else
-                    {
-                        deviceStatus = new DeviceStatus();
-                        deviceStatus.DId = entity.DeviceId;
-                        deviceStatus.StatusType = (StatusType)ds.StatusType;
-                        deviceStatus.Status = ds.Value;
-
-                        _commandPerserService.AddDeviceStatus(deviceStatus);
-                    }
+                    UpdateDevice(deviceStatus, ds);
                 }
                 else
                 {
-                    entity = new Device();
-                    entity.DeviceHash = _commandJson.DeviceUUID.ToString();
-                    entity.Mac = _commandJson.MacID;
-                    entity.Id = Convert.ToInt32((_commandJson.DeviceID));
-                    entity.DeviceVersion = _commandJson.DeviceVersion;
-
-                    entity = _commandPerserService.AdddDevice(entity);
-
-                    DeviceStatus deviceStatus = new DeviceStatus();
-                    deviceStatus.DId = entity.DeviceId;
-                    deviceStatus.StatusType = (StatusType)ds.StatusType;
-                    deviceStatus.Status = ds.Value;
-
-                    _commandPerserService.AddDeviceStatus(deviceStatus);
+                    AddDeviceStatus(entity, ds);
                 }
             }
         }
 
+        private static void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
+        {
+            var deviceStatus = new DeviceStatus();
+            deviceStatus.DId = entity.DeviceId;
+            deviceStatus.StatusType = ds.StatusType;
+            deviceStatus.Status = ds.Value;
 
-        //CommandParser fp = new CommandParser(commandArray);
+            _commandPerserService.AddDeviceStatus(deviceStatus);
+        }
 
-        //    Device entity = _commandPerserService.FindDevice(Convert.ToInt32((commandJson.DeviceID)));
+        private static void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
+        {
+            deviceStatus.Status = ds.Value;
+            _commandPerserService.UpdateDeviceStatus(deviceStatus);
+        }
 
+        private Device AddNewDevice()
+        {
+            Device entity = new Device
+            {
+                DeviceHash = _commandJson.DeviceUUID.ToString(),
+                Mac = _commandJson.MacID,
+                Id = Convert.ToInt32((_commandJson.DeviceID)),
+                DeviceVersion = _commandJson.DeviceVersion
+            };
 
-        //    Channel channel = _commandPerserService.FindChannel(Convert.ToInt32((commandJson.DeviceID)));
-        //    foreach (var channelValue in fp.ChannelValueList)
-        //    {
-        //        //update channelstatus
-        //    }
+            return _commandPerserService.AdddDevice(entity);
+        }
 
+        private int GetChannelNoOfCommunicationProtocol()
+        {
+            return Convert.ToInt32(GetValue(CommandArray[2]));
+        }
 
-        //}
+        private int GetValueOfCommunicationProtocol()
+        {
+            return Convert.ToInt32(GetValue(CommandArray[3]));
+        }
+
+        private void GetDeviceStatus(StatusType status)
+        {
+            DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
+            deviceStatus.DId = _commandJson.DeviceID.ToString();
+            deviceStatus.StatusType = (int)status;
+            deviceStatus.Value = GetValueOfCommunicationProtocol();
+            DeviceStatusList.Add(deviceStatus);
+        }
+
+        private void GetChannelStatus(StatusType status)
+        {
+            ChannelStatusEntity channelStatus = new ChannelStatusEntity();
+            channelStatus.Status = (int)status;
+            channelStatus.ChannelNo = GetChannelNoOfCommunicationProtocol();
+            channelStatus.Value = GetValueOfCommunicationProtocol().ToString();
+            ChannelStatusList.Add(channelStatus);
+        }
 
         #endregion
     }

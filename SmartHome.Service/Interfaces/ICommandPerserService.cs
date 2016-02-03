@@ -26,6 +26,8 @@ namespace SmartHome.Service.Interfaces
         DeviceStatus FindDeviceStatus(int deviceid, int Id);
 
         ChannelStatus FindChannelStatus(int deviceid, int Id);
-        Channel FindChannel(int id);
+        Channel FindChannel(int deviceId,int channelNo);
+
+        List<ChannelStatus> GetAllChannelStatus(int deviceId);
     }
 }
