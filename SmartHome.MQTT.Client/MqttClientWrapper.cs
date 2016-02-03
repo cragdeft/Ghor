@@ -113,8 +113,8 @@ namespace SmartHome.MQTT.Client
 
                 CommandJson josnObject = jsonManager.JsonProcess<CommandJson>(Encoding.UTF8.GetString(e.Message));
                 CommandJsonManager commandJsonManager = new CommandJsonManager(josnObject);
+
                 commandJsonManager.Parse();
-                commandJsonManager.SaveOrUpDateStatus();
             }
            
         }
