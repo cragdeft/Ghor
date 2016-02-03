@@ -9,10 +9,10 @@ using SmartHome.MQTT.Client;
 namespace SmartHome.Tests
 {
     [TestClass]
-    public class TestCommandParser
+    public class TestCommandJsonManager
     {
         [TestMethod]
-        public void Encrypt_ShouldParseCommand()
+        public void TestResponseFeedback_ShouldSaveFeedback()
         {
             string cs = "[{1,6,32,0,0,3,0,1,1,1,0,0,2,1,56,1,3,0,0,0,4,0,0,0,5,0,0,0,6,1,0,0}]";
             var values = cs.Replace("[{", string.Empty).Replace("}]", string.Empty).Split(',');
