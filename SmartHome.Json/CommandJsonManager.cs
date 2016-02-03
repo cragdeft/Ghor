@@ -135,9 +135,6 @@ namespace SmartHome.Json
             {
                 ParseCurrentLoadStatusCommand(8);
             }
-
-            
-
         }
 
         private void ParseCurrentLoadStatusCommand(int length)
@@ -194,23 +191,17 @@ namespace SmartHome.Json
         private void OnOffFeedbackCommandParse()
         {
             GetChannelStatus(StatusType.OnOffFeedback);
-
-            GetDeviceStatus(StatusType.OnOffFeedback);
         }
 
         private void DimmingFeedbackCommandParse()
         {
             GetChannelStatus(StatusType.DimmingFeedback);
 
-            GetDeviceStatus(StatusType.DimmingFeedback);
-
         }
 
         private void DimmingFeedbackEnableDisableCommandParse()
         {
             GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
-
-            GetDeviceStatus(StatusType.DimmingEnableDisableFeedback);
 
         }
 
@@ -221,7 +212,7 @@ namespace SmartHome.Json
 
         private void ThermalShutDownCommandParse()
         {
-            GetChannelStatus(StatusType.ThermalShutDownResponse);
+            GetDeviceStatus(StatusType.ThermalShutDownResponse);
         }
 
         private void SaveOrUpDateStatus()
