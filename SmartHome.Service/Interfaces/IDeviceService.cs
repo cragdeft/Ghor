@@ -13,8 +13,5 @@ namespace SmartHome.Service.Interfaces
     {
         IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model);
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
-
-        
-
     }
 }

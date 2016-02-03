@@ -37,8 +37,3 @@ F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\bin\Debug\Repository.Pa
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.csprojResolveAssemblyReference.cache
-C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
-C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
-C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
-C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
-C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb
