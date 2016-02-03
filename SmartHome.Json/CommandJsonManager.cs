@@ -362,7 +362,7 @@ namespace SmartHome.Json
         {
             var deviceStatus = new DeviceStatus();
             deviceStatus.DId = entity.DeviceId;
-            deviceStatus.StatusType = ds.StatusType;
+            deviceStatus.StatusType = (StatusType) ds.StatusType;
             deviceStatus.Status = ds.Value;
 
             _commandPerserService.AddDeviceStatus(deviceStatus);
