@@ -159,6 +159,7 @@ namespace SmartHome.Json
 
 
                 }
+
         }
 
         private void AddChannelStatusToList(int channelNo,StatusType type,int value)
@@ -241,6 +242,7 @@ namespace SmartHome.Json
 
             }
             }
+
         }
 
         private void SaveDeviceStatus(Device entity)
