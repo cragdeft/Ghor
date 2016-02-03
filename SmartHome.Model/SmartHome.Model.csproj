@@ -52,18 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201602020826271_initialCreate.cs" />
-    <Compile Include="Migrations\201602020826271_initialCreate.Designer.cs">
-      <DependentUpon>201602020826271_initialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602020840047_initialCreate2.cs" />
-    <Compile Include="Migrations\201602020840047_initialCreate2.Designer.cs">
-      <DependentUpon>201602020840047_initialCreate2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602020910188_initialCreate3.cs" />
-    <Compile Include="Migrations\201602020910188_initialCreate3.Designer.cs">
-      <DependentUpon>201602020910188_initialCreate3.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201602030804087_initialDeviceStatus.cs" />
     <Compile Include="Migrations\201602030804087_initialDeviceStatus.Designer.cs">
       <DependentUpon>201602030804087_initialDeviceStatus.cs</DependentUpon>
@@ -106,15 +94,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201602020826271_initialCreate.resx">
-      <DependentUpon>201602020826271_initialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602020840047_initialCreate2.resx">
-      <DependentUpon>201602020840047_initialCreate2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602020910188_initialCreate3.resx">
-      <DependentUpon>201602020910188_initialCreate3.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602030804087_initialDeviceStatus.resx">
       <DependentUpon>201602030804087_initialDeviceStatus.cs</DependentUpon>
     </EmbeddedResource>
