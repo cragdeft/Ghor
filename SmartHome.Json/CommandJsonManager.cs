@@ -10,7 +10,6 @@ using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
-using SmartHome.MQTT.Client;
 using SmartHome.Service;
 using SmartHome.Service.Interfaces;
 

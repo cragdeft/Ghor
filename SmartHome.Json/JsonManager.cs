@@ -46,7 +46,7 @@ namespace SmartHome.Json
                 IEnumerable<Model.Models.Version> oVersion = ConfigureVersion(oRootObject);
                 IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
                 MergeVersionAndVersionDetail(oVersion, oVersionDetail);
-               // StoreVersionAndVersionDetail(oVersion);
+                StoreVersionAndVersionDetail(oVersion);
 
                 IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
                 IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);

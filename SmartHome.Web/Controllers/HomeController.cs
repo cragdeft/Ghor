@@ -25,8 +25,8 @@ namespace SmartHome.Web.Controllers
     //[CustomAuthorize(Roles = "User", Users = "1,2,3")]
     public class HomeController : BaseController
     {
-        //private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        //private readonly IServerResponceService _serverResponceService;
+        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+        private readonly IVersionService _versionService;
 
         //public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IServerResponceService serverResponceService)
         //{
@@ -52,6 +52,12 @@ namespace SmartHome.Web.Controllers
 
         //    //return View(_serverResponceService.Queryable());
         //}
+
+        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService)
+        {
+            this._unitOfWorkAsync = unitOfWorkAsync;
+            this._versionService = versionService;
+        }
 
         #region m2m
 
@@ -123,9 +129,11 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Contact()
         {
+
+            var temp = _versionService.Query().Include(x => x.VersionDetails).Select().ToList();
             ViewBag.Message = "Your contact page.";
 
-            return View();
+            return View(temp);
         }
 
         //public async Task<ActionResult> Create(ServerResponce model)

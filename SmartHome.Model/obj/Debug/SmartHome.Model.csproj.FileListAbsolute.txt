@@ -110,9 +110,9 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\Repository.Pattern.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.xml
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\bin\Debug\EntityFramework.SqlServer.xml
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csprojResolveAssemblyReference.cache
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate.resources
-C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate2.resources
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate3.resources
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Model\obj\Debug\SmartHome.Model.pdb

@@ -12,7 +12,7 @@ namespace SmartHome.MQTT.Client
 {
     public static class MqttClientWrapper
     {
-        
+
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
@@ -106,6 +106,12 @@ namespace SmartHome.MQTT.Client
 
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
+            
+
+            if (e.Topic == TopicType.Configuration.ToString())
+            {
+                new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
+            }
 
             if (e.Topic == TopicType.Feedback.ToString())
             {
@@ -116,10 +122,10 @@ namespace SmartHome.MQTT.Client
 
                 commandJsonManager.Parse();
             }
-           
+
         }
 
-        
+
 
         #endregion
     }
