@@ -23,7 +23,7 @@ namespace SmartHome.Json
         private static IUnitOfWorkAsync _unitOfWorkAsync;
         private static IDeviceService _deviceService;
         private static ICommandPerserService _commandPerserService;
-        private CommandJson _commandJson { get; set; }
+        private CommandJsonEntity _commandJson { get; set; }
         private Device Device { get; set; }
 
         private string[] CommandArray { get; set; }
@@ -41,14 +41,14 @@ namespace SmartHome.Json
         #endregion
 
         #region Constructor
-        public CommandJsonManager(CommandJson commandJson)
+        public CommandJsonManager(CommandJsonEntity commandJson)
         {
             InitializeParameters(commandJson);
 
             InitializeList();
         }
 
-        private void InitializeParameters(CommandJson commandJson)
+        private void InitializeParameters(CommandJsonEntity commandJson)
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
@@ -68,6 +68,11 @@ namespace SmartHome.Json
 
         #region Methods
 
+        public void LogCommand(bool isProcessed)
+        {
+            _commandJson.IsProcessed = isProcessed;
+            _commandPerserService.LogCommand(_commandJson);
+        }
         public void Parse()
         {
             Device = _commandPerserService.FindDevice(_commandJson.DeviceUUID);
@@ -75,7 +80,9 @@ namespace SmartHome.Json
             if (Device == null)
             {
                 //ErrorLog
+                LogCommand(false);
                 return;
+
             }
 
             else
@@ -245,13 +252,6 @@ namespace SmartHome.Json
 
             var device = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceUUID)));
 
-            if (device == null)
-            {
-                //Error Log
-                return;
-            }
-
-
             SaveDeviceStatus(device);
 
             SaveChannelStatus(device);
@@ -312,16 +312,16 @@ namespace SmartHome.Json
         }
 
 
-        private Channel AddChannel(Channel channel, ChannelStatusEntity channelValue)
-        {
-            channel = new Channel
-            {
-                DId = _commandJson.DeviceID,
-                ChannelNo = channelValue.ChannelNo
-            };
-            _commandPerserService.AdddChannel(channel);
-            return channel;
-        }
+        //private Channel AddChannel(Channel channel, ChannelStatusEntity channelValue)
+        //{
+        //    channel = new Channel
+        //    {
+        //        DId = _commandJson.DeviceID,
+        //        ChannelNo = channelValue.ChannelNo
+        //    };
+        //    _commandPerserService.AdddChannel(channel);
+        //    return channel;
+        //}
 
         private void AddChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
@@ -416,6 +416,8 @@ namespace SmartHome.Json
             };
             ChannelStatusList.Add(channelStatus);
         }
+
+        
 
         #endregion
     }
