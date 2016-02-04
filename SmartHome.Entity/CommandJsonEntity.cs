@@ -24,8 +24,8 @@ namespace SmartHome.Entity
         public bool Response { get; set; }
         [JsonProperty("mac_id")]
         public string Mac { get; set; }
-        [JsonProperty("email")]
         public string DeviceVersion { get; set; }
+        [JsonProperty("email")]
         public string EmailAddress { get; set; }
 
         public bool IsProcessed { get; set; }
