@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace SmartHome.Json
         public List<DeviceStatusEntity> DeviceStatusList { get; set; }
         public List<ChannelStatusEntity> ChannelStatusList { get; set; }
         public int Length { get; set; }
-        public int Initiator { get; set; }
+        public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
         #endregion
 
@@ -73,16 +74,16 @@ namespace SmartHome.Json
         }
         public void Parse()
         {
-            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUID);
+            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUId);
 
             if (Device == null)
             {
-                LogCommand(false,"Device (DeviceHash = "+_commandJson.DeviceUUID+" ) not found.");
+                LogCommand(false,"Device (DeviceHash = "+_commandJson.DeviceUUId+" ) not found.");
                 return;
             }
             else
             {
-                //Initiator = GetInitiator();
+                ParseInitiatorAndSetVersionValue();
 
                 CommandId = GetCommandId();
                 
@@ -124,9 +125,46 @@ namespace SmartHome.Json
             return (CommandId)Enum.ToObject(typeof(CommandId), GetValue(CommandArray[1]));
         }
 
-        private int GetInitiator()
+        private void ParseInitiatorAndSetVersionValue()
         {
-            return Convert.ToInt32(GetValue(CommandArray[0]));
+           GetInitiator();
+           
+           bool[] directionBoolArray = new bool[5];
+           bool[] versionBoolArray = new bool[3];
+           BitArray cds0 = new BitArray(BitConverter.GetBytes(Initiator).ToArray());
+
+           IterateByte(cds0, ref directionBoolArray, ref versionBoolArray);
+
+           _commandJson.DeviceVersion = GetIntFromBitArray(new BitArray(versionBoolArray)).ToString();
+
+        }
+
+        private void GetInitiator()
+        {
+            Initiator = Convert.ToByte(CommandArray[0]);
+        }
+
+        private static void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
+        {
+            for (int i = 0; i < cds0.Length; i++)
+            {
+                if (i <= 4)
+                    directionBoolArray[i] = cds0[i];
+                else
+                    versionBoolArray[i] = cds0[i];
+            }
+        }
+
+        private int GetIntFromBitArray(BitArray bitArray)
+        {
+
+            if (bitArray.Length > 32)
+                throw new ArgumentException("Argument length shall be at most 32 bits.");
+
+            int[] array = new int[1];
+            bitArray.CopyTo(array, 0);
+            return array[0];
+
         }
 
         private int GetValue(string arg)
@@ -187,7 +225,7 @@ namespace SmartHome.Json
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
-                DId = _commandJson.DeviceID.ToString(),
+                DId = _commandJson.DeviceId.ToString(),
                 StatusType = (int)type,
                 Value = value
             };
@@ -283,7 +321,7 @@ namespace SmartHome.Json
             }
             else
             {
-                LogCommand(false, "Channel (DeviceHash = " + _commandJson.DeviceUUID + " and Channel No ( "+ channelValue.ChannelNo+" ) ) not found.");
+                LogCommand(false, "Channel (DeviceHash = " + _commandJson.DeviceUUId + " and Channel No ( "+ channelValue.ChannelNo+" ) ) not found.");
             }
         }
 
@@ -305,7 +343,7 @@ namespace SmartHome.Json
         {
             var status = new ChannelStatus
             {
-                DId = _commandJson.DeviceID,
+                DId = _commandJson.DeviceId,
                 CId = channel.ChannelId,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
@@ -365,7 +403,7 @@ namespace SmartHome.Json
         private void GetDeviceStatus(StatusType status)
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
-            deviceStatus.DId = _commandJson.DeviceID.ToString();
+            deviceStatus.DId = _commandJson.DeviceId.ToString();
             deviceStatus.StatusType = (int)status;
             deviceStatus.Value = GetValueOfCommunicationProtocol();
             DeviceStatusList.Add(deviceStatus);
