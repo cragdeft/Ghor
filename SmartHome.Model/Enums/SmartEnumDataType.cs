@@ -43,13 +43,13 @@ namespace SmartHome.Model.Enums
 
     public enum ChannelId
     {
-        SmartSwitchChannelAll,  
-        SmartSwitchChannel1,
-        SmartSwitchChannel2,
-        SmartSwitchChannel3,
-        SmartSwitchChannel4,
-        SmartSwitchChannel5,
-        SmartSwitchChannel6
+        SmartSwitchChannelAll=0,  
+        SmartSwitchChannel1=1,
+        SmartSwitchChannel2=2,
+        SmartSwitchChannel3=3,
+        SmartSwitchChannel4=4,
+        SmartSwitchChannel5=5,
+        SmartSwitchChannel6=6
 
     }
 
