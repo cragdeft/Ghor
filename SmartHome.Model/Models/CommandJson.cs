@@ -15,13 +15,13 @@ namespace SmartHome.Model.Models
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CommandID { get; set; }
+        public int CommandId { get; set; }
         public String Command { get; set; }
-        public int DeviceID { get; set; }
-        public int DeviceUUID { get; set; }
+        public int DeviceId { get; set; }
+        public int DeviceUUId { get; set; }
         public bool Response { get; set; }
         public string DeviceVersion { get; set; }
-        public string MacID { get; set; }
+        public string Mac { get; set; }
         public string EmailAddress { get; set; }
 
         public bool IsProcessed { get; set; }

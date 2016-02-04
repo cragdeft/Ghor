@@ -119,14 +119,14 @@ namespace SmartHome.MQTT.Client
             var jsonString = Encoding.UTF8.GetString(e.Message);
             if (e.Topic == CommandType.Configuration.ToString())
             {
-                new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
+                new JsonManager().JsonProcess(jsonString);
             }
 
             if (e.Topic == CommandType.Feedback.ToString())
             {
 
                 var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
-                if (jsonObject.CommandID == 25)
+                if (jsonObject.CommandId == 25)
                     CommandLog(jsonObject);
                 else
                     FeedbackCommandParse(jsonObject);
