@@ -29,5 +29,7 @@ namespace SmartHome.Service.Interfaces
         List<ChannelStatus> GetAllChannelStatus(int deviceId);
 
         void LogCommand(CommandJsonEntity command);
+
+        void UpdateChannel(Channel channel);
     }
 }
