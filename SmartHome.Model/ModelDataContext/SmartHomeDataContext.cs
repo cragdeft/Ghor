@@ -42,7 +42,9 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<UserType> UserTypes { get; set; }
         public IDbSet<UserStatus> UserStatuses { get; set; }        
         public IDbSet<WebPagesRole> WebPagesRoles { get; set; }
-        
+
+        public IDbSet<CommandJson> CommandJsons { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
