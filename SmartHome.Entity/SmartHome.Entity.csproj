@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="ChannelEntity.cs" />
     <Compile Include="ChannelStatusEntity.cs" />
-    <Compile Include="CommandJson.cs" />
+    <Compile Include="CommandJsonEntity.cs" />
     <Compile Include="DeviceEntity.cs" />
     <Compile Include="DeviceInfoEntity.cs" />
     <Compile Include="DeviceStatusEntity.cs" />
@@ -62,6 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
+      <Project>{56FE5655-E41D-4DCA-964A-AB04DC82E0E9}</Project>
+      <Name>SmartHome.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
