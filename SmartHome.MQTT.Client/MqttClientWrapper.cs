@@ -119,23 +119,22 @@ namespace SmartHome.MQTT.Client
             var jsonString = Encoding.UTF8.GetString(e.Message);
             if (e.Topic == CommandType.Configuration.ToString())
             {
-                new JsonManager().JsonProcess(jsonString);
+                new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
             }
 
             if (e.Topic == CommandType.Feedback.ToString())
             {
 
                 var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
-                if (jsonObject.CommandId == 25)
-                    CommandLog(jsonObject);
-                else
-                    FeedbackCommandParse(jsonObject);
+
+                FeedbackCommandParse(jsonObject);
             }
 
             if (e.Topic == CommandType.Command.ToString())
             {
                 var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
-                CommandLog(jsonObject);
+                CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+                commandJsonManager.LogCommand(true, "");
             }
         }
 
@@ -154,14 +153,6 @@ namespace SmartHome.MQTT.Client
             CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
 
             commandJsonManager.Parse();
-        }
-
-        private static void CommandLog(CommandJsonEntity jsonObject)
-        {
-
-            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
-            
-            commandJsonManager.LogCommand(true);
         }
 
         #endregion
