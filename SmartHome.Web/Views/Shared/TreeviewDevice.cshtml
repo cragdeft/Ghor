@@ -3,10 +3,10 @@
 
 @helper GetTreeView(IEnumerable<SmartHome.Entity.DeviceInfoEntity> siteMenu, int parentID)
 {
-foreach (var i in siteMenu.Where(a => a.ParentId.Equals(parentID)))
+foreach (var nextDevice in siteMenu.Where(a => a.ParentId.Equals(parentID)))
 {
         <li>
-            @{var submenu = siteMenu.Where(a => a.ParentId.Equals(i.SequenceId)).Count();}
+            @{var submenu = siteMenu.Where(a => a.ParentId.Equals(nextDevice.SequenceId)).Count();}
             @if (submenu > 0)
             {
                 <span class="collapse collapsible">&nbsp;</span>
@@ -16,12 +16,12 @@ foreach (var i in siteMenu.Where(a => a.ParentId.Equals(parentID)))
                 <span style="width:15px; display:inline-block">&nbsp;</span>
             }
             <span>
-                <a href="#">@i.DisplayName</a>
+                <a href="#">@nextDevice.DisplayName</a>
             </span>
             @if (submenu > 0)
             {
                 <ul>
-                    @GetTreeView(siteMenu, i.SequenceId)
+                    @GetTreeView(siteMenu, nextDevice.SequenceId)
                     @* Recursive  Call for Populate Sub items here*@
                 </ul>
             }
