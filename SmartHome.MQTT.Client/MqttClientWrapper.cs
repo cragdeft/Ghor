@@ -22,14 +22,24 @@ namespace SmartHome.MQTT.Client
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.11.195")
+                if (brokerAddress == "192.168.11.150")
                 {
-                    SmartHomeMQTT = new MqttClient(brokerAddress);
+                    //SmartHomeMQTT = new MqttClient(brokerAddress, 18830, true, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback, null);
+
+                    SmartHomeMQTT = new MqttClient(brokerAddress, 18830, false, null, null, MqttSslProtocols.None, null);
+                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+                                      new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
                     SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
                 }
                 else
                 {
                     SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
+
+                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+                                    new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+
                     SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
                 }
 
@@ -107,7 +117,6 @@ namespace SmartHome.MQTT.Client
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             var jsonString = Encoding.UTF8.GetString(e.Message);
-
             if (e.Topic == CommandType.Configuration.ToString())
             {
                 new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
