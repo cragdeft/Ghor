@@ -16,7 +16,7 @@ namespace SmartHome.Model.Enums
         NON_DIMMABLE_BULB = 1,
         [EnumMember]
         DIMMABLE_BULB = 2,
-        [EnumMember]
+        [EnumMember]                                                                     
         FAN = 3
     }
     [DataContract]
