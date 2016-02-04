@@ -15,7 +15,7 @@ namespace SmartHome.Service.Interfaces
 
         DeviceStatus AddDeviceStatus(DeviceStatus deviceStatus);
 
-        bool UpdateChannelStatus(ChannelStatus channelStatus);
+        ChannelStatus UpdateChannelStatus(ChannelStatus channelStatus);
 
         ChannelStatus AddChannelStatus(ChannelStatus channelStatus);
 
@@ -28,6 +28,6 @@ namespace SmartHome.Service.Interfaces
 
         List<ChannelStatus> GetAllChannelStatus(int deviceId);
 
-        Channel AdddChannel(Channel channel);
+        void LogCommand(CommandJsonEntity command);
     }
 }
