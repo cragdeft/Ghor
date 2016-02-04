@@ -15,6 +15,7 @@ namespace SmartHome.Model.Models
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CommandJsonId { get; set; }
         public int CommandId { get; set; }
         public String Command { get; set; }
         public int DeviceId { get; set; }
