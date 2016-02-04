@@ -106,26 +106,54 @@ namespace SmartHome.MQTT.Client
 
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            
+            var jsonString = Encoding.UTF8.GetString(e.Message);
 
-            if (e.Topic == TopicType.Configuration.ToString())
+            if (e.Topic == CommandType.Configuration.ToString())
             {
                 new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
             }
 
-            if (e.Topic == TopicType.Feedback.ToString())
+            if (e.Topic == CommandType.Feedback.ToString())
             {
-                JsonManager jsonManager = new JsonManager();
 
-                CommandJson josnObject = jsonManager.JsonProcess<CommandJson>(Encoding.UTF8.GetString(e.Message));
-                CommandJsonManager commandJsonManager = new CommandJsonManager(josnObject);
-
-                commandJsonManager.Parse();
+                var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
+                if (jsonObject.CommandID == 25)
+                    CommandLog(jsonObject);
+                else
+                    FeedbackCommandParse(jsonObject);
             }
 
+            if (e.Topic == CommandType.Command.ToString())
+            {
+                var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
+                CommandLog(jsonObject);
+            }
         }
 
+        private static CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
+        {
+            MqttMsgPublishEventArgs e;
+            JsonManager jsonManager = new JsonManager();
+            CommandJsonEntity jsonObject = jsonManager.JsonProcess<CommandJsonEntity>(jsonString);
+            jsonObject.CommandType = commandType;
+            return jsonObject;
+        }
 
+        private static void FeedbackCommandParse(CommandJsonEntity jsonObject)
+        {
+
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+
+            commandJsonManager.Parse();
+        }
+
+        private static void CommandLog(CommandJsonEntity jsonObject)
+        {
+
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            
+            commandJsonManager.LogCommand(true);
+        }
 
         #endregion
     }
