@@ -110,7 +110,7 @@ namespace SmartHome.Model.Enums
 
 
 
-    public enum TopicType
+    public enum CommandType
     {
         Command,
         Configuration,
