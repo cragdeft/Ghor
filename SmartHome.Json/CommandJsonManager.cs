@@ -115,7 +115,7 @@ namespace SmartHome.Json
                         DimmingFeedbackEnableDisableCommandParse();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return;
                 }
 
                 SaveOrUpDateStatus();
@@ -125,7 +125,8 @@ namespace SmartHome.Json
 
         private CommandId GetCommandId()
         {
-            return (CommandId)Enum.ToObject(typeof(CommandId), GetValue(CommandArray[1]));
+            _commandJson.CommandId = GetValue(CommandArray[1]);
+            return (CommandId)Enum.ToObject(typeof(CommandId), _commandJson.CommandId);
         }
 
         private void ParseInitiatorAndSetVersionValue()
@@ -149,12 +150,12 @@ namespace SmartHome.Json
 
         private static void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
         {
-            for (int i = 0; i < cds0.Length; i++)
+            for (int i = 0; i < 8; i++)
             {
                 if (i <= 4)
                     directionBoolArray[i] = cds0[i];
                 else
-                    versionBoolArray[i] = cds0[i];
+                    versionBoolArray[i-5] = cds0[i];
             }
         }
 
