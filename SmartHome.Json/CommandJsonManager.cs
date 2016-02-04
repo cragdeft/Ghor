@@ -75,7 +75,7 @@ namespace SmartHome.Json
         }
         public void Parse()
         {
-            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUID);
+            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUId);
 
             if (Device == null)
             {
@@ -198,7 +198,7 @@ namespace SmartHome.Json
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
-                DId = _commandJson.DeviceID.ToString(),
+                DId = _commandJson.DeviceId.ToString(),
                 StatusType = (int)type,
                 Value = value
             };
@@ -250,7 +250,7 @@ namespace SmartHome.Json
         private void SaveOrUpDateStatus()
         {
 
-            var device = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceUUID)));
+            var device = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceUUId)));
 
             SaveDeviceStatus(device);
 
@@ -327,7 +327,7 @@ namespace SmartHome.Json
         {
             var status = new ChannelStatus
             {
-                DId = _commandJson.DeviceID,
+                DId = _commandJson.DeviceId,
                 CId = channel.ChannelId,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
@@ -400,7 +400,7 @@ namespace SmartHome.Json
         private void GetDeviceStatus(StatusType status)
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
-            deviceStatus.DId = _commandJson.DeviceID.ToString();
+            deviceStatus.DId = _commandJson.DeviceId.ToString();
             deviceStatus.StatusType = (int)status;
             deviceStatus.Value = GetValueOfCommunicationProtocol();
             DeviceStatusList.Add(deviceStatus);

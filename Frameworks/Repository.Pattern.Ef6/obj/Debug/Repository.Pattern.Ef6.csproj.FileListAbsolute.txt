@@ -24,15 +24,6 @@ C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pa
 C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
 C:\Aplomb\SmartHomeApp\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll.config
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\System.Net.Http.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll.config
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.pdb
@@ -85,3 +76,17 @@ F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\bin\Debug\EntityFra
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
 F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll.config
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.Ef6.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\EntityFramework.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\EntityFramework.SqlServer.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Newtonsoft.Json.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\System.Net.Http.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Repository.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\EntityFramework.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\EntityFramework.SqlServer.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb

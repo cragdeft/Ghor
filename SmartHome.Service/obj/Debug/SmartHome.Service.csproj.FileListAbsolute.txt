@@ -14,22 +14,6 @@ C:\Aplomb\SmartHomeApp\SmartHome.Service\bin\Debug\SmartHome.Model.pdb
 C:\Aplomb\SmartHomeApp\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\Aplomb\SmartHomeApp\SmartHome.Service\obj\Debug\SmartHome.Service.dll
 C:\Aplomb\SmartHomeApp\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.Ef6.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Service.Pattern.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\EntityFramework.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\LinqKit.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Microsoft.Practices.ServiceLocation.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.Ef6.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Service.Pattern.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.dll
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.pdb
 C:\Aplomb\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.dll
@@ -117,3 +101,26 @@ F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\EntityFramework.xml
 F:\Projects\Smart Home Web\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\SmartHome.Service\obj\Debug\SmartHome.Service.dll
 F:\Projects\Smart Home Web\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Service.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\AutoMapper.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.Ef6.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Service.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Entity.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Repository.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\EntityFramework.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\LinqKit.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Newtonsoft.Json.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.Ef6.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Repository.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\Service.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Entity.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Model.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\SmartHome.Repository.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\bin\Debug\EntityFramework.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
