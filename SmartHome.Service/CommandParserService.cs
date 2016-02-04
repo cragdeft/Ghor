@@ -67,7 +67,7 @@ namespace SmartHome.Service
                 _unitOfWorkAsync.Commit();
                 return deviceStatus;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 _unitOfWorkAsync.Rollback();
@@ -93,11 +93,11 @@ namespace SmartHome.Service
                 .FirstOrDefault();
         }
 
-        public Device FindDevice(int id)
+        public Device FindDevice(int deviceHash)
         {
             return _deviceRepository
                 .Queryable()
-                .Where(u => u.DeviceId == id)
+                .Where(u => u.DeviceHash == deviceHash.ToString())
                 .FirstOrDefault();
         }
 
@@ -105,7 +105,7 @@ namespace SmartHome.Service
         {
             return _channelStatusRepository
                 .Queryable()
-                .Where(u => u.DId == deviceid && u.Id == Id)
+                .Where(u => u.DId == deviceid && u.ChannelNo == Id)
                 .FirstOrDefault();
         }
 
@@ -123,26 +123,27 @@ namespace SmartHome.Service
                 .Queryable()
                 .Where(u => u.DId == deviceId).ToList();
         }
+        
 
-        public Device AdddDevice(Device device)
+        public Channel AdddChannel(Channel channel)
         {
             _unitOfWorkAsync.BeginTransaction();
 
             try
             {
 
-                device.AuditField = new AuditFields( _email, DateTime.Now,null,null);
-                device.ObjectState = ObjectState.Added;
-                _deviceRepository.Insert(device);
+                channel.AuditField = new AuditFields(_email, DateTime.Now, null, null);
+                channel.ObjectState = ObjectState.Added;
+                _channelRepository.Insert(channel);
                 var changes = _unitOfWorkAsync.SaveChangesAsync();
                 _unitOfWorkAsync.Commit();
-                return device;
+                return channel;
             }
             catch (Exception ex)
             {
 
                 _unitOfWorkAsync.Rollback();
-                return device;
+                return channel;
             }
         }
     }

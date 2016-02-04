@@ -143,3 +143,11 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.xml
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml

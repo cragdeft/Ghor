@@ -85,3 +85,6 @@ F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\EntityFramework.xml
 F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
 F:\Projects\Smart Home Web\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Entity.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Newtonsoft.Json.dll
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\SmartHome.Entity.pdb
