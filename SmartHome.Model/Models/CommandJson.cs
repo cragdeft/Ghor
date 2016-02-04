@@ -26,6 +26,7 @@ namespace SmartHome.Model.Models
 
         public bool IsProcessed { get; set; }
         public CommandType CommandType { get; set; }
+        public string ProcessFailReason { get; set; }
         #endregion
 
         #region Complex Properties
