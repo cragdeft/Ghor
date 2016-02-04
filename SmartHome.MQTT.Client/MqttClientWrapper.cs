@@ -119,41 +119,42 @@ namespace SmartHome.MQTT.Client
             var jsonString = Encoding.UTF8.GetString(e.Message);
             if (e.Topic == CommandType.Configuration.ToString())
             {
-                new JsonManager().JsonProcess(Encoding.UTF8.GetString(e.Message));
+                new JsonManager().JsonProcess(jsonString);
             }
 
             if (e.Topic == CommandType.Feedback.ToString())
             {
-
                 var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
-
                 FeedbackCommandParse(jsonObject);
             }
 
             if (e.Topic == CommandType.Command.ToString())
             {
                 var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
-                CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
-                commandJsonManager.LogCommand(true, "");
+                CommandLog(jsonObject);
             }
+        }
+
+        private static void CommandLog(CommandJsonEntity jsonObject)
+        {
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            commandJsonManager.LogCommand(true, "");
         }
 
         private static CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
         {
-            MqttMsgPublishEventArgs e;
-            JsonManager jsonManager = new JsonManager();
-            CommandJsonEntity jsonObject = jsonManager.JsonProcess<CommandJsonEntity>(jsonString);
+            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
             jsonObject.CommandType = commandType;
             return jsonObject;
         }
 
         private static void FeedbackCommandParse(CommandJsonEntity jsonObject)
         {
-
             CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
-
             commandJsonManager.Parse();
         }
+
+
 
         #endregion
     }
