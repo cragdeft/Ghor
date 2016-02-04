@@ -33,5 +33,6 @@ namespace SmartHome.Entity
 
         public bool IsProcessed { get; set; }
         public CommandType CommandType { get; set; }
+
     }
 }
