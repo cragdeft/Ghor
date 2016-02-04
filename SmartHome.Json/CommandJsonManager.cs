@@ -299,13 +299,10 @@ namespace SmartHome.Json
         {
             foreach (var channelValue in ChannelStatusList)
             {
-                if (channelValue.ChannelNo == 0)
-                {
-                    //UpdateAllChannelStatus(device, channelValue);
-                }
-                else
+                if (channelValue.ChannelNo > 0)
                 {
                     SaveSingleChannelStatus(channelValue, device);
+                    //UpdateAllChannelStatus(device, channelValue);
                 }
             }
         }
