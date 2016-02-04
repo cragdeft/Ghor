@@ -161,7 +161,7 @@ namespace SmartHome.Service
 
         public void LogCommand(CommandJsonEntity command)
         {
-            //Mapper.CreateMap<CommandJsonEntity, CommandJson>();
+            Mapper.CreateMap<CommandJsonEntity, CommandJson>();
             CommandJson commanD = Mapper.Map<CommandJsonEntity, CommandJson>(command);
             _unitOfWorkAsync.BeginTransaction();
 
@@ -175,6 +175,25 @@ namespace SmartHome.Service
                 _unitOfWorkAsync.Commit();
             }
             catch (Exception ex)
+            {
+
+                _unitOfWorkAsync.Rollback();
+            }
+        }
+
+        public void UpdateChannel(Channel channel)
+        {
+            _unitOfWorkAsync.BeginTransaction();
+            try
+            {
+
+                channel.AuditField = new AuditFields(channel.AuditField.InsertedBy, channel.AuditField.InsertedDateTime, _email, DateTime.Now);
+                channel.ObjectState = ObjectState.Modified;
+                _channelRepository.Update(channel);
+                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                _unitOfWorkAsync.Commit();
+            }
+            catch (Exception)
             {
 
                 _unitOfWorkAsync.Rollback();

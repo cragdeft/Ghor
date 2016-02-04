@@ -14,8 +14,6 @@ namespace SmartHome.Entity
     {
         [JsonProperty("CommandJsonId")]
         public int CommandJsonId { get; set; }
-        [JsonProperty("command_id")]
-        public int CommandId { get; set; }
         [JsonProperty("command_byte")]
         public String Command { get; set; }
         [JsonProperty("device_id")]
@@ -24,14 +22,15 @@ namespace SmartHome.Entity
         public int DeviceUUId { get; set; }
         [JsonProperty("response")]
         public bool Response { get; set; }
-        [JsonProperty("device_version")]
-        public string DeviceVersion { get; set; }
         [JsonProperty("mac_id")]
         public string Mac { get; set; }
+        public string DeviceVersion { get; set; }
         [JsonProperty("email")]
         public string EmailAddress { get; set; }
 
         public bool IsProcessed { get; set; }
         public CommandType CommandType { get; set; }
+        public string ProcessFailReason { get; set; }
+        public int CommandId { get; set; }
     }
 }

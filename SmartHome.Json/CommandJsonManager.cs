@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Repository.Pattern.DataContext;
 using Repository.Pattern.Ef6;
 using Repository.Pattern.UnitOfWork;
@@ -21,11 +23,9 @@ namespace SmartHome.Json
 
         #region Private
         private static IUnitOfWorkAsync _unitOfWorkAsync;
-        private static IDeviceService _deviceService;
         private static ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
         private Device Device { get; set; }
-
         private string[] CommandArray { get; set; }
         #endregion
 
@@ -33,14 +33,15 @@ namespace SmartHome.Json
         public List<DeviceStatusEntity> DeviceStatusList { get; set; }
         public List<ChannelStatusEntity> ChannelStatusList { get; set; }
         public int Length { get; set; }
-        public int Initiator { get; set; }
-
+        public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
         #endregion
 
         #endregion
 
         #region Constructor
+
+        
         public CommandJsonManager(CommandJsonEntity commandJson)
         {
             InitializeParameters(commandJson);
@@ -54,7 +55,7 @@ namespace SmartHome.Json
             _unitOfWorkAsync = new UnitOfWork(context);
             _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
             _commandJson = commandJson;
-            CommandArray = _commandJson.Command.Replace("[{", string.Empty).Replace("}]", string.Empty).Split(',');
+            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
             Length = CommandArray.Length;
         }
 
@@ -68,9 +69,10 @@ namespace SmartHome.Json
 
         #region Methods
 
-        public void LogCommand(bool isProcessed)
+        public void LogCommand(bool isProcessed,string reason)
         {
             _commandJson.IsProcessed = isProcessed;
+            _commandJson.ProcessFailReason = reason;
             _commandPerserService.LogCommand(_commandJson);
         }
         public void Parse()
@@ -79,22 +81,21 @@ namespace SmartHome.Json
 
             if (Device == null)
             {
-                //ErrorLog
-                LogCommand(false);
+                LogCommand(false,"Device (DeviceHash = "+_commandJson.DeviceUUId+" ) not found.");
                 return;
-
             }
-
             else
             {
-
-
-                //Initiator = GetInitiator();
+                ParseInitiatorAndSetVersionValue();
 
                 CommandId = GetCommandId();
+                
 
                 switch (CommandId)
                 {
+                    case CommandId.DevicePingRequest:
+                        LogCommand(true,"");
+                        return;
                     case CommandId.DeviceOnOffFeedback:
                         OnOffFeedbackCommandParse();
                         break;
@@ -114,7 +115,7 @@ namespace SmartHome.Json
                         DimmingFeedbackEnableDisableCommandParse();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        return;
                 }
 
                 SaveOrUpDateStatus();
@@ -124,12 +125,50 @@ namespace SmartHome.Json
 
         private CommandId GetCommandId()
         {
-            return (CommandId)Enum.ToObject(typeof(CommandId), GetValue(CommandArray[1]));
+            _commandJson.CommandId = GetValue(CommandArray[1]);
+            return (CommandId)Enum.ToObject(typeof(CommandId), _commandJson.CommandId);
         }
 
-        private int GetInitiator()
+        private void ParseInitiatorAndSetVersionValue()
         {
-            return Convert.ToInt32(GetValue(CommandArray[0]));
+           GetInitiator();
+           
+           bool[] directionBoolArray = new bool[5];
+           bool[] versionBoolArray = new bool[3];
+           BitArray cds0 = new BitArray(BitConverter.GetBytes(Initiator).ToArray());
+
+           IterateByte(cds0, ref directionBoolArray, ref versionBoolArray);
+
+           _commandJson.DeviceVersion = GetIntFromBitArray(new BitArray(versionBoolArray)).ToString();
+
+        }
+
+        private void GetInitiator()
+        {
+            Initiator = Convert.ToByte(CommandArray[0]);
+        }
+
+        private static void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                if (i <= 4)
+                    directionBoolArray[i] = cds0[i];
+                else
+                    versionBoolArray[i-5] = cds0[i];
+            }
+        }
+
+        private int GetIntFromBitArray(BitArray bitArray)
+        {
+
+            if (bitArray.Length > 32)
+                throw new ArgumentException("Argument length shall be at most 32 bits.");
+
+            int[] array = new int[1];
+            bitArray.CopyTo(array, 0);
+            return array[0];
+
         }
 
         private int GetValue(string arg)
@@ -147,20 +186,12 @@ namespace SmartHome.Json
             if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
             GetDeviceStatus(StatusType.SmartSwitchThermalShutdown);
 
-            if (CommandArray.Length > 30)
-            {
-                ParseCurrentLoadStatusCommand(28);
-            }
-            else
-            {
-                ParseCurrentLoadStatusCommand(8);
-            }
+            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 28 : 8);
         }
 
         private void ParseCurrentLoadStatusCommand(int length)
         {
-
-            for (int i = 5; i < length; i++)
+            for (int i = 4; i < length; i++)
             {
                 if (i % 5 == 0)
                 {
@@ -174,10 +205,11 @@ namespace SmartHome.Json
                 else if (i % 7 == 0)
                 {
                     AddChannelStatusToList(GetValue(CommandArray[i - 3]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i]));
-                    //AddDeviceStatusToList(StatusType.SmartSwitchIndicator, GetValue(CommandArray[i]));
+                    if(GetValue(CommandArray[i - 3]) == 0)
+                    {
+                        AddDeviceStatusToList(StatusType.SmartSwitchIndicator, GetValue(CommandArray[i]));
+                    }
                 }
-
-
             }
         }
 
@@ -189,7 +221,6 @@ namespace SmartHome.Json
                 Status = (int)type,
                 Value = value.ToString()
             };
-
             ChannelStatusList.Add(channelStatus);
 
         }
@@ -204,7 +235,6 @@ namespace SmartHome.Json
             };
 
             DeviceStatusList.Add(deviceStatus);
-
         }
 
 
@@ -223,23 +253,30 @@ namespace SmartHome.Json
                 GetChannelStatus(StatusType.DimmingFeedback);
             else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
                 GetDeviceStatus(StatusType.DimmingFeedback);
-
         }
 
         private void DimmingFeedbackEnableDisableCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
                 GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
-
-            else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatus(StatusType.DimmingEnableDisableFeedback);
-
         }
 
-        private void LoadTypeSelectCommandParse()
+        private void  LoadTypeSelectCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
-                GetChannelStatus(StatusType.LoadTypeSelectFeedback);
+            {
+                AddChannelValue(StatusType.LoadTypeSelectFeedback);
+            }
+            //GetChannelStatus(StatusType.LoadTypeSelectFeedback);
+        }
+
+        private void AddChannelValue(StatusType status)
+        {
+            Channel channel = _commandPerserService.FindChannel(Device.DeviceId, GetChannelNoOfCommunicationProtocol());
+            channel.LoadType = (LoadType?) GetValueOfCommunicationProtocol();
+            channel.LoadName = "";
+
+            _commandPerserService.UpdateChannel(channel);
         }
 
         private void ThermalShutDownCommandParse()
@@ -249,12 +286,9 @@ namespace SmartHome.Json
 
         private void SaveOrUpDateStatus()
         {
+            SaveDeviceStatus(Device);
 
-            var device = _commandPerserService.FindDevice(Convert.ToInt32((_commandJson.DeviceUUId)));
-
-            SaveDeviceStatus(device);
-
-            SaveChannelStatus(device);
+            SaveChannelStatus(Device);
         }
 
         private void SaveChannelStatus(Device device)
@@ -265,7 +299,6 @@ namespace SmartHome.Json
                 {
                     UpdateAllChannelStatus(device, channelValue);
                 }
-
                 else
                 {
                     SaveSingleChannelStatus(channelValue, device);
@@ -284,7 +317,6 @@ namespace SmartHome.Json
 
         private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
         {
-
             var channel = _commandPerserService.FindChannel(device.Id, channelValue.ChannelNo);
 
             if (channel != null)
@@ -293,7 +325,7 @@ namespace SmartHome.Json
             }
             else
             {
-                //Error log
+                LogCommand(false, "Channel (DeviceHash = " + _commandJson.DeviceUUId + " and Channel No ( "+ channelValue.ChannelNo+" ) ) not found.");
             }
         }
 
@@ -310,18 +342,6 @@ namespace SmartHome.Json
                 AddChannelStatus(channel, channelValue);
             }
         }
-
-
-        //private Channel AddChannel(Channel channel, ChannelStatusEntity channelValue)
-        //{
-        //    channel = new Channel
-        //    {
-        //        DId = _commandJson.DeviceID,
-        //        ChannelNo = channelValue.ChannelNo
-        //    };
-        //    _commandPerserService.AdddChannel(channel);
-        //    return channel;
-        //}
 
         private void AddChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
@@ -374,19 +394,6 @@ namespace SmartHome.Json
             _commandPerserService.UpdateDeviceStatus(deviceStatus);
         }
 
-        //private Device AddNewDevice()
-        //{
-        //    Device entity = new Device
-        //    {
-        //        DeviceHash = _commandJson.DeviceUUID.ToString(),
-        //        Mac = _commandJson.MacID,
-        //        Id = Convert.ToInt32((_commandJson.DeviceID)),
-        //        DeviceVersion = _commandJson.DeviceVersion
-        //    };
-
-        //    return _commandPerserService.AdddDevice(entity);
-        //}
-
         private int GetChannelNoOfCommunicationProtocol()
         {
             return Convert.ToInt32(GetValue(CommandArray[2]));
@@ -417,7 +424,10 @@ namespace SmartHome.Json
             ChannelStatusList.Add(channelStatus);
         }
 
-        
+        public static T JsonDesrialized<T>(string JsonString)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonString);
+        }
 
         #endregion
     }
