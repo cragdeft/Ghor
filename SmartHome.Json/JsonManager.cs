@@ -213,11 +213,7 @@ namespace SmartHome.Json
             }
         }
         #endregion
-
-        private T JsonDesrialized<T>(string JsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(JsonString);
-        }
+        
 
     }
 }

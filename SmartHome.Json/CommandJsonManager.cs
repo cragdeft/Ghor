@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Repository.Pattern.DataContext;
 using Repository.Pattern.Ef6;
 using Repository.Pattern.UnitOfWork;
@@ -39,6 +40,8 @@ namespace SmartHome.Json
         #endregion
 
         #region Constructor
+
+        
         public CommandJsonManager(CommandJsonEntity commandJson)
         {
             InitializeParameters(commandJson);
@@ -420,7 +423,10 @@ namespace SmartHome.Json
             ChannelStatusList.Add(channelStatus);
         }
 
-        
+        public static T JsonDesrialized<T>(string JsonString)
+        {
+            return JsonConvert.DeserializeObject<T>(JsonString);
+        }
 
         #endregion
     }
