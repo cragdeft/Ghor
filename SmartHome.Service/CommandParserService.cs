@@ -161,7 +161,7 @@ namespace SmartHome.Service
 
         public void LogCommand(CommandJsonEntity command)
         {
-            //Mapper.CreateMap<CommandJsonEntity, CommandJson>();
+            Mapper.CreateMap<CommandJsonEntity, CommandJson>();
             CommandJson commanD = Mapper.Map<CommandJsonEntity, CommandJson>(command);
             _unitOfWorkAsync.BeginTransaction();
 
