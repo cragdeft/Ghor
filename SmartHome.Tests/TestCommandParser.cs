@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartHome.Entity;
+using SmartHome.Json;
+using SmartHome.Model.Enums;
 using SmartHome.MQTT.Client;
 
 namespace SmartHome.Tests
@@ -12,17 +15,13 @@ namespace SmartHome.Tests
     public class TestCommandJsonManager
     {
         [TestMethod]
-        public void TestResponseFeedback_ShouldSaveFeedback()
+        public void TestCommandJsonParse_ShouldParseCommand()
         {
-            string cs = "[{1,6,32,0,0,3,0,1,1,1,0,0,2,1,56,1,3,0,0,0,4,0,0,0,5,0,0,0,6,1,0,0}]";
-            var values = cs.Replace("[{", string.Empty).Replace("}]", string.Empty).Split(',');
-            byte[] commandArray = new byte[values.Length];
-
-            for (int index = 0; index < values.Length; index++)
-            {
-                commandArray[index] = Convert.ToByte(values[index]);
-            }
-           // CommandParser fp = new CommandParser(commandArray);
+            var jsonString = "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 1, 1, 1, 255, 255, 255, -5]\",\"command_id\": 1}";
+            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
+            jsonObject.CommandType = CommandType.Feedback;
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            commandJsonManager.Parse();
         }
     }
 }
