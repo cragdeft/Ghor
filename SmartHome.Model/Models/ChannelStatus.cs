@@ -29,7 +29,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region  Navigation Properties
-       // public virtual Channel Channel { get; set; }
+        public virtual Channel Channel { get; set; }
         #endregion
 
     }
