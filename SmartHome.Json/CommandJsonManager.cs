@@ -184,32 +184,24 @@ namespace SmartHome.Json
         private void CurrentLoadStatusParse()
         {
             if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
-            GetDeviceStatus(StatusType.SmartSwitchThermalShutdown);
 
-            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 28 : 8);
+            GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
+
+            if (GetValue(CommandArray[4]) == 0)
+                GetDeviceStatusFromNumber7Bit(StatusType.IndicatorOnOffFeedback);
+
+            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 8 : 4);
         }
 
-        private void ParseCurrentLoadStatusCommand(int length)
+        private void ParseCurrentLoadStatusCommand(int startingIndex)
         {
-            for (int i = 4; i < length; i++)
+            for (int i = startingIndex; i < Length; i += 4)
             {
-                if (i % 5 == 0)
-                {
-                    AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.OnOffFeedback, GetValue(CommandArray[i]));
-                }
-                else if (i % 6 == 0)
-                {
-                    AddChannelStatusToList(GetValue(CommandArray[i - 2]), StatusType.DimmingFeedback, GetValue(CommandArray[i]));
-                    //AddDeviceStatusToList(StatusType.DimmingFeedback, GetValue(CommandArray[i]));
-                }
-                else if (i % 7 == 0)
-                {
-                    AddChannelStatusToList(GetValue(CommandArray[i - 3]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i]));
-                    if (GetValue(CommandArray[i - 3]) == 0)
-                    {
-                        AddDeviceStatusToList(StatusType.SmartSwitchIndicator, GetValue(CommandArray[i]));
-                    }
-                }
+                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.OnOffFeedback, GetValue(CommandArray[i+1]));
+
+                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.DimmingFeedback, GetValue(CommandArray[i + 2]));
+
+                //AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i + 2]));
             }
         }
 
@@ -244,7 +236,7 @@ namespace SmartHome.Json
                 GetChannelStatus(StatusType.OnOffFeedback);
 
             else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatus(StatusType.OnOffFeedback);
+                GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
         }
 
         private void DimmingFeedbackCommandParse()
@@ -252,7 +244,7 @@ namespace SmartHome.Json
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
                 GetChannelStatus(StatusType.DimmingFeedback);
             else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatus(StatusType.DimmingFeedback);
+                GetDeviceStatusFromNumber3Bit(StatusType.DimmingFeedback);
         }
 
         private void DimmingFeedbackEnableDisableCommandParse()
@@ -275,7 +267,7 @@ namespace SmartHome.Json
             Channel channel = _commandPerserService.FindChannel(Device.DeviceId, GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
-                channel.LoadType = (LoadType?)GetValueOfCommunicationProtocol();
+                channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
 
                 _commandPerserService.UpdateChannel(channel);
             }
@@ -285,7 +277,7 @@ namespace SmartHome.Json
 
         private void ThermalShutDownCommandParse()
         {
-            GetDeviceStatus(StatusType.ThermalShutDownResponse);
+            GetDeviceStatusFromNumber3Bit(StatusType.ThermalShutDownResponse);
         }
 
         private void SaveOrUpDateStatus()
@@ -400,18 +392,25 @@ namespace SmartHome.Json
             return Convert.ToInt32(GetValue(CommandArray[2]));
         }
 
-        private int GetValueOfCommunicationProtocol()
+        private int Get3RdBitValueOfCommunicationProtocol()
         {
             return Convert.ToInt32(GetValue(CommandArray[3]));
         }
 
-        private void GetDeviceStatus(StatusType status)
+        private int Get7ThBitValueOfCommunicationProtocol()
         {
-            DeviceStatusEntity deviceStatus = new DeviceStatusEntity();
-            deviceStatus.DId = _commandJson.DeviceId.ToString();
-            deviceStatus.StatusType = (int)status;
-            deviceStatus.Value = GetValueOfCommunicationProtocol();
-            DeviceStatusList.Add(deviceStatus);
+            return Convert.ToInt32(GetValue(CommandArray[3]));
+        }
+
+        private void GetDeviceStatusFromNumber3Bit(StatusType status)
+        {
+            AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol());
+
+        }
+
+        private void GetDeviceStatusFromNumber7Bit(StatusType status)
+        {
+            AddDeviceStatusToList(status, Get7ThBitValueOfCommunicationProtocol());
         }
 
         private void GetChannelStatus(StatusType status)
@@ -420,14 +419,14 @@ namespace SmartHome.Json
             {
                 Status = (int)status,
                 ChannelNo = GetChannelNoOfCommunicationProtocol(),
-                Value = GetValueOfCommunicationProtocol().ToString()
+                Value = Get3RdBitValueOfCommunicationProtocol().ToString()
             };
             ChannelStatusList.Add(channelStatus);
         }
 
-        public static T JsonDesrialized<T>(string JsonString)
+        public static T JsonDesrialized<T>(string jsonString)
         {
-            return JsonConvert.DeserializeObject<T>(JsonString);
+            return JsonConvert.DeserializeObject<T>(jsonString);
         }
 
         #endregion
