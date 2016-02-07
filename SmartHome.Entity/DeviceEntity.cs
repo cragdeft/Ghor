@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SmartHome.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,9 @@ namespace SmartHome.Entity
         public string DeviceVersion { get; set; }
         public bool IsDeleted { get; set; }
         public string Mac { get; set; }
-        [JsonProperty("DeviceType")]
-        public string DType { get; set; }
-        // public DeviceType? DeviceType { get; set; }
+        //[JsonProperty("DeviceType")]
+       // public string DeviceType { get; set; }
+        public DeviceType? DeviceType { get; set; }
         public int Watt { get; set; }
         #endregion
 
