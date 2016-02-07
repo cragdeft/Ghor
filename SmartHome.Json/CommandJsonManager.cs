@@ -351,6 +351,7 @@ namespace SmartHome.Json
             var status = new ChannelStatus
             {
                 Channel = channel,
+                Status =  (ChannelStatusType) channelValue.Status,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
             };
@@ -386,7 +387,7 @@ namespace SmartHome.Json
             {
                 Device = entity,
                 StatusType = (StatusType) ds.StatusType,
-                Status = ds.Value
+                Value = ds.Value
             };
 
             _commandPerserService.AddDeviceStatus(deviceStatus);
