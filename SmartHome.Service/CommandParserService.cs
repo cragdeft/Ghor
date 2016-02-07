@@ -123,7 +123,7 @@ namespace SmartHome.Service
         public Device FindDevice(int deviceHash)
         {
             return _deviceRepository
-                .Queryable()
+                .Query().Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList()
                 .Where(u => u.DeviceHash == deviceHash.ToString())
                 .FirstOrDefault();
         }
