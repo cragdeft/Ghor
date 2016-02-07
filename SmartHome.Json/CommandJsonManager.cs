@@ -187,12 +187,7 @@ namespace SmartHome.Json
 
             GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
 
-
             ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 32 : 8);
-
-
-
-
 
         }
 
