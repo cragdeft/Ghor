@@ -20,14 +20,7 @@ namespace SmartHome.Service.Interfaces
         ChannelStatus AddChannelStatus(ChannelStatus channelStatus);
 
         Device FindDevice(int deviceHash);
-
-        DeviceStatus FindDeviceStatus(int deviceid, int Id);
-
-        ChannelStatus FindChannelStatus(int deviceid, int Id);
-        Channel FindChannel(int deviceId,int channelNo);
-
-        List<ChannelStatus> GetAllChannelStatus(int deviceId);
-
+        
         void LogCommand(CommandJsonEntity command);
 
         void UpdateChannel(Channel channel);
