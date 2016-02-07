@@ -120,14 +120,6 @@ namespace SmartHome.Service
             }
         }
 
-        public DeviceStatus FindDeviceStatus(int deviceid, int Id)
-        {
-            return _deviceStatusRepository
-                .Queryable()
-                .Where(u => u.DId == deviceid && u.StatusType == (StatusType)Id)
-                .FirstOrDefault();
-        }
-
         public Device FindDevice(int deviceHash)
         {
             return _deviceRepository
@@ -135,29 +127,8 @@ namespace SmartHome.Service
                 .Where(u => u.DeviceHash == deviceHash.ToString())
                 .FirstOrDefault();
         }
-
-        public ChannelStatus FindChannelStatus(int deviceid, int Id)
-        {
-            return _channelStatusRepository
-                .Queryable()
-                .Where(u => u.DId == deviceid && u.ChannelNo == Id)
-                .FirstOrDefault();
-        }
-
-        public Channel FindChannel(int deviceId, int channelNo)
-        {
-            return _channelRepository
-                .Queryable()
-                .Where(u => u.DId == deviceId && u.ChannelNo == channelNo)
-                .FirstOrDefault();
-        }
-
-        public List<ChannelStatus> GetAllChannelStatus(int deviceId)
-        {
-            return _channelStatusRepository
-                .Queryable()
-                .Where(u => u.DId == deviceId).ToList();
-        }
+        
+        
 
         public void LogCommand(CommandJsonEntity command)
         {
