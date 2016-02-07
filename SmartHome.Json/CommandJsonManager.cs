@@ -185,12 +185,17 @@ namespace SmartHome.Json
         {
             if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
 
-            GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
-
-            if (GetValue(CommandArray[4]) == 0)
+            if (Length == 32 )
+            {
+                GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
                 GetDeviceStatusFromNumber7Bit(StatusType.IndicatorOnOffFeedback);
+                ParseCurrentLoadStatusCommand(8);
+            }
+            else
+            {
+                ParseCurrentLoadStatusCommand(4);
+            }
 
-            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 8 : 4);
         }
 
         private void ParseCurrentLoadStatusCommand(int startingIndex)
@@ -233,7 +238,13 @@ namespace SmartHome.Json
         private void OnOffFeedbackCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
-                GetChannelStatus(StatusType.OnOffFeedback);
+            {
+                if(GetChannelNoOfCommunicationProtocol() == 0)
+                    GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
+               else
+                    GetChannelStatus(StatusType.OnOffFeedback);
+            }
+            
 
             else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
                 GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
