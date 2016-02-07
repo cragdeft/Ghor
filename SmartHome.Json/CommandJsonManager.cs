@@ -81,7 +81,7 @@ namespace SmartHome.Json
 
             if (Device == null)
             {
-                LogCommand(false, "Device (DeviceHash = " + _commandJson.DeviceUUId + " ) not found.");
+                LogCommand(false, "Device not found.");
                 return;
             }
             else
@@ -185,19 +185,24 @@ namespace SmartHome.Json
         {
             if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
 
-            GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
-
-            if (GetValue(CommandArray[4]) == 0)
+            if (Length == 32)
+            {
+                GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
                 GetDeviceStatusFromNumber7Bit(StatusType.IndicatorOnOffFeedback);
+                ParseCurrentLoadStatusCommand(8);
+            }
+            else
+            {
+                ParseCurrentLoadStatusCommand(4);
+            }
 
-            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 8 : 4);
         }
 
         private void ParseCurrentLoadStatusCommand(int startingIndex)
         {
             for (int i = startingIndex; i < Length; i += 4)
             {
-                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.OnOffFeedback, GetValue(CommandArray[i+1]));
+                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.OnOffFeedback, GetValue(CommandArray[i + 1]));
 
                 AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.DimmingFeedback, GetValue(CommandArray[i + 2]));
 
@@ -221,7 +226,6 @@ namespace SmartHome.Json
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
-                DId = _commandJson.DeviceId.ToString(),
                 StatusType = (int)type,
                 Value = value
             };
@@ -233,7 +237,13 @@ namespace SmartHome.Json
         private void OnOffFeedbackCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
-                GetChannelStatus(StatusType.OnOffFeedback);
+            {
+                if (GetChannelNoOfCommunicationProtocol() == 0)
+                    GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
+                else
+                    GetChannelStatus(StatusType.OnOffFeedback);
+            }
+
 
             else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
                 GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
@@ -264,7 +274,7 @@ namespace SmartHome.Json
 
         private void AddChannelValue(StatusType status)
         {
-            Channel channel = _commandPerserService.FindChannel(Device.DeviceId, GetChannelNoOfCommunicationProtocol());
+            Channel channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
                 channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
@@ -299,18 +309,18 @@ namespace SmartHome.Json
             }
         }
 
-        private static void UpdateAllChannelStatus(Device device, ChannelStatusEntity channelValue)
-        {
-            List<ChannelStatus> list = _commandPerserService.GetAllChannelStatus(device.Id);
-            foreach (ChannelStatus channelStatus in list)
-            {
-                UpdateChannelStatus(channelStatus, channelValue);
-            }
-        }
+        //private static void UpdateAllChannelStatus(Device device, ChannelStatusEntity channelValue)
+        //{
+        //    List<ChannelStatus> list = _commandPerserService.GetAllChannelStatus(device.DeviceId);
+        //    foreach (ChannelStatus channelStatus in list)
+        //    {
+        //        UpdateChannelStatus(channelStatus, channelValue);
+        //    }
+        //}
 
         private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
         {
-            var channel = _commandPerserService.FindChannel(device.Id, channelValue.ChannelNo);
+            var channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
 
             if (channel != null)
             {
@@ -324,7 +334,7 @@ namespace SmartHome.Json
 
         private void AddOrUpdateChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
-            var status = _commandPerserService.FindChannelStatus(channel.ChannelId, channelValue.ChannelNo);
+            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType) channelValue.Status);
 
             if (status != null)
             {
@@ -340,8 +350,7 @@ namespace SmartHome.Json
         {
             var status = new ChannelStatus
             {
-                DId = _commandJson.DeviceId,
-                CId = channel.ChannelId,
+                Channel = channel,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
             };
@@ -358,7 +367,7 @@ namespace SmartHome.Json
         {
             foreach (var ds in DeviceStatusList)
             {
-                DeviceStatus deviceStatus = _commandPerserService.FindDeviceStatus(entity.DeviceId, ds.StatusType);
+                DeviceStatus deviceStatus =  Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType) ds.StatusType);
 
                 if (deviceStatus != null)
                 {
@@ -373,17 +382,20 @@ namespace SmartHome.Json
 
         private static void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
         {
-            var deviceStatus = new DeviceStatus();
-            deviceStatus.DId = entity.DeviceId;
-            deviceStatus.StatusType = (StatusType)ds.StatusType;
-            deviceStatus.Status = ds.Value;
+            var deviceStatus = new DeviceStatus
+            {
+                Device = entity,
+                StatusType = (StatusType) ds.StatusType,
+                Status = ds.Value
+            };
 
             _commandPerserService.AddDeviceStatus(deviceStatus);
         }
 
-        private static void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
+        private void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
         {
-            deviceStatus.Status = ds.Value;
+            deviceStatus.StatusType = (StatusType) ds.StatusType;
+            deviceStatus.Value = ds.Value;
             _commandPerserService.UpdateDeviceStatus(deviceStatus);
         }
 
