@@ -28,6 +28,7 @@ namespace SmartHome.Web.Controllers
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IVersionService _versionService;
         private readonly IDeviceService _deviceService;
+        private readonly IConfigurationParserManagerService _configurationService;
 
         //public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IServerResponceService serverResponceService)
         //{
@@ -54,11 +55,12 @@ namespace SmartHome.Web.Controllers
         //    //return View(_serverResponceService.Queryable());
         //}
 
-        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService, IDeviceService deviceService)
+        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService, IDeviceService deviceService,IConfigurationParserManagerService configurationService)
         {
             this._unitOfWorkAsync = unitOfWorkAsync;
             this._versionService = versionService;
             this._deviceService = deviceService;
+            this._configurationService = configurationService;
         }
 
         #region m2m
@@ -131,9 +133,9 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.DeviceInfo = _deviceService.GetsDeviceAllInfo();
+            ViewBag.DeviceInfo = _configurationService.GetsDeviceAllInfo();
             ViewBag.Message = "Your contact page.";
-            return View(_versionService.GetsAllVersion());
+            return View(_configurationService.GetsAllVersion());
         }
 
         //public async Task<ActionResult> Create(ServerResponce model)

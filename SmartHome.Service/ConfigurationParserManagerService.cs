@@ -1,6 +1,7 @@
 ﻿using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
+using SmartHome.Entity;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
 //using System;
@@ -283,5 +284,89 @@ namespace SmartHome.Service
 
 
         #endregion
+
+
+        public IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo()
+        {
+            // add business logic here
+            // return _repository.GetsAllDevice();
+
+            int parentSequence = 0;
+            List<DeviceInfoEntity> dInfoEntity = new List<DeviceInfoEntity>();
+            var device = _deviceRepository.Query().Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList();
+
+            foreach (Device nextDeviceInfo in device)
+            {
+                //DId,DeviceName,DeviceHash,DType
+                DeviceInfoEntity deviceInfo = new DeviceInfoEntity();
+                deviceInfo.DisplayName = "DId--" + nextDeviceInfo.DId + ", DeviceName--" + nextDeviceInfo.DeviceName + ", DeviceHash--" + nextDeviceInfo.DeviceHash + ", DType--" + nextDeviceInfo.DeviceType.ToString();
+                deviceInfo.ParentId = 0;
+                deviceInfo.SequenceId = dInfoEntity.Count() + 1;
+                parentSequence = deviceInfo.SequenceId;
+                dInfoEntity.Add(deviceInfo);
+
+                foreach (DeviceStatus nextDStatus in nextDeviceInfo.DeviceStatus)
+                {
+                    deviceInfo = new DeviceInfoEntity();
+                    deviceInfo.DisplayName = "StatusType--" + nextDStatus.StatusType.ToString() + ", Value--" + nextDStatus.Value.ToString();
+                    deviceInfo.SequenceId = dInfoEntity.Count() + 1;
+                    deviceInfo.ParentId = parentSequence;
+                    dInfoEntity.Add(deviceInfo);
+
+                }
+
+                foreach (Channel nextChannelInfo in nextDeviceInfo.Channels)
+                {
+                    DeviceInfoEntity deviceCInfo = new DeviceInfoEntity();
+                    deviceCInfo.DisplayName = " ChannelNo--" + nextChannelInfo.ChannelNo.ToString() + ", LoadName--" + nextChannelInfo.LoadName + ", LoadType--" + nextChannelInfo.LoadType.ToString();
+                    deviceCInfo.SequenceId = dInfoEntity.Count() + 1;
+                    deviceCInfo.ParentId = parentSequence;
+                    dInfoEntity.Add(deviceCInfo);
+
+                    foreach (ChannelStatus nextCStatus in nextChannelInfo.ChannelStatuses)
+                    {
+                        deviceInfo = new DeviceInfoEntity();
+                        deviceInfo.DisplayName = " Status--" + nextCStatus.Status.ToString() + ", Value--" + nextCStatus.Value.ToString();//nextChannelInfo.ChannelNo.ToString();
+                        deviceInfo.SequenceId = dInfoEntity.Count() + 1;
+                        deviceInfo.ParentId = deviceCInfo.SequenceId;
+                        dInfoEntity.Add(deviceInfo);
+                    }
+                }
+
+
+            }
+
+            return dInfoEntity;
+        }
+
+
+        public IEnumerable<VersionInfoEntity> GetsAllVersion()
+        {
+            // add business logic here
+            // return _repository.GetsAllVersion();
+
+            int parentSequence = 0;
+            List<VersionInfoEntity> vInfoEntity = new List<VersionInfoEntity>();
+            var version = _versionRepository.Query().Include(x => x.VersionDetails).Select().ToList();
+            foreach (Version nextVersion in version)
+            {
+                //AppName,AuthCode,PassPhrase
+                VersionInfoEntity versionInfo = new VersionInfoEntity();
+                versionInfo.DisplayName = "AppName--" + nextVersion.AppName + ", AuthCode--" + nextVersion.AuthCode + ", PassPhrase--" + nextVersion.PassPhrase;
+                versionInfo.ParentId = 0;
+                versionInfo.SequenceId = vInfoEntity.Count() + 1;
+                parentSequence = versionInfo.SequenceId;
+                vInfoEntity.Add(versionInfo);
+                foreach (VersionDetail nextVDetail in nextVersion.VersionDetails)
+                {
+                    versionInfo = new VersionInfoEntity();
+                    versionInfo.DisplayName = "DeviceType--" + nextVDetail.DeviceType;
+                    versionInfo.ParentId = parentSequence;
+                    versionInfo.SequenceId = vInfoEntity.Count() + 1;
+                    vInfoEntity.Add(versionInfo);
+                }
+            }
+            return vInfoEntity;
+        }
     }
 }
