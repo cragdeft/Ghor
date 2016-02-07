@@ -81,7 +81,7 @@ namespace SmartHome.Json
 
             if (Device == null)
             {
-                LogCommand(false, "Device (DeviceHash = " + _commandJson.DeviceUUId + " ) not found.");
+                LogCommand(false, "Device not found.");
                 return;
             }
             else
