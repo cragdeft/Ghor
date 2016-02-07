@@ -7,6 +7,7 @@ using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
+using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Service;
@@ -136,7 +137,7 @@ namespace SmartHome.Json
             //.ForMember(dest => dest.DeviceVersion, opt => opt.MapFrom(src => src.Version))
             //.ForMember(dest => dest.DType, opt => opt.MapFrom(src => src.DeviceType))
             //.ForMember(dest => dest.DType, opt => opt.MapFrom(src => (int)GetEnumValue<DeviceType>(src.DeviceType)))//enum
-            .ForMember(dest => dest.DeviceType, opt => opt.UseValue(58))
+            //.ForMember(dest => dest.DeviceType, opt => opt.MapFrom(src => (DeviceType)src.DType))//, opt => opt.UseValue(DeviceType))
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
             IEnumerable<Model.Models.Device> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<Model.Models.Device>>(myObj.Device);
