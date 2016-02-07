@@ -38,7 +38,6 @@ namespace SmartHome.Service
             return versionModel;
         }
 
-
         public List<Version> FillVersionInformations(IEnumerable<Version> model, List<Version> versionModel)
         {
             foreach (var item in model)

@@ -10,10 +10,8 @@ namespace SmartHome.Service.Interfaces
     public interface IConfigurationParserManagerService
     {
         IEnumerable<Version> AddOrUpdateVersionGraphRange(IEnumerable<Version> model);
-
         IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<Device> model);
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
-
         IEnumerable<VersionInfoEntity> GetsAllVersion();
 
 
