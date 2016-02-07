@@ -187,25 +187,21 @@ namespace SmartHome.Json
 
             GetDeviceStatusFromNumber3Bit(StatusType.SmartSwitchThermalShutdown);
 
-            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 32 : 8);
+            if (GetValue(CommandArray[4]) == 0)
+                GetDeviceStatusFromNumber7Bit(StatusType.IndicatorOnOffFeedback);
 
+            ParseCurrentLoadStatusCommand(CommandArray.Length > 30 ? 8 : 4);
         }
 
-        private void ParseCurrentLoadStatusCommand(int length)
+        private void ParseCurrentLoadStatusCommand(int startingIndex)
         {
-            for (int i = 5; i < length; i += 4)
+            for (int i = startingIndex; i < Length; i += 4)
             {
-                if (GetValue(CommandArray[i - 1]) == 0)
-                {
-                    GetDeviceStatusFromNumber7Bit(StatusType.IndicatorOnOffFeedback);
-                    continue;
-                }
-                AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.OnOffFeedback, GetValue(CommandArray[i]));
+                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.OnOffFeedback, GetValue(CommandArray[i+1]));
 
-                AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.DimmingFeedback, GetValue(CommandArray[i + 1]));
+                AddChannelStatusToList(GetValue(CommandArray[i]), StatusType.DimmingFeedback, GetValue(CommandArray[i + 2]));
 
-                AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i + 2]));
-
+                //AddChannelStatusToList(GetValue(CommandArray[i - 1]), StatusType.IndicatorOnOffFeedback, GetValue(CommandArray[i + 2]));
             }
         }
 
