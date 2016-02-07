@@ -102,9 +102,9 @@ namespace SmartHome.Model.Enums
 
     public enum ChannelStatusType
     {
-        channelSwitchable=1,
-        channelDimmable=2,
-        channelHardwareDimSwitchable=3 
+        Switchable=1,
+        Dimmable=2,
+        HardwareDimSwitchable=3 
 
     }
 
