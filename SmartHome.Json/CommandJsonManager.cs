@@ -274,7 +274,7 @@ namespace SmartHome.Json
 
         private void AddChannelValue(StatusType status)
         {
-            Channel channel = _commandPerserService.FindChannel(Device.DeviceId, GetChannelNoOfCommunicationProtocol());
+            Channel channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
                 channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
@@ -320,7 +320,7 @@ namespace SmartHome.Json
 
         private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
         {
-            var channel = _commandPerserService.FindChannel(device.DeviceId, channelValue.ChannelNo);
+            var channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
 
             if (channel != null)
             {
@@ -334,7 +334,7 @@ namespace SmartHome.Json
 
         private void AddOrUpdateChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
-            var status = _commandPerserService.FindChannelStatus(channel.ChannelId, channelValue.ChannelNo);
+            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType) channelValue.Status);
 
             if (status != null)
             {
@@ -367,7 +367,7 @@ namespace SmartHome.Json
         {
             foreach (var ds in DeviceStatusList)
             {
-                DeviceStatus deviceStatus = _commandPerserService.FindDeviceStatus(entity.DeviceId, ds.StatusType);
+                DeviceStatus deviceStatus =  Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType) ds.StatusType);
 
                 if (deviceStatus != null)
                 {
@@ -395,7 +395,7 @@ namespace SmartHome.Json
         private void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
         {
             deviceStatus.StatusType = (StatusType) ds.StatusType;
-            deviceStatus.Status = ds.Value;
+            deviceStatus.Value = ds.Value;
             _commandPerserService.UpdateDeviceStatus(deviceStatus);
         }
 
