@@ -20,21 +20,14 @@ namespace SmartHome.Json
 {
     public class JsonManager
     {
-
-        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        private readonly IVersionService _versionService;
-        private readonly IDeviceService _deviceService;
+        private static IUnitOfWorkAsync _unitOfWorkAsync;
+        private static IConfigurationParserManagerService _configurationPerserService;
 
         public JsonManager()
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
-
-            IRepositoryAsync<Model.Models.Version> versionrepo = new Repository<Model.Models.Version>(context, _unitOfWorkAsync);
-            IRepositoryAsync<Model.Models.Device> deviceRepo = new Repository<Model.Models.Device>(context, _unitOfWorkAsync);
-
-            _versionService = new VersionService(versionrepo);
-            _deviceService = new DeviceService(deviceRepo);
+            _configurationPerserService = new ConfigurationParserManagerService(_unitOfWorkAsync);
         }
 
         public void JsonProcess(string JsonString)
@@ -187,7 +180,7 @@ namespace SmartHome.Json
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                _deviceService.AddOrUpdateGraphRange(oDevice);
+                _configurationPerserService.AddOrUpdateDeviceGraphRange(oDevice);
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
 
@@ -203,7 +196,7 @@ namespace SmartHome.Json
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                _versionService.AddOrUpdateGraphRange(oVersion);
+                _configurationPerserService.AddOrUpdateVersionGraphRange(oVersion);
                 var changes = await _unitOfWorkAsync.SaveChangesAsync();
                 _unitOfWorkAsync.Commit();
 
@@ -214,7 +207,7 @@ namespace SmartHome.Json
             }
         }
         #endregion
-        
+
 
     }
 }
