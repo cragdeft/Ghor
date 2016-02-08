@@ -134,6 +134,15 @@ namespace SmartHome.Json
                     case CommandId.SmartSwitchHardwareDimmingFeedback:
                         DimmingFeedbackEnableDisableCommandParse();
                         break;
+                    case CommandId.SmartRainbowPower:
+                        SmartRainbowPowerCommandParse();
+                        break;
+                    case CommandId.SmartRainbowRgbwStatus:
+                        SmartRainbowRgbwCommandParse();
+                        break;
+                    case CommandId.SmartRainbowRgbwSet:
+                        SmartRainbowRgbwSetCommandParse();
+                        break;
                     default:
                         return;
                 }
@@ -226,7 +235,6 @@ namespace SmartHome.Json
             {
                 ParseCurrentLoadStatusCommand(4);
             }
-
         }
 
         private void ParseCurrentLoadStatusCommand(int startingIndex)
@@ -301,6 +309,21 @@ namespace SmartHome.Json
                 AddChannelValue(StatusType.LoadTypeSelectFeedback);
             }
             //GetChannelStatus(StatusType.LoadTypeSelectFeedback);
+        }
+
+        private void SmartRainbowRgbwSetCommandParse()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SmartRainbowRgbwCommandParse()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SmartRainbowPowerCommandParse()
+        {
+            throw new NotImplementedException();
         }
 
         private void AddChannelValue(StatusType status)
