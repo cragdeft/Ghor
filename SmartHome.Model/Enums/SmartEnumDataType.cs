@@ -74,11 +74,11 @@ namespace SmartHome.Model.Enums
         SmartSwitchDimmingFeedback = 52,
         SmartSwitchHardwareDimmingRequest = 63,
         SmartSwitchHardwareDimmingFeedback = 64,
+        SmartRainbowPower =97,
+        SmartRainbowRgbwStatus = 98,
+        SmartRainbowRgbwSet=99,
         DeviceHardResetRequest = 17,
-        DeviceHardResetFeedback = 18,
-        DevicePower = 200,
-        DeviceRgbwStatus = 201,
-        DeviceRgbwSet = 202
+        DeviceHardResetFeedback = 18
 
     }
 
