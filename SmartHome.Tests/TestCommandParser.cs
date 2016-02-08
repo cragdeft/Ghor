@@ -28,17 +28,78 @@ namespace SmartHome.Tests
         [TestInitialize]
         public void Initialize()
         {
-            InitializeJsonObject();
-
-
-            InitializeDevice();
-
             CommandPerserService = new Mock<ICommandPerserService>();
         }
 
         [TestMethod]
         public void TestCommandJsonParse_ShouldParseCommand()
         {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+
+        [TestMethod]
+        public void TestOnOffFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void TestThermalShutDown_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void TestDimmingFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void TestDemmingEnableDisableFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void LoadTypeFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void CurrentLoadStatus32ByteFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Object.Parse();
+        }
+        [TestMethod]
+        public void CurrentLoadStatus8ByteFeedback_ShouldParseCommand()
+        {
+            InitializeJsonObject();
+            InitializeDevice();
             var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
             mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
             mockCommandJsonManager.Object.Parse();
@@ -133,4 +194,4 @@ namespace SmartHome.Tests
         } 
         #endregion
     }
-}
+}   
