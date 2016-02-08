@@ -32,7 +32,7 @@ namespace SmartHome.Tests
         {
             DeviceList = new List<Device>();
             CommandPerserService = new Mock<ICommandPerserService>();
-            
+
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace SmartHome.Tests
         public void TestThermalShutDown_ShouldParseCommand()
         {
             var jsonString =
-              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 56, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 56, 1, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -73,7 +73,7 @@ namespace SmartHome.Tests
         public void TestDimmingFeedback_ShouldParseCommand()
         {
             var jsonString =
-               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 52, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 52, 1, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -83,12 +83,14 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.SmartSwitchDimmingFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("1", mockCommandJsonManager.Object.ChannelStatusList[0].Value);
         }
         [TestMethod]
         public void TestDemmingEnableDisableFeedback_ShouldParseCommand()
         {
             var jsonString =
-               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 64, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 64, 1, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -98,6 +100,8 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.SmartSwitchHardwareDimmingFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(StatusType.DimmingEnableDisableFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("1", mockCommandJsonManager.Object.ChannelStatusList[0].Value);
         }
         [TestMethod]
         public void LoadTypeFeedback_ShouldParseCommand()
@@ -113,12 +117,13 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.SmartSwitchLoadTypeSelectFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(LoadType.NO_LOAD, mockCommandJsonManager.Object.LoadType);
         }
         [TestMethod]
         public void CurrentLoadStatus32ByteFeedback_ShouldParseCommand()
         {
             var jsonString =
-              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 6, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1,6,32, 1, 0, 2, 2, 2, 1, 2, 2, 2,2, 2, 2, 2,3,2, 2, 2,4, 2, 2, 2,5, 2, 2, 2,6, 2, 2, 2]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -128,12 +133,56 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.DeviceCurrentLoadStatusFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(32, mockCommandJsonManager.Object.Length);
+
+            Assert.AreEqual(StatusType.SmartSwitchThermalShutdown, (StatusType)mockCommandJsonManager.Object.DeviceStatusList[0].StatusType);
+            Assert.AreEqual(1, mockCommandJsonManager.Object.DeviceStatusList[0].Value);
+
+            Assert.AreEqual(StatusType.IndicatorOnOffFeedback, (StatusType)mockCommandJsonManager.Object.DeviceStatusList[1].StatusType);
+            Assert.AreEqual(2, mockCommandJsonManager.Object.DeviceStatusList[1].Value);
+
+            //channel 1
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[0].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[1].Value);
+
+            //channel 2
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[2].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[3].Value);
+
+            //channel 3
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[4].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[5].Value);
+
+            //channel 4
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[6].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[7].Value);
+
+            //chanel 5
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[8].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[9].Value);
+
+            //channel 6
         }
         [TestMethod]
         public void CurrentLoadStatus8ByteFeedback_ShouldParseCommand()
         {
             var jsonString =
-              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 6, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 6, 8, 1, 1, 2, 2, 2]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -143,6 +192,13 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.DeviceCurrentLoadStatusFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(8, mockCommandJsonManager.Object.Length);
+
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[0].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[1].Value);
         }
 
         #region Private Methods
@@ -248,7 +304,7 @@ namespace SmartHome.Tests
         {
             JsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
             JsonObject.CommandType = CommandType.Feedback;
-        } 
+        }
         #endregion
     }
-}   
+}
