@@ -26,6 +26,7 @@ namespace SmartHome.Json
         private static ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
         private Device Device { get; set; }
+
         private string[] CommandArray { get; set; }
         #endregion
 
@@ -35,6 +36,7 @@ namespace SmartHome.Json
         public int Length { get; set; }
         public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
+        
         #endregion
 
         #endregion
@@ -49,14 +51,30 @@ namespace SmartHome.Json
             InitializeList();
         }
 
+        public CommandJsonManager(CommandJsonEntity commandJson, ICommandPerserService commandPerserService)
+        {
+            _commandPerserService = commandPerserService;
+            _commandJson = commandJson;
+            SetupCommandArrayAndLength();
+            
+            InitializeList();
+
+        }
+
+        private void SetupCommandArrayAndLength()
+        {
+            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
+            Length = CommandArray.Length;
+        }
+
         private void InitializeParameters(CommandJsonEntity commandJson)
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
             _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
             _commandJson = commandJson;
-            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
-            Length = CommandArray.Length;
+            SetupCommandArrayAndLength();
+            
         }
 
         private void InitializeList()
@@ -77,7 +95,7 @@ namespace SmartHome.Json
         }
         public void Parse()
         {
-            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUId);
+            Device = FindDevice();
 
             if (Device == null)
             {
@@ -120,7 +138,11 @@ namespace SmartHome.Json
 
                 SaveOrUpDateStatus();
             }
+        }
 
+        public virtual Device FindDevice()
+        {
+            return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
         }
 
         private CommandId GetCommandId()
