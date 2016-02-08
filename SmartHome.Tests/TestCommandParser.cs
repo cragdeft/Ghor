@@ -23,89 +23,142 @@ namespace SmartHome.Tests
         public CommandJsonEntity JsonObject { get; set; }
         public Device Device { get; set; }
 
+        public List<Device> DeviceList { get; set; }
+
         public Mock<ICommandPerserService> CommandPerserService { get; set; }
 
         [TestInitialize]
         public void Initialize()
         {
+            DeviceList = new List<Device>();
             CommandPerserService = new Mock<ICommandPerserService>();
-        }
-
-        [TestMethod]
-        public void TestCommandJsonParse_ShouldParseCommand()
-        {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
-            mockCommandJsonManager.Object.Parse();
+            
         }
 
         [TestMethod]
         public void TestOnOffFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 2, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.DeviceOnOffFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void TestThermalShutDown_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 56, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.SmartSwitchThermalShutdownNotificationFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void TestDimmingFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 52, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.SmartSwitchDimmingFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void TestDemmingEnableDisableFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+               "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 64, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.SmartSwitchHardwareDimmingFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void LoadTypeFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 58, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.SmartSwitchLoadTypeSelectFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void CurrentLoadStatus32ByteFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 6, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.DeviceCurrentLoadStatusFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
         [TestMethod]
         public void CurrentLoadStatus8ByteFeedback_ShouldParseCommand()
         {
-            InitializeJsonObject();
-            InitializeDevice();
-            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            var jsonString =
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 6, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+
+            //Arrange
+            var mockCommandJsonManager = Arrange(jsonString);
+            //act
             mockCommandJsonManager.Object.Parse();
+            // Assert
+            Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
+            Assert.AreEqual(CommandId.DeviceCurrentLoadStatusFeedback, mockCommandJsonManager.Object.CommandId);
+            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
         }
 
         #region Private Methods
+        private Mock<CommandJsonManager> Arrange(string jsonString)
+        {
+            InitializeDevice();
+            InitializeJsonObject(jsonString);
+            CommandPerserService.Setup(x => x.FindDevice(JsonObject.DeviceUUId))
+                .Returns(FindDevice(JsonObject.DeviceUUId.ToString()));
+
+            var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            return mockCommandJsonManager;
+        }
+
+        private Device FindDevice(string deviceHash)
+        {
+            return DeviceList.FirstOrDefault(x => x.DeviceHash == deviceHash);
+        }
+
         private void InitializeDevice()
         {
             GetDemoDevice();
@@ -119,6 +172,8 @@ namespace SmartHome.Tests
 
             var demoDeviceStatusList = GetDemoDeviceStatusList();
             Device.DeviceStatus = demoDeviceStatusList;
+
+            DeviceList.Add(Device);
         }
 
         private List<DeviceStatus> GetDemoDeviceStatusList()
@@ -172,7 +227,7 @@ namespace SmartHome.Tests
             Device = new Device()
             {
                 AuditField = null,
-                DeviceHash = "12345",
+                DeviceHash = "2094027172",
                 DeviceName = "demo",
                 DeviceType = 0,
                 IsDeleted = false,
@@ -185,10 +240,8 @@ namespace SmartHome.Tests
             };
         }
 
-        private void InitializeJsonObject()
+        private void InitializeJsonObject(string jsonString)
         {
-            var jsonString =
-                "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 2, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
             JsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
             JsonObject.CommandType = CommandType.Feedback;
         } 
