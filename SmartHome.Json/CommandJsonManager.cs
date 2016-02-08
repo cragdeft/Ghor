@@ -25,7 +25,7 @@ namespace SmartHome.Json
         private static IUnitOfWorkAsync _unitOfWorkAsync;
         private static ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
-        private Device Device { get; set; }
+        public Device Device { get; set; }
 
         private string[] CommandArray { get; set; }
         #endregion
@@ -36,6 +36,7 @@ namespace SmartHome.Json
         public int Length { get; set; }
         public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
+        public LoadType LoadType { get; set; }
         
         #endregion
 
@@ -308,7 +309,7 @@ namespace SmartHome.Json
             if (channel != null)
             {
                 channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
-
+                LoadType = (LoadType) channel.LoadType;
                 _commandPerserService.UpdateChannel(channel);
             }
             else
@@ -433,7 +434,7 @@ namespace SmartHome.Json
 
         private int Get7ThBitValueOfCommunicationProtocol()
         {
-            return Convert.ToInt32(GetValue(CommandArray[3]));
+            return Convert.ToInt32(GetValue(CommandArray[7]));
         }
 
         private void GetDeviceStatusFromNumber3Bit(StatusType status)
