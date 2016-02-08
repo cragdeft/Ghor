@@ -25,7 +25,8 @@ namespace SmartHome.Json
         private static IUnitOfWorkAsync _unitOfWorkAsync;
         private static ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
-        private Device Device { get; set; }
+        public Device Device { get; set; }
+
         private string[] CommandArray { get; set; }
         #endregion
 
@@ -35,6 +36,8 @@ namespace SmartHome.Json
         public int Length { get; set; }
         public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
+        public LoadType LoadType { get; set; }
+        
         #endregion
 
         #endregion
@@ -49,14 +52,30 @@ namespace SmartHome.Json
             InitializeList();
         }
 
+        public CommandJsonManager(CommandJsonEntity commandJson, ICommandPerserService commandPerserService)
+        {
+            _commandPerserService = commandPerserService;
+            _commandJson = commandJson;
+            SetupCommandArrayAndLength();
+            
+            InitializeList();
+
+        }
+
+        private void SetupCommandArrayAndLength()
+        {
+            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
+            Length = CommandArray.Length;
+        }
+
         private void InitializeParameters(CommandJsonEntity commandJson)
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
             _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
             _commandJson = commandJson;
-            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
-            Length = CommandArray.Length;
+            SetupCommandArrayAndLength();
+            
         }
 
         private void InitializeList()
@@ -69,6 +88,7 @@ namespace SmartHome.Json
 
         #region Methods
 
+        #region Public Methods
         public void LogCommand(bool isProcessed, string reason)
         {
             _commandJson.IsProcessed = isProcessed;
@@ -77,7 +97,7 @@ namespace SmartHome.Json
         }
         public void Parse()
         {
-            Device = _commandPerserService.FindDevice(_commandJson.DeviceUUId);
+            Device = FindDevice();
 
             if (Device == null)
             {
@@ -114,15 +134,35 @@ namespace SmartHome.Json
                     case CommandId.SmartSwitchHardwareDimmingFeedback:
                         DimmingFeedbackEnableDisableCommandParse();
                         break;
+                    case CommandId.SmartRainbowPower:
+                        SmartRainbowPowerCommandParse();
+                        break;
+                    case CommandId.SmartRainbowRgbwStatus:
+                        SmartRainbowRgbwCommandParse();
+                        break;
+                    case CommandId.SmartRainbowRgbwSet:
+                        SmartRainbowRgbwSetCommandParse();
+                        break;
                     default:
                         return;
                 }
 
                 SaveOrUpDateStatus();
             }
-
         }
 
+        public virtual Device FindDevice()
+        {
+            return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
+        }
+
+        public static T JsonDesrialized<T>(string jsonString)
+        {
+            return JsonConvert.DeserializeObject<T>(jsonString);
+        } 
+        #endregion
+
+        #region Private Methods
         private CommandId GetCommandId()
         {
             _commandJson.CommandId = GetValue(CommandArray[1]);
@@ -195,7 +235,6 @@ namespace SmartHome.Json
             {
                 ParseCurrentLoadStatusCommand(4);
             }
-
         }
 
         private void ParseCurrentLoadStatusCommand(int startingIndex)
@@ -272,13 +311,28 @@ namespace SmartHome.Json
             //GetChannelStatus(StatusType.LoadTypeSelectFeedback);
         }
 
+        private void SmartRainbowRgbwSetCommandParse()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SmartRainbowRgbwCommandParse()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SmartRainbowPowerCommandParse()
+        {
+            throw new NotImplementedException();
+        }
+
         private void AddChannelValue(StatusType status)
         {
             Channel channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
                 channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
-
+                LoadType = (LoadType) channel.LoadType;
                 _commandPerserService.UpdateChannel(channel);
             }
             else
@@ -309,15 +363,6 @@ namespace SmartHome.Json
             }
         }
 
-        //private static void UpdateAllChannelStatus(Device device, ChannelStatusEntity channelValue)
-        //{
-        //    List<ChannelStatus> list = _commandPerserService.GetAllChannelStatus(device.DeviceId);
-        //    foreach (ChannelStatus channelStatus in list)
-        //    {
-        //        UpdateChannelStatus(channelStatus, channelValue);
-        //    }
-        //}
-
         private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
         {
             var channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
@@ -334,7 +379,7 @@ namespace SmartHome.Json
 
         private void AddOrUpdateChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
-            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType) channelValue.Status);
+            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType)channelValue.Status);
 
             if (status != null)
             {
@@ -351,7 +396,7 @@ namespace SmartHome.Json
             var status = new ChannelStatus
             {
                 Channel = channel,
-                Status =  (ChannelStatusType) channelValue.Status,
+                Status = (ChannelStatusType)channelValue.Status,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
             };
@@ -368,7 +413,7 @@ namespace SmartHome.Json
         {
             foreach (var ds in DeviceStatusList)
             {
-                DeviceStatus deviceStatus =  Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType) ds.StatusType);
+                DeviceStatus deviceStatus = Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType)ds.StatusType);
 
                 if (deviceStatus != null)
                 {
@@ -386,7 +431,7 @@ namespace SmartHome.Json
             var deviceStatus = new DeviceStatus
             {
                 Device = entity,
-                StatusType = (StatusType) ds.StatusType,
+                StatusType = (StatusType)ds.StatusType,
                 Value = ds.Value
             };
 
@@ -395,7 +440,7 @@ namespace SmartHome.Json
 
         private void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
         {
-            deviceStatus.StatusType = (StatusType) ds.StatusType;
+            deviceStatus.StatusType = (StatusType)ds.StatusType;
             deviceStatus.Value = ds.Value;
             _commandPerserService.UpdateDeviceStatus(deviceStatus);
         }
@@ -412,7 +457,7 @@ namespace SmartHome.Json
 
         private int Get7ThBitValueOfCommunicationProtocol()
         {
-            return Convert.ToInt32(GetValue(CommandArray[3]));
+            return Convert.ToInt32(GetValue(CommandArray[7]));
         }
 
         private void GetDeviceStatusFromNumber3Bit(StatusType status)
@@ -435,13 +480,9 @@ namespace SmartHome.Json
                 Value = Get3RdBitValueOfCommunicationProtocol().ToString()
             };
             ChannelStatusList.Add(channelStatus);
-        }
-
-        public static T JsonDesrialized<T>(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(jsonString);
-        }
-
+        } 
+        #endregion
+        
         #endregion
     }
 }

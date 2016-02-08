@@ -38,10 +38,5 @@ namespace SmartHome.Tests
             Assert.AreEqual(encryptedTextForAndroid, encryptedValueAndroid);
             Assert.AreEqual(plainTextForAndroid, decryptedValueAndroid);
         }
-
-        [TestMethod]
-        public void CommandPerser_ShouldSaveCommand()
-        {
-        }
     }
 }
