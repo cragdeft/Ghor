@@ -22,7 +22,18 @@ namespace SmartHome.MQTT.Client
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.11.150")
+                if (brokerAddress == "192.168.11.195")
+                {
+                    SmartHomeMQTT = new MqttClient(brokerAddress);
+
+                   
+                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+                                      new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+                    SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+                }
+
+                else if(brokerAddress == "192.168.11.150")
                 {
                     //SmartHomeMQTT = new MqttClient(brokerAddress, 18830, true, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback, null);
 
