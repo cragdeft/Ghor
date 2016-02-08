@@ -331,15 +331,6 @@ namespace SmartHome.Json
             }
         }
 
-        //private static void UpdateAllChannelStatus(Device device, ChannelStatusEntity channelValue)
-        //{
-        //    List<ChannelStatus> list = _commandPerserService.GetAllChannelStatus(device.DeviceId);
-        //    foreach (ChannelStatus channelStatus in list)
-        //    {
-        //        UpdateChannelStatus(channelStatus, channelValue);
-        //    }
-        //}
-
         private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
         {
             var channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
