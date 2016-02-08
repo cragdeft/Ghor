@@ -149,34 +149,39 @@ namespace SmartHome.Tests
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[1].Value);
 
             //channel 2
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[2].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[2].Value);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[3].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[3].Value);
 
             //channel 3
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[4].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[4].Value);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[5].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[5].Value);
 
             //channel 4
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[6].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[6].Value);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[7].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[7].Value);
 
             //chanel 5
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[8].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[8].Value);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[1].Status);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[9].Status);
             Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[9].Value);
 
             //channel 6
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[10].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[10].Value);
+
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[11].Status);
+            Assert.AreEqual("2", mockCommandJsonManager.Object.ChannelStatusList[11].Value);
         }
         [TestMethod]
         public void CurrentLoadStatus8ByteFeedback_ShouldParseCommand()
