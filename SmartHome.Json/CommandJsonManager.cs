@@ -87,6 +87,7 @@ namespace SmartHome.Json
 
         #region Methods
 
+        #region Public Methods
         public void LogCommand(bool isProcessed, string reason)
         {
             _commandJson.IsProcessed = isProcessed;
@@ -145,6 +146,13 @@ namespace SmartHome.Json
             return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
         }
 
+        public static T JsonDesrialized<T>(string jsonString)
+        {
+            return JsonConvert.DeserializeObject<T>(jsonString);
+        } 
+        #endregion
+
+        #region Private Methods
         private CommandId GetCommandId()
         {
             _commandJson.CommandId = GetValue(CommandArray[1]);
@@ -347,7 +355,7 @@ namespace SmartHome.Json
 
         private void AddOrUpdateChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
-            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType) channelValue.Status);
+            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType)channelValue.Status);
 
             if (status != null)
             {
@@ -364,7 +372,7 @@ namespace SmartHome.Json
             var status = new ChannelStatus
             {
                 Channel = channel,
-                Status =  (ChannelStatusType) channelValue.Status,
+                Status = (ChannelStatusType)channelValue.Status,
                 ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
             };
@@ -381,7 +389,7 @@ namespace SmartHome.Json
         {
             foreach (var ds in DeviceStatusList)
             {
-                DeviceStatus deviceStatus =  Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType) ds.StatusType);
+                DeviceStatus deviceStatus = Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType)ds.StatusType);
 
                 if (deviceStatus != null)
                 {
@@ -399,7 +407,7 @@ namespace SmartHome.Json
             var deviceStatus = new DeviceStatus
             {
                 Device = entity,
-                StatusType = (StatusType) ds.StatusType,
+                StatusType = (StatusType)ds.StatusType,
                 Value = ds.Value
             };
 
@@ -408,7 +416,7 @@ namespace SmartHome.Json
 
         private void UpdateDevice(DeviceStatus deviceStatus, DeviceStatusEntity ds)
         {
-            deviceStatus.StatusType = (StatusType) ds.StatusType;
+            deviceStatus.StatusType = (StatusType)ds.StatusType;
             deviceStatus.Value = ds.Value;
             _commandPerserService.UpdateDeviceStatus(deviceStatus);
         }
@@ -448,13 +456,9 @@ namespace SmartHome.Json
                 Value = Get3RdBitValueOfCommunicationProtocol().ToString()
             };
             ChannelStatusList.Add(channelStatus);
-        }
-
-        public static T JsonDesrialized<T>(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(jsonString);
-        }
-
+        } 
+        #endregion
+        
         #endregion
     }
 }
