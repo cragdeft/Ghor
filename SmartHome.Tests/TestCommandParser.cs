@@ -39,7 +39,7 @@ namespace SmartHome.Tests
         public void TestOnOffFeedback_ShouldParseCommand()
         {
             var jsonString =
-              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 2, 0, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
+              "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid\": 2094027172,\"device_id\": 32769, \"mac_id\": \"mac\",\"command_byte\": \"[1, 2, 1, 1, 1, 255, 255, -5]\",\"command_id\": 1}";
 
             //Arrange
             var mockCommandJsonManager = Arrange(jsonString);
@@ -49,6 +49,8 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.DeviceOnOffFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)mockCommandJsonManager.Object.ChannelStatusList[0].Status);
+            Assert.AreEqual("1", mockCommandJsonManager.Object.ChannelStatusList[0].Value);
         }
         [TestMethod]
         public void TestThermalShutDown_ShouldParseCommand()
@@ -64,6 +66,8 @@ namespace SmartHome.Tests
             Assert.AreEqual(JsonObject.DeviceUUId.ToString(), mockCommandJsonManager.Object.Device.DeviceHash);
             Assert.AreEqual(CommandId.SmartSwitchThermalShutdownNotificationFeedback, mockCommandJsonManager.Object.CommandId);
             Assert.AreEqual(DeviceType.SMART_SWITCH_6G, mockCommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(StatusType.ThermalShutDownResponse, (StatusType)mockCommandJsonManager.Object.DeviceStatusList[0].StatusType);
+            Assert.AreEqual(1, mockCommandJsonManager.Object.DeviceStatusList[0].Value);
         }
         [TestMethod]
         public void TestDimmingFeedback_ShouldParseCommand()
