@@ -16,7 +16,7 @@ namespace SmartHome.Model.Enums
         NON_DIMMABLE_BULB = 1,
         [EnumMember]
         DIMMABLE_BULB = 2,
-        [EnumMember]                                                                     
+        [EnumMember]
         FAN = 3
     }
     [DataContract]
@@ -38,18 +38,18 @@ namespace SmartHome.Model.Enums
         BLE = 0,
         [EnumMember]
         WIFI = 1
-        
+
     }
 
     public enum ChannelId
     {
-        SmartSwitchChannelAll=0,  
-        SmartSwitchChannel1=1,
-        SmartSwitchChannel2=2,
-        SmartSwitchChannel3=3,
-        SmartSwitchChannel4=4,
-        SmartSwitchChannel5=5,
-        SmartSwitchChannel6=6
+        SmartSwitchChannelAll = 0,
+        SmartSwitchChannel1 = 1,
+        SmartSwitchChannel2 = 2,
+        SmartSwitchChannel3 = 3,
+        SmartSwitchChannel4 = 4,
+        SmartSwitchChannel5 = 5,
+        SmartSwitchChannel6 = 6
 
     }
 
@@ -61,7 +61,7 @@ namespace SmartHome.Model.Enums
         DeviceOnOffFeedback = 2,
         DeviceCurrentLoadStatusRequest = 5,
         DeviceCurrentLoadStatusFeedback = 6,
-        DevicePingRequest= 25,
+        DevicePingRequest = 25,
         SmartSwitchIndicatorPowerRequest = 53, //calls constructor with value 53
         SmartSwitchIndicatorPowerFeedback = 54,
         SmartSwitchThermalShutdownNotificationRequest = 55,
@@ -74,21 +74,24 @@ namespace SmartHome.Model.Enums
         SmartSwitchDimmingFeedback = 52,
         SmartSwitchHardwareDimmingRequest = 63,
         SmartSwitchHardwareDimmingFeedback = 64,
-        SmartRainbowPower =97,
-        SmartRainbowRgbwStatus = 98,
-        SmartRainbowRgbwSet=99,
         DeviceHardResetRequest = 17,
-        DeviceHardResetFeedback = 18
+        DeviceHardResetFeedback = 18,
+        //DevicePower = 200,
+        SmartRainbowPower = 97,
+        //DeviceRgbwStatus = 201,
+        SmartRainbowRgbwStatus = 98,
+        //DeviceRgbwSet = 202
+        SmartRainbowRgbw = 99
 
     }
 
     public enum StatusType
     {
         DeviceSwitchable = 1,
-        SmartSwitchIndicator = 53, 
+        SmartSwitchIndicator = 53,
         DimmingFeedback = 52,
         OnOffFeedback = 2,
-        CurrentLoadStatus = 6, 
+        CurrentLoadStatus = 6,
         DeviceActive = 5,
         IndicatorOnOffFeedback = 54,
         SmartSwitchThermalShutdown = 55,
@@ -102,9 +105,9 @@ namespace SmartHome.Model.Enums
 
     public enum ChannelStatusType
     {
-        Switchable=1,
-        Dimmable=2,
-        HardwareDimSwitchable=3 
+        Switchable = 1,
+        Dimmable = 2,
+        HardwareDimSwitchable = 3
 
     }
 
