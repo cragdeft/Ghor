@@ -27,10 +27,10 @@ namespace SmartHome.Entity
         public string DeviceVersion { get; set; }
         [JsonProperty("email")]
         public string EmailAddress { get; set; }
-
         public bool IsProcessed { get; set; }
         public CommandType CommandType { get; set; }
         public string ProcessFailReason { get; set; }
-        public int CommandId { get; set; }
+        [JsonProperty("command_id")]
+        public CommandId CommandId { get; set; }
     }
 }
