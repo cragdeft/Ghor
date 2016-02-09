@@ -95,7 +95,7 @@ namespace SmartHome.Model.Enums
         ThermalShutDownResponse = 56,
         LoadTypeSelectFeedback = 58,
         DimmingEnableDisableFeedback = 64,
-        RgbwStatus = 200,
+        RgbwStatus = 98,
         RgbwCustomColor = 201
 
     }
