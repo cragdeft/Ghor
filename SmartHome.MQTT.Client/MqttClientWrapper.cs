@@ -4,6 +4,8 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using SmartHome.Entity;
+using SmartHome.Json.Parser;
+using SmartHome.Json.Parser.ParseLibrary;
 using SmartHome.Model.Enums;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -161,8 +163,12 @@ namespace SmartHome.MQTT.Client
 
         private static void FeedbackCommandParse(CommandJsonEntity jsonObject)
         {
-            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
-            commandJsonManager.Parse();
+            //CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            //commandJsonManager.Parse();
+            IParserFactory factory = new ParserFactory(jsonObject);
+            var parser = factory.GetParser(jsonObject.CommandId.ToString());
+            parser.Parse();
+            parser.SaveOrUpdateStatus();
         }
 
 
