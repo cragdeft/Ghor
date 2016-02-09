@@ -38,9 +38,6 @@ namespace SmartHome.Tests
             else
                 Assert.AreEqual(true, isEmailExists);
         }
-
         
-
-
     }
 }
