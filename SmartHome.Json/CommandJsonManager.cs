@@ -150,7 +150,7 @@ namespace SmartHome.Json
                     case CommandId.SmartRainbowRgbwStatus:
                         SmartRainbowRgbwCommandParse();
                         break;
-                    case CommandId.SmartRainbowRgbwSet:
+                    case CommandId.SmartRainbowRgbw:
                         SmartRainbowRgbwSetCommandParse();
                         break;
                     default:
