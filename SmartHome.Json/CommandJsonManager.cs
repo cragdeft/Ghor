@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Repository.Pattern.DataContext;
 using Repository.Pattern.Ef6;
@@ -50,6 +48,8 @@ namespace SmartHome.Json
             InitializeParameters(commandJson);
 
             InitializeList();
+
+            Device = FindDevice();
         }
 
         public CommandJsonManager(CommandJsonEntity commandJson, ICommandPerserService commandPerserService)
@@ -59,6 +59,16 @@ namespace SmartHome.Json
             SetupCommandArrayAndLength();
             
             InitializeList();
+
+            if (Device == null)
+            {
+                LogCommand(false, "Device not found.");
+                return;
+            }
+            else
+            {
+                ParseInitiatorAndSetVersionValue();
+            }
 
         }
 
@@ -151,7 +161,7 @@ namespace SmartHome.Json
             }
         }
 
-        public virtual Device FindDevice()
+        public Device FindDevice()
         {
             return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
         }
@@ -165,7 +175,7 @@ namespace SmartHome.Json
         #region Private Methods
         private CommandId GetCommandId()
         {
-            _commandJson.CommandId = GetValue(CommandArray[1]);
+            _commandJson.CommandId = (CommandId) GetValue(CommandArray[1]);
             return (CommandId)Enum.ToObject(typeof(CommandId), _commandJson.CommandId);
         }
 
@@ -221,7 +231,7 @@ namespace SmartHome.Json
             return value;
         }
 
-        private void CurrentLoadStatusParse()
+        public void CurrentLoadStatusParse()
         {
             if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
 
@@ -273,7 +283,7 @@ namespace SmartHome.Json
         }
 
 
-        private void OnOffFeedbackCommandParse()
+        public void OnOffFeedbackCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
             {
@@ -288,7 +298,7 @@ namespace SmartHome.Json
                 GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
         }
 
-        private void DimmingFeedbackCommandParse()
+        public void DimmingFeedbackCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
                 GetChannelStatus(StatusType.DimmingFeedback);
@@ -296,13 +306,13 @@ namespace SmartHome.Json
                 GetDeviceStatusFromNumber3Bit(StatusType.DimmingFeedback);
         }
 
-        private void DimmingFeedbackEnableDisableCommandParse()
+        public void DimmingFeedbackEnableDisableCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
                 GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
         }
 
-        private void LoadTypeSelectCommandParse()
+        public void LoadTypeSelectCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
             {
@@ -344,7 +354,7 @@ namespace SmartHome.Json
             GetDeviceStatusFromNumber3Bit(StatusType.ThermalShutDownResponse);
         }
 
-        private void SaveOrUpDateStatus()
+        public void SaveOrUpDateStatus()
         {
             SaveDeviceStatus(Device);
 
