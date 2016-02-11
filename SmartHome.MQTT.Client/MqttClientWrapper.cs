@@ -163,16 +163,14 @@ namespace SmartHome.MQTT.Client
 
         private static void FeedbackCommandParse(CommandJsonEntity jsonObject)
         {
-            //CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
             //commandJsonManager.Parse();
             IParserFactory factory = new ParserFactory(jsonObject);
             var parser = factory.GetParser(jsonObject.CommandId.ToString());
             parser.Parse();
             parser.SaveOrUpdateStatus();
+
         }
-
-
-
         #endregion
     }
 }
