@@ -25,7 +25,7 @@ namespace SmartHome.Tests
             };
 
             // Act
-            var response = controller.RegisterUser("", "", "asd@emaiyl.com", "", "", "", "");
+            var response = controller.RegisterUser(new UserInfoEntity());
             System.Diagnostics.Trace.WriteLine(response.Content);
             // Assert
             bool isEmailExists = false;
