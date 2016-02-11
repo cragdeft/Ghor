@@ -120,6 +120,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Feature\UserInfoTest.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserInfoTest.feature</DependentUpon>
+    </Compile>
     <Compile Include="Feature\Version_Add.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,6 +137,7 @@
     </Compile>
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
+    <Compile Include="Steps\UserInfoTestSteps.cs" />
     <Compile Include="Steps\VersionSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
     <Compile Include="TestCommandParser.cs" />
@@ -143,6 +149,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Feature\UserInfoTest.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>UserInfoTest.feature.cs</LastGenOutput>
+    </None>
     <None Include="Feature\Version_Add.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Version_Add.feature.cs</LastGenOutput>
