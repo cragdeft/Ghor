@@ -120,10 +120,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Feature\Command_Json_Valid_Input.feature.cs">
+    <Compile Include="Feature\UserInfoRegister.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Command_Json_Valid_Input.feature</DependentUpon>
+      <DependentUpon>UserInfoRegister.feature</DependentUpon>
     </Compile>
     <Compile Include="Feature\Version_Add.feature.cs">
       <AutoGen>True</AutoGen>
@@ -137,7 +137,7 @@
     </Compile>
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
-    <Compile Include="Steps\Command_Json_Valid_InputSteps.cs" />
+    <Compile Include="Steps\UserInfoTestSteps.cs" />
     <Compile Include="Steps\VersionSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
     <Compile Include="TestCommandParser.cs" />
@@ -149,9 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Feature\Command_Json_Valid_Input.feature">
+    <None Include="Feature\UserInfoRegister.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Command_Json_Valid_Input.feature.cs</LastGenOutput>
+      <LastGenOutput>UserInfoRegister.feature.cs</LastGenOutput>
     </None>
     <None Include="Feature\Version_Add.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
