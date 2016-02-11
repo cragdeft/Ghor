@@ -98,8 +98,6 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.When("I save the UserInfoEntity", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 14
  testRunner.Then("the UserInfoEntity is saved successfully", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 15
-  testRunner.And("I can retrieve the UserInfoEntity by UserInfoId", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

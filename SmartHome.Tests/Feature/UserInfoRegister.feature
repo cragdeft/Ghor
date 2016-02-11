@@ -12,4 +12,3 @@ Scenario: Register a user
 
 	When I save the UserInfoEntity
 	Then the UserInfoEntity is saved successfully
-		And I can retrieve the UserInfoEntity by UserInfoId
