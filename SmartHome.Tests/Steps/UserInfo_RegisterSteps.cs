@@ -62,7 +62,7 @@ namespace SmartHome.Tests.Steps
             ScenarioContext.Current.Pending();
         }
 
-        private bool IsLoginIdUnique(string deviceHash)
+        private bool IsLoginIdUnique(string email)
         {
             List<UserInfoEntity> userList = new List<UserInfoEntity>()
             {
@@ -72,7 +72,7 @@ namespace SmartHome.Tests.Steps
                 new UserInfoEntity() { Email = "e@b.com"}
             };
 
-            return userList.Exists(x => x.Email == deviceHash);
+            return userList.Exists(x => x.Email == email);
         }
     }
 }
