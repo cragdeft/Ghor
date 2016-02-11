@@ -7,15 +7,14 @@ using WatiN.Core;
 namespace SmartHome.Tests.Steps
 {
     [Binding]
-    public class VersionSteps
+    public class Configuration_Json_Valid_InputSteps
     {
         [Given]
-        public void Given_I_am_at_the_PAGE_page(string page)
+        public void Given_I_am_at_the_configuration_json_input_page()
         {
             WebBrowser.Current.GoTo("http://localhost:8600/Home/About");
-
         }
-
+        
         [When]
         public void When_I_fill_in_the_following_form(TechTalk.SpecFlow.Table table)
         {
@@ -30,7 +29,7 @@ namespace SmartHome.Tests.Steps
                 textField.TypeText(row["value"]);
             }
         }
-
+        
         [When]
         public void When_I_click_the_PUBLISH_button_for_publish(string publish)
         {
@@ -41,9 +40,9 @@ namespace SmartHome.Tests.Steps
 
             subscribButton.Click();
         }
-
+        
         [When]
-        public void When_I_click_the_SUBSCRIBE_button_for_subscrib(string subscribe)
+        public void When_I_click_the_SUBSCRIB_button_for_subscrib(string subscrib)
         {
             var subscribButton = WebBrowser.Current.Button(Find.ByValue("Subscrib"));
 
@@ -51,17 +50,14 @@ namespace SmartHome.Tests.Steps
                 Assert.Fail("Expected to find a button with the value of 'subscribe'.");
 
             subscribButton.Click();
-        }       
-
-
+        }
+        
         [Then]
-        public void Then_I_should_be_at_the_PAGE_page(string page)
+        public void Then_I_should_be_at_the_subscribe_page()
         {
             var expectedURL = "http://localhost:8600/Home/SubscribeMessage";
             var actualURL = WebBrowser.Current.Url;
             Assert.AreEqual(expectedURL, actualURL);
-
-
         }
     }
 }
