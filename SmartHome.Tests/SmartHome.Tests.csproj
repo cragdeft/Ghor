@@ -120,10 +120,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Feature\UserInfoTest.feature.cs">
+    <Compile Include="Feature\UserInfoRegister.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>UserInfoTest.feature</DependentUpon>
+      <DependentUpon>UserInfoRegister.feature</DependentUpon>
     </Compile>
     <Compile Include="Feature\Version_Add.feature.cs">
       <AutoGen>True</AutoGen>
@@ -149,9 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Feature\UserInfoTest.feature">
+    <None Include="Feature\UserInfoRegister.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>UserInfoTest.feature.cs</LastGenOutput>
+      <LastGenOutput>UserInfoRegister.feature.cs</LastGenOutput>
     </None>
     <None Include="Feature\Version_Add.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
