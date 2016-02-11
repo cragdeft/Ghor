@@ -75,18 +75,6 @@
   <ItemGroup>
     <Compile Include="CommandJsonManager.cs" />
     <Compile Include="JsonManager.cs" />
-    <Compile Include="Parser\BaseParser.cs" />
-    <Compile Include="Parser\IParser.cs" />
-    <Compile Include="Parser\IParserFactory.cs" />
-    <Compile Include="Parser\ParseLibrary\CurrentLoadStatusParser.cs" />
-    <Compile Include="Parser\ParseLibrary\DimmingFeedbackEnableDisableParser.cs" />
-    <Compile Include="Parser\ParseLibrary\EmptyParser.cs" />
-    <Compile Include="Parser\ParseLibrary\LoadTypeSelectParser.cs" />
-    <Compile Include="Parser\ParseLibrary\OnOffFeedbackParser.cs" />
-    <Compile Include="Parser\ParseLibrary\ParserFactory.cs" />
-    <Compile Include="Parser\ParseLibrary\DimmingFeedbackParser.cs" />
-    <Compile Include="Parser\ParseLibrary\PingFeedbackParser.cs" />
-    <Compile Include="Parser\ParseLibrary\ThermalShutDownParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
