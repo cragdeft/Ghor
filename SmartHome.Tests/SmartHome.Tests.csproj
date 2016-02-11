@@ -120,6 +120,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Feature\ParseCommand.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ParseCommand.feature</DependentUpon>
+    </Compile>
     <Compile Include="Feature\UserInfoRegister.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -137,18 +142,21 @@
     </Compile>
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
-    <Compile Include="Steps\UserInfoTestSteps.cs" />
+    <Compile Include="Steps\ParseCommandSteps.cs" />
+    <Compile Include="Steps\UserInfo_RegisterSteps.cs" />
     <Compile Include="Steps\VersionSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
-    <Compile Include="TestCommandParser.cs" />
     <Compile Include="Controllers\TestVersionController.cs" />
     <Compile Include="Services\TestVersionService.cs" />
-    <Compile Include="TestUserInfoController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Feature\ParseCommand.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ParseCommand.feature.cs</LastGenOutput>
+    </None>
     <None Include="Feature\UserInfoRegister.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>UserInfoRegister.feature.cs</LastGenOutput>
