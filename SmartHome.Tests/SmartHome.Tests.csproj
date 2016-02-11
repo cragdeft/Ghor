@@ -135,16 +135,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Version_Add.feature</DependentUpon>
     </Compile>
-    <Compile Include="Feature\Version_Valid_Input.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Version_Valid_Input.feature</DependentUpon>
-    </Compile>
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
     <Compile Include="Steps\ParseCommandSteps.cs" />
     <Compile Include="Steps\UserInfo_RegisterSteps.cs" />
-    <Compile Include="Steps\VersionSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
     <Compile Include="Controllers\TestVersionController.cs" />
     <Compile Include="Services\TestVersionService.cs" />
@@ -164,10 +158,6 @@
     <None Include="Feature\Version_Add.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Version_Add.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Feature\Version_Valid_Input.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Version_Valid_Input.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
