@@ -57,6 +57,7 @@ namespace SmartHome.Service
 
         public VersionEntity Add(VersionEntity entity)
         {
+            Mapper.CreateMap<VersionEntity, Version>();
             Version model = Mapper.Map<VersionEntity, Version>(entity);
             model.AuditField = new AuditFields();
             model.ObjectState = ObjectState.Added;
