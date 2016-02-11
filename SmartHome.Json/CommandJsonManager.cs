@@ -48,8 +48,6 @@ namespace SmartHome.Json
             InitializeParameters(commandJson);
 
             InitializeList();
-
-            Device = FindDevice();
         }
 
         public CommandJsonManager(CommandJsonEntity commandJson, ICommandPerserService commandPerserService)
@@ -59,16 +57,7 @@ namespace SmartHome.Json
             SetupCommandArrayAndLength();
             
             InitializeList();
-
-            if (Device == null)
-            {
-                LogCommand(false, "Device not found.");
-                return;
-            }
-            else
-            {
-                ParseInitiatorAndSetVersionValue();
-            }
+            
 
         }
 
@@ -161,7 +150,7 @@ namespace SmartHome.Json
             }
         }
 
-        public Device FindDevice()
+        public virtual Device FindDevice()
         {
             return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
         }
