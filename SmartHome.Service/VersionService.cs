@@ -23,7 +23,7 @@ namespace SmartHome.Service
         public VersionService(IRepositoryAsync<Version> repository) : base(repository)
         {
             _repository = repository;
-            Mapper.CreateMap<VersionEntity, Version>();
+            // Mapper.CreateMap<VersionEntity, Version>();
         }
 
         public bool IsExists(int key)
@@ -50,6 +50,7 @@ namespace SmartHome.Service
 
         public async Task<VersionEntity> GetAsync(int Id)
         {
+            Mapper.CreateMap<Version, VersionEntity>();
             var SyncList = await _repository.FindAsync(Id);
             return Mapper.Map<Version, VersionEntity>(SyncList);
         }
