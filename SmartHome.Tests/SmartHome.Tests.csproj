@@ -138,6 +138,7 @@
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
     <Compile Include="Steps\Configuration_Json_Valid_InputSteps.cs" />
+    <Compile Include="Steps\UserInfo_RegisterSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
     <Compile Include="TestCommandParser.cs" />
     <Compile Include="Controllers\TestVersionController.cs" />
