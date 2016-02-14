@@ -190,7 +190,7 @@ namespace SmartHome.Tests.Steps
             {
                 new DeviceStatus()
                 {
-                    Value = 1,
+                    Value = "1",
                     AuditField = null,
                     Device = Device,
                     Status = 1,

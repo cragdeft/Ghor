@@ -55,10 +55,7 @@ namespace SmartHome.Json
             _commandPerserService = commandPerserService;
             _commandJson = commandJson;
             SetupCommandArrayAndLength();
-            
             InitializeList();
-            
-
         }
 
         private void SetupCommandArrayAndLength()
@@ -265,7 +262,7 @@ namespace SmartHome.Json
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
                 StatusType = (int)type,
-                Value = value
+                Value = value.ToString()
             };
 
             DeviceStatusList.Add(deviceStatus);
@@ -317,12 +314,19 @@ namespace SmartHome.Json
 
         private void SmartRainbowRgbwCommandParse()
         {
+            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+                GetDeviceStatusForSmartRainbow(StatusType.RgbwStatus);
+        }
+
+        private void GetDeviceStatusForSmartRainbow(StatusType rgbwStatus)
+        {
             throw new NotImplementedException();
         }
 
         private void SmartRainbowPowerCommandParse()
         {
-            throw new NotImplementedException();
+            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+                GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
         }
 
         private void AddChannelValue(StatusType status)
