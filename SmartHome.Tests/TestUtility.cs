@@ -17,10 +17,10 @@ namespace SmartHome.Tests
         {
 
             // Arrange
-            string plainTextForIOS = "Test)";
-            string plainTextForAndroid = "Hi there";
-            string encryptedTextForIOS = "P7Bv3wibqUgKOFmFU+v1SQ==";
-            string encryptedTextForAndroid = "yfOoqzkm3tK97qgleRZPHA==";
+            string plainTextForIOS = "Hi there";
+            string plainTextForAndroid = "Hello";
+            string encryptedTextForIOS = "6NTdfJFMBWKUW5IQtKKZUQ==";
+            string encryptedTextForAndroid = "qLzUKiQ/Q9l5w6wJBPXJsw==";
 
             // Act
 

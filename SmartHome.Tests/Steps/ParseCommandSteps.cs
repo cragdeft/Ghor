@@ -17,7 +17,6 @@ namespace SmartHome.Tests.Steps
     public class ParseCommandSteps
     {
         public CommandJsonEntity JsonObject { get; set; }
-        public Device Device { get; set; }
 
         public List<Device> DeviceList { get; set; }
 
@@ -60,7 +59,7 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_thermalshutdown_status()
         {
-            Assert.AreEqual(1, _CommandJsonManager.Object.DeviceStatusList[0].Value);
+            Assert.AreEqual("1", _CommandJsonManager.Object.DeviceStatusList[0].Value);
         }
 
         [Then]
@@ -81,10 +80,10 @@ namespace SmartHome.Tests.Steps
         public void Then_I_will_check_CurrentLoadStatusThreeTwoByte_status()
         {
             Assert.AreEqual(StatusType.SmartSwitchThermalShutdown, (StatusType)_CommandJsonManager.Object.DeviceStatusList[0].StatusType);
-            Assert.AreEqual(1, _CommandJsonManager.Object.DeviceStatusList[0].Value);
+            Assert.AreEqual("1", _CommandJsonManager.Object.DeviceStatusList[0].Value);
 
             Assert.AreEqual(StatusType.IndicatorOnOffFeedback, (StatusType)_CommandJsonManager.Object.DeviceStatusList[1].StatusType);
-            Assert.AreEqual(2, _CommandJsonManager.Object.DeviceStatusList[1].Value);
+            Assert.AreEqual("2", _CommandJsonManager.Object.DeviceStatusList[1].Value);
 
             //channel 1
             Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].Status);
@@ -148,6 +147,20 @@ namespace SmartHome.Tests.Steps
             Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].Value);
         }
 
+        [Then]
+        public void Then_I_will_check_RgbwSetFeedback_status()
+        {
+            Assert.AreEqual(StatusType.RgbwStatus, (StatusType)_CommandJsonManager.Object.DeviceStatusList[0].StatusType);
+            Assert.AreEqual("1|1|1|0|1", _CommandJsonManager.Object.DeviceStatusList[0].Value);
+        }
+
+        [Then]
+        public void Then_I_will_check_RainbowOnOffFeedback_status()
+        {
+            Assert.AreEqual(StatusType.RgbwStatus, (StatusType)_CommandJsonManager.Object.DeviceStatusList[0].StatusType);
+            Assert.AreEqual("1", _CommandJsonManager.Object.DeviceStatusList[0].Value);
+        }
+
 
         #region Private Methods
         private Mock<CommandJsonManager> Arrange(string jsonString)
@@ -158,7 +171,7 @@ namespace SmartHome.Tests.Steps
                 .Returns(FindDevice(JsonObject.DeviceUUId.ToString()));
 
             var mockCommandJsonManager = new Mock<CommandJsonManager>(JsonObject, CommandPerserService.Object);
-            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(Device);
+            mockCommandJsonManager.Setup(x => x.FindDevice()).Returns(CommandPerserService.Object.FindDevice(JsonObject.DeviceUUId));
             return mockCommandJsonManager;
         }
 
@@ -169,30 +182,32 @@ namespace SmartHome.Tests.Steps
 
         private void InitializeDevice()
         {
-            GetDemoDevice();
-            var demoChannel = GetDemoChannel();
-            var demoChannelList = new List<Channel>() { demoChannel };
-            Device.Channels = demoChannelList;
+            AddDemoDevice();
 
-            var demoChannelStatusList = GetDemoChannelStatusList(demoChannel);
+            foreach (var device in DeviceList)
+            {
+                var demoChannel = GetDemoChannel(device);
+                var demoChannelList = new List<Channel>() { demoChannel };
+                device.Channels = demoChannelList;
 
-            demoChannel.ChannelStatuses = demoChannelStatusList;
+                var demoChannelStatusList = GetDemoChannelStatusList(demoChannel);
 
-            var demoDeviceStatusList = GetDemoDeviceStatusList();
-            Device.DeviceStatus = demoDeviceStatusList;
+                demoChannel.ChannelStatuses = demoChannelStatusList;
 
-            DeviceList.Add(Device);
+                var demoDeviceStatusList = GetDemoDeviceStatusList(device);
+                device.DeviceStatus = demoDeviceStatusList;
+            }
         }
 
-        private List<DeviceStatus> GetDemoDeviceStatusList()
+        private List<DeviceStatus> GetDemoDeviceStatusList(Device device)
         {
             return new List<DeviceStatus>()
             {
                 new DeviceStatus()
                 {
-                    Value = 1,
+                    Value = "1",
                     AuditField = null,
-                    Device = Device,
+                    Device = device,
                     Status = 1,
                     StatusType = StatusType.CurrentLoadStatus,
                     DeviceStatusId = 1
@@ -216,11 +231,11 @@ namespace SmartHome.Tests.Steps
             };
         }
 
-        private Channel GetDemoChannel()
+        private Channel GetDemoChannel(Device device)
         {
             return new Channel()
             {
-                Device = Device,
+                Device = device,
                 AuditField = null,
                 ChannelId = 1,
                 ChannelNo = 1,
@@ -230,9 +245,9 @@ namespace SmartHome.Tests.Steps
             };
         }
 
-        private void GetDemoDevice()
+        private void AddDemoDevice()
         {
-            Device = new Device()
+            var device = new Device()
             {
                 AuditField = null,
                 DeviceHash = "2094027172",
@@ -241,11 +256,30 @@ namespace SmartHome.Tests.Steps
                 IsDeleted = false,
                 Mac = "mac",
                 Watt = null,
-                DeviceId = 1,
+                DeviceId = 32769,
                 DeviceVersion = "0",
                 DeviceStatus = null,
                 Channels = null
             };
+
+            DeviceList.Add(device);
+
+            device = new Device()
+            {
+                AuditField = null,
+                DeviceHash = "2094027173",
+                DeviceName = "demo",
+                DeviceType = (DeviceType?) 1,
+                IsDeleted = false,
+                Mac = "mac",
+                Watt = null,
+                DeviceId = 32767,
+                DeviceVersion = "0",
+                DeviceStatus = null,
+                Channels = null
+            };
+
+            DeviceList.Add(device);
         }
 
         private void InitializeJsonObject(string jsonString)

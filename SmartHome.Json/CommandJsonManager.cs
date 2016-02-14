@@ -20,8 +20,8 @@ namespace SmartHome.Json
         #region Property
 
         #region Private
-        private static IUnitOfWorkAsync _unitOfWorkAsync;
-        private static ICommandPerserService _commandPerserService;
+        private  IUnitOfWorkAsync _unitOfWorkAsync;
+        private  ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
         public Device Device { get; set; }
 
@@ -55,10 +55,7 @@ namespace SmartHome.Json
             _commandPerserService = commandPerserService;
             _commandJson = commandJson;
             SetupCommandArrayAndLength();
-            
             InitializeList();
-            
-
         }
 
         private void SetupCommandArrayAndLength()
@@ -136,9 +133,6 @@ namespace SmartHome.Json
                     case CommandId.SmartRainbowPower:
                         SmartRainbowPowerCommandParse();
                         break;
-                    case CommandId.SmartRainbowRgbwStatus:
-                        SmartRainbowRgbwCommandParse();
-                        break;
                     case CommandId.SmartRainbowRgbw:
                         SmartRainbowRgbwSetCommandParse();
                         break;
@@ -187,7 +181,7 @@ namespace SmartHome.Json
             Initiator = Convert.ToByte(CommandArray[0]);
         }
 
-        private static void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
+        private void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -260,7 +254,7 @@ namespace SmartHome.Json
 
         }
 
-        private void AddDeviceStatusToList(StatusType type, int value)
+        private void AddDeviceStatusToList(StatusType type, string value)
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
@@ -312,17 +306,27 @@ namespace SmartHome.Json
 
         private void SmartRainbowRgbwSetCommandParse()
         {
-            throw new NotImplementedException();
+            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            {
+                AddDeviceStatusToList(StatusType.RgbwStatus, GetRgbwStatus());
+            }
         }
 
-        private void SmartRainbowRgbwCommandParse()
+        private string GetRgbwStatus()
         {
-            throw new NotImplementedException();
+            string deviceStatusValue = null;
+            for (int i = 2; i < 7; i++)
+                deviceStatusValue += GetValue(CommandArray[i]).ToString() + "|";
+            deviceStatusValue = deviceStatusValue?.Remove(deviceStatusValue.Length - 1);
+
+            return deviceStatusValue;
+
         }
 
         private void SmartRainbowPowerCommandParse()
         {
-            throw new NotImplementedException();
+            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+                GetDeviceStatusFromNumber3Bit(StatusType.RgbwStatus); 
         }
 
         private void AddChannelValue(StatusType status)
@@ -402,7 +406,7 @@ namespace SmartHome.Json
             _commandPerserService.AddChannelStatus(status);
         }
 
-        private static void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
+        private  void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
         {
             status.Value = Convert.ToInt32(channelValue.Value);
             _commandPerserService.UpdateChannelStatus(status);
@@ -425,7 +429,7 @@ namespace SmartHome.Json
             }
         }
 
-        private static void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
+        private void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
         {
             var deviceStatus = new DeviceStatus
             {
@@ -461,13 +465,13 @@ namespace SmartHome.Json
 
         private void GetDeviceStatusFromNumber3Bit(StatusType status)
         {
-            AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol());
+            AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol().ToString());
 
         }
 
         private void GetDeviceStatusFromNumber7Bit(StatusType status)
         {
-            AddDeviceStatusToList(status, Get7ThBitValueOfCommunicationProtocol());
+            AddDeviceStatusToList(status, Get7ThBitValueOfCommunicationProtocol().ToString());
         }
 
         private void GetChannelStatus(StatusType status)

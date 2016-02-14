@@ -60,3 +60,19 @@ Scenario: Parse CommandJson for CurrentLoadStatus8Byte
 	And I created a json with that string
 	When I parse
 	Then I will check DimmingFeedback status
+
+Scenario: Parse CommandJson for RgbwSetFeedback
+	Given I have entered following property  
+	| field				| value			|
+	| JsonString | { "response": true, "device_version": "00", "email": "hvuv@vuu.com", "device_uuid": 2094027173,"device_id": 32767, "mac_id": "mac","command_byte": "[1, 99, 1, 1, 1, 0, 1, -5]","command_id": 99} |
+	And I created a json with that string
+	When I parse
+	Then I will check RgbwSetFeedback status
+
+Scenario: Parse CommandJson for RainbowOnOffFeedback
+	Given I have entered following property  
+	| field				| value			|
+	| JsonString | { "response": true, "device_version": "00", "email": "hvuv@vuu.com", "device_uuid": 2094027173,"device_id": 32767, "mac_id": "mac","command_byte": "[1, 97, 1, 1, 1, 0, 1, -5]","command_id": 97} |
+	And I created a json with that string
+	When I parse
+	Then I will check RainbowOnOffFeedback status

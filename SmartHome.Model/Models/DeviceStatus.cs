@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
         //public int StatusType { get; set; }
         public StatusType StatusType { get; set; }
         public int Status { get; set; }
-        public int Value { get; set; }
+        public string Value { get; set; }
         #endregion
 
         #region Complex Properties
