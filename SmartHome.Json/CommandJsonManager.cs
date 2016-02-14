@@ -133,9 +133,6 @@ namespace SmartHome.Json
                     case CommandId.SmartRainbowPower:
                         SmartRainbowPowerCommandParse();
                         break;
-                    case CommandId.SmartRainbowRgbwStatus:
-                        SmartRainbowRgbwCommandParse();
-                        break;
                     case CommandId.SmartRainbowRgbw:
                         SmartRainbowRgbwSetCommandParse();
                         break;
@@ -324,11 +321,6 @@ namespace SmartHome.Json
 
             return deviceStatusValue;
 
-        }
-
-        private void SmartRainbowRgbwCommandParse()
-        {
-            
         }
 
         private void SmartRainbowPowerCommandParse()
