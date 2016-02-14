@@ -260,6 +260,62 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Parse CommandJson for RgbwSetFeedback")]
+        public virtual void ParseCommandJsonForRgbwSetFeedback()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Parse CommandJson for RgbwSetFeedback", ((string[])(null)));
+#line 64
+this.ScenarioSetup(scenarioInfo);
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "field",
+                        "value"});
+            table8.AddRow(new string[] {
+                        "JsonString",
+                        "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid" +
+                            "\": 2094027173,\"device_id\": 32767, \"mac_id\": \"mac\",\"command_byte\": \"[1, 99, 1, 1," +
+                            " 1, 0, 1, -5]\",\"command_id\": 99}"});
+#line 65
+ testRunner.Given("I have entered following property", ((string)(null)), table8, "Given ");
+#line 68
+ testRunner.And("I created a json with that string", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 69
+ testRunner.When("I parse", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 70
+ testRunner.Then("I will check RgbwSetFeedback status", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Parse CommandJson for RainbowOnOffFeedback")]
+        public virtual void ParseCommandJsonForRainbowOnOffFeedback()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Parse CommandJson for RainbowOnOffFeedback", ((string[])(null)));
+#line 72
+this.ScenarioSetup(scenarioInfo);
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "field",
+                        "value"});
+            table9.AddRow(new string[] {
+                        "JsonString",
+                        "{ \"response\": true, \"device_version\": \"00\", \"email\": \"hvuv@vuu.com\", \"device_uuid" +
+                            "\": 2094027173,\"device_id\": 32767, \"mac_id\": \"mac\",\"command_byte\": \"[1, 97, 1, 1," +
+                            " 1, 0, 1, -5]\",\"command_id\": 97}"});
+#line 73
+ testRunner.Given("I have entered following property", ((string)(null)), table9, "Given ");
+#line 76
+ testRunner.And("I created a json with that string", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 77
+ testRunner.When("I parse", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 78
+ testRunner.Then("I will check RainbowOnOffFeedback status", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
