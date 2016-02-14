@@ -197,7 +197,6 @@ namespace SmartHome.Tests.Steps
                 var demoDeviceStatusList = GetDemoDeviceStatusList(device);
                 device.DeviceStatus = demoDeviceStatusList;
             }
-            
         }
 
         private List<DeviceStatus> GetDemoDeviceStatusList(Device device)
