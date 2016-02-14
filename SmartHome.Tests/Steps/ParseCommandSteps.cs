@@ -157,7 +157,7 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_RainbowOnOffFeedback_status()
         {
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.DeviceStatusList[0].StatusType);
+            Assert.AreEqual(StatusType.RgbwStatus, (StatusType)_CommandJsonManager.Object.DeviceStatusList[0].StatusType);
             Assert.AreEqual("1", _CommandJsonManager.Object.DeviceStatusList[0].Value);
         }
 
