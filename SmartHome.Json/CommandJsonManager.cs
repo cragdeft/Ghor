@@ -257,12 +257,12 @@ namespace SmartHome.Json
 
         }
 
-        private void AddDeviceStatusToList(StatusType type, int value)
+        private void AddDeviceStatusToList(StatusType type, string value)
         {
             DeviceStatusEntity deviceStatus = new DeviceStatusEntity
             {
                 StatusType = (int)type,
-                Value = value.ToString()
+                Value = value
             };
 
             DeviceStatusList.Add(deviceStatus);
@@ -309,24 +309,32 @@ namespace SmartHome.Json
 
         private void SmartRainbowRgbwSetCommandParse()
         {
-            throw new NotImplementedException();
+            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            {
+                AddDeviceStatusToList(StatusType.RgbwStatus, GetRgbwStatus());
+            }
+        }
+
+        private string GetRgbwStatus()
+        {
+            string deviceStatusValue = null;
+            for (int i = 2; i < 7; i++)
+                deviceStatusValue += GetValue(CommandArray[i]).ToString() + "|";
+            deviceStatusValue = deviceStatusValue?.Remove(deviceStatusValue.Length - 1);
+
+            return deviceStatusValue;
+
         }
 
         private void SmartRainbowRgbwCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatusForSmartRainbow(StatusType.RgbwStatus);
-        }
-
-        private void GetDeviceStatusForSmartRainbow(StatusType rgbwStatus)
-        {
-            throw new NotImplementedException();
+            
         }
 
         private void SmartRainbowPowerCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
+                GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback); 
         }
 
         private void AddChannelValue(StatusType status)
@@ -465,13 +473,13 @@ namespace SmartHome.Json
 
         private void GetDeviceStatusFromNumber3Bit(StatusType status)
         {
-            AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol());
+            AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol().ToString());
 
         }
 
         private void GetDeviceStatusFromNumber7Bit(StatusType status)
         {
-            AddDeviceStatusToList(status, Get7ThBitValueOfCommunicationProtocol());
+            AddDeviceStatusToList(status, Get7ThBitValueOfCommunicationProtocol().ToString());
         }
 
         private void GetChannelStatus(StatusType status)
