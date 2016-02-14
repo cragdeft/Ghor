@@ -20,8 +20,8 @@ namespace SmartHome.Json
         #region Property
 
         #region Private
-        private static IUnitOfWorkAsync _unitOfWorkAsync;
-        private static ICommandPerserService _commandPerserService;
+        private  IUnitOfWorkAsync _unitOfWorkAsync;
+        private  ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
         public Device Device { get; set; }
 
@@ -181,7 +181,7 @@ namespace SmartHome.Json
             Initiator = Convert.ToByte(CommandArray[0]);
         }
 
-        private static void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
+        private void IterateByte(BitArray cds0, ref bool[] directionBoolArray, ref bool[] versionBoolArray)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -406,7 +406,7 @@ namespace SmartHome.Json
             _commandPerserService.AddChannelStatus(status);
         }
 
-        private static void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
+        private  void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
         {
             status.Value = Convert.ToInt32(channelValue.Value);
             _commandPerserService.UpdateChannelStatus(status);
@@ -429,7 +429,7 @@ namespace SmartHome.Json
             }
         }
 
-        private static void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
+        private void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
         {
             var deviceStatus = new DeviceStatus
             {
