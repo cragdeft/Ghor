@@ -14,7 +14,7 @@ namespace SmartHome.Tests.Steps
         {
             WebBrowser.Current.GoTo("http://localhost:8600/Home/About");
         }
-        
+
         [When]
         public void When_I_fill_in_the_following_form(TechTalk.SpecFlow.Table table)
         {
@@ -29,7 +29,7 @@ namespace SmartHome.Tests.Steps
                 textField.TypeText(row["value"]);
             }
         }
-        
+
         [When]
         public void When_I_click_the_PUBLISH_button_for_publish(string publish)
         {
@@ -40,7 +40,7 @@ namespace SmartHome.Tests.Steps
 
             subscribButton.Click();
         }
-        
+
         [When]
         public void When_I_click_the_SUBSCRIB_button_for_subscrib(string subscrib)
         {
@@ -51,7 +51,7 @@ namespace SmartHome.Tests.Steps
 
             subscribButton.Click();
         }
-        
+
         [Then]
         public void Then_I_should_be_at_the_subscribe_page()
         {

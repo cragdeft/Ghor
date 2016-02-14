@@ -120,6 +120,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Feature\Configuration_Json_Parse_Input_Check.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Configuration_Json_Parse_Input_Check.feature</DependentUpon>
+    </Compile>
     <Compile Include="Feature\ParseCommand.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -137,6 +142,7 @@
     </Compile>
     <Compile Include="StepHelpers\BrowserDemoHelper.cs" />
     <Compile Include="StepHelpers\WebBrowser.cs" />
+    <Compile Include="Steps\Configuration_Json_Valid_InputSteps.cs" />
     <Compile Include="Steps\ParseCommandSteps.cs" />
     <Compile Include="Steps\UserInfo_RegisterSteps.cs" />
     <Compile Include="Steps\Version_AddSteps.cs" />
@@ -147,6 +153,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Feature\Configuration_Json_Parse_Input_Check.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Configuration_Json_Parse_Input_Check.feature.cs</LastGenOutput>
+    </None>
     <None Include="Feature\ParseCommand.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ParseCommand.feature.cs</LastGenOutput>
