@@ -326,7 +326,7 @@ namespace SmartHome.Json
         private void SmartRainbowPowerCommandParse()
         {
             if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
-                GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback); 
+                GetDeviceStatusFromNumber3Bit(StatusType.RgbwStatus); 
         }
 
         private void AddChannelValue(StatusType status)
