@@ -20,8 +20,8 @@ namespace SmartHome.Json
 {
     public class JsonManager
     {
-        private static IUnitOfWorkAsync _unitOfWorkAsync;
-        private static IConfigurationParserManagerService _configurationPerserService;
+        private IUnitOfWorkAsync _unitOfWorkAsync;
+        private IConfigurationParserManagerService _configurationPerserService;
 
         public JsonManager()
         {
