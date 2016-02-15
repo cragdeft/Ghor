@@ -47,7 +47,7 @@ namespace SmartHome.Service
                 deviceStatus.AuditField = new AuditFields(deviceStatus.AuditField.InsertedBy, deviceStatus.AuditField.InsertedDateTime, _email, DateTime.Now);
                 deviceStatus.ObjectState = ObjectState.Modified;
                 _deviceStatusRepository.Update(deviceStatus);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
                 return deviceStatus;
             }
@@ -67,7 +67,7 @@ namespace SmartHome.Service
                 deviceStatus.AuditField = new AuditFields(_email, DateTime.Now, null, null);
                 deviceStatus.ObjectState = ObjectState.Added;
                 _deviceStatusRepository.Insert(deviceStatus);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
                 return deviceStatus;
             }
@@ -88,7 +88,7 @@ namespace SmartHome.Service
                 channelStatus.AuditField = new AuditFields(channelStatus.AuditField.InsertedBy, channelStatus.AuditField.InsertedDateTime, _email, DateTime.Now);
                 channelStatus.ObjectState = ObjectState.Modified;
                 _channelStatusRepository.Update(channelStatus);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
                 return channelStatus;
             }
@@ -108,7 +108,7 @@ namespace SmartHome.Service
                 channelStatus.AuditField = new AuditFields(_email, DateTime.Now, null, null);
                 channelStatus.ObjectState = ObjectState.Added;
                 _channelStatusRepository.Insert(channelStatus);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
                 return channelStatus;
             }
@@ -142,7 +142,7 @@ namespace SmartHome.Service
                 commanD.AuditField = new AuditFields(_email, DateTime.Now, null, null);
                 commanD.ObjectState = ObjectState.Added;
                 _commandJsonRepository.Insert(commanD);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
             catch (Exception ex)
@@ -161,7 +161,7 @@ namespace SmartHome.Service
                 channel.AuditField = new AuditFields(channel.AuditField.InsertedBy, channel.AuditField.InsertedDateTime, _email, DateTime.Now);
                 channel.ObjectState = ObjectState.Modified;
                 _channelRepository.Update(channel);
-                var changes = _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
             catch (Exception)
