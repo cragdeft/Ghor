@@ -42,7 +42,6 @@ namespace SmartHome.Json
 
         #region Constructor
 
-
         public CommandJsonManager(CommandJsonEntity commandJson)
         {
             InitializeParameters(commandJson);
@@ -318,7 +317,6 @@ namespace SmartHome.Json
             for (int i = 2; i < 7; i++)
                 deviceStatusValue += GetValue(CommandArray[i]).ToString() + "|";
             deviceStatusValue = deviceStatusValue?.Remove(deviceStatusValue.Length - 1);
-
             return deviceStatusValue;
 
         }
