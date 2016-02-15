@@ -9,7 +9,7 @@ foreach (var nextVersion in siteMenu.Where(a => a.ParentId.Equals(parentID)))
             @{var submenu = siteMenu.Where(a => a.ParentId.Equals(nextVersion.SequenceId)).Count();}
             @if (submenu > 0)
             {
-                <span class="collapse collapsible">&nbsp;</span>
+                <span class="treeCollapse collapsible">&nbsp;</span>
             }
             else
             {
