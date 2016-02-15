@@ -191,13 +191,13 @@ namespace SmartHome.Json
             }
         }
 
-        private async void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
+        private void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
         {
             _unitOfWorkAsync.BeginTransaction();
             try
             {
                 _configurationPerserService.AddOrUpdateVersionGraphRange(oVersion);
-                var changes = await _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
 
             }
