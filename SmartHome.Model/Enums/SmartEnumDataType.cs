@@ -12,25 +12,27 @@ namespace SmartHome.Model.Enums
     public enum LoadType
     {
         [EnumMember]
-        NO_LOAD = 0,
+        NoLoad = 0,
         [EnumMember]
-        NON_DIMMABLE_BULB = 1,
+        NonDimmableBulb = 1,
         [EnumMember]
-        DIMMABLE_BULB = 2,
+        DimmableBulb = 2,
         [EnumMember]
-        FAN = 3
+        Fan = 3,
+        Tubelight = 4,
+        Cfl = 5
     }
     [DataContract]
     public enum DeviceType
     {
         [EnumMember]
-        SMART_SWITCH_6G = 0,
+        SmartSwitch6g = 0,
         [EnumMember]
-        SMART_RAINBOW_12 = 1,
+        SmartRainbow12 = 1,
         [EnumMember]
-        CURTAIN = 2,
+        Curtain = 2,
         [EnumMember]
-        CAMERA = 3
+        Camera = 3
     }
 
     public enum MeshModeType

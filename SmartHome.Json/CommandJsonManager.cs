@@ -215,7 +215,7 @@ namespace SmartHome.Json
 
         public void CurrentLoadStatusParse()
         {
-            if (Device.DeviceType != DeviceType.SMART_SWITCH_6G) return;
+            if (Device.DeviceType != DeviceType.SmartSwitch6g) return;
 
             if (Length == 32)
             {
@@ -267,7 +267,7 @@ namespace SmartHome.Json
 
         public void OnOffFeedbackCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
+            if (Device.DeviceType == DeviceType.SmartSwitch6g)
             {
                 if (GetChannelNoOfCommunicationProtocol() == 0)
                     GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
@@ -276,27 +276,27 @@ namespace SmartHome.Json
             }
 
 
-            else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            else if (Device.DeviceType == DeviceType.SmartRainbow12)
                 GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
         }
 
         public void DimmingFeedbackCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
+            if (Device.DeviceType == DeviceType.SmartSwitch6g)
                 GetChannelStatus(StatusType.DimmingFeedback);
-            else if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            else if (Device.DeviceType == DeviceType.SmartRainbow12)
                 GetDeviceStatusFromNumber3Bit(StatusType.DimmingFeedback);
         }
 
         public void DimmingFeedbackEnableDisableCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
+            if (Device.DeviceType == DeviceType.SmartSwitch6g)
                 GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
         }
 
         public void LoadTypeSelectCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_SWITCH_6G)
+            if (Device.DeviceType == DeviceType.SmartSwitch6g)
             {
                 AddChannelValue(StatusType.LoadTypeSelectFeedback);
             }
@@ -305,7 +305,7 @@ namespace SmartHome.Json
 
         private void SmartRainbowRgbwSetCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            if (Device.DeviceType == DeviceType.SmartRainbow12)
             {
                 AddDeviceStatusToList(StatusType.RgbwStatus, GetRgbwStatus());
             }
@@ -323,7 +323,7 @@ namespace SmartHome.Json
 
         private void SmartRainbowPowerCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SMART_RAINBOW_12)
+            if (Device.DeviceType == DeviceType.SmartRainbow12)
                 GetDeviceStatusFromNumber3Bit(StatusType.RgbwStatus); 
         }
 

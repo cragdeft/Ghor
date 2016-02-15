@@ -20,8 +20,8 @@ namespace SmartHome.Json
 {
     public class JsonManager
     {
-        private static IUnitOfWorkAsync _unitOfWorkAsync;
-        private static IConfigurationParserManagerService _configurationPerserService;
+        private IUnitOfWorkAsync _unitOfWorkAsync;
+        private IConfigurationParserManagerService _configurationPerserService;
 
         public JsonManager()
         {
@@ -191,13 +191,13 @@ namespace SmartHome.Json
             }
         }
 
-        private async void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
+        private void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
         {
             _unitOfWorkAsync.BeginTransaction();
             try
             {
                 _configurationPerserService.AddOrUpdateVersionGraphRange(oVersion);
-                var changes = await _unitOfWorkAsync.SaveChangesAsync();
+                var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
 
             }

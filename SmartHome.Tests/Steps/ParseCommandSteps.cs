@@ -72,8 +72,8 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_LoadType_status()
         {
-            Assert.AreEqual(DeviceType.SMART_SWITCH_6G, _CommandJsonManager.Object.Device.DeviceType);
-            Assert.AreEqual(LoadType.NO_LOAD, _CommandJsonManager.Object.LoadType);
+            Assert.AreEqual(DeviceType.SmartSwitch6g, _CommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(LoadType.NoLoad, _CommandJsonManager.Object.LoadType);
         }
 
         [Then]
