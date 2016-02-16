@@ -82,8 +82,8 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "smarthome-noreply@sinepulse.com",
                         "sumon.kumar@aplombtechbd.com",
+                        "test",
                         "this is a test message",
-                        "true",
                         "true",
                         "true",
                         "1/2/2015"});
