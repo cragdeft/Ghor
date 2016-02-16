@@ -18,8 +18,15 @@ namespace SmartHome.MailApi.Controllers
         public HttpResponseMessage SendMail(EmailEntity email, bool isEncrypted)
         {
             HttpResponseMessage response;
-            SmartHomeMailClient mailClient = new SmartHomeMailClient(email);
-            response = Request.CreateResponse(HttpStatusCode.OK, mailClient.SendEmail(isEncrypted));
+            if (ModelState.IsValid)
+            {
+                SmartHomeMailClient mailClient = new SmartHomeMailClient(email);
+                response = Request.CreateResponse(HttpStatusCode.OK, mailClient.SendEmail(isEncrypted));
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK, false);
+            }
 
             return response;
         }
