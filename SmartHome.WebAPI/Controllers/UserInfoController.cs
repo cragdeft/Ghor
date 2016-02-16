@@ -36,7 +36,6 @@ namespace SmartHome.WebAPI.Controllers
             this._userInfoService = userInfoService;
         }
 
-
         [Route("api/Userinfos")]
         public HttpResponseMessage Get()
         {
@@ -86,7 +85,6 @@ namespace SmartHome.WebAPI.Controllers
                 }
                 catch (Exception)
                 {
-                    
                     _unitOfWorkAsync.Rollback();
                 }
                 response = Request.CreateResponse(HttpStatusCode.OK, userInfo);
@@ -97,8 +95,6 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
     }
-
-
 }
 
 

@@ -173,3 +173,5 @@ E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\De
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.pdb
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.xml
