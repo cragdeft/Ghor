@@ -71,7 +71,6 @@ namespace SmartHome.Tests.Steps
                 new UserInfoEntity() { Email = "d@b.com"},
                 new UserInfoEntity() { Email = "e@b.com"}
             };
-
             return userList.Exists(x => x.Email == email);
         }
     }
