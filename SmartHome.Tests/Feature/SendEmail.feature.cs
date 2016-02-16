@@ -64,10 +64,10 @@ namespace SmartHome.Tests.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Send Email")]
-        public virtual void SendEmail()
+        [NUnit.Framework.DescriptionAttribute("Send Plain Email")]
+        public virtual void SendPlainEmail()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Send Email", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Send Plain Email", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line hidden
@@ -81,7 +81,7 @@ this.ScenarioSetup(scenarioInfo);
                         "SentDate"});
             table1.AddRow(new string[] {
                         "smarthome-noreply@sinepulse.com",
-                        "skd9000@gmail.com",
+                        "sumon.kumar@aplombtechbd.com",
                         "this is a test message",
                         "true",
                         "true",
@@ -90,9 +90,9 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("I have a  EmailoEntity record with the following properties", ((string)(null)), table1, "Given ");
 #line 12
-  testRunner.When("I save the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When("I send the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 13
-  testRunner.Then("I will check Email sent or not", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("I will check Email sent or not and response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using NUnit.Framework;
 using SmartHome.Entity;
-using SmartHome.Mail;
+using SmartHome.MailApi.Controllers;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -15,19 +18,27 @@ namespace SmartHome.Tests.Steps
         {
             ScenarioContext.Current.Set<EmailEntity>(table.CreateInstance<EmailEntity>());
         }
-        
-        [When]
-        public void When_I_save_the_Email()
-        {
-            SmartHomeMailClient mailClient = new SmartHomeMailClient(ScenarioContext.Current.Get<EmailEntity>());
-            ScenarioContext.Current.Set<bool>(mailClient.SendEmail(true), "SaveResult");
-        }
-        
-        [Then]
-        public void Then_I_will_check_Email_sent_or_not()
-        {
-            Assert.AreEqual(ScenarioContext.Current.Get<bool>("SaveResult"), true);
 
+        [Then]
+        public void Then_I_will_check_Email_sent_or_not_and_response()
+        {
+            Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").StatusCode, HttpStatusCode.OK);
+            Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").Content, true);
         }
+
+        [When]
+        public void When_I_send_the_Email()
+        {
+            EmailController = new EmailController
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
+
+            ScenarioContext.Current.Set<HttpResponseMessage>(EmailController.SendMail(ScenarioContext.Current.Get<EmailEntity>(),false), "SaveResult");
+        }
+
+
+        public EmailController EmailController { get; set; }
     }
 }
