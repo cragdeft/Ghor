@@ -154,13 +154,15 @@ namespace SmartHome.MQTT.Client
 
         private static void DefinedMQTTCommunicationEvents()
         {
-            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
-                              new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
             SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
             SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
             SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
+
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+                              new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+          
         }
 
         private static void BrokerConnectionWithCertificate(string brokerAddress)
