@@ -23,7 +23,7 @@ namespace SmartHome.Tests.Steps
         public void Then_I_will_check_Email_sent_or_not_and_response()
         {
             Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").StatusCode, HttpStatusCode.OK);
-            Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").Content, true);
+            Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").Content.ReadAsStringAsync().Result, "true");
         }
 
         [When]
