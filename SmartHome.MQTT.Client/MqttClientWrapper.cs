@@ -24,43 +24,22 @@ namespace SmartHome.MQTT.Client
             {
                 if (brokerAddress == "192.168.11.195")
                 {
-                    SmartHomeMQTT = new MqttClient(brokerAddress);
-
-                   
-                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
-                                      new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
-                    SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+                    LocalBrokerConnection(brokerAddress);
                 }
-
-                else if(brokerAddress == "192.168.11.150")
+                else if (brokerAddress == "192.168.11.150")
                 {
-                    //SmartHomeMQTT = new MqttClient(brokerAddress, 18830, true, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback, null);
-
-                    SmartHomeMQTT = new MqttClient(brokerAddress, 18830, false, null, null, MqttSslProtocols.None, null);
-                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
-                                      new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
-                    SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+                    BrokerConnectionWithoutCertificate(brokerAddress);
                 }
                 else
                 {
-                    SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
-
-                    ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
-                                    new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE,MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
-
-                    SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
+                    BrokerConnectionWithCertificate(brokerAddress);
                 }
 
-
-                SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
-                SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
-                SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
-                SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
+                DefinedMQTTCommunicationEvents();
             }
         }
+
+
 
         public static bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -168,6 +147,43 @@ namespace SmartHome.MQTT.Client
             //parser.Parse();
             //parser.SaveOrUpdateStatus();
 
+        }
+        #endregion
+
+        #region MQTT connection events
+
+        private static void DefinedMQTTCommunicationEvents()
+        {
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+                              new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+            SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
+            SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
+            SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
+            SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
+        }
+
+        private static void BrokerConnectionWithCertificate(string brokerAddress)
+        {
+            SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
+            SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
+        }
+
+        private static void BrokerConnectionWithoutCertificate(string brokerAddress)
+        {
+            SmartHomeMQTT = new MqttClient(brokerAddress, 18830, false, null, null, MqttSslProtocols.None, null);
+            MQTTConnectiobn();
+        }
+
+        private static void LocalBrokerConnection(string brokerAddress)
+        {
+            SmartHomeMQTT = new MqttClient(brokerAddress);
+            MQTTConnectiobn();
+        }
+
+        private static void MQTTConnectiobn()
+        {
+            SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
         }
         #endregion
     }
