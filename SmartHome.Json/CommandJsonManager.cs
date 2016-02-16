@@ -42,7 +42,6 @@ namespace SmartHome.Json
 
         #region Constructor
 
-
         public CommandJsonManager(CommandJsonEntity commandJson)
         {
             InitializeParameters(commandJson);
@@ -318,7 +317,6 @@ namespace SmartHome.Json
             for (int i = 2; i < 7; i++)
                 deviceStatusValue += GetValue(CommandArray[i]).ToString() + "|";
             deviceStatusValue = deviceStatusValue?.Remove(deviceStatusValue.Length - 1);
-
             return deviceStatusValue;
 
         }
@@ -326,7 +324,7 @@ namespace SmartHome.Json
         private void SmartRainbowPowerCommandParse()
         {
             if (Device.DeviceType == DeviceType.SmartRainbow12)
-                GetDeviceStatusFromNumber3Bit(StatusType.RgbwStatus); 
+                GetDeviceStatusFromNumber2Bit(StatusType.RgbwStatus); 
         }
 
         private void AddChannelValue(StatusType status)
@@ -453,6 +451,10 @@ namespace SmartHome.Json
             return Convert.ToInt32(GetValue(CommandArray[2]));
         }
 
+        private int Get2NdBitValueOfCommunicationProtocol()
+        {
+            return Convert.ToInt32(GetValue(CommandArray[2]));
+        }
         private int Get3RdBitValueOfCommunicationProtocol()
         {
             return Convert.ToInt32(GetValue(CommandArray[3]));
@@ -466,7 +468,11 @@ namespace SmartHome.Json
         private void GetDeviceStatusFromNumber3Bit(StatusType status)
         {
             AddDeviceStatusToList(status, Get3RdBitValueOfCommunicationProtocol().ToString());
+        }
 
+        private void GetDeviceStatusFromNumber2Bit(StatusType status)
+        {
+            AddDeviceStatusToList(status, Get2NdBitValueOfCommunicationProtocol().ToString());
         }
 
         private void GetDeviceStatusFromNumber7Bit(StatusType status)

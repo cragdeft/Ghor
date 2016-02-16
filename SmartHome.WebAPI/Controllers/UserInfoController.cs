@@ -46,14 +46,6 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        [Route("api/IsValidUser/{userName}")]
-        public HttpResponseMessage Get(string userName)
-        {
-            var userInfos = _userInfoService.UserValidatyCheckByUserName(userName);
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, userInfos);
-            return response;
-        }
-
         [ValidateAntiForgeryToken]
         [Route("api/users")]
         public HttpResponseMessage Post()

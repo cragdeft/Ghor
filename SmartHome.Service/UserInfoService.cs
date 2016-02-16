@@ -28,12 +28,6 @@ namespace SmartHome.Service
             return _repository.GetsUserInfos();
             
         }
-
-        public bool UserValidatyCheckByUserName(string userName)
-        {
-            return _repository.UserValidatyCheckByUserName(userName);
-        }
-
         public bool IsLoginIdUnique(string email)
         {
             return _repository.IsLoginIdUnique(email);

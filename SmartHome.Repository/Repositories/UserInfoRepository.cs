@@ -16,15 +16,6 @@ namespace SmartHome.Repository.Repositories
                 .Queryable()
                 .AsEnumerable();
         }
-
-        public static bool UserValidatyCheckByUserName(this IRepositoryAsync<UserInfo> repository, string userName)
-        {
-            return repository
-                .Queryable()
-                .Where(u => u.UserName == userName)
-                .AsEnumerable().Count() == 0 ? false : true;
-        }
-
         public static bool IsLoginIdUnique(this IRepositoryAsync<UserInfo> repository, string email)
         {
             return repository
