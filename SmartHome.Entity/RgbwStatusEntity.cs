@@ -11,7 +11,7 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties        
         public int Id { get; set; }
-        [JsonProperty("DeviceId")]
+        [JsonProperty("DeviceTableId")]
         public int DId { get; set; }
         [JsonProperty("StatusType")]        
         public int RGBColorStatusType { get; set; }

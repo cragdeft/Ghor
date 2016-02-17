@@ -156,6 +156,7 @@ namespace SmartHome.Service
                         if (item.DeviceStatus != null && item.DeviceStatus.Count > 0)
                         {
                             AddOrEditExistingDeviceStatus(item, existingItem);
+                            AddOrEditExistingRgbwStatus(item, existingItem);
                             AddOrEditExistingChannels(item, existingItem);
                         }
 
@@ -231,6 +232,43 @@ namespace SmartHome.Service
             tempExistingChannelStatus.AuditField = new AuditFields();
         }
 
+
+        #region AddOrEditExistingRgbwStatus
+        private void AddOrEditExistingRgbwStatus(Device item, Device existingItem)
+        {
+            foreach (var nextStatus in item.RgbwStatuses)
+            {
+                var tempExistingDStatus = existingItem.RgbwStatuses.Where(p => p.Id == nextStatus.Id).FirstOrDefault();
+                if (tempExistingDStatus != null)
+                {
+                    //modify
+                    FillExistingRgbInfo(nextStatus, tempExistingDStatus);
+                }
+                else
+                {
+                    //add
+                    existingItem.RgbwStatuses.Add(nextStatus);
+                }
+            }
+        }
+
+        private void FillExistingRgbInfo(RgbwStatus nextStatus, RgbwStatus tempExistingStatus)
+        {
+            tempExistingStatus.ObjectState = ObjectState.Modified;
+            tempExistingStatus.Id = nextStatus.Id;
+            tempExistingStatus.DId = nextStatus.DId;
+            tempExistingStatus.RGBColorStatusType = nextStatus.RGBColorStatusType;
+            tempExistingStatus.IsPowerOn = nextStatus.IsPowerOn;
+            tempExistingStatus.ColorR = nextStatus.ColorR;
+            tempExistingStatus.ColorG = nextStatus.ColorG;
+            tempExistingStatus.ColorB = nextStatus.ColorB;
+            tempExistingStatus.IsWhiteEnabled = nextStatus.IsWhiteEnabled;
+            tempExistingStatus.DimmingValue = nextStatus.DimmingValue;
+            tempExistingStatus.AuditField = new AuditFields();
+        }
+        #endregion
+
+        #region AddOrEditExistingDeviceStatus
         private void AddOrEditExistingDeviceStatus(Device item, Device existingItem)
         {
             foreach (var nextDStatus in item.DeviceStatus)
@@ -258,6 +296,7 @@ namespace SmartHome.Service
             tempExistingDStatus.Status = nextDStatus.Status;
             tempExistingDStatus.AuditField = new AuditFields();
         }
+        #endregion
 
         private void FillExistingDeviceInfo(Device item, Device existingItem)
         {
@@ -278,7 +317,7 @@ namespace SmartHome.Service
 
         private IEnumerable<Device> IsDeviceExists(int key, string deviceHash)
         {
-            return _deviceRepository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select();
+            return _deviceRepository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.RgbwStatuses).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select();
         }
 
 
@@ -292,7 +331,7 @@ namespace SmartHome.Service
 
             int parentSequence = 0;
             List<DeviceInfoEntity> dInfoEntity = new List<DeviceInfoEntity>();
-            var device = _deviceRepository.Query().Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList();
+            var device = _deviceRepository.Query().Include(x => x.DeviceStatus).Include(x => x.RgbwStatuses).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList();
 
             foreach (Device nextDeviceInfo in device)
             {
@@ -311,6 +350,17 @@ namespace SmartHome.Service
                     deviceInfo.SequenceId = dInfoEntity.Count() + 1;
                     deviceInfo.ParentId = parentSequence;
                     dInfoEntity.Add(deviceInfo);
+
+                }
+
+
+                foreach (RgbwStatus nextStatus in nextDeviceInfo.RgbwStatuses)
+                {
+                    DeviceInfoEntity deviceRgbInfo = new DeviceInfoEntity();
+                    deviceRgbInfo.DisplayName = " StatusType--" + nextStatus.RGBColorStatusType.ToString() + ", IsPowerOn--" + nextStatus.IsPowerOn + ", ColorR--" + nextStatus.ColorR.ToString() + ", ColorG--" + nextStatus.ColorG.ToString() + ", ColorB--" + nextStatus.ColorB.ToString() + ", DimmingValue--" + nextStatus.DimmingValue.ToString() + ", IsWhiteEnabled--" + nextStatus.IsWhiteEnabled.ToString();
+                    deviceRgbInfo.SequenceId = dInfoEntity.Count() + 1;
+                    deviceRgbInfo.ParentId = parentSequence;
+                    dInfoEntity.Add(deviceRgbInfo);
 
                 }
 
