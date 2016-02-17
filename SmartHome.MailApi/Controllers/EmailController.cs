@@ -16,7 +16,7 @@ namespace SmartHome.MailApi.Controllers
     {
         // GET: Email
         [System.Web.Mvc.Route("api/SendMail")]
-        public HttpResponseMessage SendMailFromEncryptedJson(string mailJsonString)
+        public HttpResponseMessage SendMail(string mailJsonString)
         {
             var email = SetEmailEntity(mailJsonString);
             HttpResponseMessage response;
