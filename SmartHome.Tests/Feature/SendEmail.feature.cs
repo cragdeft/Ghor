@@ -64,35 +64,26 @@ namespace SmartHome.Tests.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Send Plain Email")]
-        public virtual void SendPlainEmail()
+        [NUnit.Framework.DescriptionAttribute("Send Email")]
+        public virtual void SendEmail()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Send Plain Email", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Send Email", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "FromAddress",
-                        "ToAddress",
-                        "Subject",
-                        "Body",
-                        "EnableSSL",
-                        "IsBodyHtml",
-                        "SentDate"});
+                        "field",
+                        "value"});
             table1.AddRow(new string[] {
-                        "smarthome-noreply@sinepulse.com",
-                        "sumon.kumar@aplombtechbd.com",
-                        "test",
-                        "this is a test message",
-                        "true",
-                        "true",
-                        "1/2/2015"});
+                        "JsonString",
+                        "fySo081ThNMghoC+ykGyDfE4wnt7XMVKZye3dj0kDWfflbNf7nKA0XSljy5ZpA/3TXFLNN+87CfneGm35" +
+                            "VBpgbxp0uLD7PlyZ5xFnYVnx3c="});
 #line 7
- testRunner.Given("I have a  EmailoEntity record with the following properties", ((string)(null)), table1, "Given ");
-#line 12
-  testRunner.When("I send the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
-  testRunner.Then("I will check Email sent or not and response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Given("I have a  EmailoEntity record with the following property", ((string)(null)), table1, "Given ");
+#line 10
+ testRunner.When("I send the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 11
+ testRunner.Then("I will check Email sent or not and response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
