@@ -15,29 +15,22 @@ namespace SmartHome.MailApi.MailHelper
         {
             _Email = email;
         }
-        public bool SendEmail(bool isEncrypted)
+        public bool SendEmail()
         {
-            
-                var mailMessage = InitiateEmail(_Email, isEncrypted);
+                var mailMessage = InitiateEmail(_Email);
 
                 SmtpClient smtpClient = new SmtpClient("mail.sinepulse.com");
-                smtpClient.Credentials = new NetworkCredential(_Email.FromAddress, FromPassword);
-
                 return SendMailFromSmtpClient(smtpClient, mailMessage);
-        }
-
-        public EmailEntity RetriveEncryptedEmailContent()
-        {
-            _Email.Body = SecurityManager.Decrypt(_Email.Body);
-            return _Email;
         }
 
         private bool SendMailFromSmtpClient(SmtpClient smtpClient, MailMessage mailMessage)
         {
             try
             {
+                smtpClient.Credentials = new NetworkCredential(_Email.From, FromPassword);
+                smtpClient.EnableSsl = true;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtpClient.Send(mailMessage);
-                var s = mailMessage.Headers["Date"];
                 return true;
             }
             catch (Exception e)
@@ -46,14 +39,15 @@ namespace SmartHome.MailApi.MailHelper
             }
         }
 
-        private MailMessage InitiateEmail(EmailEntity email, bool isEncrypted)
+        private MailMessage InitiateEmail(EmailEntity email)
         {
             MailMessage mailMessage = new MailMessage();
-            mailMessage.To.Add(email.ToAddress);
-            mailMessage.From = new MailAddress(email.FromAddress);
+            mailMessage.To.Add(email.To);
+            mailMessage.From = new MailAddress(email.From);
             mailMessage.Subject = email.Subject;
-            mailMessage.Body = (isEncrypted) ? SecurityManager.Encrypt(email.Body) : email.Body;
+            mailMessage.Body = email.Body;
             mailMessage.IsBodyHtml = true;
+
             return mailMessage;
         }
     }
