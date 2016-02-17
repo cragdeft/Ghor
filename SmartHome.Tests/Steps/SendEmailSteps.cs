@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Moq;
 using NUnit.Framework;
 using SmartHome.Entity;
 using SmartHome.MailApi.Controllers;
+using SmartHome.Model.Models;
+using SmartHome.Service.Interfaces;
+using SmartHome.Utility.EncriptionAndDecryption;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -16,7 +22,17 @@ namespace SmartHome.Tests.Steps
         [Given]
         public void Given_I_have_a_EmailoEntity_record_with_the_following_properties(Table table)
         {
+            
             ScenarioContext.Current.Set<EmailEntity>(table.CreateInstance<EmailEntity>());
+        }
+
+        [Given]
+        public void Given_I_have_a_EmailoEntity_record_with_the_following_property(Table table)
+        {
+            foreach (string jsonString in table.Rows.Select(row => row["value"]))
+            {
+                ScenarioContext.Current.Set<string>(jsonString);
+            }
         }
 
         [Then]
@@ -35,7 +51,7 @@ namespace SmartHome.Tests.Steps
                 Configuration = new HttpConfiguration()
             };
 
-            ScenarioContext.Current.Set<HttpResponseMessage>(EmailController.SendMail(ScenarioContext.Current.Get<EmailEntity>(),false), "SaveResult");
+            ScenarioContext.Current.Set<HttpResponseMessage>(EmailController.SendMail(ScenarioContext.Current.Get<string>()), "SaveResult");
         }
 
 
