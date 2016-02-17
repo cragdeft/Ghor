@@ -82,14 +82,46 @@ this.ScenarioSetup(scenarioInfo);
                         "Configuration"});
             table1.AddRow(new string[] {
                         "PublishMessage",
-                        @"{""Version"":[{""Id"":1,""AppName"":""SmartHome"",""AppVersion"":""1.5"",""AuthCode"":""0123456789ABCDEF"",""PassPhrase"":""Y1JJ9N""}],""VersionDetails"":[{""Id"":1,""VersionId"":1,""HardwareVersion"":""00"",""DeviceType"":1},{""Id"":2,""VersionId"":1,""HardwareVersion"":""00"",""DeviceType"":2}],""Device"":[{""Id"":1,""DeviceId"":32769,""DeviceHash"":1606113433,""DeviceType"":0,""DeviceName"":""SMSW6G 1606113433"",""Version"":""00"",""IsDeleted"":false,""Watt"":0}],""DeviceStatus"":[{""Id"":1,""DeviceTableId"":1,""StatusType"":53,""StatusValue"":""1""},{""Id"":2,""DeviceTableId"":1,""StatusType"":5,""StatusValue"":""1""}],""Channel"":[{""Id"":1,""DeviceTableId"":1,""ChannelNo"":2,""LoadType"":3,""LoadName"":""Fan"",""LoadWatt"":0},{""Id"":2,""DeviceTableId"":1,""ChannelNo"":6,""LoadType"":5,""LoadName"":""CFL"",""LoadWatt"":0}],""NextAssociatedDeviceId"":[{""NextDeviceId"":32770}],""ChannelStatus"":[{""Id"":1,""ChannelTableId"":1,""StatusType"":1,""StatusValue"":""1""},{""Id"":2,""ChannelTableId"":1,""StatusType"":3,""StatusValue"":""0""},{""Id"":3,""ChannelTableId"":1,""StatusType"":2,""StatusValue"":""53""},{""Id"":4,""ChannelTableId"":2,""StatusType"":1,""StatusValue"":""0""},{""Id"":5,""ChannelTableId"":2,""StatusType"":3,""StatusValue"":""0""},{""Id"":6,""ChannelTableId"":2,""StatusType"":2,""StatusValue"":""100""}]}"});
+                        "{\"ChannelStatus\":[{\"ChannelTableId\":1,\"StatusValue\":\"0\",\"StatusType\":1,\"Id\":1},{\"" +
+                            "ChannelTableId\":1,\"StatusValue\":\"0\",\"StatusType\":3,\"Id\":2},{\"ChannelTableId\":1,\"" +
+                            "StatusValue\":\"85\",\"StatusType\":2,\"Id\":3},{\"ChannelTableId\":2,\"StatusValue\":\"1\",\"" +
+                            "StatusType\":1,\"Id\":4},{\"ChannelTableId\":2,\"StatusValue\":\"0\",\"StatusType\":3,\"Id\":" +
+                            "5},{\"ChannelTableId\":2,\"StatusValue\":\"41\",\"StatusType\":2,\"Id\":6},{\"ChannelTableI" +
+                            "d\":3,\"StatusValue\":\"0\",\"StatusType\":1,\"Id\":7},{\"ChannelTableId\":3,\"StatusValue\":" +
+                            "\"0\",\"StatusType\":3,\"Id\":8},{\"ChannelTableId\":3,\"StatusValue\":\"100\",\"StatusType\":" +
+                            "2,\"Id\":9},{\"ChannelTableId\":4,\"StatusValue\":\"0\",\"StatusType\":1,\"Id\":10},{\"Channe" +
+                            "lTableId\":4,\"StatusValue\":\"0\",\"StatusType\":3,\"Id\":11},{\"ChannelTableId\":4,\"Statu" +
+                            "sValue\":\"100\",\"StatusType\":2,\"Id\":12},{\"ChannelTableId\":5,\"StatusValue\":\"1\",\"Sta" +
+                            "tusType\":1,\"Id\":13},{\"ChannelTableId\":5,\"StatusValue\":\"0\",\"StatusType\":3,\"Id\":14" +
+                            "},{\"ChannelTableId\":5,\"StatusValue\":\"100\",\"StatusType\":2,\"Id\":15},{\"ChannelTable" +
+                            "Id\":6,\"StatusValue\":\"0\",\"StatusType\":1,\"Id\":16},{\"ChannelTableId\":6,\"StatusValue" +
+                            "\":\"0\",\"StatusType\":3,\"Id\":17},{\"ChannelTableId\":6,\"StatusValue\":\"0\",\"StatusType\"" +
+                            ":2,\"Id\":18}],\"VersionDetails\":[{\"DeviceType\":1,\"VersionId\":1,\"Id\":1,\"HardwareVer" +
+                            "sion\":\"00\"},{\"DeviceType\":2,\"VersionId\":1,\"Id\":2,\"HardwareVersion\":\"00\"}],\"Chann" +
+                            "el\":[{\"LoadName\":\"Light\",\"DeviceTableId\":1,\"ChannelNo\":1,\"Id\":1,\"LoadType\":1,\"Lo" +
+                            "adWatt\":0},{\"LoadName\":\"Fan\",\"DeviceTableId\":1,\"ChannelNo\":2,\"Id\":2,\"LoadType\":3" +
+                            ",\"LoadWatt\":0},{\"LoadName\":\"Dimlight\",\"DeviceTableId\":1,\"ChannelNo\":3,\"Id\":3,\"Lo" +
+                            "adType\":2,\"LoadWatt\":0},{\"LoadName\":\"Tube Light\",\"DeviceTableId\":1,\"ChannelNo\":4" +
+                            ",\"Id\":4,\"LoadType\":4,\"LoadWatt\":0},{\"LoadName\":\"CFL\",\"DeviceTableId\":1,\"ChannelN" +
+                            "o\":5,\"Id\":5,\"LoadType\":5,\"LoadWatt\":0},{\"LoadName\":\"Fan\",\"DeviceTableId\":1,\"Chan" +
+                            "nelNo\":6,\"Id\":6,\"LoadType\":3,\"LoadWatt\":0}],\"Device\":[{\"DeviceId\":32769,\"DeviceN" +
+                            "ame\":\"SMSW6G 1041075569\",\"DeviceHash\":1041075569,\"Watt\":0,\"IsDeleted\":false,\"Id\"" +
+                            ":1,\"Version\":\"00\",\"DeviceType\":2}],\"NextAssociatedDeviceId\":[{\"NextDeviceId\":327" +
+                            "70}],\"RgbwStatus\":[{\"Id\":1,\"DeviceTableId\":1,\"StatusType\":1,\"IsPowerOn\":true,\"Co" +
+                            "lorR\":10,\"ColorG\":10,\"ColorB\":50,\"IsWhiteEnabled\":true,\"DimmingValue\":10},{\"Id\":" +
+                            "2,\"DeviceTableId\":1,\"StatusType\":1,\"IsPowerOn\":true,\"ColorR\":10,\"ColorG\":10,\"Col" +
+                            "orB\":100,\"IsWhiteEnabled\":true,\"DimmingValue\":10}],\"Version\":[{\"AppName\":\"SmartH" +
+                            "ome\",\"Id\":1,\"PassPhrase\":\"9OQ26N\",\"AuthCode\":\"0123456789ABCDEF\",\"AppVersion\":\"1." +
+                            "5\"}],\"DeviceStatus\":[{\"DeviceTableId\":1,\"StatusValue\":0,\"StatusType\":53,\"Id\":1}," +
+                            "{\"DeviceTableId\":1,\"StatusValue\":1,\"StatusType\":5,\"Id\":2},{\"DeviceTableId\":1,\"St" +
+                            "atusValue\":0,\"StatusType\":55,\"Id\":3}]}"});
 #line 7
  testRunner.When("I fill in the following form", ((string)(null)), table1, "When ");
-#line 11
-  testRunner.And("I click the \'publish\' button for publish", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 12
-  testRunner.And("I click the \'subscribe\' button for subscrib", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I click the \'publish\' button for publish", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 13
+  testRunner.And("I click the \'subscribe\' button for subscrib", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
  testRunner.Then("I should be at the subscribe page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
