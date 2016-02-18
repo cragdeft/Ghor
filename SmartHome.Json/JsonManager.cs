@@ -43,10 +43,12 @@ namespace SmartHome.Json
                 StoreVersionAndVersionDetail(oVersion);
 
                 IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
+                //new
+                IEnumerable<Model.Models.RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
                 IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
                 IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
-                MergeDeviceDeviceStatusAndChannel(oDevice, oChannel, oChannelStatus, oDeviceStatus);
+                MergeDeviceDeviceStatusAndChannel(oDevice, oRgbwStatus, oChannel, oChannelStatus, oDeviceStatus);
                 StoreDeviceAndChannel(oDevice);
 
             }
@@ -105,7 +107,7 @@ namespace SmartHome.Json
             //oVersion.ToList().ForEach(p => p.VersionDetails = oVersionDetail.Where(q => q.VId == p.Id).ToList());
         }
 
-        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
+        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<RgbwStatus> oRgbwStatus, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
         {
             foreach (var item in oChannel)
             {
@@ -114,6 +116,7 @@ namespace SmartHome.Json
 
             foreach (var item in oDevice)
             {
+                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.Id).ToArray();
                 item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
                 item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
             }
@@ -123,6 +126,10 @@ namespace SmartHome.Json
 
 
         #region Device conversion
+
+
+        
+
         private IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
         {
             Mapper.CreateMap<DeviceEntity, Model.Models.Device>()
@@ -134,6 +141,15 @@ namespace SmartHome.Json
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
             IEnumerable<Model.Models.Device> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<Model.Models.Device>>(myObj.Device);
+            return oDevice;
+        }
+
+        private IEnumerable<Model.Models.RgbwStatus> ConfigureRgbwStatus(RootObjectEntity myObj)
+        {
+            Mapper.CreateMap<RgbwStatusEntity, Model.Models.RgbwStatus>()            
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
+            IEnumerable<Model.Models.RgbwStatus> oDevice = Mapper.Map<IEnumerable<RgbwStatusEntity>, IEnumerable<Model.Models.RgbwStatus>>(myObj.RgbwStatus);
             return oDevice;
         }
 

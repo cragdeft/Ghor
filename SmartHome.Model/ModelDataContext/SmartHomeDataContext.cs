@@ -18,7 +18,7 @@ namespace SmartHome.Model.ModelDataContext
         public SmartHomeDataContext()
             : base("SmartHome")
         {
-           
+
         }
 
         public new IDbSet<T> Set<T>() where T : class
@@ -40,10 +40,14 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<Room> Rooms { get; set; }
         public IDbSet<UserInfo> UserInfos { get; set; }
         public IDbSet<UserType> UserTypes { get; set; }
-        public IDbSet<UserStatus> UserStatuses { get; set; }        
+        public IDbSet<UserStatus> UserStatuses { get; set; }
         public IDbSet<WebPagesRole> WebPagesRoles { get; set; }
 
         public IDbSet<CommandJson> CommandJsons { get; set; }
+
+        public IDbSet<RgbwStatus> RgbwStatuses { get; set; }
+
+
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

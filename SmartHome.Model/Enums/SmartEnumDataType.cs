@@ -106,6 +106,16 @@ namespace SmartHome.Model.Enums
 
     }
 
+
+    public enum RGBColorStatusType
+    {
+        color1 = 1,
+        color2 = 2,
+        color3 = 3,
+        color4 = 4
+
+    }
+
     public enum ChannelStatusType
     {
         Switchable = 1,
