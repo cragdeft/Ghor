@@ -76,13 +76,14 @@ this.ScenarioSetup(scenarioInfo);
                         "value"});
             table1.AddRow(new string[] {
                         "JsonString",
-                        "fySo081ThNMghoC+ykGyDfE4wnt7XMVKZye3dj0kDWfflbNf7nKA0XSljy5ZpA/3TXFLNN+87CfneGm35" +
-                            "VBpgbxp0uLD7PlyZ5xFnYVnx3c="});
+                        "{ \"to\": \"skd9000@gmail.com\", \"body\": \"this is a test\", \"subject\": \"test\"}"});
 #line 7
  testRunner.Given("I have a  EmailoEntity record with the following property", ((string)(null)), table1, "Given ");
 #line 10
- testRunner.When("I send the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.Then("I will encrypt the string", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 11
+ testRunner.When("I send the Email", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 12
  testRunner.Then("I will check Email sent or not and response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

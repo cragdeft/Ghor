@@ -36,6 +36,13 @@ namespace SmartHome.Tests.Steps
         }
 
         [Then]
+        public void Then_I_will_encrypt_the_string()
+        {
+            ScenarioContext.Current.Set<string>(SecurityManager.Encrypt(ScenarioContext.Current.Get<string>()));
+        }
+
+
+        [Then]
         public void Then_I_will_check_Email_sent_or_not_and_response()
         {
             Assert.AreEqual(ScenarioContext.Current.Get<HttpResponseMessage>("SaveResult").StatusCode, HttpStatusCode.OK);

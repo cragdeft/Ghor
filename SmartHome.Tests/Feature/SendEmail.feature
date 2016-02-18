@@ -6,7 +6,7 @@
 Scenario: Send Email
 	Given I have a  EmailoEntity record with the following property
 	| field				| value			|
-	| JsonString |fySo081ThNMghoC+ykGyDfE4wnt7XMVKZye3dj0kDWfflbNf7nKA0XSljy5ZpA/3TXFLNN+87CfneGm35VBpgbxp0uLD7PlyZ5xFnYVnx3c=|
+	| JsonString | { "to": "skd9000@gmail.com", "body": "this is a test", "subject": "test"}|
+	Then I will encrypt the string
 	When I send the Email
 	Then I will check Email sent or not and response  
-
