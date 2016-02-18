@@ -17,22 +17,22 @@ namespace SmartHome.Tests
         {
 
             // Arrange
-            string plainTextForIOS = "Hi there";
+            var plainTextForIos = "Hi there";
             string plainTextForAndroid = "smart home";
-            string encryptedTextForIOS = "6NTdfJFMBWKUW5IQtKKZUQ==";
-            string encryptedTextForAndroid = "4tT5SFAoxd/Z+m5bpVyG3Q==";
+            const string encryptedTextForIos = "6NTdfJFMBWKUW5IQtKKZUQ==";
+            const string encryptedTextForAndroid = "4tT5SFAoxd/Z+m5bpVyG3Q==";
 
             // Act
 
-            string encryptedValueIOS = SecurityManager.Encrypt(plainTextForIOS);
-            string decryptedValueIOS = SecurityManager.Decrypt(encryptedValueIOS);
+            var encryptedValueIos = SecurityManager.Encrypt(plainTextForIos);
+            var decryptedValueIos = SecurityManager.Decrypt(encryptedValueIos);
 
-            string encryptedValueAndroid = SecurityManager.Encrypt(plainTextForAndroid);
-            string decryptedValueAndroid = SecurityManager.Decrypt(encryptedValueAndroid);
+            var encryptedValueAndroid = SecurityManager.Encrypt(plainTextForAndroid);
+            var decryptedValueAndroid = SecurityManager.Decrypt(encryptedValueAndroid);
 
             //Assert for IOS
-            Assert.AreEqual(encryptedTextForIOS, encryptedValueIOS);
-            Assert.AreEqual(plainTextForIOS, decryptedValueIOS);
+            Assert.AreEqual(encryptedTextForIos, encryptedValueIos);
+            Assert.AreEqual(plainTextForIos, decryptedValueIos);
 
             //Assert for Android
             Assert.AreEqual(encryptedTextForAndroid, encryptedValueAndroid);
