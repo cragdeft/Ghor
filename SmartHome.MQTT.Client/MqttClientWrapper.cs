@@ -11,20 +11,21 @@ using System.Configuration;
 
 namespace SmartHome.MQTT.Client
 {
-    public static class MqttClientWrapper
+    public class MqttClientWrapper
     {
 
         #region delegate event
         public delegate void NotifyMqttMsgPublishReceivedDelegate(CustomEventArgs customEventArgs);
-        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
+        public event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
         #endregion
 
         #region constructor
-        static MqttClientWrapper()
+        public MqttClientWrapper()
         {
+            //MakeConnection();
             //ClientId = string.Empty;
         }
-        public static void MakeConnection()
+        public void MakeConnection()
         {
             if (SmartHomeMQTT == null)
             {
@@ -44,7 +45,7 @@ namespace SmartHome.MQTT.Client
                 DefinedMQTTCommunicationEvents();
             }
         }
-        public static bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        public bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
             // logic for validation here
@@ -53,7 +54,7 @@ namespace SmartHome.MQTT.Client
 
         #region Properties
 
-        public static string BrokerAddress
+        public string BrokerAddress
         {
             get
             {
@@ -65,7 +66,7 @@ namespace SmartHome.MQTT.Client
             }
 
         }
-        public static int BrokerPort
+        public int BrokerPort
         {
             get
             {
@@ -77,7 +78,7 @@ namespace SmartHome.MQTT.Client
             }
 
         }
-        public static UInt16 BrokerKeepAlivePeriod
+        public UInt16 BrokerKeepAlivePeriod
         {
             get
             {
@@ -89,7 +90,7 @@ namespace SmartHome.MQTT.Client
             }
 
         }
-        public static string ClientId
+        public string ClientId
         {
             get
             {
@@ -101,15 +102,15 @@ namespace SmartHome.MQTT.Client
             }
 
         }
-        public static MqttClient SmartHomeMQTT { get; set; }
-        public static string ClientResponce { get; set; }
+        public MqttClient SmartHomeMQTT { get; set; }
+        public string ClientResponce { get; set; }
         #endregion
 
         #region Methods
 
 
 
-        public static string Publish(string messgeTopic, string publishMessage)
+        public string Publish(string messgeTopic, string publishMessage)
         {
 
             ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
@@ -121,7 +122,7 @@ namespace SmartHome.MQTT.Client
 
         }
 
-        public static string Subscribe(string messgeTopic)
+        public string Subscribe(string messgeTopic)
         {
             ushort msgId = SmartHomeMQTT.Subscribe(new string[] { messgeTopic },
                 new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE }
@@ -129,7 +130,7 @@ namespace SmartHome.MQTT.Client
             return "Success";
         }
 
-        private static void client_MqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)
+        private void client_MqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)
         {
             //e.IsPublished //it's defined confirmation message is published or not.
             // Debug.WriteLine("MessageId = " + e.MessageId + " Published = " + e.IsPublished);
@@ -138,20 +139,22 @@ namespace SmartHome.MQTT.Client
 
 
 
-        public static void client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
+        public void client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
             //Debug.WriteLine("Subscribed for id = " + e.MessageId);
             // write your code
         }
 
-        public static void client_MqttMsgUnsubscribed(object sender, MqttMsgUnsubscribedEventArgs e)
+        public void client_MqttMsgUnsubscribed(object sender, MqttMsgUnsubscribedEventArgs e)
         {
             ClientResponce = "Success";
         }
 
-        public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            var jsonString = Encoding.UTF8.GetString(e.Message);
+            string a = e.Topic;
+            var receivedMessage = Encoding.UTF8.GetString(e.Message);
+            #region MyRegion
             //if (e.Topic == CommandType.Configuration.ToString())
             //{
             //    new JsonManager().JsonProcess(jsonString);
@@ -167,25 +170,26 @@ namespace SmartHome.MQTT.Client
             //{
             //    var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
             //    CommandLog(jsonObject);
-            //}
+            //} 
+            #endregion
 
-            NotifyMessage(jsonString);
+            NotifyMessage(receivedMessage, e.Topic.ToString());
         }
 
-        private static void CommandLog(CommandJsonEntity jsonObject)
+        private void CommandLog(CommandJsonEntity jsonObject)
         {
             CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
             commandJsonManager.LogCommand(true, "");
         }
 
-        private static CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
+        private CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
         {
             CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
             jsonObject.CommandType = commandType;
             return jsonObject;
         }
 
-        private static void FeedbackCommandParse(CommandJsonEntity jsonObject)
+        private void FeedbackCommandParse(CommandJsonEntity jsonObject)
         {
             CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
             commandJsonManager.Parse();
@@ -195,11 +199,11 @@ namespace SmartHome.MQTT.Client
             //parser.SaveOrUpdateStatus();
 
         }
-        public static void NotifyMessage(string jsonString)
+        public void NotifyMessage(string receivedMessage,string receivedTopic)
         {
             if (NotifyMqttMsgPublishReceivedEvent != null)
             {
-                CustomEventArgs customEventArgs = new CustomEventArgs(jsonString);
+                CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
                 //Raise Event. All the listeners of this event will get a call.
                 NotifyMqttMsgPublishReceivedEvent(customEventArgs);
             }
@@ -209,7 +213,7 @@ namespace SmartHome.MQTT.Client
 
         #region MQTT connection events
 
-        private static void DefinedMQTTCommunicationEvents()
+        private void DefinedMQTTCommunicationEvents()
         {
             SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
             SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
@@ -222,25 +226,25 @@ namespace SmartHome.MQTT.Client
 
         }
 
-        private static void BrokerConnectionWithCertificate(string brokerAddress)
+        private void BrokerConnectionWithCertificate(string brokerAddress)
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
             SmartHomeMQTT.Connect(ClientId, "mosharraf", "mosharraf", false, BrokerKeepAlivePeriod);
         }
 
-        private static void BrokerConnectionWithoutCertificate(string brokerAddress)
+        private void BrokerConnectionWithoutCertificate(string brokerAddress)
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, BrokerPort, false, null, null, MqttSslProtocols.None, null);
             MQTTConnectiobn();
         }
 
-        private static void LocalBrokerConnection(string brokerAddress)
+        private void LocalBrokerConnection(string brokerAddress)
         {
             SmartHomeMQTT = new MqttClient(brokerAddress);
             MQTTConnectiobn();
         }
 
-        private static void MQTTConnectiobn()
+        private void MQTTConnectiobn()
         {
             SmartHomeMQTT.Connect(ClientId, null, null, false, BrokerKeepAlivePeriod);
         }
@@ -250,16 +254,25 @@ namespace SmartHome.MQTT.Client
 
     public class CustomEventArgs : EventArgs
     {
-        public CustomEventArgs(string key)
+        public CustomEventArgs(string receivedMessage,string receivedTopic)
         {
-            _key = key;
+            _receivedMessage = receivedMessage;
+            _receivedTopic = receivedTopic;
         }
-        private string _key;
+        private string _receivedMessage;
 
-        public string Key
+        public string ReceivedMessage
         {
-            get { return _key; }
-            set { _key = value; }
+            get { return _receivedMessage; }
+            set { _receivedMessage = value; }
+        }
+
+
+        private string _receivedTopic;
+        public string ReceivedTopic
+        {
+            get { return _receivedTopic; }
+            set { _receivedTopic = value; }
         }
     }
 }
