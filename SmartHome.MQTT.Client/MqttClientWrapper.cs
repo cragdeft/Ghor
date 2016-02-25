@@ -7,6 +7,7 @@ using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using System.Configuration;
 
 namespace SmartHome.MQTT.Client
 {
@@ -15,53 +16,92 @@ namespace SmartHome.MQTT.Client
 
         #region delegate event
         public delegate void NotifyMqttMsgPublishReceivedDelegate(CustomEventArgs customEventArgs);
-        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent; 
+        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
         #endregion
 
+        #region constructor
         static MqttClientWrapper()
         {
-            ClientId = string.Empty;
+            //ClientId = string.Empty;
         }
-
-        public static void MakeConnection(string brokerAddress) // the global controlled variable
+        public static void MakeConnection()
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.11.195")
+                if (BrokerAddress == "192.168.11.195")
                 {
-                    LocalBrokerConnection(brokerAddress);
+                    LocalBrokerConnection(BrokerAddress);
                 }
-                else if (brokerAddress == "192.168.11.150")
+                else if (BrokerAddress == "192.168.11.150")
                 {
-                    BrokerConnectionWithoutCertificate(brokerAddress);
+                    BrokerConnectionWithoutCertificate(BrokerAddress);
                 }
                 else
                 {
-                    BrokerConnectionWithCertificate(brokerAddress);
+                    BrokerConnectionWithCertificate(BrokerAddress);
                 }
 
                 DefinedMQTTCommunicationEvents();
             }
         }
-
-
-
         public static bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return true;
             // logic for validation here
         }
+        #endregion
 
         #region Properties
 
         public static string BrokerAddress
         {
-            get;
+            get
+            {
+                if (ConfigurationManager.AppSettings["BrokerAddress"] == null)
+                {
+                    return string.Empty;
+                }
+                return ConfigurationManager.AppSettings["BrokerAddress"].ToString();
+            }
+
+        }
+        public static int BrokerPort
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["BrokerPort"] == null)
+                {
+                    return 1883;
+                }
+                return Convert.ToInt32(ConfigurationManager.AppSettings["BrokerPort"]);
+            }
+
+        }
+        public static UInt16 BrokerKeepAlivePeriod
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["BrokerKeepAlivePeriod"] == null)
+                {
+                    return 3600;
+                }
+                return Convert.ToUInt16(ConfigurationManager.AppSettings["BrokerKeepAlivePeriod"]);
+            }
+
+        }
+        public static string ClientId
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["BrokerAccessClientId"] == null)
+                {
+                    return Guid.NewGuid().ToString();
+                }
+                return ConfigurationManager.AppSettings["BrokerAccessClientId"].ToString();
+            }
+
         }
         public static MqttClient SmartHomeMQTT { get; set; }
-        public static string ClientId { get; set; }
-        public static string MQTT_BROKER_ADDRESS { get; set; }
-
         public static string ClientResponce { get; set; }
         #endregion
 
@@ -185,12 +225,12 @@ namespace SmartHome.MQTT.Client
         private static void BrokerConnectionWithCertificate(string brokerAddress)
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
-            SmartHomeMQTT.Connect(Guid.NewGuid().ToString(), "mosharraf", "mosharraf", false, 3600);
+            SmartHomeMQTT.Connect(ClientId, "mosharraf", "mosharraf", false, BrokerKeepAlivePeriod);
         }
 
         private static void BrokerConnectionWithoutCertificate(string brokerAddress)
         {
-            SmartHomeMQTT = new MqttClient(brokerAddress, 18830, false, null, null, MqttSslProtocols.None, null);
+            SmartHomeMQTT = new MqttClient(brokerAddress, BrokerPort, false, null, null, MqttSslProtocols.None, null);
             MQTTConnectiobn();
         }
 
@@ -202,7 +242,7 @@ namespace SmartHome.MQTT.Client
 
         private static void MQTTConnectiobn()
         {
-            SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
+            SmartHomeMQTT.Connect(ClientId, null, null, false, BrokerKeepAlivePeriod);
         }
         #endregion
     }
