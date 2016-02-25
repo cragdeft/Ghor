@@ -105,14 +105,16 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Publish(m2mMessageViewModel model)
         {
-            model.PublishMessageStatus = MqttClientWrapper.Publish(model.MessgeTopic, model.PublishMessage);
-            return Json(model, JsonRequestBehavior.AllowGet);
+            //model.PublishMessageStatus = MqttClientWrapper.Publish(model.MessgeTopic, model.PublishMessage);
+            //return Json(model, JsonRequestBehavior.AllowGet);
+            return View();
         }
 
         public ActionResult Subscribe(m2mMessageViewModel model)
         {
-            model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
-            return Json(model, JsonRequestBehavior.AllowGet);
+            //model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
+            //return Json(model, JsonRequestBehavior.AllowGet);
+            return View();
         }
 
         public ActionResult ServerResponce()
@@ -170,7 +172,10 @@ namespace SmartHome.Web.Controllers
         public ActionResult PublishMessage(m2mMessageViewModel model)
         {
             ViewBag.Message = "Your contact page.";
-            model.PublishMessageStatus = MqttClientWrapper.Publish(model.MessgeTopic, model.PublishMessage);
+            //model.PublishMessageStatus = new MqttClientWrapper().Publish(model.MessgeTopic, model.PublishMessage);
+            //Singleton.MyProperty.MakeConnection.Instance.Message_NotifyEvent();
+
+            model.PublishMessageStatus = Singleton.WrapperInstance.Publish(model.MessgeTopic, model.PublishMessage);
             return View("About", model);
 
         }
@@ -181,14 +186,15 @@ namespace SmartHome.Web.Controllers
         {
             ViewBag.Message = "Your contact page.";
             //Registering child class event
-            MqttClientWrapper.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(Message_NotifyEvent);
-            model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
+            //MqttClientWrapper.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(Message_NotifyEvent);
+            //model.SubscribehMessageStatus = new MqttClientWrapper().Subscribe(model.MessgeTopic);
+            model.PublishMessageStatus = Singleton.WrapperInstance.Subscribe(model.MessgeTopic);
             return View("About", model);
         }
 
         void Message_NotifyEvent(CustomEventArgs customEventArgs)
         {
-            new JsonManager().JsonProcess(customEventArgs.Key);
+            //new JsonManager().JsonProcess(customEventArgs.Key);
         }
 
 
