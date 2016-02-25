@@ -13,8 +13,10 @@ namespace SmartHome.MQTT.Client
     public static class MqttClientWrapper
     {
 
+        #region delegate event
         public delegate void NotifyMqttMsgPublishReceivedDelegate(CustomEventArgs customEventArgs);
-        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
+        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent; 
+        #endregion
 
         static MqttClientWrapper()
         {
