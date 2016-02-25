@@ -13,6 +13,9 @@ namespace SmartHome.MQTT.Client
     public static class MqttClientWrapper
     {
 
+        public delegate void NotifyMqttMsgPublishReceivedDelegate(CustomEventArgs customEventArgs);
+        public static event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
+
         static MqttClientWrapper()
         {
             ClientId = string.Empty;
@@ -22,7 +25,7 @@ namespace SmartHome.MQTT.Client
         {
             if (SmartHomeMQTT == null)
             {
-                if (brokerAddress == "192.168.254.1")
+                if (brokerAddress == "192.168.11.195")
                 {
                     LocalBrokerConnection(brokerAddress);
                 }
@@ -107,22 +110,24 @@ namespace SmartHome.MQTT.Client
         public static void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             var jsonString = Encoding.UTF8.GetString(e.Message);
-            if (e.Topic == CommandType.Configuration.ToString())
-            {
-                new JsonManager().JsonProcess(jsonString);
-            }
+            //if (e.Topic == CommandType.Configuration.ToString())
+            //{
+            //    new JsonManager().JsonProcess(jsonString);
+            //}
 
-            if (e.Topic == CommandType.Feedback.ToString())
-            {
-                var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
-                FeedbackCommandParse(jsonObject);
-            }
+            //if (e.Topic == CommandType.Feedback.ToString())
+            //{
+            //    var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
+            //    FeedbackCommandParse(jsonObject);
+            //}
 
-            if (e.Topic == CommandType.Command.ToString())
-            {
-                var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
-                CommandLog(jsonObject);
-            }
+            //if (e.Topic == CommandType.Command.ToString())
+            //{
+            //    var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
+            //    CommandLog(jsonObject);
+            //}
+
+            NotifyMessage(jsonString);
         }
 
         private static void CommandLog(CommandJsonEntity jsonObject)
@@ -148,6 +153,16 @@ namespace SmartHome.MQTT.Client
             //parser.SaveOrUpdateStatus();
 
         }
+        public static void NotifyMessage(string jsonString)
+        {
+            if (NotifyMqttMsgPublishReceivedEvent != null)
+            {
+                CustomEventArgs customEventArgs = new CustomEventArgs(jsonString);
+                //Raise Event. All the listeners of this event will get a call.
+                NotifyMqttMsgPublishReceivedEvent(customEventArgs);
+            }
+        }
+
         #endregion
 
         #region MQTT connection events
@@ -162,7 +177,7 @@ namespace SmartHome.MQTT.Client
             ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
                                       MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-          
+
         }
 
         private static void BrokerConnectionWithCertificate(string brokerAddress)
@@ -188,5 +203,21 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT.Connect(Guid.NewGuid().ToString());
         }
         #endregion
+    }
+
+
+    public class CustomEventArgs : EventArgs
+    {
+        public CustomEventArgs(string key)
+        {
+            _key = key;
+        }
+        private string _key;
+
+        public string Key
+        {
+            get { return _key; }
+            set { _key = value; }
+        }
     }
 }
