@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Repository.Pattern.UnitOfWork;
+using SmartHome.Json;
 using SmartHome.Logging;
 using SmartHome.Model.Models;
 using SmartHome.MQTT.Client;
@@ -55,7 +56,7 @@ namespace SmartHome.Web.Controllers
         //    //return View(_serverResponceService.Queryable());
         //}
 
-        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService, IDeviceService deviceService,IConfigurationParserManagerService configurationService)
+        public HomeController(IUnitOfWorkAsync unitOfWorkAsync, IVersionService versionService, IDeviceService deviceService, IConfigurationParserManagerService configurationService)
         {
             this._unitOfWorkAsync = unitOfWorkAsync;
             this._versionService = versionService;
@@ -179,8 +180,15 @@ namespace SmartHome.Web.Controllers
         public ActionResult SubscribeMessage(m2mMessageViewModel model)
         {
             ViewBag.Message = "Your contact page.";
+            //Registering child class event
+            MqttClientWrapper.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(Message_NotifyEvent);
             model.SubscribehMessageStatus = MqttClientWrapper.Subscribe(model.MessgeTopic);
             return View("About", model);
+        }
+
+        void Message_NotifyEvent(CustomEventArgs customEventArgs)
+        {
+            new JsonManager().JsonProcess(customEventArgs.Key);
         }
 
 
