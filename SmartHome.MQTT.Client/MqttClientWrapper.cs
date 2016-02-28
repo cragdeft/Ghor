@@ -15,8 +15,22 @@ namespace SmartHome.MQTT.Client
     {
 
         #region delegate event
+
+        #region MqttMsg-Publish-Received-Notification
         public delegate void NotifyMqttMsgPublishReceivedDelegate(CustomEventArgs customEventArgs);
         public event NotifyMqttMsgPublishReceivedDelegate NotifyMqttMsgPublishReceivedEvent;
+        #endregion
+
+        #region MqttMsg-Published-Notification
+        public delegate void NotifyMqttMsgPublishedDelegate(CustomEventArgs customEventArgs);
+        public event NotifyMqttMsgPublishedDelegate NotifyMqttMsgPublishedEvent;
+        #endregion
+
+        #region MqttMsg-Subscribed-Notification
+        public delegate void NotifyMqttMsgSubscribedDelegate(CustomEventArgs customEventArgs);
+        public event NotifyMqttMsgSubscribedDelegate NotifyMqttMsgSubscribedEvent;
+        #endregion
+
         #endregion
 
         #region constructor
@@ -132,6 +146,7 @@ namespace SmartHome.MQTT.Client
 
         private void client_MqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)
         {
+            NotifyMessage("MqttMsgPublished", e.IsPublished.ToString(), string.Empty);
             //e.IsPublished //it's defined confirmation message is published or not.
             // Debug.WriteLine("MessageId = " + e.MessageId + " Published = " + e.IsPublished);
             ClientResponce = "Success";
@@ -141,6 +156,7 @@ namespace SmartHome.MQTT.Client
 
         public void client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
+            NotifyMessage("MqttMsgSubscribed", e.MessageId.ToString(), string.Empty);
             //Debug.WriteLine("Subscribed for id = " + e.MessageId);
             // write your code
         }
@@ -152,8 +168,8 @@ namespace SmartHome.MQTT.Client
 
         public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            string a = e.Topic;
-            var receivedMessage = Encoding.UTF8.GetString(e.Message);
+            //string a = e.Topic;
+            //var receivedMessage = Encoding.UTF8.GetString(e.Message);
             #region MyRegion
             //if (e.Topic == CommandType.Configuration.ToString())
             //{
@@ -173,7 +189,7 @@ namespace SmartHome.MQTT.Client
             //} 
             #endregion
 
-            NotifyMessage(receivedMessage, e.Topic.ToString());
+            NotifyMessage("MqttMsgPublishReceived", Encoding.UTF8.GetString(e.Message), e.Topic.ToString());
         }
 
         private void CommandLog(CommandJsonEntity jsonObject)
@@ -199,14 +215,38 @@ namespace SmartHome.MQTT.Client
             //parser.SaveOrUpdateStatus();
 
         }
-        public void NotifyMessage(string receivedMessage,string receivedTopic)
+        public void NotifyMessage(string NotifyType,string receivedMessage, string receivedTopic)
         {
-            if (NotifyMqttMsgPublishReceivedEvent != null)
+            if (NotifyType== "MqttMsgPublishReceived")
             {
-                CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
-                //Raise Event. All the listeners of this event will get a call.
-                NotifyMqttMsgPublishReceivedEvent(customEventArgs);
+                if (NotifyMqttMsgPublishReceivedEvent != null)
+                {
+                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
+                    //Raise Event. All the listeners of this event will get a call.
+                    NotifyMqttMsgPublishReceivedEvent(customEventArgs);
+                }
             }
+
+            if (NotifyType == "MqttMsgPublished")
+            {
+                if (NotifyMqttMsgPublishedEvent != null)
+                {
+                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
+                    //Raise Event. All the listeners of this event will get a call.
+                    NotifyMqttMsgPublishedEvent(customEventArgs);
+                }
+            }
+
+            if (NotifyType == "MqttMsgSubscribed")
+            {
+                if (NotifyMqttMsgSubscribedEvent != null)
+                {
+                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
+                    //Raise Event. All the listeners of this event will get a call.
+                    NotifyMqttMsgSubscribedEvent(customEventArgs);
+                }
+            }
+
         }
 
         #endregion
@@ -254,7 +294,7 @@ namespace SmartHome.MQTT.Client
 
     public class CustomEventArgs : EventArgs
     {
-        public CustomEventArgs(string receivedMessage,string receivedTopic)
+        public CustomEventArgs(string receivedMessage, string receivedTopic)
         {
             _receivedMessage = receivedMessage;
             _receivedTopic = receivedTopic;
