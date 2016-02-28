@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartHome.MQTT.Client;
-using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.Utility.EncryptionAndDecryption;
 
 namespace SmartHome.Tests
 {
