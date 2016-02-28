@@ -5,9 +5,10 @@ using SmartHome.Logging;
 using SmartHome.Model.Models;
 using SmartHome.MQTT.Client;
 using SmartHome.Service.Interfaces;
-using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.Utility.EncryptionAndDecryption;
 using SmartHome.Web.Filters;
 using SmartHome.Web.Models;
+using SmartHome.Web.Utility;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -175,7 +176,7 @@ namespace SmartHome.Web.Controllers
             //model.PublishMessageStatus = new MqttClientWrapper().Publish(model.MessgeTopic, model.PublishMessage);
             //Singleton.MyProperty.MakeConnection.Instance.Message_NotifyEvent();
 
-            model.PublishMessageStatus = Singleton.WrapperInstance.Publish(model.MessgeTopic, model.PublishMessage);
+            model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Publish(model.MessgeTopic, model.PublishMessage);
             return View("About", model);
 
         }
@@ -188,7 +189,7 @@ namespace SmartHome.Web.Controllers
             //Registering child class event
             //MqttClientWrapper.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(Message_NotifyEvent);
             //model.SubscribehMessageStatus = new MqttClientWrapper().Subscribe(model.MessgeTopic);
-            model.PublishMessageStatus = Singleton.WrapperInstance.Subscribe(model.MessgeTopic);
+            model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Subscribe(model.MessgeTopic);
             return View("About", model);
         }
 

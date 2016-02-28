@@ -1,22 +1,13 @@
 ﻿using Newtonsoft.Json;
-using SmartHome.Json;
-using SmartHome.Model.Enums;
-using SmartHome.Model.ModelDataContext;
-using SmartHome.MQTT.Client;
 using SmartHome.Web.Filters;
 using SmartHome.Web.Utility;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
-using uPLibrary.Networking.M2Mqtt;
 
 namespace SmartHome.Web
 {
@@ -24,7 +15,7 @@ namespace SmartHome.Web
     {
         protected void Application_Start()
         {
-            Singleton.WrapperInstance.MakeConnection();            
+            MqttClientWrapperAdapter.WrapperInstance.MakeConnection();            
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

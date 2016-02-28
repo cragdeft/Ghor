@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 using SmartHome.Entity;
-using SecurityManager = SmartHome.Utility.EncriptionAndDecryption.SecurityManager;
+using SecurityManager = SmartHome.Utility.EncryptionAndDecryption.SecurityManager;
 
 namespace SmartHome.MailApi.MailHelper
 {

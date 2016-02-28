@@ -10,7 +10,7 @@ using SmartHome.Entity;
 using SmartHome.MailApi.Controllers;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
-using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.Utility.EncryptionAndDecryption;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 

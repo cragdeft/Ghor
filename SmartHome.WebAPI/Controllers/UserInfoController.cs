@@ -8,7 +8,7 @@ using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Repository.Repositories;
 using SmartHome.Service.Interfaces;
-using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.Utility.EncryptionAndDecryption;
 using SmartHome.WebAPI.Filter;
 using System;
 using System.Collections.Generic;

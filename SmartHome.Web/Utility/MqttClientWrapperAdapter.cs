@@ -8,7 +8,7 @@ using System.Web;
 
 namespace SmartHome.Web.Utility
 {
-    public class Singleton
+    public class MqttClientWrapperAdapter
     {
         private static MqttClientWrapper instance = null;
         //Lock synchronization object
@@ -19,7 +19,7 @@ namespace SmartHome.Web.Utility
             {
                 lock (syncLock)
                 {
-                    if (Singleton.instance == null)
+                    if (MqttClientWrapperAdapter.instance == null)
                     {
                         instance = new MqttClientWrapper();
                         instance.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(PublishReceivedMessage_NotifyEvent);

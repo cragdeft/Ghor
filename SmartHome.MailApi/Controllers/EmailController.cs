@@ -8,7 +8,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using SmartHome.Entity;
 using SmartHome.MailApi.MailHelper;
-using SmartHome.Utility.EncriptionAndDecryption;
+using SmartHome.Utility.EncryptionAndDecryption;
 
 namespace SmartHome.MailApi.Controllers
 {
