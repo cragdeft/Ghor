@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EncriptionAndDecryption\CryptLib.cs" />
-    <Compile Include="EncriptionAndDecryption\SecurityManager.cs" />
+    <Compile Include="EncryptionAndDecryption\CryptLib.cs" />
+    <Compile Include="EncryptionAndDecryption\SecurityManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartHome.Utility.EncriptionAndDecryption
+namespace SmartHome.Utility.EncryptionAndDecryption
 {
     public static class SecurityManager
     {

@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace SmartHome.Utility.EncriptionAndDecryption
+namespace SmartHome.Utility.EncryptionAndDecryption
 {
 	/*****************************************************************
 	 * CrossPlatform CryptLib
