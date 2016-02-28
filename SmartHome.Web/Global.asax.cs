@@ -4,6 +4,7 @@ using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.MQTT.Client;
 using SmartHome.Web.Filters;
+using SmartHome.Web.Utility;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,6 +24,7 @@ namespace SmartHome.Web
     {
         protected void Application_Start()
         {
+            Singleton.WrapperInstance.MakeConnection();            
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -35,7 +37,6 @@ namespace SmartHome.Web
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
             if (authCookie != null)
             {
-
                 FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
                 CustomPrincipalSerializeModel serializeModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(authTicket.UserData);
                 CustomPrincipal newUser = new CustomPrincipal(authTicket.Name);
@@ -47,43 +48,5 @@ namespace SmartHome.Web
                 HttpContext.Current.User = newUser;
             }
         }
-    }  
-    
-    public class Singleton
-    {
-        private static MqttClientWrapper instance = null;
-        //Lock synchronization object
-        private static object syncLock = new object();
-        public static MqttClientWrapper WrapperInstance
-        {
-            get
-            {
-                lock (syncLock)
-                {
-                    if (Singleton.instance == null)
-                    {
-                        instance = new MqttClientWrapper();
-                        instance.NotifyMqttMsgPublishReceivedEvent += new MqttClientWrapper.NotifyMqttMsgPublishReceivedDelegate(Message_NotifyEvent);
-                        instance.MakeConnection();
-                    }
-
-                    return instance;
-                }
-            }
-        }
-
-        static void Message_NotifyEvent(CustomEventArgs customEventArgs)
-        {
-            if (customEventArgs.ReceivedTopic == CommandType.Configuration.ToString())
-            {
-                new JsonManager().JsonProcess(customEventArgs.ReceivedMessage);
-            }
-        }
-
     }
-
-
-
-
-
 }
