@@ -157,8 +157,7 @@ namespace SmartHome.MQTT.Client
         public void client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
             NotifyMessage("MqttMsgSubscribed", e.MessageId.ToString(), string.Empty);
-            //Debug.WriteLine("Subscribed for id = " + e.MessageId);
-            // write your code
+          
         }
 
         public void client_MqttMsgUnsubscribed(object sender, MqttMsgUnsubscribedEventArgs e)
@@ -167,8 +166,7 @@ namespace SmartHome.MQTT.Client
         }
 
         public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {
-            //string a = e.Topic;
+        {            
             //var receivedMessage = Encoding.UTF8.GetString(e.Message);
             #region MyRegion
             //if (e.Topic == CommandType.Configuration.ToString())
@@ -215,39 +213,36 @@ namespace SmartHome.MQTT.Client
             //parser.SaveOrUpdateStatus();
 
         }
-        public void NotifyMessage(string NotifyType,string receivedMessage, string receivedTopic)
+
+        #region Delegate and event implementation
+        public void NotifyMessage(string NotifyType, string receivedMessage, string receivedTopic)
         {
-            if (NotifyType== "MqttMsgPublishReceived")
+            if (NotifyType == "MqttMsgPublishReceived")
             {
-                if (NotifyMqttMsgPublishReceivedEvent != null)
-                {
-                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
-                    //Raise Event. All the listeners of this event will get a call.
-                    NotifyMqttMsgPublishReceivedEvent(customEventArgs);
-                }
+                InvokeEvents<NotifyMqttMsgPublishReceivedDelegate>(receivedMessage, receivedTopic, NotifyMqttMsgPublishReceivedEvent);
             }
 
             if (NotifyType == "MqttMsgPublished")
             {
-                if (NotifyMqttMsgPublishedEvent != null)
-                {
-                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
-                    //Raise Event. All the listeners of this event will get a call.
-                    NotifyMqttMsgPublishedEvent(customEventArgs);
-                }
+                InvokeEvents<NotifyMqttMsgPublishedDelegate>(receivedMessage, receivedTopic, NotifyMqttMsgPublishedEvent);
             }
 
             if (NotifyType == "MqttMsgSubscribed")
             {
-                if (NotifyMqttMsgSubscribedEvent != null)
-                {
-                    CustomEventArgs customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
-                    //Raise Event. All the listeners of this event will get a call.
-                    NotifyMqttMsgSubscribedEvent(customEventArgs);
-                }
-            }
+                InvokeEvents<NotifyMqttMsgSubscribedDelegate>(receivedMessage, receivedTopic, NotifyMqttMsgSubscribedEvent);
 
+            }
         }
+
+        private static void InvokeEvents<T>(string receivedMessage, string receivedTopic, T eventDelegate)
+        {
+            if (eventDelegate != null)
+            {
+                var customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
+                ((Delegate)(object)eventDelegate).DynamicInvoke(customEventArgs);
+            }
+        } 
+        #endregion
 
         #endregion
 
