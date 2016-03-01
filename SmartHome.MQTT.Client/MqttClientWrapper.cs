@@ -8,6 +8,8 @@ using SmartHome.Model.Enums;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Configuration;
+using System.Collections.Generic;
+using SmartHome.Logging;
 
 namespace SmartHome.MQTT.Client
 {
@@ -36,28 +38,54 @@ namespace SmartHome.MQTT.Client
         #region constructor
         public MqttClientWrapper()
         {
-            //MakeConnection();
-            //ClientId = string.Empty;
+
+            //SmartHomeMQTT.WillTopic = string.Format("clients/{0}", ClientId);//what is?
         }
         public void MakeConnection()
         {
-            if (SmartHomeMQTT == null)
+
+
+            #region MyRegion
+
+            try
             {
-                if (BrokerAddress == "192.168.11.195")
+                if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
-                    LocalBrokerConnection(BrokerAddress);
-                }
-                else if (BrokerAddress == "192.168.11.150")
-                {
-                    BrokerConnectionWithoutCertificate(BrokerAddress);
-                }
-                else
-                {
-                    BrokerConnectionWithCertificate(BrokerAddress);
+                    if (BrokerAddress == "192.168.11.195")
+                    {
+                        LocalBrokerConnection(BrokerAddress);
+                    }
+                    else if (BrokerAddress == "192.168.11.150")
+                    {
+                        BrokerConnectionWithoutCertificate(BrokerAddress);
+                    }
+                    else
+                    {
+                        BrokerConnectionWithCertificate(BrokerAddress);
+                    }
+
+                    DefinedMQTTCommunicationEvents();
                 }
 
-                DefinedMQTTCommunicationEvents();
             }
+            catch (Exception ex)
+            {
+
+                Logger.LogError(ex, string.Format("Could not stablished connection to MQ broker: {1}", ex.Message));
+
+                //don't leave the client connected
+                if (SmartHomeMQTT != null && SmartHomeMQTT.IsConnected)
+                    try
+                    {
+                        SmartHomeMQTT.Disconnect();
+                    }
+                    catch
+                    {
+                        Logger.LogError(ex, string.Format("Could not disconnect to MQ broker: {1}", ex.Message));
+                    }
+            }
+            #endregion
+
         }
         public bool client_RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
@@ -68,6 +96,8 @@ namespace SmartHome.MQTT.Client
 
         #region Properties
 
+        public string WillTopic { get; set; }
+        readonly object locker = new object();
         public string BrokerAddress
         {
             get
@@ -126,11 +156,23 @@ namespace SmartHome.MQTT.Client
 
         public string Publish(string messgeTopic, string publishMessage)
         {
-
-            ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
+            if (SmartHomeMQTT != null)
+            {
+                try
+                {
+                    lock (locker)
+                    {
+                        ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
-                                          true);
+                                          true);//what is retain
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //    log.Warn("Error while publishing: " + ex.Message, ex);
+                }
+            }
             return "Success";
 
 
@@ -138,17 +180,29 @@ namespace SmartHome.MQTT.Client
 
         public string Subscribe(string messgeTopic)
         {
-            ushort msgId = SmartHomeMQTT.Subscribe(new string[] { messgeTopic },
-                new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE }
-                );
+            if (SmartHomeMQTT != null)
+            {
+                ushort msgId = SmartHomeMQTT.Subscribe(new string[] { messgeTopic },
+                     new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE }
+                     );
+                Logger.Log(string.Format("Subscription to topic {0}", messgeTopic));
+            }
             return "Success";
+        }
+
+        /// <summary>
+        /// Subscribe to a list of topics
+        /// </summary>
+        public void Subscribe(IEnumerable<string> messgeTopics)
+        {
+            foreach (var item in messgeTopics)
+                Subscribe(item);
         }
 
         private void client_MqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)
         {
             NotifyMessage("MqttMsgPublished", e.IsPublished.ToString(), string.Empty);
-            //e.IsPublished //it's defined confirmation message is published or not.
-            // Debug.WriteLine("MessageId = " + e.MessageId + " Published = " + e.IsPublished);
+            Logger.Log(string.Format("Mqtt-Msg-Published to topic {0}", e.IsPublished.ToString()));
             ClientResponce = "Success";
         }
 
@@ -157,7 +211,8 @@ namespace SmartHome.MQTT.Client
         public void client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
             NotifyMessage("MqttMsgSubscribed", e.MessageId.ToString(), string.Empty);
-          
+            Logger.Log(string.Format("Mqtt-Msg-Subscribed to topic {0}", e.MessageId.ToString()));
+
         }
 
         public void client_MqttMsgUnsubscribed(object sender, MqttMsgUnsubscribedEventArgs e)
@@ -166,7 +221,7 @@ namespace SmartHome.MQTT.Client
         }
 
         public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {            
+        {
             //var receivedMessage = Encoding.UTF8.GetString(e.Message);
             #region MyRegion
             //if (e.Topic == CommandType.Configuration.ToString())
@@ -188,7 +243,27 @@ namespace SmartHome.MQTT.Client
             #endregion
 
             NotifyMessage("MqttMsgPublishReceived", Encoding.UTF8.GetString(e.Message), e.Topic.ToString());
+            Logger.Log(string.Format("Mqtt-Msg-Publish-Received to topic {0}", e.Topic.ToString()));
         }
+
+        public void client_ConnectionClosed(object sender, EventArgs e)
+        {
+
+            if (!(sender as MqttClient).IsConnected || SmartHomeMQTT == null)
+            {
+                HandleReconnect();
+            }
+            Logger.Log("Connection has been closed");
+        }
+
+    
+        void HandleReconnect()
+        {            
+            MakeConnection();
+        }
+        
+
+
 
         private void CommandLog(CommandJsonEntity jsonObject)
         {
@@ -241,7 +316,7 @@ namespace SmartHome.MQTT.Client
                 var customEventArgs = new CustomEventArgs(receivedMessage, receivedTopic);
                 ((Delegate)(object)eventDelegate).DynamicInvoke(customEventArgs);
             }
-        } 
+        }
         #endregion
 
         #endregion
@@ -250,10 +325,12 @@ namespace SmartHome.MQTT.Client
 
         private void DefinedMQTTCommunicationEvents()
         {
+
             SmartHomeMQTT.MqttMsgPublished += client_MqttMsgPublished;//publish
             SmartHomeMQTT.MqttMsgSubscribed += client_MqttMsgSubscribed;//subscribe confirmation
             SmartHomeMQTT.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
+            SmartHomeMQTT.ConnectionClosed += client_ConnectionClosed;
 
             ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
