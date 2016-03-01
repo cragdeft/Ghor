@@ -34,5 +34,27 @@ namespace SmartHome.Logging
                
             }
         }
+
+        public static void Log(string contextualMessage = null)
+        {
+            try
+            {
+
+                if (contextualMessage != null)
+                {
+
+                    //connect log4 and write message.
+                }
+                else
+                {
+                    //connect log4 and write message.+contextualMessage
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Unable to write log file by used log4.");
+            }
+        }
     }
 }
