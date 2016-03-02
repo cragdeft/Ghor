@@ -39,7 +39,7 @@ namespace SmartHome.MQTT.Client
         public MqttClientWrapper()
         {
 
-            //SmartHomeMQTT.WillTopic = string.Format("clients/{0}", ClientId);//what is?
+            
         }
         public void MakeConnection()
         {
@@ -165,7 +165,7 @@ namespace SmartHome.MQTT.Client
                         ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
-                                          true);//what is retain
+                                          true);
                     }
                 }
                 catch (Exception ex)
