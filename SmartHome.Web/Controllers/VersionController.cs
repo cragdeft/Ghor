@@ -1,6 +1,12 @@
-﻿using Repository.Pattern.Infrastructure;
+﻿using Repository.Pattern.DataContext;
+using Repository.Pattern.Ef6;
+using Repository.Pattern.Infrastructure;
+using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
+using SmartHome.Model.ModelDataContext;
+using SmartHome.Model.Models;
+using SmartHome.Service;
 using SmartHome.Service.Interfaces;
 using SmartHome.Web.Models;
 using System;
@@ -41,23 +47,55 @@ namespace SmartHome.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(VersionEntity entity)
+        public async  Task<ActionResult> Create(VersionEntity entity)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWorkAsync.BeginTransaction();
+                #region MyRegion
+                //_unitOfWorkAsync.BeginTransaction();
 
-                try
+                //try
+                //{
+                //    _versionService.Add(entity);
+                //    var changes = await _unitOfWorkAsync.SaveChangesAsync();
+                //    _unitOfWorkAsync.Commit();
+                //    return RedirectToAction("Index");
+                //}
+                //catch (Exception ex)
+                //{
+                //    _unitOfWorkAsync.Rollback();
+                //} 
+                #endregion
+
+
+                #region MyRegion
+                using (IDataContextAsync context = new SmartHomeDataContext())
+                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-                    _versionService.Add(entity);
-                    var changes = await _unitOfWorkAsync.SaveChangesAsync();
-                    _unitOfWorkAsync.Commit();
-                    return RedirectToAction("Index");
+                    IRepositoryAsync<SmartHome.Model.Models.Version> versionRepository = new Repository<SmartHome.Model.Models.Version>(context, unitOfWork);
+                    IVersionService versionService = new VersionService(versionRepository);
+
+                    try
+                    {
+                        unitOfWork.BeginTransaction();
+
+
+                        //versionService.Add(entity);
+                        versionService.Add(entity);
+                        var changes =await unitOfWork.SaveChangesAsync();
+                        unitOfWork.Commit();
+                        return RedirectToAction("Index");
+
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        unitOfWork.Rollback();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _unitOfWorkAsync.Rollback();
-                }
+                #endregion
             }
             return View(entity);
         }
@@ -132,6 +170,15 @@ namespace SmartHome.Web.Controllers
         }
         #endregion
 
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        _unitOfWorkAsync.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
 
     }
 
