@@ -11,8 +11,6 @@
 </head>
 <body>
 
-
-
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div id="header-sticky">
         </div>
@@ -24,9 +22,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                
+
                 <div class="pull-left ">
-                    <img class="navbar-header-smarthome-image" />                    
+                    <img class="navbar-header-smarthome-image" />
                 </div>
 
                 @Html.ActionLink("Smart Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
@@ -44,19 +42,13 @@
                 <div class="pull-right">
 
                     <span class="header-title-right">Sign in | Sign up &nbsp;</span>
-                    <span class="social-icon">                       
+                    <span class="social-icon">
                         <i class="fa fa-user "></i>
                     </span>
-                    
-                   
-
-                    
-                   
                 </div>
                 @*@Html.Partial("_LoginPartial")*@
             </div>
         </div>
-
     </div>
     <br />
 
@@ -74,18 +66,13 @@
                 <img class="footer-sinepulse-image" />
                 <span class="text-muted">&copy; @DateTime.Now.Year - Aplomb tech bd</span>
             </div>
-            
-        
             <span class="social-icon pull-right">
                 <i class="fa fa-rss social-icon-rss"></i>
                 <i class="fa fa-facebook social-icon-fb"></i>
                 <i class="fa fa-twitter social-icon-twitter"></i>
             </span>
-        
         </div>
-        
     </div>
-
 
 
     @Scripts.Render("~/bundles/jquery")
