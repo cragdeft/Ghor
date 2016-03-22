@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - Smart home app</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -23,8 +24,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <div class="pull-left navbar-header-smarthome-image">
+                
+                <div class="pull-left ">
+                    <img class="navbar-header-smarthome-image" />                    
                 </div>
+
                 @Html.ActionLink("Smart Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
 
@@ -39,15 +43,11 @@
                 </ul>
                 <div class="pull-right">
 
-                    <div class="row col-md-12">
-                        @*<div class="col-md-8">
-                            <span class="text-muted">Sign in/Sign up</span>
-                        </div>*@
-                        <div class="navbar-signup-image col-md-2">
-                        </div>
-                       
-
-                    </div>
+                    <span class="header-title-right">Sign in | Sign up &nbsp;</span>
+                    <span class="social-icon">                       
+                        <i class="fa fa-user "></i>
+                    </span>
+                    
                    
 
                     
@@ -70,10 +70,20 @@
 
     <div id="footer-sticky">
         <div class="container">
-            <div class="pull-left footer-sinepulse-image">
+            <div class="pull-left ">
+                <img class="footer-sinepulse-image" />
+                <span class="text-muted">&copy; @DateTime.Now.Year - Aplomb tech bd</span>
             </div>
-            <p class="text-muted">&copy; @DateTime.Now.Year - Aplomb tech bd</p>
+            
+        
+            <span class="social-icon pull-right">
+                <i class="fa fa-rss social-icon-rss"></i>
+                <i class="fa fa-facebook social-icon-fb"></i>
+                <i class="fa fa-twitter social-icon-twitter"></i>
+            </span>
+        
         </div>
+        
     </div>
 
 
