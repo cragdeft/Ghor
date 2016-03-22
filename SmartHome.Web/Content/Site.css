@@ -176,3 +176,54 @@ textarea {
         color:#FFF;
     }
 
+#tabs .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: #33691E/*{fcDefault}*/;
+    text-decoration: none;
+}
+#tabs .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited{
+    color: #FFF/*{fcActive}*/;
+    background-color: #8BC34A;
+    text-decoration: none;
+    border: 1px solid #33691E;
+}
+
+
+
+#tabs .ui-widget-header,
+#tabs {
+    border: 1px solid #dddddd;    
+}
+
+.smarthome-text-off {
+    color: #F44336;
+}
+
+.smarthome-text-on {
+    color: #8BC34A;
+}
+
+hr.separator-border-1 {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    width: 190px;
+}
+
+.text-grey {
+    color: #E0E0E0;
+}
+
+h6.panel-title {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 0.5;
+}
+
+.panel-body small {
+        font-size: 10px;
+}
+h4.panel-title{
+    margin-top: 10px;
+    line-height: 0.5;
+}

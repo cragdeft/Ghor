@@ -71,7 +71,8 @@ namespace SmartHome.Web.Controllers
         // [CustomAuthorize(Roles = "User", Users = "1,2,3")]
         public ActionResult Index()
         {
-            return RedirectToAction("About");
+            //return RedirectToAction("SmartHome");
+            return View("SmartHome");
             //var temp = User;
             #region Parese Json
 
