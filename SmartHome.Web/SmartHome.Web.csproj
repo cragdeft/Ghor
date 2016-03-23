@@ -265,6 +265,10 @@
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\colorWheelPicker\farbtastic.css" />
+    <Content Include="Content\colorWheelPicker\marker.png" />
+    <Content Include="Content\colorWheelPicker\mask.png" />
+    <Content Include="Content\colorWheelPicker\wheel.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -338,6 +342,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\colorWheelPicker\farbtastic.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -395,7 +400,8 @@
     <Content Include="Views\Shared\TreeviewDevice.cshtml" />
     <Content Include="Views\Home\SmartHome.cshtml" />
     <Content Include="Views\Home\_SmartHomeRoom.cshtml" />
-    <Content Include="Views\Home\_SmartHomeDevice.cshtml" />
+    <Content Include="Views\Home\_SmartHomeDeviceSwitch.cshtml" />
+    <Content Include="Views\Home\_SmartHomeDeviceRGBW.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

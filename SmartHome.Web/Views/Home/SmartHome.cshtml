@@ -17,19 +17,21 @@
     <div id="tabs-1">
         @*Content for Tab 1 goes here.<br />
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@   
+            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
 
-        <div class="row">
-            @Html.Partial("_SmartHomeDevice")
+        <div class="row row-centered">            
+            @Html.Partial("_SmartHomeDeviceSwitch")
+            @Html.Partial("_SmartHomeDeviceRGBW")
+            @Html.Partial("_SmartHomeDeviceRGBW")
         </div>
 
-        
+
     </div>
 
     <div id="tabs-2">
         @*Content for Tab 2 goes here.<br />
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
         <div class="row">
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
@@ -40,7 +42,7 @@
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
-        </div>  
+        </div>
     </div>
 
     <div id="tabs-3">
@@ -56,26 +58,36 @@
 
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/cssjqryUi")
+<script src="~/Scripts/colorWheelPicker/farbtastic.js"></script>
+<link href="~/Content/colorWheelPicker/farbtastic.css" rel="stylesheet" />
 
     <script type="text/javascript">
-    $(function () {
-        $("#tabs").tabs();
-    });
+        $(function () {
+            $("#tabs").tabs();
+        });
     </script>
 
 
-<script>
-    $(function() {
-        $( "#slider-range-min" ).slider({
-            range: "min",
-            value: 37,
-            min: 1,
-            max: 700,
-            slide: function( event, ui ) {
-                $( "#amount" ).val( "$" + ui.value );
-            }
-        });
-        $( "#amount" ).val( "$" + $( "#slider-range-min" ).slider( "value" ) );
-    });
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    $('#demo').hide();
+    $('#picker').farbtastic('#color');
+  });
 </script>
+
+
+    <script>
+        $(function () {
+            $("#slider-range-min").slider({
+                range: "min",
+                value: 1,
+                min: 1,
+                max: 100,
+                slide: function (event, ui) {
+                    $("#amount").val(ui.value+" %");
+                }
+            });
+            $("#amount").val($("#slider-range-min").slider("value")+"%");
+        });
+    </script>
 }

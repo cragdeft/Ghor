@@ -184,7 +184,7 @@ textarea {
     color: #FFF/*{fcActive}*/;
     background-color: #8BC34A;
     text-decoration: none;
-    border: 1px solid #33691E;
+    /*border: 1px solid #33691E;*/
 }
 
 
@@ -219,6 +219,9 @@ h6.panel-title {
     font-size: 12px;
     line-height: 0.5;
 }
+.line-height-less{
+     line-height: 0.5;
+}
 
 .panel-body small {
         font-size: 10px;
@@ -232,17 +235,88 @@ h4.panel-title{
     background-color: #424242;
     margin: 20px;
 }
+
+.margin-20{
+ margin: 20px;
+}
+.padding-20{
+ padding: 20px;
+}
+
+
 .font-size-10{
     font-size: 10px;
     line-height: 0.6;
 }
 
 .switch-dimentsion {
-    height:100px;
+    /*height:100px;*/
 }
 
 .switch-label{
-     margin-top: 52px;
-    font-size: 12px;
-    padding-left: 5px;
+    /*margin-top: 52px;*/
+    /*font-size: 12px;*/
+    /*padding-left: 5px;*/
+}
+
+.row-centered {
+    text-align:center;
+}
+
+.col-centered {
+    display:inline-block;
+    /*float:none;*/
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.border-1{
+    border-top: 1px solid #F44336;
+}
+
+
+.slider-range-min.ui-state-default, .slider-range-min.ui-widget-content .ui-state-default, .slider-range-min.ui-widget-header .ui-state-default {
+    border: 1px solid #8BC34A;
+    /*background: #8BC34A;*/
+    color: #8BC34A;
+}
+
+.slider-range-min .ui-corner-all, .slider-range-min .ui-corner-bottom, .slider-range-min .ui-corner-right, .slider-range-min .ui-corner-br {
+    border-bottom-right-radius: 10px/*{cornerRadius}*/;
+}
+
+.slider-range-min .ui-corner-all, .slider-range-min .ui-corner-bottom, .slider-range-min .ui-corner-left, .slider-range-min .ui-corner-bl {
+    border-bottom-left-radius: 10px/*{cornerRadius}*/;
+}
+.slider-range-min .ui-corner-all, .slider-range-min .ui-corner-top, .slider-range-min .ui-corner-right, .slider-range-min .ui-corner-tr {
+    border-top-right-radius: 10px/*{cornerRadius}*/;
+}
+.slider-range-min .ui-corner-all, .slider-range-min .ui-corner-top, .slider-range-min .ui-corner-left, .slider-range-min .ui-corner-tl {
+    border-top-left-radius: 10px/*{cornerRadius}*/;
+}
+.range-background{
+    /*color: #33691E;*/
+    border:0px;
+    background-color: #424242;
+    width: 60px;
+}
+
+.picker-range-background{      
+    border:0px;
+    background-color: #424242;
+    width: 80px;
+}
+
+
+.imgwrapper {
+   width: 80%;
+}
+
+.switch-panel-height{
+    /*min-width:277px;*/
+}
+.panel-header-label-color{
+   color: #8BC34A
 }
