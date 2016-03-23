@@ -395,6 +395,7 @@
     <Content Include="Views\Shared\TreeviewDevice.cshtml" />
     <Content Include="Views\Home\SmartHome.cshtml" />
     <Content Include="Views\Home\_SmartHomeRoom.cshtml" />
+    <Content Include="Views\Home\_SmartHomeDevice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

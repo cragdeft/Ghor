@@ -18,6 +18,18 @@
         @*Content for Tab 1 goes here.<br />
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
             sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@   
+
+        <div class="row">
+            @Html.Partial("_SmartHomeDevice")
+        </div>
+
+        
+    </div>
+
+    <div id="tabs-2">
+        @*Content for Tab 2 goes here.<br />
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
         <div class="row">
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
@@ -29,12 +41,6 @@
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
         </div>  
-    </div>
-
-    <div id="tabs-2">
-        Content for Tab 2 goes here.<br />
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
     </div>
 
     <div id="tabs-3">
@@ -56,4 +62,20 @@
         $("#tabs").tabs();
     });
     </script>
+
+
+<script>
+    $(function() {
+        $( "#slider-range-min" ).slider({
+            range: "min",
+            value: 37,
+            min: 1,
+            max: 700,
+            slide: function( event, ui ) {
+                $( "#amount" ).val( "$" + ui.value );
+            }
+        });
+        $( "#amount" ).val( "$" + $( "#slider-range-min" ).slider( "value" ) );
+    });
+</script>
 }
