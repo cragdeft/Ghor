@@ -1,5 +1,5 @@
 ﻿<div class="col-sm-6 col-centered">
-    <div class="panel panel-default">
+    <div class="panel panel-default rgb-device-min-height">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-6">
@@ -30,9 +30,9 @@
                             <div class="row ">
                             </div>
                             <div class="row">
-                                <div>
-                                    <input type="text" id="color" name="color" value="#123456" class="picker-range-background" />
-                                </div>
+                                @*<div>
+                                    <input type="text" id="color" name="color" value="#123456" class="colorText picker-range-background" />
+                                </div>*@
 
                             </div>
                         </div>
@@ -43,8 +43,14 @@
 
                     <div class="row">
                         <div class="col-sm-offset-3 col-sm-8">
-                            <div class="row imgwrapper">
-                                <div id="picker"></div>
+                            @*<div class="row imgwrapper">
+                                    <div class="picker"></div>
+                                </div>*@
+
+                            <div class="imgwrapper">
+                                <input type="text" class="input-color picker-range-background" name="color" value="#123456" />
+                                <div class="picker">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,13 +61,13 @@
                     <div class="row">
                         @*<div class="col-sm-4">
 
-                        </div>*@
+                            </div>*@
 
                         <div class="col-sm-12 padding-20">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div id="slider-range-min" class="slider-range-min"></div>
-                                    <input type="text" id="amount" class="range-background text-grey" />
+                                    <input type="text" id="amount" class="amount range-background text-grey" />
                                 </div>
                             </div>
 
@@ -69,7 +75,7 @@
 
                         @*<div class="col-sm-4">
 
-                        </div>*@
+                            </div>*@
 
                     </div>
 

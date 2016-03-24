@@ -19,9 +19,8 @@
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
             sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
 
-        <div class="row row-centered">            
+        <div class="row row-centered">
             @Html.Partial("_SmartHomeDeviceSwitch")
-            @Html.Partial("_SmartHomeDeviceRGBW")
             @Html.Partial("_SmartHomeDeviceRGBW")
         </div>
 
@@ -58,36 +57,48 @@
 
     @Scripts.Render("~/bundles/jqueryui")
     @Styles.Render("~/Content/cssjqryUi")
-<script src="~/Scripts/colorWheelPicker/farbtastic.js"></script>
-<link href="~/Content/colorWheelPicker/farbtastic.css" rel="stylesheet" />
+    <script src="~/Scripts/colorWheelPicker/farbtastic.js"></script>
+    <link href="~/Content/colorWheelPicker/farbtastic.css" rel="stylesheet" />
 
     <script type="text/javascript">
-        $(function () {
+
+        $(document).ready(function () {
             $("#tabs").tabs();
+
         });
     </script>
 
 
-<script type="text/javascript" charset="utf-8">
-  $(document).ready(function() {
-    $('#demo').hide();
-    $('#picker').farbtastic('#color');
-  });
-</script>
+    @*<script type="text/javascript" charset="utf-8">
+          $(document).ready(function() {
+            $(".picker").farbtastic(".colorText");
+          });
+        </script>*@
+
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('.imgwrapper').each(function (i, obj) {
+                $(obj).find('.picker').attr('id', 'picker-' + i)
+                $(obj).find('.input-color').addClass('input-color-' + i)
+                $('#picker-' + i).farbtastic('.input-color-' + i);
+            });
+        });
+    </script>
 
 
     <script>
         $(function () {
-            $("#slider-range-min").slider({
+            $(".slider-range-min").slider({
                 range: "min",
                 value: 1,
                 min: 1,
                 max: 100,
                 slide: function (event, ui) {
-                    $("#amount").val(ui.value+" %");
+                    $(".amount").val(ui.value + " %");
                 }
             });
-            $("#amount").val($("#slider-range-min").slider("value")+"%");
+            $(".amount").val($(".slider-range-min").slider("value") + "%");
         });
     </script>
 }

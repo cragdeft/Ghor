@@ -320,3 +320,13 @@ h4.panel-title{
 .panel-header-label-color{
    color: #8BC34A
 }
+
+.panel.panel-default .panel-heading{
+   min-height:67px
+}
+/*.rgb-device-min-height{
+    min-height:517px;
+}*/
+
+
+
