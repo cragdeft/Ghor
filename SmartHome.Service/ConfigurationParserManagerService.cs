@@ -16,7 +16,8 @@ namespace SmartHome.Service
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        private readonly IRepositoryAsync<Home> _homeRepository;
+        private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<Device> _deviceRepository;
         private string _email;
@@ -25,30 +26,29 @@ namespace SmartHome.Service
         public ConfigurationParserManagerService(IUnitOfWorkAsync unitOfWorkAsync)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
+            _userInfoRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
             _versionRepository = _unitOfWorkAsync.RepositoryAsync<Version>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
         }
 
 
 
-
-
         #region Home AddOrUpdateGraphRange
-        public IEnumerable<Home> AddOrUpdateHomeGraphRange(IEnumerable<Home> model)
+        public IEnumerable<UserHomeLink> AddOrUpdateHomeGraphRange(IEnumerable<UserHomeLink> model)
         {
-            List<Home> homeModel = new List<Home>();
-            homeModel = FillHomeInformations(model, homeModel);
-            _homeRepository.InsertOrUpdateGraphRange(homeModel);
-            return homeModel;
+            List<UserHomeLink> userHomeModel = new List<UserHomeLink>();
+            userHomeModel = FillHomeInformations(model, userHomeModel);
+            _userHomeRepository.InsertOrUpdateGraphRange(userHomeModel);
+            return userHomeModel;
         }
 
-        public List<Home> FillHomeInformations(IEnumerable<Home> model, List<Home> homeModel)
+        public List<UserHomeLink> FillHomeInformations(IEnumerable<UserHomeLink> model, List<UserHomeLink> homeModel)
         {
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<Home> temp = IsHomeExists(item.Id);
+                IEnumerable<UserHomeLink> temp = IsHomeExists(item.HId);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -62,12 +62,14 @@ namespace SmartHome.Service
                     foreach (var existingItem in temp.ToList())
                     {
                         //modify version                    
-                        FillExistingHomeInfo(item, existingItem);
+                        var temp2 = item.Home;
 
-                        if (item.Rooms != null && item.Rooms.Count > 0)
-                        {
-                            AddOrEditExistingRoomItems(item, existingItem);
-                        }
+                        //FillExistingHomeInfo(item, existingItem);
+
+                        //if (item.Rooms != null && item.Rooms.Count > 0)
+                        //{
+                        //    AddOrEditExistingRoomItems(item, existingItem);
+                        //}
 
                     }
                 }
@@ -130,10 +132,203 @@ namespace SmartHome.Service
             existingItem.ObjectState = ObjectState.Modified;
         }
 
-        private IEnumerable<Home> IsHomeExists(string key)
+        private IEnumerable<UserHomeLink> IsHomeExists(string key)
         {
-            return _homeRepository.Query(e => e.Id == key).Include(x => x.Rooms).Select();
+            return _userHomeRepository.Query(e => e.HId == key).Include(x=>x.Home).Include(x=>x.UserInfo).Select();
         }
+
+
+
+        #endregion
+
+
+        #region Userinfo AddOrUpdateUserInfoGraphRange
+        public IEnumerable<UserInfo> AddOrUpdateUserInfoGraphRange(IEnumerable<UserInfo> model)
+        {
+            List<UserInfo> userInfoModel = new List<UserInfo>();
+            userInfoModel = FillUserInformations(model, userInfoModel);
+            _userInfoRepository.InsertOrUpdateGraphRange(userInfoModel);
+            return userInfoModel;
+        }
+
+        public List<UserInfo> FillUserInformations(IEnumerable<UserInfo> model, List<UserInfo> userInfoModel)
+        {
+            foreach (var item in model)
+            {
+                //check already exist or not.
+                IEnumerable<UserInfo> temp = IsUserExists(item.Id);
+                if (temp.Count() == 0)
+                {
+                    item.DateOfBirth = System.DateTime.Now;
+                    //new item
+                    userInfoModel.Add(item);
+                    continue;
+                }
+                else
+                {
+                    //existing item               
+                    // versionModel = temp;
+                    foreach (var existingItem in temp.ToList())
+                    {
+                        //modify version                    
+                        FillExistingUserInfo(item, existingItem);
+
+                        //if (item.Rooms != null && item.Rooms.Count > 0)
+                        //{
+                        //    AddOrEditExistingRoomItems(item, existingItem);
+                        //}
+
+                    }
+                }
+            }
+
+            return userInfoModel;
+        }
+
+
+        private void FillExistingUserInfo(UserInfo item, UserInfo existingItem)
+        {
+            existingItem.UserInfoId = item.UserInfoId;
+            existingItem.Id = item.Id;
+            existingItem.LocalId = item.LocalId;
+            existingItem.Password = item.Password;
+            existingItem.UserName = item.UserName;
+            existingItem.FirstName = item.FirstName;
+            existingItem.LastName = item.LastName;
+            existingItem.MiddleName = item.MiddleName;
+            //existingItem.FullName = item.FullName;
+            existingItem.AccNo = item.AccNo;
+            existingItem.CellPhone = item.CellPhone;
+            existingItem.DateOfBirth = item.DateOfBirth;
+            existingItem.Gender = item.Gender;
+            existingItem.Email = item.Email;
+            existingItem.ExpireDate = item.ExpireDate;
+            existingItem.OldAcc = item.OldAcc;
+            existingItem.SocialSecurityNumber = item.SocialSecurityNumber;
+            existingItem.IsEmailRecipient = item.IsEmailRecipient;
+            existingItem.IsLoggedIn = item.IsLoggedIn;
+            existingItem.IsSMSRecipient = item.IsSMSRecipient;
+            existingItem.LastLogIn = item.LastLogIn;
+            existingItem.IsActive = item.IsActive;
+            existingItem.Country = item.Country;
+            existingItem.LoginStatus = item.LoginStatus;
+            existingItem.RegStatus = item.RegStatus;
+            existingItem.IsSynced = item.IsSynced;
+
+            existingItem.ObjectState = ObjectState.Modified;
+        }
+
+        private IEnumerable<UserInfo> IsUserExists(string key)
+        {
+            return _userInfoRepository.Query(e => e.Id == key).Select();
+        }
+
+
+
+        #endregion
+
+
+
+        #region Home AddOrUpdateGraphRange
+        //public IEnumerable<Home> AddOrUpdateHomeGraphRange(IEnumerable<Home> model)
+        //{
+        //    List<Home> homeModel = new List<Home>();
+        //    homeModel = FillHomeInformations(model, homeModel);
+        //    _homeRepository.InsertOrUpdateGraphRange(homeModel);
+        //    return homeModel;
+        //}
+
+        //public List<Home> FillHomeInformations(IEnumerable<Home> model, List<Home> homeModel)
+        //{
+        //    foreach (var item in model)
+        //    {
+        //        //check already exist or not.
+        //        IEnumerable<Home> temp = IsHomeExists(item.Id);
+        //        if (temp.Count() == 0)
+        //        {
+        //            //new item
+        //            homeModel.Add(item);
+        //            continue;
+        //        }
+        //        else
+        //        {
+        //            //existing item               
+        //            // versionModel = temp;
+        //            foreach (var existingItem in temp.ToList())
+        //            {
+        //                //modify version                    
+        //                FillExistingHomeInfo(item, existingItem);
+
+        //                if (item.Rooms != null && item.Rooms.Count > 0)
+        //                {
+        //                    AddOrEditExistingRoomItems(item, existingItem);
+        //                }
+
+        //            }
+        //        }
+        //    }
+
+        //    return homeModel;
+        //}
+
+
+
+        //private void AddOrEditExistingRoomItems(Home item, Home existingItem)
+        //{
+        //    foreach (var nextRoom in item.Rooms)
+        //    {
+        //        var tempExistingRoom = existingItem.Rooms.Where(p => p.Id == nextRoom.Id).FirstOrDefault();
+        //        if (tempExistingRoom != null)
+        //        {
+        //            //modify
+        //            FillExistingRoomInfo(nextRoom, tempExistingRoom);
+        //        }
+        //        else
+        //        {
+        //            //add
+        //            existingItem.Rooms.Add(nextRoom);
+        //        }
+        //    }
+        //}
+
+        //private void FillExistingRoomInfo(Room nextRoomDetail, Room tempExistingRoomDetail)
+        //{
+        //    tempExistingRoomDetail.ObjectState = ObjectState.Modified;
+        //    tempExistingRoomDetail.Id = nextRoomDetail.Id;
+        //    tempExistingRoomDetail.HId = nextRoomDetail.HId;
+        //    tempExistingRoomDetail.Name = nextRoomDetail.Name;
+        //    tempExistingRoomDetail.RoomNumber = nextRoomDetail.RoomNumber;
+        //    tempExistingRoomDetail.Comment = nextRoomDetail.Comment;
+        //    tempExistingRoomDetail.IsMasterRoom = nextRoomDetail.IsMasterRoom;
+        //    tempExistingRoomDetail.IsActive = nextRoomDetail.IsActive;
+        //    tempExistingRoomDetail.AuditField = new AuditFields();
+        //}
+
+        //private void FillExistingHomeInfo(Home item, Home existingItem)
+        //{
+
+        //    existingItem.Id = item.Id;
+        //    existingItem.Name = item.Name;
+        //    existingItem.TimeZone = item.TimeZone;
+        //    //existingItem.RegistrationKey = item.RegistrationKey;
+        //    //existingItem.HardwareId = item.HardwareId;
+        //    //existingItem.TrialCount = item.TrialCount;
+        //    existingItem.Comment = item.Comment;
+        //    existingItem.IsActive = item.IsActive;
+        //    existingItem.IsDefault = item.IsDefault;
+        //    existingItem.IsAdmin = item.IsAdmin;
+        //    existingItem.MeshMode = item.MeshMode;
+        //    existingItem.Phone = item.Phone;
+        //    existingItem.PassPhrase = item.PassPhrase;
+        //    existingItem.IsInternet = item.IsInternet;
+
+        //    existingItem.ObjectState = ObjectState.Modified;
+        //}
+
+        //private IEnumerable<Home> IsHomeExists(string key)
+        //{
+        //    return _homeRepository.Query(e => e.Id == key).Include(x => x.Rooms).Select();
+        //}
 
 
 
