@@ -16,6 +16,7 @@ namespace SmartHome.Service
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+        private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<Device> _deviceRepository;
         private string _email;
@@ -24,9 +25,119 @@ namespace SmartHome.Service
         public ConfigurationParserManagerService(IUnitOfWorkAsync unitOfWorkAsync)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
+            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
             _versionRepository = _unitOfWorkAsync.RepositoryAsync<Version>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
         }
+
+
+
+
+
+        #region Home AddOrUpdateGraphRange
+        public IEnumerable<Home> AddOrUpdateHomeGraphRange(IEnumerable<Home> model)
+        {
+            List<Home> homeModel = new List<Home>();
+            homeModel = FillHomeInformations(model, homeModel);
+            _homeRepository.InsertOrUpdateGraphRange(homeModel);
+            return homeModel;
+        }
+
+        public List<Home> FillHomeInformations(IEnumerable<Home> model, List<Home> homeModel)
+        {
+            foreach (var item in model)
+            {
+                //check already exist or not.
+                IEnumerable<Home> temp = IsHomeExists(item.Id);
+                if (temp.Count() == 0)
+                {
+                    //new item
+                    homeModel.Add(item);
+                    continue;
+                }
+                else
+                {
+                    //existing item               
+                    // versionModel = temp;
+                    foreach (var existingItem in temp.ToList())
+                    {
+                        //modify version                    
+                        FillExistingHomeInfo(item, existingItem);
+
+                        if (item.Rooms != null && item.Rooms.Count > 0)
+                        {
+                            AddOrEditExistingRoomItems(item, existingItem);
+                        }
+
+                    }
+                }
+            }
+
+            return homeModel;
+        }
+
+
+
+        private void AddOrEditExistingRoomItems(Home item, Home existingItem)
+        {
+            foreach (var nextRoom in item.Rooms)
+            {
+                var tempExistingRoom = existingItem.Rooms.Where(p => p.Id == nextRoom.Id).FirstOrDefault();
+                if (tempExistingRoom != null)
+                {
+                    //modify
+                    FillExistingRoomInfo(nextRoom, tempExistingRoom);
+                }
+                else
+                {
+                    //add
+                    existingItem.Rooms.Add(nextRoom);
+                }
+            }
+        }
+
+        private void FillExistingRoomInfo(Room nextRoomDetail, Room tempExistingRoomDetail)
+        {
+            tempExistingRoomDetail.ObjectState = ObjectState.Modified;
+            tempExistingRoomDetail.Id = nextRoomDetail.Id;
+            tempExistingRoomDetail.HId = nextRoomDetail.HId;
+            tempExistingRoomDetail.Name = nextRoomDetail.Name;
+            tempExistingRoomDetail.RoomNumber = nextRoomDetail.RoomNumber;
+            tempExistingRoomDetail.Comment = nextRoomDetail.Comment;
+            tempExistingRoomDetail.IsMasterRoom = nextRoomDetail.IsMasterRoom;
+            tempExistingRoomDetail.IsActive = nextRoomDetail.IsActive;
+            tempExistingRoomDetail.AuditField = new AuditFields();
+        }
+
+        private void FillExistingHomeInfo(Home item, Home existingItem)
+        {
+
+            existingItem.Id = item.Id;
+            existingItem.Name = item.Name;
+            existingItem.TimeZone = item.TimeZone;
+            //existingItem.RegistrationKey = item.RegistrationKey;
+            //existingItem.HardwareId = item.HardwareId;
+            //existingItem.TrialCount = item.TrialCount;
+            existingItem.Comment = item.Comment;
+            existingItem.IsActive = item.IsActive;
+            existingItem.IsDefault = item.IsDefault;
+            existingItem.IsAdmin = item.IsAdmin;
+            existingItem.MeshMode = item.MeshMode;
+            existingItem.Phone = item.Phone;
+            existingItem.PassPhrase = item.PassPhrase;
+            existingItem.IsInternet = item.IsInternet;
+
+            existingItem.ObjectState = ObjectState.Modified;
+        }
+
+        private IEnumerable<Home> IsHomeExists(string key)
+        {
+            return _homeRepository.Query(e => e.Id == key).Include(x => x.Rooms).Select();
+        }
+
+
+
+        #endregion
 
 
         #region version AddOrUpdateGraphRange
@@ -120,6 +231,9 @@ namespace SmartHome.Service
 
 
         #endregion
+
+
+
 
 
         #region device AddOrUpdateGraphRange
