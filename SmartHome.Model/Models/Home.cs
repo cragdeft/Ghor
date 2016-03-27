@@ -20,6 +20,9 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HomeId { get; set; }
+
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public string TimeZone { get; set; }
