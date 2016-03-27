@@ -26,6 +26,10 @@ namespace SmartHome.Entity
         public IEnumerable<ChannelEntity> Channel { get; set; }
         public IEnumerable<ChannelStatusEntity> ChannelStatus { get; set; }
         public IEnumerable<NextAssociatedDeviceEntity> NextAssociatedDeviceId { get; set; }
-        
+
+        public IEnumerable<HomeEntity> Home { get; set; }
+
+        public IEnumerable<RoomEntity> Room { get; set; }
+
     }
 }
