@@ -15,6 +15,7 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserInfoId { get; set; }
+        public string Id { get; set; }
         public string LocalId { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }
@@ -36,6 +37,10 @@ namespace SmartHome.Model.Models
         public bool IsSMSRecipient { get; set; }
         public DateTime? LastLogIn { get; set; }
         public bool IsActive { get; set; }
+        public string Country { get; set; }
+        public bool LoginStatus { get; set; }
+        public bool RegStatus { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties
@@ -46,7 +51,9 @@ namespace SmartHome.Model.Models
         public virtual ICollection<UserType> UserTypes { get; set; }
         public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<UserStatus> UserStatuses { get; set; }
-        public virtual ICollection<Home> Homes { get; set; }
+
+        public virtual ICollection<UserHomeLink> UserHomeLinks { get; set; }
+        //public virtual ICollection<Home> Homes { get; set; }
         //public virtual ICollection<Address> Addresses { get; set; }
         //public virtual Room Room { get; set; } 
         public virtual ICollection<WebPagesRole> WebPagesRoles { get; set; }

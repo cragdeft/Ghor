@@ -62,6 +62,20 @@ namespace SmartHome.Model.ModelDataContext
                   m.MapRightKey("RoleId");
               });
 
+
+            //modelBuilder.Entity<UserInfo>()
+            //.HasMany(u => u.Homes)
+            //.WithMany(r => r.UserInfos)
+            //.Map(m =>
+            //{
+            //    m.ToTable("UserInfoHomes");               
+            //    m.MapLeftKey("HomeId");
+            //    m.MapRightKey("UserInfoId");
+            //    m.MapRightKey("UserInfoId");
+            //});
+
+            //modelBuilder.Entity<UserInfo>().HasKey(e => new { e.UserId, e.BadgeId });
+
             base.OnModelCreating(modelBuilder);
 
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
