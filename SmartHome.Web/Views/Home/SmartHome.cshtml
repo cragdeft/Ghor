@@ -15,22 +15,12 @@
     </ul>
 
     <div id="tabs-1">
-        @*Content for Tab 1 goes here.<br />
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
-
-        <div class="row row-centered">
-            @Html.Partial("_SmartHomeDeviceSwitch")
-            @Html.Partial("_SmartHomeDeviceRGBW")
+        <div class="row">
+            @Html.Partial("_SmartHomeMain")
         </div>
-
-
     </div>
 
     <div id="tabs-2">
-        @*Content for Tab 2 goes here.<br />
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-            sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.*@
         <div class="row">
             @Html.Partial("_SmartHomeRoom")
             @Html.Partial("_SmartHomeRoom")
@@ -45,9 +35,10 @@
     </div>
 
     <div id="tabs-3">
-        Content for Tab 3 goes here.<br />
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+        <div class="row row-centered">
+            @Html.Partial("_SmartHomeDeviceSwitch")
+            @Html.Partial("_SmartHomeDeviceRGBW")
+        </div>
     </div>
 
 </div>
@@ -81,7 +72,7 @@
             $('.imgwrapper').each(function (i, obj) {
                 $(obj).find('.picker').attr('id', 'picker-' + i)
                 $(obj).find('.input-color').addClass('input-color-' + i)
-                $('#picker-' + i).farbtastic('.input-color-' + i);
+                $('#picker-' + i).farbtastic('.input-color-' + i, {width: 50, height: 50 });
             });
         });
     </script>

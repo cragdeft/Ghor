@@ -333,6 +333,7 @@
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
     <Content Include="Images\SmartHome.png" />
+    <Content Include="Images\tab-home\tab-home.png" />
     <Content Include="Images\ui-icons_454545_256x240.png" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
@@ -402,6 +403,7 @@
     <Content Include="Views\Home\_SmartHomeRoom.cshtml" />
     <Content Include="Views\Home\_SmartHomeDeviceSwitch.cshtml" />
     <Content Include="Views\Home\_SmartHomeDeviceRGBW.cshtml" />
+    <Content Include="Views\Home\_SmartHomeMain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
