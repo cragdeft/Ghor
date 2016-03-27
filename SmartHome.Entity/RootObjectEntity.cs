@@ -16,6 +16,8 @@ namespace SmartHome.Entity
         //public IEnumerable<ChannelEntity> Channel { get; set; }
         //public int NextDeviceID { get; set; }
 
+        public IEnumerable<UserInfoEntity> UserInfo { get; set; }
+        public IEnumerable<UserHomeLinkEntity> UserHomeLink { get; set; }
 
         public IEnumerable<VersionEntity> Version { get; set; }
         public IEnumerable<VersionDetailEntity> VersionDetails { get; set; }

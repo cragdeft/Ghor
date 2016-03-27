@@ -62,6 +62,7 @@
     <Compile Include="RgbwStatusEntity.cs" />
     <Compile Include="RoomEntity.cs" />
     <Compile Include="RootObjectEntity.cs" />
+    <Compile Include="UserHomeLinkEntity.cs" />
     <Compile Include="UserInfoEntity.cs" />
     <Compile Include="VersionDetailEntity.cs" />
     <Compile Include="VersionEntity.cs" />
