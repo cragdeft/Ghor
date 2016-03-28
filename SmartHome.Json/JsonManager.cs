@@ -39,14 +39,13 @@ namespace SmartHome.Json
 
 
                 IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
-
                 IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
                 IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
                 List<UserHomeLink> oUserHomeLink = new List<UserHomeLink>();
-                oUserHomeLink= MergeHomeAndRoom(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
+                oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
                 //StoreUserInfo(oUserInfo);
 
-                StoreHomeAndRoom(oUserHomeLink);
+                StoreHomeAndRoomAndUser(oUserHomeLink);
 
 
                 //IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
@@ -158,18 +157,12 @@ namespace SmartHome.Json
 
         #region Merge
 
-        private List<UserHomeLink> MergeHomeAndRoom(IEnumerable<Home> oHome, IEnumerable<Room> oRoom, IEnumerable<UserInfo> oUserInfo, IEnumerable<UserHomeLinkEntity> oUserHomeLink)
+        private List<UserHomeLink> MergeHomeAndRoomAndUser(IEnumerable<Home> oHome, IEnumerable<Room> oRoom, IEnumerable<UserInfo> oUserInfo, IEnumerable<UserHomeLinkEntity> oUserHomeLink)
         {
-            //foreach (var item in oHome)
-            //{
-            //    item.Rooms = oRoom.Where(p => p.HId == item.Id).ToArray();
-            //    var temp = oUserHomeLink.Where(p => p.Home == item.Id);
-            //    if (temp != null && temp.Count() > 0)
-            //    {
-            //        //item.UserInfos = oUserInfo.Where(p => p.Id == temp.FirstOrDefault().User).ToArray();                    
-            //    }
-
-            //}            
+            foreach (var item in oHome)
+            {
+                item.Rooms = oRoom.Where(p => p.HId == item.Id).ToArray();
+            }
 
             List<UserHomeLink> oUserHomeList = new List<UserHomeLink>();
             foreach (var item in oUserHomeLink)
@@ -177,13 +170,13 @@ namespace SmartHome.Json
 
                 var userHomeLink = new UserHomeLink
                 {
-                    HId = item.Home,
-                    UInfoId=item.User,
+                    HId = Convert.ToInt32(item.Home),
+                    UInfoId = Convert.ToInt32(item.User),
                     Home = oHome.FirstOrDefault(p => p.Id == item.Home),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User),
                     IsAdmin = item.IsAdmin,
                     IsSynced = item.IsSynced,
-                    ObjectState= ObjectState.Added
+                    ObjectState = ObjectState.Added
                 };
                 oUserHomeList.Add(userHomeLink);
             }
@@ -303,23 +296,9 @@ namespace SmartHome.Json
 
 
 
-        private void StoreUserInfo(IEnumerable<Model.Models.UserInfo> oUserInfo)
-        {
-            _unitOfWorkAsync.BeginTransaction();
-            try
-            {
-                _configurationPerserService.AddOrUpdateUserInfoGraphRange(oUserInfo);
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+       
 
-            }
-            catch (Exception ex)
-            {
-                _unitOfWorkAsync.Rollback();
-            }
-        }
-
-        private void StoreHomeAndRoom(IEnumerable<Model.Models.UserHomeLink> oUserHomeLink)
+        private void StoreHomeAndRoomAndUser(IEnumerable<Model.Models.UserHomeLink> oUserHomeLink)
         {
             _unitOfWorkAsync.BeginTransaction();
             try
@@ -334,24 +313,6 @@ namespace SmartHome.Json
                 _unitOfWorkAsync.Rollback();
             }
         }
-
-        //private void StoreHomeAndRoom(IEnumerable<Model.Models.Home> oHome)
-        //{
-        //    _unitOfWorkAsync.BeginTransaction();
-        //    try
-        //    {
-        //        _configurationPerserService.AddOrUpdateHomeGraphRange(oHome);
-        //        var changes = _unitOfWorkAsync.SaveChanges();
-        //        _unitOfWorkAsync.Commit();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _unitOfWorkAsync.Rollback();
-        //    }
-        //}
-
-
 
         private void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
         {
