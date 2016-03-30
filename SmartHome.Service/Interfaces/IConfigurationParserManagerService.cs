@@ -19,5 +19,6 @@ namespace SmartHome.Service.Interfaces
         IEnumerable<VersionInfoEntity> GetsAllVersion();
 
         List<UserHomeLink> GetsHomesAllInfo();
+        List<Version> GetsAppVersionAllInfo();
     }
 }

@@ -241,7 +241,7 @@ namespace SmartHome.Tests.Steps
                 ChannelNo = 1,
                 ChannelStatuses = null,
                 LoadName = "2",
-                LoadType = null
+                LoadType = LoadType.NoLoad
             };
         }
 
@@ -269,7 +269,7 @@ namespace SmartHome.Tests.Steps
                 AuditField = null,
                 DeviceHash = "2094027173",
                 DeviceName = "demo",
-                DeviceType = (DeviceType?) 1,
+                DeviceType = (DeviceType) 1,
                 IsDeleted = false,
                 Mac = "mac",
                 Watt = null,

@@ -757,5 +757,17 @@ namespace SmartHome.Service
         }
 
         #endregion
+
+        #region Gets App version infos
+
+        public List<Version> GetsAppVersionAllInfo()
+        {
+
+            var temp = _versionRepository.Query()
+                .Include(x => x.VersionDetails).Select().ToList();
+            return temp;
+        }
+
+        #endregion
     }
 }
