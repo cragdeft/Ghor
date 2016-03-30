@@ -25,7 +25,7 @@ namespace SmartHome.Model.Models
         public string Watt { get; set; }
         public string Mac { get; set; }
         public string DType { get; set; }
-        public DeviceType? DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }
         #endregion
 
         #region  Complex Properties

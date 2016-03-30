@@ -22,7 +22,7 @@ namespace SmartHome.Model.Models
         public string LoadName { get; set; }
         //public int Status { get; set; }
         //public int Value { get; set; }
-        public LoadType? LoadType { get; set; }
+        public LoadType LoadType { get; set; }
         #endregion
 
         #region Complex Properties

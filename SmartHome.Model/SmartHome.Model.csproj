@@ -52,9 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201603280542273_initialCreate.cs" />
-    <Compile Include="Migrations\201603280542273_initialCreate.Designer.cs">
-      <DependentUpon>201603280542273_initialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201603290413014_initialCreate.cs" />
+    <Compile Include="Migrations\201603290413014_initialCreate.Designer.cs">
+      <DependentUpon>201603290413014_initialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
@@ -97,8 +97,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603280542273_initialCreate.resx">
-      <DependentUpon>201603280542273_initialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201603290413014_initialCreate.resx">
+      <DependentUpon>201603290413014_initialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
