@@ -71,8 +71,8 @@ namespace SmartHome.Web.Controllers
         // [CustomAuthorize(Roles = "User", Users = "1,2,3")]
         public ActionResult Index()
         {
-            //return RedirectToAction("SmartHome");
-            return View("SmartHome");
+            return RedirectToAction("SmartHome");
+            //return View("SmartHome");
             //var temp = User;
             #region Parese Json
 
@@ -197,6 +197,19 @@ namespace SmartHome.Web.Controllers
         void Message_NotifyEvent(CustomEventArgs customEventArgs)
         {
             //new JsonManager().JsonProcess(customEventArgs.Key);
+        }
+
+
+        public ActionResult SmartHome(m2mMessageViewModel model)
+
+        {
+            ViewBag.Message = "Smart Home";
+
+            //model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Subscribe(model.MessgeTopic);
+
+            var temp = _configurationService.GetsHomesAllInfo();
+            return View(temp);
+            //return View("About", model);
         }
 
 

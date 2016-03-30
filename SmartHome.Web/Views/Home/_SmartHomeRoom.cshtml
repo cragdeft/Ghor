@@ -1,78 +1,128 @@
-﻿<div class="col-sm-4">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-2 pull-left">
-                    <img src="~/Images/bedroom.png" alt="bed room" style="width:44px;height:44px;" />
-                </div>
-                <div class="col-sm-6">
-                    <h4 class="panel-title panel-header-label-color"><strong><span>Bed room</span></strong></h4>
-                    <small><span>on/off status</span></small>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-offset-2 col-sm-2  pull-left">
-                    <img src="~/Images/device/fan_off.png" alt="bed room" style="width:40px;height:40px;" />
-                </div>
-                <div class="col-sm-6">
-                    <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
-                    <small>
-                        <span class="smarthome-text-on">
-                            On-2
-                        </span>
-                        <span>
-                            |
-                        </span>
-                        <span class="smarthome-text-off">
-                            Off-1
-                        </span>
-                    </small>
-                </div>
-            </div>
-            <hr class="separator-border-1" />
+﻿@using SmartHome.Model.Enums
+@model List<SmartHome.Model.Models.Room>
 
-            <div class="row">
-                <div class="col-sm-offset-2 col-sm-2  pull-left">
-                    <img src="~/Images/device/bulb_off.png" alt="bed room" style="width:44px;height:44px;" />
-                </div>
-                <div class="col-sm-6">
-                    <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
-                    <small>
-                        <span class="smarthome-text-on">
-                            On-2
-                        </span>
-                        <span>
-                            |
-                        </span>
-                        <span class="smarthome-text-off">
-                            Off-1
-                        </span>
-                    </small>
+
+@foreach (var item in Model)
+{
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-2 pull-left">
+                        <img src="~/Images/bedroom.png" alt="bed room" style="width:44px;height:44px;" />
+                    </div>
+                    <div class="col-sm-6">
+                        <h4 class="panel-title panel-header-label-color"><strong><span>@item.Name</span></strong></h4>
+                        <small><span>on/off status</span></small>
+                    </div>
                 </div>
             </div>
-            <hr class="separator-border-1"/>           
-            <div class="row">
-                <div class="col-sm-offset-2 col-sm-2  pull-left">
-                    <img src="~/Images/device/cfl_off.png" alt="bed room" style="width:44px;height:44px;" />
-                </div>
-                <div class="col-sm-6">
-                    <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
-                    <small>
-                        <span class="smarthome-text-on">
-                            On-2
-                        </span>
-                        <span>
-                            |
-                        </span>
-                        <span class="smarthome-text-off">
-                            Off-1
-                        </span>
-                    </small>
-                </div>
+
+            <div class="panel-body">
+                @foreach (var nextRoomDevice in item.Devices.GroupBy(p => p.DeviceType))
+                {
+
+                    <div class="row">
+                        <div class="col-sm-offset-2 col-sm-2  pull-left">
+                            @switch (nextRoomDevice.Key)
+                            {
+                                case DeviceType.SmartSwitch6g:
+                                    <img src="~/Images/smart-devices/SmartSwitch.png" alt="Smart Switch" style="width:40px;height:40px;" />
+                                    break;
+                                case DeviceType.SmartRainbow12:
+                                    <img src="~/Images/smart-devices/SmartRainbow.png" alt="Smart Rainbow" style="width:40px;height:40px;" />
+                                    break;
+                                case DeviceType.Curtain:
+                                    <img src="~/Images/smart-devices/SmartCurtain.png" alt="Smart Curtain" style="width:40px;height:40px;" />
+                                    break;
+                                case DeviceType.Camera:
+                                    <img src="~/Images/smart-devices/SmartCamera.png" alt="Smart Camera" style="width:40px;height:40px;" />
+                                    break;
+                                default:
+                                    break;
+                            }
+                            @*@if (nextRoomDevice.Key == 0)
+                                {
+
+                                }*@
+                            @*else if (nextRoomDevice.Key == 1)
+                                {
+                                    <img src="~/Images/device/fan_off.png" alt="bed room" style="width:40px;height:40px;" />
+                                }
+                                else if (nextRoomDevice.Key == 2)
+                                {
+                                    <img src="~/Images/device/fan_off.png" alt="bed room" style="width:40px;height:40px;" />
+
+                                }
+                                else if (nextRoomDevice.Key == 3)
+                                {
+
+                                }*@
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h6 class="panel-title"><span class="text-grey">@nextRoomDevice.Key.ToString()</span></h6>
+                            <small>
+                                <span class="smarthome-text-on">
+                                    Total-@nextRoomDevice.Count().ToString()
+                                </span>
+                                @*<span>
+                                        |
+                                    </span>
+                                    <span class="smarthome-text-off">
+                                        Off-1
+                                    </span>*@
+                            </small>
+                        </div>
+                    </div>
+
+                    <hr class="separator-border-1" />
+
+                    @*<div class="row">
+                            <div class="col-sm-offset-2 col-sm-2  pull-left">
+                                <img src="~/Images/device/bulb_off.png" alt="bed room" style="width:44px;height:44px;" />
+                            </div>
+                            <div class="col-sm-6">
+                                <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
+                                <small>
+                                    <span class="smarthome-text-on">
+                                        On-2
+                                    </span>
+                                    <span>
+                                        |
+                                    </span>
+                                    <span class="smarthome-text-off">
+                                        Off-1
+                                    </span>
+                                </small>
+                            </div>
+                        </div>
+                        <hr class="separator-border-1" />
+                        <div class="row">
+                            <div class="col-sm-offset-2 col-sm-2  pull-left">
+                                <img src="~/Images/device/cfl_off.png" alt="bed room" style="width:44px;height:44px;" />
+                            </div>
+                            <div class="col-sm-6">
+                                <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
+                                <small>
+                                    <span class="smarthome-text-on">
+                                        On-2
+                                    </span>
+                                    <span>
+                                        |
+                                    </span>
+                                    <span class="smarthome-text-off">
+                                        Off-1
+                                    </span>
+                                </small>
+                            </div>
+                        </div>*@
+                }
+
+
+
             </div>
-            
         </div>
     </div>
-</div>
+}
+

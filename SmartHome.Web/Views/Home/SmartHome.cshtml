@@ -1,4 +1,5 @@
-﻿
+﻿@model List<SmartHome.Model.Models.UserHomeLink>
+
 @{
     ViewBag.Title = "SmartHome";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,22 +23,31 @@
 
     <div id="tabs-2">
         <div class="row">
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
-            @Html.Partial("_SmartHomeRoom")
+
+            @foreach (var item in Model)
+            {
+                @Html.Partial("_SmartHomeRoom", item.Home.Rooms.ToList())
+            }
+
+            @*@Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")
+                @Html.Partial("_SmartHomeRoom")*@
         </div>
     </div>
 
     <div id="tabs-3">
         <div class="row row-centered">
-            @Html.Partial("_SmartHomeDeviceSwitch")
-            @Html.Partial("_SmartHomeDeviceRGBW")
+            
+            @Html.Partial("_SmartHomeDevice", Model)
+
+
+            @*@Html.Partial("_SmartHomeDeviceSwitch")
+                @Html.Partial("_SmartHomeDeviceRGBW")*@
         </div>
     </div>
 
@@ -72,7 +82,7 @@
             $('.imgwrapper').each(function (i, obj) {
                 $(obj).find('.picker').attr('id', 'picker-' + i)
                 $(obj).find('.input-color').addClass('input-color-' + i)
-                $('#picker-' + i).farbtastic('.input-color-' + i, {width: 50, height: 50 });
+                $('#picker-' + i).farbtastic('.input-color-' + i, { width: 50, height: 50 });
             });
         });
     </script>
