@@ -17,9 +17,10 @@ namespace SmartHome.Service
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
-        private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<Device> _deviceRepository;
+        private readonly IRepositoryAsync<Room> _roomRepository;
         private string _email;
         #endregion
 
@@ -27,19 +28,20 @@ namespace SmartHome.Service
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _userInfoRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
-            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _userHomeLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
             _versionRepository = _unitOfWorkAsync.RepositoryAsync<Version>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
+            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
         }
 
 
 
-        #region Home AddOrUpdateGraphRange
+        #region Home-User-Room AddOrUpdateGraphRange
         public IEnumerable<UserHomeLink> AddOrUpdateHomeGraphRange(IEnumerable<UserHomeLink> model)
         {
             List<UserHomeLink> userHomeModel = new List<UserHomeLink>();
             userHomeModel = FillHomeInformations(model, userHomeModel);
-            _userHomeRepository.InsertOrUpdateGraphRange(userHomeModel);
+            _userHomeLinkRepository.InsertOrUpdateGraphRange(userHomeModel);
             return userHomeModel;
         }
 
@@ -48,7 +50,7 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<UserHomeLink> temp = IsHomeExists(item.HId);
+                IEnumerable<UserHomeLink> temp = IsHomeExists(item.HId, item.UInfoId);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -62,13 +64,14 @@ namespace SmartHome.Service
                     foreach (var existingItem in temp.ToList())
                     {
                         //modify version                    
-                        var temp2 = item.Home;
+                        //var temp2 = item.Home;
 
-                        //FillExistingHomeInfo(item, existingItem);
+                        FillExistingHomeInfo(item.Home, existingItem.Home);
+                        FillExistingUserInfo(item.UserInfo, existingItem.UserInfo);
 
-                        //if (item.Rooms != null && item.Rooms.Count > 0)
+                        //if (item.Home != null)
                         //{
-                        //    AddOrEditExistingRoomItems(item, existingItem);
+                        //    AddOrEditExistingHomeItems(item.Home, existingItem.Home);
                         //}
 
                     }
@@ -78,7 +81,27 @@ namespace SmartHome.Service
             return homeModel;
         }
 
+        private void FillExistingHomeInfo(Home item, Home existingItem)
+        {
 
+            existingItem.Id = item.Id;
+            existingItem.Name = item.Name;
+            existingItem.TimeZone = item.TimeZone;
+            //existingItem.RegistrationKey = item.RegistrationKey;
+            //existingItem.HardwareId = item.HardwareId;
+            //existingItem.TrialCount = item.TrialCount;
+            existingItem.Comment = item.Comment;
+            existingItem.IsActive = item.IsActive;
+            existingItem.IsDefault = item.IsDefault;
+            existingItem.IsAdmin = item.IsAdmin;
+            existingItem.MeshMode = item.MeshMode;
+            existingItem.Phone = item.Phone;
+            existingItem.PassPhrase = item.PassPhrase;
+            existingItem.IsInternet = item.IsInternet;
+            existingItem.ObjectState = ObjectState.Modified;
+
+            AddOrEditExistingRoomItems(item, existingItem);
+        }
 
         private void AddOrEditExistingRoomItems(Home item, Home existingItem)
         {
@@ -111,31 +134,12 @@ namespace SmartHome.Service
             tempExistingRoomDetail.AuditField = new AuditFields();
         }
 
-        private void FillExistingHomeInfo(Home item, Home existingItem)
+        private IEnumerable<UserHomeLink> IsHomeExists(int HId, int UInfoId)
         {
-
-            existingItem.Id = item.Id;
-            existingItem.Name = item.Name;
-            existingItem.TimeZone = item.TimeZone;
-            //existingItem.RegistrationKey = item.RegistrationKey;
-            //existingItem.HardwareId = item.HardwareId;
-            //existingItem.TrialCount = item.TrialCount;
-            existingItem.Comment = item.Comment;
-            existingItem.IsActive = item.IsActive;
-            existingItem.IsDefault = item.IsDefault;
-            existingItem.IsAdmin = item.IsAdmin;
-            existingItem.MeshMode = item.MeshMode;
-            existingItem.Phone = item.Phone;
-            existingItem.PassPhrase = item.PassPhrase;
-            existingItem.IsInternet = item.IsInternet;
-
-            existingItem.ObjectState = ObjectState.Modified;
+            return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
 
-        private IEnumerable<UserHomeLink> IsHomeExists(string key)
-        {
-            return _userHomeRepository.Query(e => e.HId == key).Include(x=>x.Home).Include(x=>x.UserInfo).Select();
-        }
+        //.Include(x => x.Channels.Select(y => y.ChannelStatuses))
 
 
 
@@ -188,7 +192,6 @@ namespace SmartHome.Service
 
         private void FillExistingUserInfo(UserInfo item, UserInfo existingItem)
         {
-            existingItem.UserInfoId = item.UserInfoId;
             existingItem.Id = item.Id;
             existingItem.LocalId = item.LocalId;
             existingItem.Password = item.Password;
@@ -428,15 +431,20 @@ namespace SmartHome.Service
         #endregion
 
 
-
-
-
         #region device AddOrUpdateGraphRange
 
 
-        public IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<Device> model)
+        public IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<Device> model, IEnumerable<DeviceEntity> modelEntity)
         {
             List<Device> deviceModel = new List<Device>();
+            #region MyRegion
+            foreach (Device item in model)
+            {
+                item.Room = _roomRepository.Find(modelEntity.FirstOrDefault(p => p.Id == item.Id).RoomId);
+            }
+
+            #endregion
+
             deviceModel = FillDeviceInformations(model, deviceModel);
             _deviceRepository.InsertOrUpdateGraphRange(deviceModel);
             return deviceModel;
@@ -621,12 +629,13 @@ namespace SmartHome.Service
             existingItem.Mac = item.Mac;
             existingItem.DeviceType = item.DeviceType;
             existingItem.AuditField = new AuditFields();
+            existingItem.Room = item.Room;
 
         }
 
         private IEnumerable<Device> IsDeviceExists(int key, string deviceHash)
         {
-            return _deviceRepository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.RgbwStatuses).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select();
+            return _deviceRepository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Room).Include(x => x.RgbwStatuses).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select();
         }
 
 
@@ -731,5 +740,21 @@ namespace SmartHome.Service
             }
             return vInfoEntity;
         }
+
+        #region Gets homes infos
+
+        public List<UserHomeLink> GetsHomesAllInfo()
+        {
+            //var temp = _userHomeLinkRepository.Query().Include(x => x.Home).Include(x => x.Home.Rooms.Select(y => y.Devices.Select(z => z.DeviceStatus))).Include(x => x.UserInfo).Select().ToList();
+            var temp = _userHomeLinkRepository.Query().Include(x => x.Home)
+                .Include(x => x.Home.Rooms.Select(y => y.Devices.Select(z => z.Channels.Select(a => a.ChannelStatuses))))
+                .Include(x => x.Home.Rooms.Select(y => y.Devices.Select(z => z.DeviceStatus)))
+                .Include(x => x.UserInfo).Select().ToList();
+
+            return temp;
+
+        }
+
+        #endregion
     }
 }
