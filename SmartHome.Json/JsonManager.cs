@@ -66,7 +66,7 @@ namespace SmartHome.Json
                 IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
                 IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
                 MergeDeviceDeviceStatusAndChannel(oDevice, oRgbwStatus, oChannel, oChannelStatus, oDeviceStatus);
-                StoreDeviceAndChannel(oDevice);
+                StoreDeviceAndChannel(oDevice, oRootObject.Device);
 
             }
             catch (Exception ex)
@@ -220,11 +220,6 @@ namespace SmartHome.Json
         private IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
         {
             Mapper.CreateMap<DeviceEntity, Model.Models.Device>()
-            //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
-            //.ForMember(dest => dest.DeviceVersion, opt => opt.MapFrom(src => src.Version))
-            //.ForMember(dest => dest.DType, opt => opt.MapFrom(src => src.DeviceType))
-            //.ForMember(dest => dest.DType, opt => opt.MapFrom(src => (int)GetEnumValue<DeviceType>(src.DeviceType)))//enum
-            //.ForMember(dest => dest.DeviceType, opt => opt.MapFrom(src => (DeviceType)src.DType))//, opt => opt.UseValue(DeviceType))
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
             IEnumerable<Model.Models.Device> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<Model.Models.Device>>(myObj.Device);
@@ -278,12 +273,12 @@ namespace SmartHome.Json
         #endregion
 
         #region Store
-        private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice)
+        private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice, IEnumerable<DeviceEntity> oDeviceEntity)
         {
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                _configurationPerserService.AddOrUpdateDeviceGraphRange(oDevice);
+                _configurationPerserService.AddOrUpdateDeviceGraphRange(oDevice, oDeviceEntity);
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
 
@@ -296,7 +291,7 @@ namespace SmartHome.Json
 
 
 
-       
+
 
         private void StoreHomeAndRoomAndUser(IEnumerable<Model.Models.UserHomeLink> oUserHomeLink)
         {

@@ -332,7 +332,7 @@ namespace SmartHome.Json
             Channel channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
-                channel.LoadType = (LoadType?)Get3RdBitValueOfCommunicationProtocol();
+                channel.LoadType = (LoadType)Get3RdBitValueOfCommunicationProtocol();
                 LoadType = (LoadType) channel.LoadType;
                 _commandPerserService.UpdateChannel(channel);
             }
