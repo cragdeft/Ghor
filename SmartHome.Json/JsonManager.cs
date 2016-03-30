@@ -20,60 +20,56 @@ namespace SmartHome.Json
 {
     public class JsonManager
     {
-        private IUnitOfWorkAsync _unitOfWorkAsync;
-        private IConfigurationParserManagerService _configurationPerserService;
-
         public JsonManager()
         {
-            IDataContextAsync context = new SmartHomeDataContext();
-            _unitOfWorkAsync = new UnitOfWork(context);
-            _configurationPerserService = new ConfigurationParserManagerService(_unitOfWorkAsync);
+
         }
 
         public void JsonProcess(string JsonString)
         {
             try
             {
-
                 RootObjectEntity oRootObject = JsonDesrialized(JsonString);
-
-
-                IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
-                IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
-                IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
-                List<UserHomeLink> oUserHomeLink = new List<UserHomeLink>();
-                oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
-                //StoreUserInfo(oUserInfo);
-
-                StoreHomeAndRoomAndUser(oUserHomeLink);
-
-
-                //IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
-                //MergeVersionAndVersionDetail(oVersion, oVersionDetail);
-                //StoreVersionAndVersionDetail(oVersion);
-
-
-
-                IEnumerable<Model.Models.Version> oVersion = ConfigureVersion(oRootObject);
-                IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
-                MergeVersionAndVersionDetail(oVersion, oVersionDetail);
-                StoreVersionAndVersionDetail(oVersion);
-
-                IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
-                //new
-                IEnumerable<Model.Models.RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
-                IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
-                IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
-                IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
-                MergeDeviceDeviceStatusAndChannel(oDevice, oRgbwStatus, oChannel, oChannelStatus, oDeviceStatus);
-                StoreDeviceAndChannel(oDevice, oRootObject.Device);
-
+                SaveUpdateHomeLink(oRootObject);
+                SaveUpdateVersion(oRootObject);
+                SaveUpdateDevice(oRootObject);
             }
             catch (Exception ex)
             {
 
             }
         }
+
+        #region Save Information
+        private void SaveUpdateDevice(RootObjectEntity oRootObject)
+        {
+            IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
+            IEnumerable<Model.Models.RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
+            IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
+            IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
+            IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
+            MergeDeviceDeviceStatusAndChannel(oDevice, oRgbwStatus, oChannel, oChannelStatus, oDeviceStatus);
+            StoreDeviceAndChannel(oDevice, oRootObject.Device);
+        }
+
+        private void SaveUpdateVersion(RootObjectEntity oRootObject)
+        {
+            IEnumerable<Model.Models.Version> oVersion = ConfigureVersion(oRootObject);
+            IEnumerable<Model.Models.VersionDetail> oVersionDetail = ConfigureVersionDetail(oRootObject);
+            MergeVersionAndVersionDetail(oVersion, oVersionDetail);
+            StoreVersionAndVersionDetail(oVersion);
+        }
+
+        private void SaveUpdateHomeLink(RootObjectEntity oRootObject)
+        {
+            IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
+            IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
+            IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
+            List<UserHomeLink> oUserHomeLink = new List<UserHomeLink>();
+            oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
+            StoreHomeAndRoomAndUser(oUserHomeLink);
+        } 
+        #endregion
 
         public T JsonProcess<T>(string JsonString)
         {
@@ -84,7 +80,6 @@ namespace SmartHome.Json
         {
             return JsonConvert.DeserializeObject<RootObjectEntity>(JsonString);
         }
-
 
         #region Version Conversion
         private IEnumerable<Model.Models.VersionDetail> ConfigureVersionDetail(RootObjectEntity oRootObject)
@@ -109,47 +104,7 @@ namespace SmartHome.Json
         }
 
 
-        #region Home
 
-        private IEnumerable<Model.Models.Home> ConfigureHome(RootObjectEntity myObj)
-        {
-            Mapper.CreateMap<HomeEntity, Model.Models.Home>()
-                        .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))//audit field
-                        .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
-            IEnumerable<Model.Models.Home> oHome = Mapper.Map<IEnumerable<HomeEntity>, IEnumerable<Model.Models.Home>>(myObj.Home);
-            return oHome;
-        }
-        #endregion
-
-        #region Room
-
-        private IEnumerable<Model.Models.Room> ConfigureRoom(RootObjectEntity oRootObject)
-        {
-            Mapper.CreateMap<RoomEntity, Model.Models.Room>()
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
-            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
-            IEnumerable<Model.Models.Room> oRoom = Mapper.Map<IEnumerable<Entity.RoomEntity>, IEnumerable<Model.Models.Room>>(oRootObject.Room);
-            return oRoom;
-        }
-
-
-        #endregion
-
-
-        #region MyRegion
-
-        private IEnumerable<Model.Models.UserInfo> ConfigureUserInfo(RootObjectEntity oRootObject)
-        {
-            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
-            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
-            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
-            IEnumerable<Model.Models.UserInfo> oUserInfo = Mapper.Map<IEnumerable<Entity.UserInfoEntity>, IEnumerable<Model.Models.UserInfo>>(oRootObject.UserInfo);
-            return oUserInfo;
-        }
-
-
-        #endregion
 
 
 
@@ -190,8 +145,6 @@ namespace SmartHome.Json
             {
                 item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
             }
-
-            //oVersion.ToList().ForEach(p => p.VersionDetails = oVersionDetail.Where(q => q.VId == p.Id).ToList());
         }
 
         private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<RgbwStatus> oRgbwStatus, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
@@ -212,11 +165,9 @@ namespace SmartHome.Json
         #endregion
 
 
-        #region Device conversion
+        #region Configuration
 
-
-
-
+        #region Device
         private IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
         {
             Mapper.CreateMap<DeviceEntity, Model.Models.Device>()
@@ -235,14 +186,21 @@ namespace SmartHome.Json
             return oDevice;
         }
 
+        private IEnumerable<Model.Models.DeviceStatus> ConfigureDeviceStatus(RootObjectEntity myObj)
+        {
+            Mapper.CreateMap<DeviceStatusEntity, Model.Models.DeviceStatus>()
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
+            IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = Mapper.Map<IEnumerable<DeviceStatusEntity>, IEnumerable<Model.Models.DeviceStatus>>(myObj.DeviceStatus);
+            return oDeviceStatus;
+        }
+        #endregion
+
+        #region Channel
         private IEnumerable<Model.Models.Channel> ConfigureChannel(RootObjectEntity myObj)
         {
 
             Mapper.CreateMap<ChannelEntity, Model.Models.Channel>()
-            //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
-            //.ForMember(dest => dest.DId, opt => opt.MapFrom(src => src.DeviceID))
-            //.ForMember(dest => dest.LoadType, opt => opt.UseValue(58))
-            //.ForMember(dest => dest.LoadType, opt => opt.MapFrom(src => (int)GetEnumValue<LoadType>(src.LoadType)))//enum
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
             IEnumerable<Model.Models.Channel> oDevice = Mapper.Map<IEnumerable<ChannelEntity>, IEnumerable<Model.Models.Channel>>(myObj.Channel);
@@ -257,71 +215,115 @@ namespace SmartHome.Json
             IEnumerable<Model.Models.ChannelStatus> oDevice = Mapper.Map<IEnumerable<ChannelStatusEntity>, IEnumerable<Model.Models.ChannelStatus>>(myObj.ChannelStatus);
             return oDevice;
         }
+        #endregion
 
+        #region Home
 
-
-        private IEnumerable<Model.Models.DeviceStatus> ConfigureDeviceStatus(RootObjectEntity myObj)
+        private IEnumerable<Model.Models.Home> ConfigureHome(RootObjectEntity myObj)
         {
-            Mapper.CreateMap<DeviceStatusEntity, Model.Models.DeviceStatus>()
-            //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ID))
-            //.ForMember(dest => dest.DId, opt => opt.MapFrom(src => src.DeviceID))
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
-            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
-            IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = Mapper.Map<IEnumerable<DeviceStatusEntity>, IEnumerable<Model.Models.DeviceStatus>>(myObj.DeviceStatus);
-            return oDeviceStatus;
+            Mapper.CreateMap<HomeEntity, Model.Models.Home>()
+                        .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))//audit field
+                        .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
+            IEnumerable<Model.Models.Home> oHome = Mapper.Map<IEnumerable<HomeEntity>, IEnumerable<Model.Models.Home>>(myObj.Home);
+            return oHome;
         }
+        #endregion
+
+        #region Room
+
+        private IEnumerable<Model.Models.Room> ConfigureRoom(RootObjectEntity oRootObject)
+        {
+            Mapper.CreateMap<RoomEntity, Model.Models.Room>()
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
+            IEnumerable<Model.Models.Room> oRoom = Mapper.Map<IEnumerable<Entity.RoomEntity>, IEnumerable<Model.Models.Room>>(oRootObject.Room);
+            return oRoom;
+        }
+
+
+        #endregion
+
+        #region UserInfo
+
+        private IEnumerable<Model.Models.UserInfo> ConfigureUserInfo(RootObjectEntity oRootObject)
+        {
+            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
+            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
+            IEnumerable<Model.Models.UserInfo> oUserInfo = Mapper.Map<IEnumerable<Entity.UserInfoEntity>, IEnumerable<Model.Models.UserInfo>>(oRootObject.UserInfo);
+            return oUserInfo;
+        }
+
+
+        #endregion
+
         #endregion
 
         #region Store
         private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice, IEnumerable<DeviceEntity> oDeviceEntity)
         {
-            _unitOfWorkAsync.BeginTransaction();
-            try
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                _configurationPerserService.AddOrUpdateDeviceGraphRange(oDevice, oDeviceEntity);
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+                IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
 
-            }
-            catch (Exception ex)
-            {
-                _unitOfWorkAsync.Rollback();
+                try
+                {
+                    unitOfWork.BeginTransaction();
+                    service.AddOrUpdateDeviceGraphRange(oDevice, oDeviceEntity);
+                    var changes = unitOfWork.SaveChanges();
+                    unitOfWork.Commit();
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.Rollback();
+                }
             }
         }
 
-
-
-
-
         private void StoreHomeAndRoomAndUser(IEnumerable<Model.Models.UserHomeLink> oUserHomeLink)
         {
-            _unitOfWorkAsync.BeginTransaction();
-            try
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                _configurationPerserService.AddOrUpdateHomeGraphRange(oUserHomeLink);
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+                IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
 
+                try
+                {
+                    unitOfWork.BeginTransaction();
+                    service.AddOrUpdateHomeGraphRange(oUserHomeLink);
+                    var changes = unitOfWork.SaveChanges();
+                    unitOfWork.Commit();
+
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.Rollback();
+                }
             }
-            catch (Exception ex)
-            {
-                _unitOfWorkAsync.Rollback();
-            }
+
         }
 
         private void StoreVersionAndVersionDetail(IEnumerable<Model.Models.Version> oVersion)
         {
-            _unitOfWorkAsync.BeginTransaction();
-            try
-            {
-                _configurationPerserService.AddOrUpdateVersionGraphRange(oVersion);
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
 
-            }
-            catch (Exception ex)
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                _unitOfWorkAsync.Rollback();
+                IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
+
+                try
+                {
+                    unitOfWork.BeginTransaction();
+                    service.AddOrUpdateVersionGraphRange(oVersion);
+                    var changes = unitOfWork.SaveChanges();
+                    unitOfWork.Commit();
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.Rollback();
+                }
             }
         }
         #endregion
