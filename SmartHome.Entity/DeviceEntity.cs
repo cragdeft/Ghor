@@ -26,6 +26,8 @@ namespace SmartHome.Entity
        // public string DeviceType { get; set; }
         public DeviceType? DeviceType { get; set; }
         public int Watt { get; set; }
+        [JsonProperty("Room")]
+        public int RoomId { get; set; }
         #endregion
 
     }
