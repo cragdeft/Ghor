@@ -207,8 +207,10 @@ namespace SmartHome.Web.Controllers
 
             //model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Subscribe(model.MessgeTopic);
 
-            var temp = _configurationService.GetsHomesAllInfo();
-            return View(temp);
+            var tempHomeAll = _configurationService.GetsHomesAllInfo();
+            var tempVersionAll = _configurationService.GetsAppVersionAllInfo();
+            ViewBag.AppVersion = tempVersionAll;
+            return View(tempHomeAll);
             //return View("About", model);
         }
 

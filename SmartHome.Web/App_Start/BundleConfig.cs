@@ -34,6 +34,10 @@ namespace SmartHome.Web
             //css
             bundles.Add(new StyleBundle("~/Content/cssjqryUi").Include(
                    "~/Content/themes/base/all.css"));
+
+            //css font awesome
+            bundles.Add(new StyleBundle("~/Content/cssfontAwesome").Include(
+                   "~/Content/fontawesome/css/font-awesome.css"));
         }
     }
 }

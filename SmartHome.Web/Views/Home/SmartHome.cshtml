@@ -3,10 +3,14 @@
 @{
     ViewBag.Title = "SmartHome";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SmartHome.Model.Models.Version> appVersion = ViewBag.AppVersion;
 }
 
-<h2>Smart Home</h2>
-
+<h2 class="padding-bottom-9">
+    <span>
+        Welcome to <strong> @Model.First().Home.Name </strong>
+    </span>
+</h2>
 <div id="tabs">
 
     <ul>
@@ -17,7 +21,12 @@
 
     <div id="tabs-1">
         <div class="row">
-            @Html.Partial("_SmartHomeMain")
+            @if (appVersion != null && appVersion.Count() > 0)
+            {
+                @Html.Partial("_SmartHomeMain", appVersion)
+
+            }
+
         </div>
     </div>
 
@@ -42,7 +51,7 @@
 
     <div id="tabs-3">
         <div class="row row-centered">
-            
+
             @Html.Partial("_SmartHomeDevice", Model)
 
 

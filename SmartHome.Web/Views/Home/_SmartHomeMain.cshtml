@@ -1,10 +1,12 @@
-﻿<div class="col-sm-4 div-center">
+﻿@model List<SmartHome.Model.Models.Version>
+
+<div class="col-sm-4 div-center">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row padding-20">
              
                 <div class="col-sm-10">
-                    <h4 class="panel-title panel-header-label-color"><span>Welcome to<strong> smart home</strong></span></h4>
+                    <h4 class="panel-title panel-header-label-color"><span>Welcome to<strong> @Model.First().AppName</strong></span></h4>
                   
                 </div>
             </div>
@@ -21,11 +23,11 @@
                     <div class="arrow_box">
                         <div class="padding-10">
                             <div>
-                                <span>Current Version</span>
+                                <span>Current App Version</span>
                             </div>
 
                             <div>
-                                <strong><span>1.0.1</span></strong>
+                                <strong><span>@Model.First().AppVersion</span></strong>
                             </div>
                         </div>
 
