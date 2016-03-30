@@ -13,8 +13,8 @@
             switch (nextDevice.DeviceType)
             {
                 case DeviceType.SmartSwitch6g:
-                    @Html.SmartSwitch6g(nextDevice)
-                    @*@Html.Partial("_SmartHomeDeviceSwitch", nextDevice)*@
+                    @*@Html.SmartSwitch6g(nextDevice)*@
+                    @Html.Partial("_SmartHomeDeviceSwitch", nextDevice)
                     break;
                 case DeviceType.SmartRainbow12:
                     @Html.Partial("_SmartHomeDeviceRGBW")

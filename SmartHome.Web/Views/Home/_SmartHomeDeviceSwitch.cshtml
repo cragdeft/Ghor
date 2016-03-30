@@ -6,259 +6,70 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="panel-title panel-header-label-color"><strong><span>@Model.DeviceType.ToString()</span></strong></h4>
-                    @*<small><span>Bed room</span></small>*@
+                    <h4 class="panel-title panel-header-label-color"><strong><span>@Model.DeviceName</span></strong></h4>
                 </div>
             </div>
         </div>
         <div class="panel-body switch-body">
             <div class="text-center">
                 <div class="container margin-20 padding-20">
-
-                    @Html.Raw("<div class=\"row\">")
-                    @foreach (var nextChannel in Model.Channels.OrderBy(p => p.ChannelNo))
-                    {                        
-
-                        
-
-                            switch (nextChannel.ChannelNo)
-                            {
-                                case 1:
-                                    @*@Html.Partial("_SmartHomeDeviceSwitch", nextDevice)*@
-
-                                    <div class="col-sm-4">
-                                        <div class="row">
-                                            @switch (nextChannel.LoadType)
-                                            {
-                                                case LoadType.NoLoad:
-                                                    <img src="~/Images/device/default_state.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.NonDimmableBulb:
-                                                    <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.DimmableBulb:
-                                                    <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Fan:
-                                                    <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Tubelight:
-                                                    <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Cfl:
-                                                    <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                            }
-
-                                        </div>
-                                        <div class="row">
-                                            <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                        </div>
-                                    </div>
-
-                                            <div class="col-sm-4">
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="row">
-                                                    <img src="~/Images/device/indicator_on.png" alt="bed room" />
-                                                </div>
-                                                <div class="row">
-                                                    <span class="font-size-10 text-grey">Indicator</span>
-                                                </div>
-                                            </div>
-                                    break;
-
-                                case 2:
-
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="row">
-                                                @switch (nextChannel.LoadType)
-                                                {
-                                                    case LoadType.NoLoad:
-                                                        <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.NonDimmableBulb:
-                                                        <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.DimmableBulb:
-                                                        <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Fan:
-                                                        <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Tubelight:
-                                                        <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Cfl:
-                                                        <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                }
-                                            </div>
-                                            <div class="row">
-                                                <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-4">
-
-                                        </div>
-
-                                        <div class="col-sm-4">
-
-                                        </div>
-
-                                    </div>
-                                    break;
-                                case 3:
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="row">
-                                                @switch (nextChannel.LoadType)
-                                                {
-                                                    case LoadType.NoLoad:
-                                                        <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.NonDimmableBulb:
-                                                        <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.DimmableBulb:
-                                                        <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Fan:
-                                                        <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Tubelight:
-                                                        <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                    case LoadType.Cfl:
-                                                        <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                        break;
-                                                }
-                                            </div>
-                                            <div class="row">
-                                                <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-4">
-
-                                        </div>
-
-                                        <div class="col-sm-4">
-
-                                        </div>
-
-                                    </div>
-                                    break;
-                                case 4:
-                                  
-                                    @Html.Raw("<div class=\"row\">")
-                                    <div class="col-sm-4">
-                                        <div class="row">
-                                            @switch (nextChannel.LoadType)
-                                            {
-                                                case LoadType.NoLoad:
-                                                    <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.NonDimmableBulb:
-                                                    <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.DimmableBulb:
-                                                    <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Fan:
-                                                    <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Tubelight:
-                                                    <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Cfl:
-                                                    <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                            }
-                                        </div>
-                                        <div class="row">
-                                            <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                        </div>
-                                    </div>
-
-                                   
-
-                                            @*</div>*@
-
-                                break;
-                            case 5:
-                                <div class="col-sm-4">
-                                    <div class="row">
-                                        @switch (nextChannel.LoadType)
-                                        {
-                                            case LoadType.NoLoad:
-                                                <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                break;
-                                            case LoadType.NonDimmableBulb:
-                                                <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                break;
-                                            case LoadType.DimmableBulb:
-                                                <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                break;
-                                            case LoadType.Fan:
-                                                <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                break;
-                                            case LoadType.Tubelight:
-                                                <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                break;
-                                            case LoadType.Cfl:
-                                                <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                break;
-                                        }
-                                    </div>
-                                    <div class="row">
-                                        <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 1))
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <img src="~/Images/device/indicator_on.png" alt="bed room" />
+                            </div>
+                            <div class="row">
+                                <span class="font-size-10 text-grey">indicator</span>
+                            </div>
+                        </div>
+                    </div>
 
 
-                                    break;
-                                case 6:
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 2))
+                        </div>
 
-                                    <div class="col-sm-4">
-                                        <div class="row">
-                                            @switch (nextChannel.LoadType)
-                                            {
-                                                case LoadType.NoLoad:
-                                                    <img src="~/Images/device/default_state.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.NonDimmableBulb:
-                                                    <img src="~/Images/device/bulb_off.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.DimmableBulb:
-                                                    <img src="~/Images/device/dimmable_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Fan:
-                                                    <img src="~/Images/device/fan_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Tubelight:
-                                                    <img src="~/Images/device/tube_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                                case LoadType.Cfl:
-                                                    <img src="~/Images/device/cfl_on.png" alt=@nextChannel.LoadName />
-                                                    break;
-                                            }
-                                        </div>
-                                        <div class="row">
-                                            <span class="font-size-10 text-grey">@nextChannel.LoadName</span>
-                                        </div>
-                                    </div>
-                                    @Html.Raw("</div>")
-                                    break;
+                        <div class="col-sm-4">
 
-                            }
-                       
-                    }
+                        </div>
 
-                    @Html.Raw("</div>")
-            
+                        <div class="col-sm-4">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 3))
+                        </div>
+
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 4))
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 5))
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 6))
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
