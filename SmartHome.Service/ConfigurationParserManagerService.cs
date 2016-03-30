@@ -1,6 +1,7 @@
 ﻿using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
+using Service.Pattern;
 using SmartHome.Entity;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
@@ -15,23 +16,23 @@ namespace SmartHome.Service
     public class ConfigurationParserManagerService : IConfigurationParserManagerService
     {
         #region PrivateProperty
-        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+        // private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<Device> _deviceRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
-        private string _email;
+        // private string _email;
         #endregion
 
-        public ConfigurationParserManagerService(IUnitOfWorkAsync unitOfWorkAsync)
+        public ConfigurationParserManagerService(IUnitOfWorkAsync unitOfWork)
         {
-            _unitOfWorkAsync = unitOfWorkAsync;
-            _userInfoRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
-            _userHomeLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
-            _versionRepository = _unitOfWorkAsync.RepositoryAsync<Version>();
-            _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
-            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
+            // _unitOfWorkAsync = unitOfWork;
+            _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
+            _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
+            _versionRepository = unitOfWork.RepositoryAsync<Version>();
+            _deviceRepository = unitOfWork.RepositoryAsync<Device>();
+            _roomRepository = unitOfWork.RepositoryAsync<Room>();
         }
 
 
