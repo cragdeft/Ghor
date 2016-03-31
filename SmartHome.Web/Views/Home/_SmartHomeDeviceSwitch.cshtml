@@ -6,7 +6,12 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-6">
-                    <h4 class="panel-title panel-header-label-color"><strong><span>@Model.DeviceName</span></strong></h4>
+                    
+                    <h4 class="panel-title panel-header-label-color">
+                        <strong>
+                            <span>@Model.DeviceName</span>
+                        </strong>
+                    </h4>
                 </div>
             </div>
         </div>
@@ -15,7 +20,7 @@
                 <div class="container margin-20 padding-20">
                     <div class="row">
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 1))
+                            @Html.ChannelLoad(Model.Channels, 1)
                         </div>
                         <div class="col-sm-4">
                         </div>
@@ -32,7 +37,7 @@
 
                     <div class="row">
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 2))
+                            @Html.ChannelLoad(Model.Channels, 2)
                         </div>
 
                         <div class="col-sm-4">
@@ -47,7 +52,7 @@
 
                     <div class="row">
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 3))
+                            @Html.ChannelLoad(Model.Channels, 3)
                         </div>
 
                         <div class="col-sm-4">
@@ -59,15 +64,15 @@
 
                     <div class="row">
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 4))
+                            @Html.ChannelLoad(Model.Channels, 4)
                         </div>
 
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 5))
+                            @Html.ChannelLoad(Model.Channels, 5)
                         </div>
 
                         <div class="col-sm-4">
-                            @Html.ChannelLoad(Model.Channels.First(p => p.ChannelNo == 6))
+                            @Html.ChannelLoad(Model.Channels, 6)
                         </div>
                     </div>
                 </div>

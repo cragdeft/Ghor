@@ -251,6 +251,10 @@ h4.panel-title{
  padding: 10px;
 }
 
+.padding-bottom-9{
+ padding-bottom: 9px;
+}
+
 
 
 .font-size-10{
@@ -372,4 +376,8 @@ h4.panel-title{
 	border-top-color: #dddddd;
 	border-width: 16px;
 	margin-left: -11px;
+}
+
+#tabs{
+    display:none;
 }

@@ -47,55 +47,28 @@ namespace SmartHome.Web.Controllers
         }
 
         [HttpPost]
-        public async  Task<ActionResult> Create(VersionEntity entity)
+        public async Task<ActionResult> Create(VersionEntity entity)
         {
             if (ModelState.IsValid)
             {
-                #region MyRegion
-                //_unitOfWorkAsync.BeginTransaction();
-
-                //try
-                //{
-                //    _versionService.Add(entity);
-                //    var changes = await _unitOfWorkAsync.SaveChangesAsync();
-                //    _unitOfWorkAsync.Commit();
-                //    return RedirectToAction("Index");
-                //}
-                //catch (Exception ex)
-                //{
-                //    _unitOfWorkAsync.Rollback();
-                //} 
-                #endregion
-
-
-                #region MyRegion
                 using (IDataContextAsync context = new SmartHomeDataContext())
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IRepositoryAsync<SmartHome.Model.Models.Version> versionRepository = new Repository<SmartHome.Model.Models.Version>(context, unitOfWork);
                     IVersionService versionService = new VersionService(versionRepository);
-
                     try
                     {
                         unitOfWork.BeginTransaction();
-
-
-                        //versionService.Add(entity);
                         versionService.Add(entity);
-                        var changes =await unitOfWork.SaveChangesAsync();
+                        var changes = await unitOfWork.SaveChangesAsync();
                         unitOfWork.Commit();
                         return RedirectToAction("Index");
-
-
-
-
                     }
                     catch (Exception ex)
                     {
                         unitOfWork.Rollback();
                     }
                 }
-                #endregion
             }
             return View(entity);
         }
@@ -118,7 +91,7 @@ namespace SmartHome.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-               
+
                 _unitOfWorkAsync.BeginTransaction();
 
                 try
@@ -169,16 +142,6 @@ namespace SmartHome.Web.Controllers
             return View(entity);
         }
         #endregion
-
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        _unitOfWorkAsync.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
 
     }
 

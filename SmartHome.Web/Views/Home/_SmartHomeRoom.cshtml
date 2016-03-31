@@ -12,7 +12,7 @@
                         <img src="~/Images/bedroom.png" alt="bed room" style="width:44px;height:44px;" />
                     </div>
                     <div class="col-sm-6">
-                        <h4 class="panel-title panel-header-label-color"><strong><span>@item.Name</span></strong></h4>
+                        <h4 class="panel-title panel-header-label-color"><strong><span class="room" data-room-link="#@item.Name.Replace(" ","_")">@item.Name</span></strong></h4>
                         <small><span>on/off status</span></small>
                     </div>
                 </div>
@@ -41,24 +41,6 @@
                                 default:
                                     break;
                             }
-                            @*@if (nextRoomDevice.Key == 0)
-                                {
-
-                                }*@
-                            @*else if (nextRoomDevice.Key == 1)
-                                {
-                                    <img src="~/Images/device/fan_off.png" alt="bed room" style="width:40px;height:40px;" />
-                                }
-                                else if (nextRoomDevice.Key == 2)
-                                {
-                                    <img src="~/Images/device/fan_off.png" alt="bed room" style="width:40px;height:40px;" />
-
-                                }
-                                else if (nextRoomDevice.Key == 3)
-                                {
-
-                                }*@
-
                         </div>
                         <div class="col-sm-6">
                             <h6 class="panel-title"><span class="text-grey">@nextRoomDevice.Key.ToString()</span></h6>
@@ -77,46 +59,6 @@
                     </div>
 
                     <hr class="separator-border-1" />
-
-                    @*<div class="row">
-                            <div class="col-sm-offset-2 col-sm-2  pull-left">
-                                <img src="~/Images/device/bulb_off.png" alt="bed room" style="width:44px;height:44px;" />
-                            </div>
-                            <div class="col-sm-6">
-                                <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
-                                <small>
-                                    <span class="smarthome-text-on">
-                                        On-2
-                                    </span>
-                                    <span>
-                                        |
-                                    </span>
-                                    <span class="smarthome-text-off">
-                                        Off-1
-                                    </span>
-                                </small>
-                            </div>
-                        </div>
-                        <hr class="separator-border-1" />
-                        <div class="row">
-                            <div class="col-sm-offset-2 col-sm-2  pull-left">
-                                <img src="~/Images/device/cfl_off.png" alt="bed room" style="width:44px;height:44px;" />
-                            </div>
-                            <div class="col-sm-6">
-                                <h6 class="panel-title"><span class="text-grey">Fan</span></h6>
-                                <small>
-                                    <span class="smarthome-text-on">
-                                        On-2
-                                    </span>
-                                    <span>
-                                        |
-                                    </span>
-                                    <span class="smarthome-text-off">
-                                        Off-1
-                                    </span>
-                                </small>
-                            </div>
-                        </div>*@
                 }
 
 
@@ -124,5 +66,8 @@
             </div>
         </div>
     </div>
+
+  
 }
+
 

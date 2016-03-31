@@ -6,7 +6,13 @@
 
     foreach (var nextRoom in nextHome.Home.Rooms)
     {
-        <span class="text-left"><h4>@nextRoom.Name</h4></span>
+        <div >
+           
+            <span class="text-left">
+               
+                <h4 >@nextRoom.Name</h4>
+            </span>
+        </div>
         <hr />
         foreach (var nextDevice in nextRoom.Devices)
         {
@@ -24,7 +30,7 @@
                     break;
                 case DeviceType.Camera:
                     break;
-               
+
             }
         }
 

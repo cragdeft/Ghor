@@ -24,7 +24,6 @@
             @if (appVersion != null && appVersion.Count() > 0)
             {
                 @Html.Partial("_SmartHomeMain", appVersion)
-
             }
 
         </div>
@@ -32,31 +31,16 @@
 
     <div id="tabs-2">
         <div class="row">
-
             @foreach (var item in Model)
             {
                 @Html.Partial("_SmartHomeRoom", item.Home.Rooms.ToList())
             }
-
-            @*@Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")
-                @Html.Partial("_SmartHomeRoom")*@
         </div>
     </div>
 
     <div id="tabs-3">
         <div class="row row-centered">
-
             @Html.Partial("_SmartHomeDevice", Model)
-
-
-            @*@Html.Partial("_SmartHomeDeviceSwitch")
-                @Html.Partial("_SmartHomeDeviceRGBW")*@
         </div>
     </div>
 
@@ -73,8 +57,20 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+
+
+
             $("#tabs").show();
             $("#tabs").tabs();
+
+            $('.room').on('click', function (e) {
+                $("#tabs").tabs("option", "active", 2);
+                e.preventDefault();
+                $("body, html").animate({
+                    scrollTop: $($(this).attr('data-room-link')).offset()+200
+                }, 600);
+            })
+
 
         });
     </script>
