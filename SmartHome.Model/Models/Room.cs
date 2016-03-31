@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
 
         public string Name { get; set; }
         public int RoomNumber { get; set; }
-        public string Comment { get; set; }        
+        public string Comment { get; set; }
         public bool IsMasterRoom { get; set; }
         public bool IsActive { get; set; }
         #endregion
@@ -31,11 +31,10 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-        public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
-        public virtual ICollection<Device> Devices { get; set; }
-        //public ICollection<UserProfile> UserProfiles { get; set; }
-        public virtual  UserInfo UserInfo { get; set; } 
-        public virtual Home Home { get; set; } 
+        
+        public virtual ICollection<Device> Devices { get; set; }        
+        public virtual ICollection<UserInfo> UserInfos { get; set; }
+        public virtual Home Home { get; set; }
         #endregion
     }
 }

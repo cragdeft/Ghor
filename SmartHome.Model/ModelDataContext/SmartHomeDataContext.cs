@@ -63,6 +63,16 @@ namespace SmartHome.Model.ModelDataContext
               });
 
 
+            modelBuilder.Entity<UserInfo>()
+             .HasMany(u => u.Rooms)
+             .WithMany(r => r.UserInfos)
+             .Map(m =>
+             {
+                 m.ToTable("UserRooms");
+                 m.MapLeftKey("RoomId");
+                 m.MapRightKey("UserInfoId");
+             });
+
             //modelBuilder.Entity<UserInfo>()
             //.HasMany(u => u.Homes)
             //.WithMany(r => r.UserInfos)
