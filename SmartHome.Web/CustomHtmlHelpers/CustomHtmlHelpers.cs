@@ -11,10 +11,17 @@ namespace SmartHome.Web.CustomHtmlHelpers
 {
     public static class CustomHtmlHelpers
     {
-        public static IHtmlString ChannelLoad(this HtmlHelper helper, SmartHome.Model.Models.Channel channel)
+        #region Channel Load
+        public static IHtmlString ChannelLoad(this HtmlHelper helper, IEnumerable<SmartHome.Model.Models.Channel> channels, int channelNo)
         {
 
+            var tempChannel = channels.FirstOrDefault(p => p.ChannelNo == channelNo);
+
             TagBuilder mainRow = new TagBuilder("div");
+            if (tempChannel == null)
+            {
+                return new MvcHtmlString(mainRow.ToString());
+            }
 
             TagBuilder rowPic = new TagBuilder("div");
             rowPic.AddCssClass("row");
@@ -26,7 +33,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
             TagBuilder msg = new TagBuilder("span");
 
-            LoadChannel(channel, pic, msg);
+            LoadChannel(tempChannel, pic, msg);
 
             rowPic.InnerHtml = pic.ToString(TagRenderMode.SelfClosing);
             rowMsg.InnerHtml = msg.ToString();
@@ -36,10 +43,77 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
 
             return new MvcHtmlString(mainRow.ToString());
-            
+
         }
 
-       
+        private static void LoadChannel(Channel channel, TagBuilder pic, TagBuilder msg)
+        {
+            string cLoadPicture = string.Empty;
+            string cLoadDim = string.Empty;
+            string cLoadHardwareDim = string.Empty;
+            string cLoadName = channel.LoadName;
+            cLoadName = GetLoadName(channel, cLoadName);
+
+            foreach (var nextCStatus in channel.ChannelStatuses)
+            {
+                switch (nextCStatus.Status)
+                {
+                    case ChannelStatusType.Switchable:
+                        cLoadPicture = nextCStatus.Value == 0 ? cLoadName + "_off" : cLoadName + "_on";
+                        break;
+                    case ChannelStatusType.Dimmable:
+                        cLoadDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        if (channel.LoadType != LoadType.DimmableBulb)
+                        {
+                            cLoadDim = cLoadName;
+                        }
+
+                        break;
+                    case ChannelStatusType.HardwareDimSwitchable:
+                        cLoadHardwareDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        break;
+                }
+            }
+            pic.Attributes.Add("src", "/Images/device/" + cLoadPicture + ".png");
+            pic.Attributes.Add("alt", channel.LoadName);
+            msg.AddCssClass("font-size-10 text-grey");
+            msg.SetInnerText(cLoadDim);
+        }
+
+        private static string GetLoadName(Channel channel, string cLoadName)
+        {
+            switch (channel.LoadType)
+            {
+                case LoadType.NoLoad:
+                    cLoadName = "default";
+                    break;
+                case LoadType.NonDimmableBulb:
+                    cLoadName = "bulb";
+
+                    break;
+                case LoadType.DimmableBulb:
+                    cLoadName = "dimmable";
+
+                    break;
+                case LoadType.Fan:
+                    cLoadName = "fan";
+
+                    break;
+                case LoadType.Tubelight:
+                    cLoadName = "tube";
+
+                    break;
+                case LoadType.Cfl:
+                    cLoadName = "cfl";
+                    break;
+            }
+
+            return cLoadName;
+        }
+        #endregion
+
+
+        #region Remove
 
         public static IHtmlString SmartSwitch6g(this HtmlHelper helper, Device device)
         {
@@ -223,85 +297,9 @@ namespace SmartHome.Web.CustomHtmlHelpers
             sb.Append("</div>");
         }
 
-        private static void LoadChannel(Channel channel, TagBuilder pic, TagBuilder msg)
-        {
-            //StringBuilder sbColumn = new StringBuilder();
-            string cLoadPicture = string.Empty;
-            string cLoadDim = string.Empty;
-            string cLoadHardwareDim = string.Empty;
-            string cLoadName = channel.LoadName;
-            cLoadName = GetLoadName(channel, cLoadName);
-
-            foreach (var nextCStatus in channel.ChannelStatuses)
-            {
-                switch (nextCStatus.Status)
-                {
-                    case ChannelStatusType.Switchable:
-                        cLoadPicture = nextCStatus.Value == 0 ? cLoadName + "_off" : cLoadName + "_on";
-                        break;
-                    case ChannelStatusType.Dimmable:
-                        cLoadDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
-                        if (channel.LoadType != LoadType.DimmableBulb)
-                        {
-                            cLoadDim = cLoadName;
-                        }
-
-                        break;
-                    case ChannelStatusType.HardwareDimSwitchable:
-                        cLoadHardwareDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
-                        break;
-                }
-            }
-
-            // Add "src" attribute
-            //"\"/Images/device/" + cLoadPicture + ".png\" alt=\""
-            pic.Attributes.Add("src", "/Images/device/" + cLoadPicture + ".png");
-            // Add "alt" attribute
-            pic.Attributes.Add("alt", channel.LoadName);
-
-            msg.AddCssClass("font-size-10 text-grey");
-            msg.SetInnerText(cLoadDim);
 
 
-            //sbColumn.Append("<div class=\"col-sm-4\">");
-            //sbColumn.Append("<div class=\"row\">");
-            //sbColumn.Append("<img src=\"/Images/device/" + cLoadPicture + ".png\" alt=\"" + channelLoad + "\" />");
-            //sbColumn.Append("</div>");
-            //sbColumn.Append("<div class=\"row\">");
-            //sbColumn.Append("<span class=\"font-size-10 text-grey\">" + cLoadDim + "</span>");
-            //sbColumn.Append("</div>");
-        }
 
-        private static string GetLoadName(Channel channel, string cLoadName)
-        {
-            switch (channel.LoadType)
-            {
-                case LoadType.NoLoad:
-                    cLoadName = "default";
-                    break;
-                case LoadType.NonDimmableBulb:
-                    cLoadName = "bulb";
-
-                    break;
-                case LoadType.DimmableBulb:
-                    cLoadName = "dimmable";
-
-                    break;
-                case LoadType.Fan:
-                    cLoadName = "fan";
-
-                    break;
-                case LoadType.Tubelight:
-                    cLoadName = "tube";
-
-                    break;
-                case LoadType.Cfl:
-                    cLoadName = "cfl";
-                    break;
-            }
-
-            return cLoadName;
-        }
 
         private static string LoadChannel(Channel channel, string channelLoad)
         {
@@ -351,6 +349,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
             sb.Append("</div>");
             sb.Append("</div>");
             sb.Append("</div>");
-        }
+        } 
+        #endregion
     }
 }
