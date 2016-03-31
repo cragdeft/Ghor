@@ -8,7 +8,12 @@
 
 <h2 class="padding-bottom-9">
     <span>
-        Welcome to <strong> @Model.First().Home.Name </strong>
+        Welcome to
+        @if (@Model.Count() != 0)
+        {
+            <strong>@Model.FirstOrDefault().Home.Name </strong>
+        }
+         
     </span>
 </h2>
 <div id="tabs">
@@ -41,7 +46,9 @@
     <div id="tabs-3">
         <div class="row row-centered">
             @Html.Partial("_SmartHomeDevice", Model)
+            
         </div>
+        
     </div>
 
 </div>
@@ -55,19 +62,16 @@
     <link href="~/Content/colorWheelPicker/farbtastic.css" rel="stylesheet" />
 
     <script type="text/javascript">
-
         $(document).ready(function () {
-
-
-
             $("#tabs").show();
             $("#tabs").tabs();
 
             $('.room').on('click', function (e) {
-                $("#tabs").tabs("option", "active", 2);
+               //alert($(this).html())
+                $("#tabs").tabs("option", "active", 2);                
                 e.preventDefault();
                 $("body, html").animate({
-                    scrollTop: $($(this).attr('data-room-link')).offset()+200
+                    scrollTop: $($(this).attr('data-room-link')).offset().top
                 }, 600);
             })
 

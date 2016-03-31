@@ -60,14 +60,14 @@ namespace SmartHome.Web.Controllers
         {
             ViewBag.Message = "Publish Message";
             model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Publish(model.MessgeTopic, model.PublishMessage);
-            return View("About", model);
+            return View("Configure", model);
         }
         [HttpPost]
         public ActionResult SubscribeMessage(m2mMessageViewModel model)
         {
             ViewBag.Message = "Subscribe Message";
             model.PublishMessageStatus = MqttClientWrapperAdapter.WrapperInstance.Subscribe(model.MessgeTopic);
-            return View("About", model);
+            return View("Configure", model);
         }
         public ActionResult SmartHome()
         {

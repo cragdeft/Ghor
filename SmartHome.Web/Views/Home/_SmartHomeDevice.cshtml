@@ -2,18 +2,18 @@
 
 @foreach (var nextHome in Model)
 {
-
-
     foreach (var nextRoom in nextHome.Home.Rooms)
     {
-        <div >
-           
+        @*@Html.Raw("<div id="+ @nextRoom.Name.Replace(" ", "_") + ">")*@
+
+        
+        <div id="@nextRoom.Name.Replace(" ", "_")">
             <span class="text-left">
-               
-                <h4 >@nextRoom.Name</h4>
+                <h4>@nextRoom.Name</h4>
             </span>
         </div>
         <hr />
+        @Html.Raw("<div>")
         foreach (var nextDevice in nextRoom.Devices)
         {
             switch (nextDevice.DeviceType)
@@ -34,7 +34,13 @@
             }
         }
 
+        @Html.Raw("</div>")
+
     }
 
+
+
 }
+
+
 
