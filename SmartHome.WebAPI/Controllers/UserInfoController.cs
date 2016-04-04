@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
 using Repository.Pattern.DataContext;
 using Repository.Pattern.Ef6;
+using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
@@ -67,7 +69,7 @@ namespace SmartHome.WebAPI.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "");
             return response;
         }
-        
+
         [Route("api/RegisterUser")]
         public HttpResponseMessage RegisterUser(UserInfoEntity userInfo)
         {
@@ -91,6 +93,70 @@ namespace SmartHome.WebAPI.Controllers
             }
             else
                 response = Request.CreateResponse(HttpStatusCode.OK, true);
+
+            return response;
+        }
+
+        [Route("api/GetRegisterUser/{userInfo}")]
+        public HttpResponseMessage GetUniqueUserByEmail(string userInfo)
+        {
+            RootObjectEntity oRootObject = JsonConvert.DeserializeObject<RootObjectEntity>(userInfo);
+            var oUserInfo = oRootObject.UserInfo.First();
+            oUserInfo.Email = oUserInfo.Email + ".com";
+            HttpResponseMessage response;
+
+            var isEmailExists = _userInfoService.IsLoginIdUnique(oUserInfo.Email);
+            if (isEmailExists)
+            {
+                response = Request.CreateResponse(HttpStatusCode.Conflict, "Already registered.");
+
+            }
+            else
+            {
+                _unitOfWorkAsync.BeginTransaction();
+                try
+                {
+                    _userInfoService.Add(oUserInfo);
+                    var changes = _unitOfWorkAsync.SaveChanges();
+                    _unitOfWorkAsync.Commit();
+                }
+                catch (Exception ex)
+                {
+                    _unitOfWorkAsync.Rollback();
+                }
+                response = Request.CreateResponse(HttpStatusCode.OK, "Unique");
+            }
+
+
+            return response;
+        }
+
+
+
+        [Route("api/GetUserInfo/{email}/{pass}")]
+        public HttpResponseMessage GetUniqueUserByEmail(string email, string pass)
+        {
+            UserInfo oUserInfo = new UserInfo();
+            HttpResponseMessage response;
+            email = email + ".com";
+
+            var isEmailExists = _userInfoService.IsValidLogin(email, pass);
+            if (isEmailExists)
+            {
+                _unitOfWorkAsync.BeginTransaction();
+                try
+                {
+                    oUserInfo = _userInfoService.GetUserInfos(email, pass);
+                    _unitOfWorkAsync.Commit();
+                }
+                catch (Exception ex)
+                {
+                    _unitOfWorkAsync.Rollback();
+                }
+                response = Request.CreateResponse(HttpStatusCode.OK, oUserInfo);
+            }
+            else
+                response = Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
 
             return response;
         }
