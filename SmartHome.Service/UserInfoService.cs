@@ -26,20 +26,39 @@ namespace SmartHome.Service
         public IEnumerable<UserInfo> GetsUserInfos()
         {
             return _repository.GetsUserInfos();
-            
+
         }
         public bool IsLoginIdUnique(string email)
         {
             return _repository.IsLoginIdUnique(email);
         }
 
+        public bool IsValidLogin(string email, string pass)
+        {
+            return _repository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
+        }
+
+        public UserInfo GetUserInfos(string email, string pass)
+        {
+            return _repository.Query(x => x.Email == email && x.Password == pass)
+                .Include(x => x.UserHomeLinks.Select(y => y.Home))
+                .Include(x => x.UserRooms.Select(y => y.Room)).Select().FirstOrDefault();
+        }
+
+
         public UserInfoEntity Add(UserInfoEntity entity)
         {
-            UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
-            model.AuditField = new AuditFields();
-            model.ObjectState = ObjectState.Added;
+            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
+            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
+            Model.Models.UserInfo model = Mapper.Map<Entity.UserInfoEntity, Model.Models.UserInfo>(entity);
+
             base.Insert(model);
             return entity;
+
+
         }
+
     }
 }
