@@ -94,3 +94,29 @@ E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\obj\Deb
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
 F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\System.Web.Mvc.dll
 F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\System.Web.Mvc.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Repository.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Repository.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Entity.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Model.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\EntityFramework.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\LinqKit.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Newtonsoft.Json.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\System.Web.Mvc.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.Ef6.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Entity.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\SmartHome.Model.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Repository.Pattern.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\EntityFramework.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\LinqKit.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\LinqKit.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\System.Web.Mvc.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Web.Infrastructure.xml
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
+C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
