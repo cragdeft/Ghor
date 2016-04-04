@@ -153,12 +153,14 @@ namespace SmartHome.WebAPI.Controllers
                 {
                     _unitOfWorkAsync.Rollback();
                 }
-                response = Request.CreateResponse(HttpStatusCode.OK, oUserInfo);
+                response = Request.CreateResponse(HttpStatusCode.OK, oUserInfo);                
             }
             else
+            {
                 response = Request.CreateResponse(HttpStatusCode.NotFound, "User not found");
+            }
 
-            return response;
+            return response ;
         }
     }
 }
