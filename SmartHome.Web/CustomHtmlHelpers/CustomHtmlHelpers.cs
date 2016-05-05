@@ -115,7 +115,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
         #region Remove
 
-        public static IHtmlString SmartSwitch6g(this HtmlHelper helper, Device device)
+        public static IHtmlString SmartSwitch6g(this HtmlHelper helper, SmartDevice device)
         {
             StringBuilder sb = new StringBuilder();
             //string data = "shamim<br/>123";
@@ -132,7 +132,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
             return new MvcHtmlString(sb.ToString());
         }
 
-        private static void SwitchPanelBody(StringBuilder sb, Device device)
+        private static void SwitchPanelBody(StringBuilder sb, SmartDevice device)
         {
             sb.Append("<div class=\"panel-body switch-body\">");
             sb.Append("<div class=\"text-center\">");
@@ -147,11 +147,11 @@ namespace SmartHome.Web.CustomHtmlHelpers
             sb.Append("</div>");
         }
 
-        private static void SwitchColumns(StringBuilder sb, Device device)
+        private static void SwitchColumns(StringBuilder sb, SmartDevice device)
         {
             string columnContent = string.Empty;
             //foreach (var nextChannel in Enumerable.Range(1, 4))
-            foreach (var nextChannel in device.Channels.OrderBy(p => p.ChannelNo))
+            foreach (var nextChannel in ((SmartSwitch) device).Channels.OrderBy(p => p.ChannelNo))
             {
 
                 //var tempChannel = device.Channels.FirstOrDefault(p => p.ChannelNo == nextChannel);

@@ -54,7 +54,7 @@ namespace SmartHome.Web.App_Start
 
             container.RegisterType<IDeviceService, DeviceService>();
             container.RegisterType<IConfigurationParserManagerService, ConfigurationParserManagerService>();
-            container.RegisterType<IRepositoryAsync<Model.Models.Device>, Repository<Model.Models.Device>>();
+            container.RegisterType<IRepositoryAsync<Model.Models.SmartDevice>, Repository<Model.Models.SmartDevice>>();
 
             container.RegisterType<IUserInfoService, UserInfoService>();
             container.RegisterType<IRepositoryAsync<Model.Models.UserInfo>, Repository<Model.Models.UserInfo>>();

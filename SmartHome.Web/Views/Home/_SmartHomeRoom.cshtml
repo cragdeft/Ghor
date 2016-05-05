@@ -19,7 +19,7 @@
             </div>
 
             <div class="panel-body">
-                @foreach (var nextRoomDevice in item.Devices.GroupBy(p => p.DeviceType))
+                @foreach (var nextRoomDevice in item.SmartDevices.GroupBy(p => p.DeviceType))
                 {
 
                     <div class="row">

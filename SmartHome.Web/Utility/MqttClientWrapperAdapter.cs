@@ -1,4 +1,5 @@
-﻿using SmartHome.Json;
+﻿using SmartHome.Entity;
+using SmartHome.Json;
 using SmartHome.Model.Enums;
 using SmartHome.MQTT.Client;
 using System;
@@ -40,6 +41,28 @@ namespace SmartHome.Web.Utility
             {                
                  new JsonManager().JsonProcess(customEventArgs.ReceivedMessage);
             }
+
+
+            if (customEventArgs.ReceivedTopic == CommandType.Feedback.ToString())
+            {
+                var jsonObject = ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Feedback);
+                CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+                commandJsonManager.Parse();
+                //FeedbackCommandParse(jsonObject);
+            }
+
+            if (customEventArgs.ReceivedTopic == CommandType.Command.ToString())
+            {
+                //var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
+                //CommandLog(jsonObject);
+            }
+        }
+
+        static CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
+        {
+            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
+            jsonObject.CommandType = commandType;
+            return jsonObject;
         }
 
         static void PublishedMessage_NotifyEvent(CustomEventArgs customEventArgs)

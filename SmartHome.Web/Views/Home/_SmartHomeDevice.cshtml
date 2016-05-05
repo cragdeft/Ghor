@@ -14,7 +14,7 @@
         </div>
         <hr />
         @Html.Raw("<div>")
-        foreach (var nextDevice in nextRoom.Devices)
+        foreach (var nextDevice in nextRoom.SmartDevices)
         {
             switch (nextDevice.DeviceType)
             {
