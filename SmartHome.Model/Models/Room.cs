@@ -32,7 +32,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties
         
-        public virtual ICollection<Device> Devices { get; set; }        
+        public virtual ICollection<SmartDevice> SmartDevices { get; set; }        
         public virtual ICollection<UserRoom> UserRooms { get; set; }
         public virtual Home Home { get; set; }
         #endregion

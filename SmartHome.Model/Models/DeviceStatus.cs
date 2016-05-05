@@ -29,7 +29,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-        public virtual Device Device { get; set; } 
+        public virtual SmartDevice SmartDevice { get; set; } 
         #endregion
 
     }

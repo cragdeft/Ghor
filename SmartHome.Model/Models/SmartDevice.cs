@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class Device : Entity
+    public class SmartDevice : Entity
     {
         #region Primitive Properties
         [Key]
@@ -35,11 +35,7 @@ namespace SmartHome.Model.Models
         #region  Navigation Properties
 
         public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
-        public virtual ICollection<Channel> Channels { get; set; }
-        public virtual ICollection<RgbwStatus> RgbwStatuses { get; set; }
         public virtual Room Room { get; set; }
         #endregion
-
     }
-
 }
