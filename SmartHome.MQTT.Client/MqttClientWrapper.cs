@@ -231,7 +231,7 @@ namespace SmartHome.MQTT.Client
 
             //if (e.Topic == CommandType.Feedback.ToString())
             //{
-            //    var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
+             //   var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
             //    FeedbackCommandParse(jsonObject);
             //}
 
