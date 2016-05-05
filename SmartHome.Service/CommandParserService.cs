@@ -20,7 +20,7 @@ namespace SmartHome.Service
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<DeviceStatus> _deviceStatusRepository;
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
-        private readonly IRepositoryAsync<Device> _deviceRepository;
+        private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<CommandJson> _commandJsonRepository;
         private string _email;
@@ -29,7 +29,7 @@ namespace SmartHome.Service
         public CommandParserService(IUnitOfWorkAsync unitOfWorkAsync, string email)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            _deviceRepository = _unitOfWorkAsync.RepositoryAsync<Device>();
+            _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _deviceStatusRepository = _unitOfWorkAsync.RepositoryAsync<DeviceStatus>();
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
             _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
@@ -120,15 +120,15 @@ namespace SmartHome.Service
             }
         }
 
-        public Device FindDevice(int deviceHash)
+        public SmartDevice FindDevice(int deviceHash)
         {
             return _deviceRepository
-                .Query().Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList()
+                .Query().Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select().ToList()
                 .Where(u => u.DeviceHash == deviceHash.ToString())
                 .FirstOrDefault();
         }
-        
-        
+
+
 
         public void LogCommand(CommandJsonEntity command)
         {

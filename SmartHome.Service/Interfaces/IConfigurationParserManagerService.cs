@@ -14,7 +14,9 @@ namespace SmartHome.Service.Interfaces
         //IEnumerable<Home> AddOrUpdateHomeGraphRange(IEnumerable<Home> model);
         IEnumerable<UserHomeLink> AddOrUpdateHomeGraphRange(IEnumerable<UserHomeLink> model);
         IEnumerable<Version> AddOrUpdateVersionGraphRange(IEnumerable<Version> model);
-        IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<Device> model, IEnumerable<DeviceEntity> modelEntity);
+       // IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<Device> model, IEnumerable<DeviceEntity> modelEntity);
+        IEnumerable<SmartDevice> AddOrUpdateDeviceGraphRange(IEnumerable<SmartDevice> model, IEnumerable<DeviceEntity> modelEntity);
+        //IEnumerable<Device> AddOrUpdateDeviceGraphRange(IEnumerable<SmartSwitch> model, IEnumerable<DeviceEntity> modelEntity);
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
         IEnumerable<VersionInfoEntity> GetsAllVersion();
 

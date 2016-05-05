@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceService : Service<Device>, IDeviceService
+    public class DeviceService : Service<SmartDevice>, IDeviceService
     {
-        private readonly IRepositoryAsync<Device> _repository;
+        private readonly IRepositoryAsync<SmartDevice> _repository;
 
-        public DeviceService(IRepositoryAsync<Device> repository) : base(repository)
+        public DeviceService(IRepositoryAsync<SmartDevice> repository) : base(repository)
         {
             _repository = repository;
         }
@@ -25,21 +25,21 @@ namespace SmartHome.Service
         #region AddOrUpdateGraphRange
 
 
-        public IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model)
+        public IEnumerable<SmartDevice> AddOrUpdateGraphRange(IEnumerable<SmartDevice> model)
         {
-            List<Device> deviceModel = new List<Device>();
+            List<SmartDevice> deviceModel = new List<SmartDevice>();
             deviceModel = FillDeviceInformations(model, deviceModel);
             base.InsertOrUpdateGraphRange(deviceModel);
             return deviceModel;
         }
 
 
-        public List<Device> FillDeviceInformations(IEnumerable<Device> model, List<Device> deviceModel)
+        public List<SmartDevice> FillDeviceInformations(IEnumerable<SmartDevice> model, List<SmartDevice> deviceModel)
         {
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<Device> temp = IsDeviceExists(item.Id, item.DeviceHash);
+                IEnumerable<SmartDevice> temp = IsDeviceExists(item.Id, item.DeviceHash);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -67,11 +67,11 @@ namespace SmartHome.Service
         }
 
 
-        private void AddOrEditExistingChannels(Device item, Device existingItem)
+        private void AddOrEditExistingChannels(SmartDevice item, SmartDevice existingItem)
         {
-            foreach (var nextChannel in item.Channels)
+            foreach (var nextChannel in ((SmartSwitch)item).Channels)
             {
-                var tempExistingChannel = existingItem.Channels.Where(p => p.Id == nextChannel.Id).FirstOrDefault();
+                var tempExistingChannel = ((SmartSwitch)existingItem).Channels.Where(p => p.Id == nextChannel.Id).FirstOrDefault();
                 if (tempExistingChannel != null)
                 {
                     //modify
@@ -80,7 +80,7 @@ namespace SmartHome.Service
                 else
                 {
                     //add
-                    existingItem.Channels.Add(nextChannel);
+                    ((SmartSwitch)existingItem).Channels.Add(nextChannel);
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace SmartHome.Service
             tempExistingChannelStatus.AuditField = new AuditFields();
         }
 
-        private void AddOrEditExistingDeviceStatus(Device item, Device existingItem)
+        private void AddOrEditExistingDeviceStatus(SmartDevice item, SmartDevice existingItem)
         {
             foreach (var nextDStatus in item.DeviceStatus)
             {
@@ -159,7 +159,7 @@ namespace SmartHome.Service
             tempExistingDStatus.AuditField = new AuditFields();
         }
 
-        private void FillExistingDeviceInfo(Device item, Device existingItem)
+        private void FillExistingDeviceInfo(SmartDevice item, SmartDevice existingItem)
         {
             existingItem.ObjectState = ObjectState.Modified;
 
@@ -176,9 +176,9 @@ namespace SmartHome.Service
 
         }
 
-        private IEnumerable<Device> IsDeviceExists(int key, string deviceHash)
+        private IEnumerable<SmartDevice> IsDeviceExists(int key, string deviceHash)
         {
-            return _repository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select();
+            return _repository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select();
         }
 
 
@@ -191,9 +191,9 @@ namespace SmartHome.Service
 
             int parentSequence = 0;
             List<DeviceInfoEntity> dInfoEntity = new List<DeviceInfoEntity>();
-            var device = _repository.Query().Include(x => x.DeviceStatus).Include(x => x.Channels.Select(y => y.ChannelStatuses)).Select().ToList();
+            var device = _repository.Query().Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select().ToList();
 
-            foreach (Device nextDeviceInfo in device)
+            foreach (SmartDevice nextDeviceInfo in device)
             {
                 //DId,DeviceName,DeviceHash,DType
                 DeviceInfoEntity deviceInfo = new DeviceInfoEntity();
@@ -213,7 +213,7 @@ namespace SmartHome.Service
 
                 }
 
-                foreach (Channel nextChannelInfo in nextDeviceInfo.Channels)
+                foreach (Channel nextChannelInfo in ((SmartSwitch)nextDeviceInfo).Channels)
                 {
                     DeviceInfoEntity deviceCInfo = new DeviceInfoEntity();
                     deviceCInfo.DisplayName = " ChannelNo--" + nextChannelInfo.ChannelNo.ToString() + ", LoadName--" + nextChannelInfo.LoadName + ", LoadType--" + nextChannelInfo.LoadType.ToString();

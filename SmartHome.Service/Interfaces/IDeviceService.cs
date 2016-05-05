@@ -9,9 +9,9 @@ using SmartHome.Entity;
 
 namespace SmartHome.Service.Interfaces
 {
-    public interface IDeviceService : IService<Device>
+    public interface IDeviceService : IService<SmartDevice>
     {
-        IEnumerable<Device> AddOrUpdateGraphRange(IEnumerable<Device> model);
+        IEnumerable<SmartDevice> AddOrUpdateGraphRange(IEnumerable<SmartDevice> model);
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
     }
 }
