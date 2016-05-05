@@ -29,9 +29,10 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<Models.Version> Versions { get; set; }
         public IDbSet<VersionDetail> VersionDetails { get; set; }
 
-        public IDbSet<Device> Devices { get; set; }
+       // public IDbSet<Device> Devices { get; set; }
+        public IDbSet<SmartDevice> SmartDevices { get; set; }
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
-        public IDbSet<Channel> Channels { get; set; }
+        //public IDbSet<Channel> Channels { get; set; }
 
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
@@ -45,7 +46,7 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<CommandJson> CommandJsons { get; set; }
 
-        public IDbSet<RgbwStatus> RgbwStatuses { get; set; }
+        //public IDbSet<RgbwStatus> RgbwStatuses { get; set; }
 
 
 
@@ -61,6 +62,10 @@ namespace SmartHome.Model.ModelDataContext
                   m.MapLeftKey("UserInfoId");
                   m.MapRightKey("RoleId");
               });
+
+           modelBuilder.Entity<SmartDevice>()
+          .Map<SmartSwitch>(m => m.Requires("Discriminator").HasValue("SmartSwitch"))
+          .Map<SmartRainbow>(m => m.Requires("Discriminator").HasValue("SmartRainbow"));
 
 
             //modelBuilder.Entity<UserInfo>()
