@@ -43,14 +43,21 @@ namespace SmartHome.Json
         #region Save Information
         private void SaveUpdateDevice(RootObjectEntity oRootObject)
         {
-            IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
+            //IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
+            List<SmartDevice> oSmartDevice = new List<SmartDevice>();
+            IEnumerable<SmartSwitch> oDeviceSwitch = MapSmartDeviceObject<SmartSwitch>(oRootObject, DeviceType.SmartSwitch6g);
+            IEnumerable<SmartRainbow> oDeviceRainbow = MapSmartDeviceObject<SmartRainbow>(oRootObject, DeviceType.SmartRainbow12);
             IEnumerable<Model.Models.RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
             IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
             IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
             IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
-            MergeDeviceDeviceStatusAndChannel(oDevice, oRgbwStatus, oChannel, oChannelStatus, oDeviceStatus);
-            StoreDeviceAndChannel(oDevice, oRootObject.Device);
+
+            MergeDeviceDeviceStatusAndChannel(oDeviceSwitch, oChannel, oChannelStatus, oDeviceStatus, oSmartDevice);
+            MergeDeviceDeviceStatusAndRgbStatus(oDeviceRainbow, oRgbwStatus, oSmartDevice);
+            StoreDeviceAndChannel(oSmartDevice, oRootObject.Device);
         }
+
+
 
         private void SaveUpdateVersion(RootObjectEntity oRootObject)
         {
@@ -68,7 +75,7 @@ namespace SmartHome.Json
             List<UserHomeLink> oUserHomeLink = new List<UserHomeLink>();
             oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
             StoreHomeAndRoomAndUser(oUserHomeLink);
-        } 
+        }
         #endregion
 
         public T JsonProcess<T>(string JsonString)
@@ -147,7 +154,8 @@ namespace SmartHome.Json
             }
         }
 
-        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<Device> oDevice, IEnumerable<RgbwStatus> oRgbwStatus, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus)
+
+        private void MergeDeviceDeviceStatusAndChannel(IEnumerable<SmartSwitch> oDevice, IEnumerable<Channel> oChannel, IEnumerable<ChannelStatus> oChannelStatus, IEnumerable<DeviceStatus> oDeviceStatus, List<SmartDevice> oSmartDevice)
         {
             foreach (var item in oChannel)
             {
@@ -156,9 +164,23 @@ namespace SmartHome.Json
 
             foreach (var item in oDevice)
             {
-                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.Id).ToArray();
                 item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
                 item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+                item.AuditField = new AuditFields();
+                item.ObjectState = ObjectState.Added;
+                oSmartDevice.Add(item);
+            }
+        }
+
+        private void MergeDeviceDeviceStatusAndRgbStatus(IEnumerable<SmartRainbow> oDevice, IEnumerable<RgbwStatus> oRgbwStatus, List<SmartDevice> oSmartDevice)
+        {
+
+            foreach (var item in oDevice)
+            {
+                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.Id).ToArray();
+                item.AuditField = new AuditFields();
+                item.ObjectState = ObjectState.Added;
+                oSmartDevice.Add(item);
             }
         }
 
@@ -168,14 +190,20 @@ namespace SmartHome.Json
         #region Configuration
 
         #region Device
-        private IEnumerable<Model.Models.Device> ConfigureDevice(RootObjectEntity myObj)
+
+
+
+
+        private IEnumerable<T> MapSmartDeviceObject<T>(RootObjectEntity myObj, DeviceType dType)
         {
-            Mapper.CreateMap<DeviceEntity, Model.Models.Device>()
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
-            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state
-            IEnumerable<Model.Models.Device> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<Model.Models.Device>>(myObj.Device);
+            Mapper.CreateMap<DeviceEntity, T>();
+            //.ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            //.ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state            
+            IEnumerable<T> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<T>>(myObj.Device.Where(x => x.DeviceType == dType));
             return oDevice;
         }
+
+
 
         private IEnumerable<Model.Models.RgbwStatus> ConfigureRgbwStatus(RootObjectEntity myObj)
         {
@@ -261,7 +289,7 @@ namespace SmartHome.Json
         #endregion
 
         #region Store
-        private void StoreDeviceAndChannel(IEnumerable<Model.Models.Device> oDevice, IEnumerable<DeviceEntity> oDeviceEntity)
+        private void StoreDeviceAndChannel(IEnumerable<Model.Models.SmartDevice> oDevice, IEnumerable<DeviceEntity> oDeviceEntity)
         {
             using (IDataContextAsync context = new SmartHomeDataContext())
             using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
