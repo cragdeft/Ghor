@@ -60,6 +60,12 @@ namespace SmartHome.MQTT.Client
                     {
                         BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
                     }
+
+                    else if (BrokerAddress == "192.169.244.37")
+                    {
+                        //BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
+                        BrokerConnectionWithCertificateForWebBroker(BrokerAddress);
+                    }
                     else if (BrokerAddress == "192.168.11.150")
                     {
                         BrokerConnectionWithoutCertificate(BrokerAddress);
@@ -350,6 +356,12 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
             SmartHomeMQTT.Connect(ClientId, "mosharraf", "mosharraf", false, BrokerKeepAlivePeriod);
         }
+
+        private void BrokerConnectionWithCertificateForWebBroker(string brokerAddress)
+        {
+            SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(WebBrokerResouce.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
+            SmartHomeMQTT.Connect(ClientId, "kanok", "kanok", false, BrokerKeepAlivePeriod);
+        }        
 
         private void BrokerConnectionWithoutCertificateForCommand(string brokerAddress)
         {
