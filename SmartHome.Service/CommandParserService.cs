@@ -11,6 +11,7 @@ using SmartHome.Entity;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
 using SmartHome.Model.Enums;
+using System.Data.Entity;
 
 namespace SmartHome.Service
 {
@@ -122,10 +123,25 @@ namespace SmartHome.Service
 
         public SmartDevice FindDevice(int deviceHash)
         {
-            return _deviceRepository
-                .Query().Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select().ToList()
-                .Where(u => u.DeviceHash == deviceHash.ToString())
+
+            //var temp= _deviceRepository
+            //   .Queryable().Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select().ToList()
+            //   .Where(u => u.DeviceHash == deviceHash.ToString())
+            //   .FirstOrDefault();
+
+            var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
+
+            var temp = _deviceRepository
+                .Queryable().Where(u => u.DeviceHash == deviceHash.ToString()).Include(x => x.DeviceStatus).ToList()              
                 .FirstOrDefault();
+
+            //var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
+            //var temp = _deviceRepository.Queryable().Include(x => x.Home).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
+
+
+
+            return temp;
+
         }
 
 

@@ -51,9 +51,14 @@ namespace SmartHome.MQTT.Client
             {
                 if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
-                    if (BrokerAddress == "192.168.11.195")
+                    if (BrokerAddress == "192.168.11.221")
                     {
                         LocalBrokerConnection(BrokerAddress);
+                    }
+
+                    else if (BrokerAddress == "192.168.2.1")
+                    {
+                        BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
                     }
                     else if (BrokerAddress == "192.168.11.150")
                     {
@@ -332,9 +337,11 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             SmartHomeMQTT.ConnectionClosed += client_ConnectionClosed;
 
-            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback" },
+            var temp = new string[] { "/configuration", "/command", "/feedback", "/command/kanok", "/feedback/kanok" };
+
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback","/command/kanok","/feedback/kanok" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
         }
 
@@ -342,6 +349,12 @@ namespace SmartHome.MQTT.Client
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
             SmartHomeMQTT.Connect(ClientId, "mosharraf", "mosharraf", false, BrokerKeepAlivePeriod);
+        }
+
+        private void BrokerConnectionWithoutCertificateForCommand(string brokerAddress)
+        {
+            SmartHomeMQTT = new MqttClient(brokerAddress, BrokerPort, false, null, null, MqttSslProtocols.None, null);
+            SmartHomeMQTT.Connect(ClientId, "kanok", "kanok", false, BrokerKeepAlivePeriod);
         }
 
         private void BrokerConnectionWithoutCertificate(string brokerAddress)

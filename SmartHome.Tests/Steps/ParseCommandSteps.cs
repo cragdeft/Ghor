@@ -18,7 +18,7 @@ namespace SmartHome.Tests.Steps
     {
         public CommandJsonEntity JsonObject { get; set; }
 
-        public List<Device> DeviceList { get; set; }
+        public List<SmartDevice> DeviceList { get; set; }
 
         public Mock<ICommandPerserService> CommandPerserService { get; set; }
         public Mock<CommandJsonManager> _CommandJsonManager { get; set; }
@@ -28,7 +28,7 @@ namespace SmartHome.Tests.Steps
         {
             foreach (string jsonString in table.Rows.Select(row => row["value"]))
             {
-                DeviceList = new List<Device>();
+                DeviceList = new List<SmartDevice>();
                 CommandPerserService = new Mock<ICommandPerserService>();
                 ScenarioContext.Current.Set<string>(jsonString);
             }
@@ -72,7 +72,7 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_LoadType_status()
         {
-            Assert.AreEqual(DeviceType.SmartSwitch6g, _CommandJsonManager.Object.Device.DeviceType);
+            Assert.AreEqual(DeviceType.SmartSwitch6g, _CommandJsonManager.Object.SmartDevice.DeviceType);
             Assert.AreEqual(LoadType.NoLoad, _CommandJsonManager.Object.LoadType);
         }
 
@@ -175,7 +175,7 @@ namespace SmartHome.Tests.Steps
             return mockCommandJsonManager;
         }
 
-        private Device FindDevice(string deviceHash)
+        private SmartDevice FindDevice(string deviceHash)
         {
             return DeviceList.FirstOrDefault(x => x.DeviceHash == deviceHash);
         }
@@ -188,7 +188,7 @@ namespace SmartHome.Tests.Steps
             {
                 var demoChannel = GetDemoChannel(device);
                 var demoChannelList = new List<Channel>() { demoChannel };
-                device.Channels = demoChannelList;
+                ((SmartSwitch)device).Channels = demoChannelList;
 
                 var demoChannelStatusList = GetDemoChannelStatusList(demoChannel);
 
@@ -199,7 +199,7 @@ namespace SmartHome.Tests.Steps
             }
         }
 
-        private List<DeviceStatus> GetDemoDeviceStatusList(Device device)
+        private List<DeviceStatus> GetDemoDeviceStatusList(SmartDevice device)
         {
             return new List<DeviceStatus>()
             {
@@ -207,7 +207,7 @@ namespace SmartHome.Tests.Steps
                 {
                     Value = "1",
                     AuditField = null,
-                    Device = device,
+                    SmartDevice = device,
                     Status = 1,
                     StatusType = StatusType.CurrentLoadStatus,
                     DeviceStatusId = 1
@@ -231,11 +231,11 @@ namespace SmartHome.Tests.Steps
             };
         }
 
-        private Channel GetDemoChannel(Device device)
+        private Channel GetDemoChannel(SmartDevice device)
         {
             return new Channel()
             {
-                Device = device,
+               // SmartDevice = device,
                 AuditField = null,
                 ChannelId = 1,
                 ChannelNo = 1,
@@ -247,7 +247,7 @@ namespace SmartHome.Tests.Steps
 
         private void AddDemoDevice()
         {
-            var device = new Device()
+            var device = new SmartDevice()
             {
                 AuditField = null,
                 DeviceHash = "2094027172",
@@ -258,13 +258,13 @@ namespace SmartHome.Tests.Steps
                 Watt = null,
                 DeviceId = 32769,
                 DeviceVersion = "0",
-                DeviceStatus = null,
-                Channels = null
+                DeviceStatus = null
+               
             };
 
             DeviceList.Add(device);
 
-            device = new Device()
+            device = new SmartDevice()
             {
                 AuditField = null,
                 DeviceHash = "2094027173",
@@ -275,8 +275,8 @@ namespace SmartHome.Tests.Steps
                 Watt = null,
                 DeviceId = 32767,
                 DeviceVersion = "0",
-                DeviceStatus = null,
-                Channels = null
+                DeviceStatus = null
+               
             };
 
             DeviceList.Add(device);

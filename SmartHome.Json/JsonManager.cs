@@ -42,15 +42,14 @@ namespace SmartHome.Json
 
         #region Save Information
         private void SaveUpdateDevice(RootObjectEntity oRootObject)
-        {
-            //IEnumerable<Model.Models.Device> oDevice = ConfigureDevice(oRootObject);
+        {            
             List<SmartDevice> oSmartDevice = new List<SmartDevice>();
             IEnumerable<SmartSwitch> oDeviceSwitch = MapSmartDeviceObject<SmartSwitch>(oRootObject, DeviceType.SmartSwitch6g);
             IEnumerable<SmartRainbow> oDeviceRainbow = MapSmartDeviceObject<SmartRainbow>(oRootObject, DeviceType.SmartRainbow12);
-            IEnumerable<Model.Models.RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
-            IEnumerable<Model.Models.Channel> oChannel = ConfigureChannel(oRootObject);
-            IEnumerable<Model.Models.ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
-            IEnumerable<Model.Models.DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
+            IEnumerable<RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
+            IEnumerable<Channel> oChannel = ConfigureChannel(oRootObject);
+            IEnumerable<ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
+            IEnumerable<DeviceStatus> oDeviceStatus = ConfigureDeviceStatus(oRootObject);
 
             MergeDeviceDeviceStatusAndChannel(oDeviceSwitch, oChannel, oChannelStatus, oDeviceStatus, oSmartDevice);
             MergeDeviceDeviceStatusAndRgbStatus(oDeviceRainbow, oRgbwStatus, oSmartDevice);
@@ -78,10 +77,10 @@ namespace SmartHome.Json
         }
         #endregion
 
-        public T JsonProcess<T>(string JsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(JsonString);
-        }
+        //public T JsonProcess<T>(string JsonString)
+        //{
+        //    return JsonConvert.DeserializeObject<T>(JsonString);
+        //}
 
         private RootObjectEntity JsonDesrialized(string JsonString)
         {

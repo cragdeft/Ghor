@@ -38,33 +38,26 @@ namespace SmartHome.Web.Utility
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             if (customEventArgs.ReceivedTopic == CommandType.Configuration.ToString())
-            {                
-                 new JsonManager().JsonProcess(customEventArgs.ReceivedMessage);
+            {
+                new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
             }
 
-
-            if (customEventArgs.ReceivedTopic == CommandType.Feedback.ToString())
+            if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
             {
-                var jsonObject = ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Feedback);
+                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Feedback);
                 CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
                 commandJsonManager.Parse();
                 //FeedbackCommandParse(jsonObject);
             }
 
-            if (customEventArgs.ReceivedTopic == CommandType.Command.ToString())
+            if (customEventArgs.ReceivedTopic == "command/kanok")//CommandType.Command.ToString()
             {
-                //var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
-                //CommandLog(jsonObject);
+                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
+                new CommandJsonManager().CommandLog(jsonObject);
             }
-        }
 
-        static CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
-        {
-            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
-            jsonObject.CommandType = commandType;
-            return jsonObject;
-        }
 
+        }
         static void PublishedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             string msg = customEventArgs.ReceivedMessage;
