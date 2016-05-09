@@ -20,10 +20,10 @@ namespace SmartHome.Json
         #region Property
 
         #region Private
-        private  IUnitOfWorkAsync _unitOfWorkAsync;
-        private  ICommandPerserService _commandPerserService;
+        private IUnitOfWorkAsync _unitOfWorkAsync;
+        private ICommandPerserService _commandPerserService;
         private CommandJsonEntity _commandJson { get; set; }
-        public Device Device { get; set; }
+        public SmartDevice SmartDevice { get; set; }
 
         private string[] CommandArray { get; set; }
         #endregion
@@ -35,12 +35,19 @@ namespace SmartHome.Json
         public byte Initiator { get; set; }
         public CommandId CommandId { get; set; }
         public LoadType LoadType { get; set; }
-        
+
         #endregion
 
         #endregion
 
         #region Constructor
+
+     
+
+        public CommandJsonManager()
+        {
+        }
+
 
         public CommandJsonManager(CommandJsonEntity commandJson)
         {
@@ -59,7 +66,8 @@ namespace SmartHome.Json
 
         private void SetupCommandArrayAndLength()
         {
-            CommandArray = _commandJson.Command.Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
+            //CommandArray = _commandJson.Command.Skip(2).ToString().Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
+            CommandArray = _commandJson.Command.ToString().Replace("[", string.Empty).Replace("]", string.Empty).Split(',').Skip(2).ToArray();
             Length = CommandArray.Length;
         }
 
@@ -70,7 +78,7 @@ namespace SmartHome.Json
             _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
             _commandJson = commandJson;
             SetupCommandArrayAndLength();
-            
+
         }
 
         private void InitializeList()
@@ -92,9 +100,9 @@ namespace SmartHome.Json
         }
         public void Parse()
         {
-            Device = FindDevice();
+            SmartDevice = FindDevice();
 
-            if (Device == null)
+            if (SmartDevice == null)
             {
                 LogCommand(false, "Device not found.");
                 return;
@@ -143,7 +151,7 @@ namespace SmartHome.Json
             }
         }
 
-        public virtual Device FindDevice()
+        public virtual SmartDevice FindDevice()
         {
             return _commandPerserService.FindDevice(_commandJson.DeviceUUId);
         }
@@ -151,13 +159,27 @@ namespace SmartHome.Json
         public static T JsonDesrialized<T>(string jsonString)
         {
             return JsonConvert.DeserializeObject<T>(jsonString);
-        } 
+        }
+
+        public CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
+        {
+            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
+            jsonObject.CommandType = commandType;
+            return jsonObject;
+        }
+
+        public void CommandLog(CommandJsonEntity jsonObject)
+        {
+            CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+            commandJsonManager.LogCommand(true, "");
+        }
+
         #endregion
 
         #region Private Methods
         private CommandId GetCommandId()
         {
-            _commandJson.CommandId = (CommandId) GetValue(CommandArray[1]);
+            _commandJson.CommandId = (CommandId)GetValue(CommandArray[1]);
             return (CommandId)Enum.ToObject(typeof(CommandId), _commandJson.CommandId);
         }
 
@@ -215,7 +237,7 @@ namespace SmartHome.Json
 
         public void CurrentLoadStatusParse()
         {
-            if (Device.DeviceType != DeviceType.SmartSwitch6g) return;
+            if (SmartDevice.DeviceType != DeviceType.SmartSwitch6g) return;
 
             if (Length == 32)
             {
@@ -267,7 +289,7 @@ namespace SmartHome.Json
 
         public void OnOffFeedbackCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartSwitch6g)
+            if (SmartDevice.DeviceType == DeviceType.SmartSwitch6g)
             {
                 if (GetChannelNoOfCommunicationProtocol() == 0)
                     GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
@@ -276,27 +298,27 @@ namespace SmartHome.Json
             }
 
 
-            else if (Device.DeviceType == DeviceType.SmartRainbow12)
+            else if (SmartDevice.DeviceType == DeviceType.SmartRainbow12)
                 GetDeviceStatusFromNumber3Bit(StatusType.OnOffFeedback);
         }
 
         public void DimmingFeedbackCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartSwitch6g)
+            if (SmartDevice.DeviceType == DeviceType.SmartSwitch6g)
                 GetChannelStatus(StatusType.DimmingFeedback);
-            else if (Device.DeviceType == DeviceType.SmartRainbow12)
+            else if (SmartDevice.DeviceType == DeviceType.SmartRainbow12)
                 GetDeviceStatusFromNumber3Bit(StatusType.DimmingFeedback);
         }
 
         public void DimmingFeedbackEnableDisableCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartSwitch6g)
+            if (SmartDevice.DeviceType == DeviceType.SmartSwitch6g)
                 GetChannelStatus(StatusType.DimmingEnableDisableFeedback);
         }
 
         public void LoadTypeSelectCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartSwitch6g)
+            if (SmartDevice.DeviceType == DeviceType.SmartSwitch6g)
             {
                 AddChannelValue(StatusType.LoadTypeSelectFeedback);
             }
@@ -305,7 +327,7 @@ namespace SmartHome.Json
 
         private void SmartRainbowRgbwSetCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartRainbow12)
+            if (SmartDevice.DeviceType == DeviceType.SmartRainbow12)
             {
                 AddDeviceStatusToList(StatusType.RgbwStatus, GetRgbwStatus());
             }
@@ -323,21 +345,21 @@ namespace SmartHome.Json
 
         private void SmartRainbowPowerCommandParse()
         {
-            if (Device.DeviceType == DeviceType.SmartRainbow12)
-                GetDeviceStatusFromNumber2Bit(StatusType.RgbwStatus); 
+            if (SmartDevice.DeviceType == DeviceType.SmartRainbow12)
+                GetDeviceStatusFromNumber2Bit(StatusType.RgbwStatus);
         }
 
         private void AddChannelValue(StatusType status)
         {
-            Channel channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
+            Channel channel = ((SmartSwitch)SmartDevice).Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
             if (channel != null)
             {
                 channel.LoadType = (LoadType)Get3RdBitValueOfCommunicationProtocol();
-                LoadType = (LoadType) channel.LoadType;
+                LoadType = (LoadType)channel.LoadType;
                 _commandPerserService.UpdateChannel(channel);
             }
             else
-                LogCommand(false, "Channel DeviceId = " + Device.DeviceId + " not found.");
+                LogCommand(false, "Channel DeviceId = " + SmartDevice.DeviceId + " not found.");
         }
 
         private void ThermalShutDownCommandParse()
@@ -347,12 +369,12 @@ namespace SmartHome.Json
 
         public void SaveOrUpDateStatus()
         {
-            SaveDeviceStatus(Device);
+            SaveDeviceStatus(SmartDevice);
 
-            SaveChannelStatus(Device);
+            SaveChannelStatus(SmartDevice);
         }
 
-        private void SaveChannelStatus(Device device)
+        private void SaveChannelStatus(SmartDevice device)
         {
             foreach (var channelValue in ChannelStatusList)
             {
@@ -364,9 +386,9 @@ namespace SmartHome.Json
             }
         }
 
-        private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, Device device)
+        private void SaveSingleChannelStatus(ChannelStatusEntity channelValue, SmartDevice device)
         {
-            var channel = Device.Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
+            var channel = ((SmartSwitch)SmartDevice).Channels.FirstOrDefault(x => x.ChannelNo == GetChannelNoOfCommunicationProtocol());
 
             if (channel != null)
             {
@@ -404,17 +426,17 @@ namespace SmartHome.Json
             _commandPerserService.AddChannelStatus(status);
         }
 
-        private  void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
+        private void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
         {
             status.Value = Convert.ToInt32(channelValue.Value);
             _commandPerserService.UpdateChannelStatus(status);
         }
 
-        private void SaveDeviceStatus(Device entity)
+        private void SaveDeviceStatus(SmartDevice entity)
         {
             foreach (var ds in DeviceStatusList)
             {
-                DeviceStatus deviceStatus = Device.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType)ds.StatusType);
+                DeviceStatus deviceStatus = SmartDevice.DeviceStatus.FirstOrDefault(x => x.StatusType == (StatusType)ds.StatusType);
 
                 if (deviceStatus != null)
                 {
@@ -427,11 +449,11 @@ namespace SmartHome.Json
             }
         }
 
-        private void AddDeviceStatus(Device entity, DeviceStatusEntity ds)
+        private void AddDeviceStatus(SmartDevice entity, DeviceStatusEntity ds)
         {
             var deviceStatus = new DeviceStatus
             {
-                Device = entity,
+                SmartDevice = entity,
                 StatusType = (StatusType)ds.StatusType,
                 Value = ds.Value
             };
@@ -489,9 +511,9 @@ namespace SmartHome.Json
                 Value = Get3RdBitValueOfCommunicationProtocol().ToString()
             };
             ChannelStatusList.Add(channelStatus);
-        } 
+        }
         #endregion
-        
+
         #endregion
     }
 }

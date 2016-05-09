@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandJsonManager.cs" />
-    <Compile Include="JsonManager.cs" />
+    <Compile Include="ConfigurationJsonManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
