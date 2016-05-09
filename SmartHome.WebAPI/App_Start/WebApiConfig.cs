@@ -28,7 +28,7 @@ namespace SmartHome.WebAPI
             //);
 
 
-            var cors = new EnableCorsAttribute("http://localhost:8500", "*", "*");            
+            var cors = new EnableCorsAttribute("http://localhost:8500", "*", "*");
             // Web API configuration and services
             config.EnableCors(cors);
             // Web API routes
@@ -43,6 +43,7 @@ namespace SmartHome.WebAPI
             json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
             //json.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
         }
     }
 }
