@@ -38,11 +38,12 @@ namespace SmartHome.Service
             return _repository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
         }
 
-        public UserInfo GetUserInfos(string email, string pass)
+        public IEnumerable<UserInfo> GetUserInfos(string email, string pass)
         {
             return _repository.Query(x => x.Email == email && x.Password == pass)
                 .Include(x => x.UserHomeLinks.Select(y => y.Home))
-                .Include(x => x.UserRooms.Select(y => y.Room)).Select().FirstOrDefault();
+                .Include(x => x.UserHomeLinks.Select(y => y.Home.Rooms))
+                .Include(x => x.UserRooms.Select(y => y.Room)).Select();
         }
 
 

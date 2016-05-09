@@ -9,14 +9,14 @@ using SmartHome.Entity;
 
 namespace SmartHome.Service.Interfaces
 {
-    
+
     public interface IUserInfoService : IService<UserInfo>
-    {        
+    {
         IEnumerable<UserInfo> GetsUserInfos();
         bool IsLoginIdUnique(string email);
 
-        bool IsValidLogin(string email,string pass);
-        UserInfo GetUserInfos(string email, string pass);
+        bool IsValidLogin(string email, string pass);
+        IEnumerable<UserInfo> GetUserInfos(string email, string pass);
         UserInfoEntity Add(UserInfoEntity model);
     }
 }
