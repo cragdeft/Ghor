@@ -34,4 +34,33 @@ namespace SmartHome.Entity
         public IEnumerable<RoomEntity> Room { get; set; }
 
     }
+
+
+    public class LoginRootObjectEntity
+    {
+        public LoginMessage MESSAGE { get; set; }
+        public LoginObjectEntity data { get; set; }
+
+    }
+
+
+    public class LoginMessage
+    {
+        public int HTTP_STATUS { get; set; }
+        public string HTTP_MESSAGE { get; set; }
+    }
+
+
+    public class LoginObjectEntity
+    {
+
+
+        public List<UserInfoEntity> UserInfo { get; set; }
+        public List<UserHomeLinkEntity> UserHomeLink { get; set; }
+
+        public List<HomeEntity> Home { get; set; }
+
+        public List<RoomEntity> Room { get; set; }
+
+    }
 }
