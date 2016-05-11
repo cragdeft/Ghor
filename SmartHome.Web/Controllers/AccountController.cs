@@ -32,23 +32,23 @@ namespace SmartHome.Web.Controllers
         [HttpPost]
         public ActionResult Login(LoginEntity model, string returnUrl = "")
         {
-            if (ModelState.IsValid)
-            {
-                var user = _userInfoService
-                    .Query(p => p.UserName == model.Username && p.Password == model.Password)
-                    .Include(x => x.WebPagesRoles)
-                    .Select()
-                    .FirstOrDefault();
+            //if (ModelState.IsValid)
+            //{
+            //    var user = _userInfoService
+            //        .Query(p => p.UserName == model.Username && p.Password == model.Password)
+            //        .Include(x => x.WebPagesRoles)
+            //        .Select()
+            //        .FirstOrDefault();
 
-                if (user != null)
-                {
-                    SetCookieInfomation(model, user);
-                    return Redirect(returnUrl);
-                }
+            //    if (user != null)
+            //    {
+            //        SetCookieInfomation(model, user);
+            //        return Redirect(returnUrl);
+            //    }
 
-                ModelState.AddModelError("", "Incorrect username and/or password");
-            }
-            ModelState.Remove("Password");
+            //    ModelState.AddModelError("", "Incorrect username and/or password");
+            //}
+            //ModelState.Remove("Password");
             return View(model);
         } 
         #endregion

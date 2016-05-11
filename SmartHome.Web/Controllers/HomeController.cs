@@ -27,7 +27,7 @@ namespace SmartHome.Web.Controllers
 
         public ActionResult Index()
         {
-            return RedirectToAction("SmartHome");
+            return RedirectToAction("Configure");
         }
         public ActionResult Configure()
         {

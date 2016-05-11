@@ -37,7 +37,7 @@ namespace SmartHome.Web.Utility
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
-            if (customEventArgs.ReceivedTopic == CommandType.Configuration.ToString())
+            if (customEventArgs.ReceivedTopic == "configuration/kanok")// CommandType.Configuration.ToString()
             {
                 new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
             }
