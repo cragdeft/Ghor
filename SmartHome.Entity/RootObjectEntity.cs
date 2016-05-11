@@ -33,6 +33,8 @@ namespace SmartHome.Entity
 
         public IEnumerable<RoomEntity> Room { get; set; }
 
+        public IEnumerable<SmartRouterEntity> RouterInfo { get; set; }
+
     }
 
 
@@ -75,7 +77,7 @@ namespace SmartHome.Entity
 
 
         public List<RgbwStatusEntity> RgbwStatus { get; set; }
-        public List<RouterInfoEntity> RouterInfo { get; set; }
+        public List<SmartRouterEntity> RouterInfo { get; set; }
 
         
 
