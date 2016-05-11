@@ -53,6 +53,9 @@ namespace SmartHome.Json
             List<SmartDevice> oSmartDevice = new List<SmartDevice>();
             IEnumerable<SmartSwitch> oDeviceSwitch = MapSmartDeviceObject<SmartSwitch>(oRootObject, DeviceType.SmartSwitch6g);
             IEnumerable<SmartRainbow> oDeviceRainbow = MapSmartDeviceObject<SmartRainbow>(oRootObject, DeviceType.SmartRainbow12);
+
+            IEnumerable<SmartRouter> oDeviceRouter = MapSmartDeviceObject<SmartRouter>(oRootObject, DeviceType.SmartRouter);
+
             IEnumerable<RgbwStatus> oRgbwStatus = ConfigureRgbwStatus(oRootObject);
             IEnumerable<Channel> oChannel = ConfigureChannel(oRootObject);
             IEnumerable<ChannelStatus> oChannelStatus = ConfigureChannelStatus(oRootObject);
@@ -60,6 +63,7 @@ namespace SmartHome.Json
 
             MergeDeviceDeviceStatusAndChannel(oDeviceSwitch, oChannel, oChannelStatus, oDeviceStatus, oSmartDevice);
             MergeDeviceDeviceStatusAndRgbStatus(oDeviceRainbow, oRgbwStatus, oSmartDevice);
+            MergeDeviceDeviceAndRouter(oDeviceRouter, oDeviceStatus, oSmartDevice);
             StoreDeviceAndChannel(oSmartDevice, oRootObject.Device);
         }
 
@@ -78,8 +82,9 @@ namespace SmartHome.Json
             IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
             IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
             IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
+            IEnumerable<Model.Models.SmartRouterInfo> oSmartRouterInfo = ConfigureSmartRouterInfo(oRootObject);
             List<UserHomeLink> oUserHomeLink = new List<UserHomeLink>();
-            oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oRootObject.UserHomeLink);
+            oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oSmartRouterInfo, oRootObject.UserHomeLink);
             StoreHomeAndRoomAndUser(oUserHomeLink);
         }
         #endregion
@@ -125,11 +130,12 @@ namespace SmartHome.Json
 
         #region Merge
 
-        private List<UserHomeLink> MergeHomeAndRoomAndUser(IEnumerable<Home> oHome, IEnumerable<Room> oRoom, IEnumerable<UserInfo> oUserInfo, IEnumerable<UserHomeLinkEntity> oUserHomeLink)
+        private List<UserHomeLink> MergeHomeAndRoomAndUser(IEnumerable<Home> oHome, IEnumerable<Room> oRoom, IEnumerable<UserInfo> oUserInfo, IEnumerable<SmartRouterInfo> oSmartRouterInfo, IEnumerable<UserHomeLinkEntity> oUserHomeLink)
         {
             foreach (var item in oHome)
             {
                 item.Rooms = oRoom.Where(p => p.HId == item.Id).ToArray();
+                item.SmartRouterInfoes = oSmartRouterInfo.Where(p => p.HId == item.Id).ToArray();
             }
 
             List<UserHomeLink> oUserHomeList = new List<UserHomeLink>();
@@ -189,6 +195,22 @@ namespace SmartHome.Json
                 oSmartDevice.Add(item);
             }
         }
+
+
+        private void MergeDeviceDeviceAndRouter(IEnumerable<SmartRouter> oDevice, IEnumerable<DeviceStatus> oDeviceStatus, List<SmartDevice> oSmartDevice)
+        {
+            foreach (var item in oDevice)
+            {
+                //item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+                item.AuditField = new AuditFields();
+                item.ObjectState = ObjectState.Added;
+                oSmartDevice.Add(item);
+            }
+            
+        }
+
+
 
         #endregion
 
@@ -276,6 +298,24 @@ namespace SmartHome.Json
 
 
         #endregion
+
+
+        #region SmartRouter
+
+        private IEnumerable<Model.Models.SmartRouterInfo> ConfigureSmartRouterInfo(RootObjectEntity oRootObject)
+        {
+            Mapper.CreateMap<SmartRouterEntity, Model.Models.SmartRouterInfo>()
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
+            IEnumerable<Model.Models.SmartRouterInfo> oSmartRouter = Mapper.Map<IEnumerable<Entity.SmartRouterEntity>, IEnumerable<Model.Models.SmartRouterInfo>>(oRootObject.RouterInfo);
+            return oSmartRouter;
+        }
+
+
+        #endregion
+
+        
+
 
         #region UserInfo
 
