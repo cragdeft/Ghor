@@ -343,9 +343,9 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             SmartHomeMQTT.ConnectionClosed += client_ConnectionClosed;
 
-            var temp = new string[] { "/configuration", "/command", "/feedback", "/command/kanok", "/feedback/kanok" };
+            var temp = new string[] { "/configuration/kanok", "/command", "/feedback", "/command/kanok", "/feedback/kanok" };
 
-            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration", "/command", "/feedback","/command/kanok","/feedback/kanok" },
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "/configuration/kanok", "/command", "/feedback","/command/kanok","/feedback/kanok" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
                                       MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
