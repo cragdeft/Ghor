@@ -26,13 +26,17 @@ namespace SmartHome.Model.Enums
     public enum DeviceType
     {
         [EnumMember]
-        SmartSwitch6g = 0,
+        SmartSwitch6g = 1,
         [EnumMember]
-        SmartRainbow12 = 1,
+        SmartRainbow12 = 2,
         [EnumMember]
-        Curtain = 2,
+        CurtainV = 3,
         [EnumMember]
-        Camera = 3
+        CurtainH = 4,
+        [EnumMember]
+        Camera = 5,
+        [EnumMember]
+        SmartRouter=6
     }
 
     public enum MeshModeType

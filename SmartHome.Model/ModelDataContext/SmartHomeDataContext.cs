@@ -31,10 +31,12 @@ namespace SmartHome.Model.ModelDataContext
 
        // public IDbSet<Device> Devices { get; set; }
         public IDbSet<SmartDevice> SmartDevices { get; set; }
+        
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
         //public IDbSet<Channel> Channels { get; set; }
 
         public IDbSet<Home> Homes { get; set; }
+        public IDbSet<SmartRouterInfo> SmartRouterInfoes { get; set; }
         public IDbSet<Address> Addresses { get; set; }
         // public IDbSet<HomeVersion> HomeVersions { get; set; }
 
@@ -65,6 +67,7 @@ namespace SmartHome.Model.ModelDataContext
 
            modelBuilder.Entity<SmartDevice>()
           .Map<SmartSwitch>(m => m.Requires("Discriminator").HasValue("SmartSwitch"))
+          .Map<SmartRouter>(m => m.Requires("Discriminator").HasValue("SmartRouter"))
           .Map<SmartRainbow>(m => m.Requires("Discriminator").HasValue("SmartRainbow"));
 
 
