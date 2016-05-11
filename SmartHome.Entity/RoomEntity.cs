@@ -18,8 +18,8 @@ namespace SmartHome.Entity
 
         public int RoomNumber { get; set; }
 
-        public bool isActive { get; set; }
-        public bool isSynced { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsSynced { get; set; }
 
         #endregion
     }

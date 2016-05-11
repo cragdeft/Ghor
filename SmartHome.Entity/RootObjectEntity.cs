@@ -58,9 +58,29 @@ namespace SmartHome.Entity
         public List<UserInfoEntity> UserInfo { get; set; }
         public List<UserHomeLinkEntity> UserHomeLink { get; set; }
 
+        public List<UserRoomLinkEntity> UserRoomLink { get; set; }
+
+        
+
         public List<HomeEntity> Home { get; set; }
 
         public List<RoomEntity> Room { get; set; }
+
+        public List<DeviceEntity> Device { get; set; }
+
+        public List<DeviceStatusEntity> DeviceStatus { get; set; }
+        public List<ChannelEntity> Channel { get; set; }
+
+        public List<ChannelStatusEntity> ChannelStatus { get; set; }
+
+
+        public List<RgbwStatusEntity> RgbwStatus { get; set; }
+        public List<RouterInfoEntity> RouterInfo { get; set; }
+
+        
+
+
+
 
     }
 }
