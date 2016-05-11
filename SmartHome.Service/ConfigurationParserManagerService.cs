@@ -107,7 +107,46 @@ namespace SmartHome.Service
             existingItem.ObjectState = ObjectState.Modified;
 
             AddOrEditExistingRoomItems(item, existingItem);
+            AddOrEditExistingRourterItems(item, existingItem);
         }
+
+        #region Smart router
+
+        private void AddOrEditExistingRourterItems(Home item, Home existingItem)
+        {
+            foreach (var nextRouter in item.SmartRouterInfoes)
+            {
+                var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id).FirstOrDefault();
+                if (tempExistingRouter != null)
+                {
+                    //modify
+                    FillExistingRouterInfo(nextRouter, tempExistingRouter);
+                }
+                else
+                {
+                    //add
+                    existingItem.SmartRouterInfoes.Add(nextRouter);
+                }
+            }
+        }
+
+
+        private void FillExistingRouterInfo(SmartRouterInfo nextRouterDetail, SmartRouterInfo tempExistingRouterDetail)
+        {
+            tempExistingRouterDetail.ObjectState = ObjectState.Modified;
+            tempExistingRouterDetail.Id = nextRouterDetail.Id;
+            tempExistingRouterDetail.HId = nextRouterDetail.HId;
+            tempExistingRouterDetail.LocalBrokerUsername = nextRouterDetail.LocalBrokerUsername;
+            tempExistingRouterDetail.LocalBrokerPassword = nextRouterDetail.LocalBrokerPassword;
+            tempExistingRouterDetail.Ssid = nextRouterDetail.Ssid;
+            tempExistingRouterDetail.IsSynced = nextRouterDetail.IsSynced;
+            tempExistingRouterDetail.IsActive = nextRouterDetail.IsActive;
+            tempExistingRouterDetail.AuditField = new AuditFields();
+        } 
+        #endregion
+
+
+
 
         private void AddOrEditExistingRoomItems(Home item, Home existingItem)
         {
@@ -142,7 +181,7 @@ namespace SmartHome.Service
 
         private IEnumerable<UserHomeLink> IsHomeExists(int HId, int UInfoId)
         {
-            return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
+            return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
 
         //.Include(x => x.Channels.Select(y => y.ChannelStatuses))
@@ -461,8 +500,46 @@ namespace SmartHome.Service
         {
             FillSmartSwitch(model, deviceModel);
             FillSmartRainbox(model, deviceModel);
+            FillSmartRouter(model, deviceModel);
             return deviceModel;
         }
+
+        #region SmartRouter
+
+        private void FillSmartRouter(IEnumerable<SmartDevice> model, List<SmartDevice> deviceModel)
+        {
+            foreach (var item in model.Where(p => p.DeviceType == Model.Enums.DeviceType.SmartRouter))
+            {
+                //check already exist or not.
+                IEnumerable<SmartDevice> temp = IsDeviceRouterExists(item.Id, item.DeviceHash);
+                if (temp.Count() == 0)
+                {
+                    //new item
+                    deviceModel.Add(item);
+                    continue;
+                }
+                else
+                {
+                    foreach (var existingItem in temp.ToList())
+                    {
+                        //modify version                    
+                        FillExistingDeviceInfo(item, existingItem);
+
+                        if (item.DeviceStatus != null && item.DeviceStatus.Count > 0)
+                        {
+                            AddOrEditExistingDeviceStatus(item, existingItem);                            
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        #endregion
+
+
 
         private void FillSmartRainbox(IEnumerable<SmartDevice> model, List<SmartDevice> deviceModel)
         {
@@ -684,6 +761,12 @@ namespace SmartHome.Service
         private IEnumerable<SmartDevice> IsDeviceRainboxExists(int key, string deviceHash)
         {
             return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRainbow>().Where(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.RgbwStatuses).Include(x => x.Room).ToList();
+
+        }
+
+        private IEnumerable<SmartDevice> IsDeviceRouterExists(int key, string deviceHash)
+        {
+            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRouter>().Where(e => e.Id == key && e.DeviceHash == deviceHash).ToList();
 
         }
 

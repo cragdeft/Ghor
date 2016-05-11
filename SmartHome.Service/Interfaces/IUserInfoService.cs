@@ -10,7 +10,7 @@ using SmartHome.Entity;
 namespace SmartHome.Service.Interfaces
 {
 
-    public interface IUserInfoService : IService<UserInfo>
+    public interface IUserInfoService 
     {
         IEnumerable<UserInfo> GetsUserInfos();
         bool IsLoginIdUnique(string email);
