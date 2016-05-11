@@ -393,8 +393,8 @@ namespace SmartHome.WebAPI.Controllers
 
 
                     var oUserInfo = oLoginObject.UserInfo.First();
-                    //oUserInfo.Email = "a@a.com";
-                    //oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
+                    oUserInfo.Email = "as@as.com";
+                    oUserInfo.Password = "46tUX/XbJOPCnTLtU283wg==";
                     var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
                     if (isEmailExists)
                     {
@@ -428,7 +428,7 @@ namespace SmartHome.WebAPI.Controllers
 
                                 oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
                                 oLoginObject.RgbwStatus = new List<RgbwStatusEntity>();
-                                oLoginObject.RouterInfo = new List<RouterInfoEntity>();
+                                //oLoginObject.RouterInfo = new List<SmartRouterEntity>();
 
 
                                 Mapper.CreateMap<Home, HomeEntity>()
@@ -440,8 +440,23 @@ namespace SmartHome.WebAPI.Controllers
                                     oLoginObject.Home.Add(nextHome);
                                 }
 
-                                
 
+
+                                //smart router
+                                foreach (var nextRouterList in item.UserHomeLinks.Select(x => x.Home).Select(x => x.SmartRouterInfoes))
+                                {
+                                    Mapper.CreateMap<SmartRouterInfo, SmartRouterEntity>();
+                                    IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(nextRouterList);
+                                    oLoginObject.RouterInfo = new List<SmartRouterEntity>();
+                                    foreach (SmartRouterEntity nextRouter in oSmartRouterEntity)
+                                    {
+                                        oLoginObject.RouterInfo.Add(nextRouter);
+                                    }
+                                }
+                                    
+
+
+                                //room
                                 foreach (var nextRoomList in item.UserHomeLinks.Select(x => x.Home).Select(x => x.Rooms))
                                 {
                                     Mapper.CreateMap<Room, RoomEntity>();
@@ -451,6 +466,10 @@ namespace SmartHome.WebAPI.Controllers
                                     {
                                         oLoginObject.Room.Add(nextRoom);
                                     }
+
+                                    
+
+
                                     //smart device
                                     oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
                                     oLoginObject.Channel = new List<ChannelEntity>();
