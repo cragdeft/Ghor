@@ -1,0 +1,86 @@
+﻿@*@using SmartHome.Model.Enums
+@model SmartHome.Model.Models.SmartDevice*@
+
+<div class="col-sm-6 col-centered switch-panel-height">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    @*<h4 class="panel-title panel-header-label-color">
+                        <strong>
+                            <span>@Model.DeviceName</span>
+                        </strong>
+                    </h4>*@
+
+                    <h4 class="panel-title panel-header-label-color"><strong><span>Smart router</span></strong></h4>
+                    <small><span>control room</span></small>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body switch-body">
+            <div class="text-center">
+                <div class="container margin-20 padding-20">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.sm)Model).Channels, 1)*@
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <img src="~/Images/device/indicator_on.png" alt="bed room" />
+                            </div>
+                            <div class="row">
+                                <span class="font-size-10 text-grey">indicator</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.SmartSwitch)Model).Channels, 2)*@
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.SmartSwitch)Model).Channels, 3)*@
+                        </div>
+
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.SmartSwitch)Model).Channels, 4)*@
+                        </div>
+
+                        <div class="col-sm-4">
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.SmartSwitch)Model).Channels, 5)*@
+                        </div>
+
+                        <div class="col-sm-4">                            
+                            @*@Html.ChannelLoad(((SmartHome.Model.Models.SmartSwitch)Model).Channels, 6)*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

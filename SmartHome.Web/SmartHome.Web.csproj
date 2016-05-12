@@ -1161,6 +1161,7 @@
     <Content Include="Views\Home\_SmartHomeDeviceRGBW.cshtml" />
     <Content Include="Views\Home\_SmartHomeMain.cshtml" />
     <Content Include="Views\Home\_SmartHomeDevice.cshtml" />
+    <Content Include="Views\Home\_SmartHomeDeviceRouter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
