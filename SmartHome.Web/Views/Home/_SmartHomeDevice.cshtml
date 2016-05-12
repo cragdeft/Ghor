@@ -25,10 +25,13 @@
                 case DeviceType.SmartRainbow12:
                     @Html.Partial("_SmartHomeDeviceRGBW")
                     break;
-                case DeviceType.Curtain:
+                case DeviceType.CurtainV:
 
                     break;
                 case DeviceType.Camera:
+                    break;
+                case DeviceType.SmartRouter:
+                    @Html.Partial("_SmartHomeDeviceRouter")
                     break;
 
             }
