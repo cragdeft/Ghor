@@ -33,7 +33,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
             TagBuilder msg = new TagBuilder("span");
 
-            LoadChannel(tempChannel, pic, msg);
+            LoadChannel(helper, tempChannel, pic, msg);
 
             rowPic.InnerHtml = pic.ToString(TagRenderMode.SelfClosing);
             rowMsg.InnerHtml = msg.ToString();
@@ -46,7 +46,9 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
         }
 
-        private static void LoadChannel(Channel channel, TagBuilder pic, TagBuilder msg)
+        
+
+        private static void LoadChannel(HtmlHelper helper, Channel channel, TagBuilder pic, TagBuilder msg)
         {
             string cLoadPicture = string.Empty;
             string cLoadDim = string.Empty;
@@ -74,7 +76,13 @@ namespace SmartHome.Web.CustomHtmlHelpers
                         break;
                 }
             }
-            pic.Attributes.Add("src", "/Images/device/" + cLoadPicture + ".png");
+            //pic.Attributes.Add("src", "/Images/device/" + cLoadPicture + ".png");
+
+            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+
+            string imgUrl = urlHelper.Content("~/Images/device/" + cLoadPicture + ".png");
+
+            pic.Attributes.Add("src", imgUrl);
             pic.Attributes.Add("alt", channel.LoadName);
             msg.AddCssClass("font-size-10 text-grey");
             msg.SetInnerText(cLoadDim);

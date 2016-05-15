@@ -32,11 +32,11 @@ namespace SmartHome.Web
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                       "~/Scripts/jquery-ui-{version}.js"));
             //css
-            bundles.Add(new StyleBundle("~/Content/cssjqryUi").Include(
+            bundles.Add(new StyleBundle("~/Content/themes/base/all").Include(
                    "~/Content/themes/base/all.css"));
 
-            //css font awesome
-            bundles.Add(new StyleBundle("~/Content/cssfontAwesome").Include(
+            //css font awesome ~/Content/fontawesome/css/font-awesome
+            bundles.Add(new StyleBundle("~/Content/fontawesome/css/font-awesome").Include(
                    "~/Content/fontawesome/css/font-awesome.css"));
         }
     }

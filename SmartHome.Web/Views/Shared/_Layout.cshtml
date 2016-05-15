@@ -6,7 +6,7 @@
     <title>@ViewBag.Title - Smart home app</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @Styles.Render("~/Content/cssfontAwesome")
+    @Styles.Render("~/Content/fontawesome/css/font-awesome")
     
 
 
@@ -25,9 +25,10 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <div class="pull-left ">
-                    <img class="navbar-header-smarthome-image" />
-                </div>
+                @*<div class="pull-left ">
+                   
+                </div>*@
+                <img class="pull-left navbar-header-smarthome-image" src="~/Images/SmartHome.png" />
 
                 @Html.ActionLink("Smart Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
@@ -65,7 +66,7 @@
     <div id="footer-sticky">
         <div class="container">
             <div class="pull-left ">
-                <img class="footer-sinepulse-image" />
+                <img class="footer-sinepulse-image"  src="~/Images/CompanyLogo.png"/>
                 <span class="text-muted">&copy; @DateTime.Now.Year - Aplomb tech bd</span>
             </div>
             <span class="social-icon pull-right">
@@ -79,6 +80,9 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/themes/base/all")
     @RenderSection("scripts", required: false)
 
 </body>
