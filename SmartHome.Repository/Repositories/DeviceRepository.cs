@@ -1,6 +1,4 @@
-﻿using Repository.Pattern.Infrastructure;
-using Repository.Pattern.Repositories;
-using SmartHome.Entity;
+﻿using SmartHome.Entity;
 using SmartHome.Model.Models;
 using System;
 using System.Collections.Generic;

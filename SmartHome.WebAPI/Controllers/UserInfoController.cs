@@ -393,8 +393,8 @@ namespace SmartHome.WebAPI.Controllers
 
 
                     var oUserInfo = oLoginObject.UserInfo.First();
-                    oUserInfo.Email = "as@as.com";
-                    oUserInfo.Password = "46tUX/XbJOPCnTLtU283wg==";
+                    //oUserInfo.Email = "as@as.comyq";
+                    //oUserInfo.Password = "46tUX/XbJOPCnTLtU283wg==";
                     var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
                     if (isEmailExists)
                     {

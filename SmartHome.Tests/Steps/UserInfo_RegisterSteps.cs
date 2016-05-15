@@ -33,13 +33,19 @@ namespace SmartHome.Tests.Steps
             UserInfoService.Setup(x => x.IsLoginIdUnique(table.CreateInstance<UserInfoEntity>().Email))
                 .Returns(IsLoginIdUnique(table.CreateInstance<UserInfoEntity>().Email));
 
-            UserInfoController = new UserInfoController(UnitOfWork.Object, UserInfoService.Object)
+            //UserInfoController = new UserInfoController(UnitOfWork.Object, UserInfoService.Object)
+            //{
+            //    Request = new HttpRequestMessage(),
+            //    Configuration = new HttpConfiguration()
+            //};
+
+            UserInfoController = new UserInfoController()
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
             };
 
-            
+
             ScenarioContext.Current.Set<UserInfoEntity>(table.CreateInstance<UserInfoEntity>());
         }
         

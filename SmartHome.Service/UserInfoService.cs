@@ -36,12 +36,12 @@ namespace SmartHome.Service
 
         public IEnumerable<UserInfo> GetsUserInfos()
         {
-            return _userInfoRepository.GetsUserInfos();
+            return _userInfoRepository.Query().Select();
 
         }
         public bool IsLoginIdUnique(string email)
         {
-            return _userInfoRepository.IsLoginIdUnique(email);
+            return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
 
         public bool IsValidLogin(string email, string pass)
