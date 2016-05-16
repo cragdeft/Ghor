@@ -363,16 +363,7 @@ namespace SmartHome.WebAPI.Controllers
             HttpResponseMessage response;
             LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
-            oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
-            oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
-            oLoginObject.UserInfo = new List<UserInfoEntity>();
-            oLoginObject.Home = new List<HomeEntity>();
-            oLoginObject.Room = new List<RoomEntity>();
 
-            oLoginObject.Device = new List<DeviceEntity>();
-            oLoginObject.DeviceStatus = new List<DeviceStatusEntity>();
-            oLoginObject.Channel = new List<ChannelEntity>();
-            oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
 
             string msg = string.Empty;
 
@@ -393,136 +384,21 @@ namespace SmartHome.WebAPI.Controllers
 
 
                     var oUserInfo = oLoginObject.UserInfo.First();
-                    //oUserInfo.Email = "as@as.comyq";
-                    //oUserInfo.Password = "46tUX/XbJOPCnTLtU283wg==";
+                    oUserInfo.Email = "shuaibmeister@gmail.com";
+                    oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
                     var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
                     if (isEmailExists)
                     {
+
+
                         unitOfWork.BeginTransaction();
                         try
                         {
+                            ObjectInitialization(oLoginObject);
+
                             var oUserEntity = service.GetUserInfos(oUserInfo.Email, oUserInfo.Password);
-                            Mapper.CreateMap<UserInfo, UserInfoEntity>()
-                            .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Gender))
-                            .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
+                            FillLoginObjectByData(oLoginObject, oUserEntity);
 
-                            IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserEntity);
-                            oLoginObject.UserInfo = new List<UserInfoEntity>();
-                            oLoginObject.UserInfo.Add(oUserInfoEntity.First());
-
-                          //  oLoginObject.UserRoomLink.Add(new UserRoomLinkEntity());
-                            foreach (var item in oUserEntity)
-                            {
-
-                                Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
-                                .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
-                                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
-                                .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.Id))
-                                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
-                                IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(item.UserHomeLinks);
-                                oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
-                                foreach (UserHomeLinkEntity nextHLink in oUserHomeLinkEntity)
-                                {
-                                    oLoginObject.UserHomeLink.Add(nextHLink);
-                                }
-
-                                oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
-                                oLoginObject.RgbwStatus = new List<RgbwStatusEntity>();
-                                //oLoginObject.RouterInfo = new List<SmartRouterEntity>();
-
-
-                                Mapper.CreateMap<Home, HomeEntity>()
-                                      .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
-                                IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(item.UserHomeLinks.Select(x => x.Home));
-                                oLoginObject.Home = new List<HomeEntity>();
-                                foreach (HomeEntity nextHome in oHomeEntity)
-                                {
-                                    oLoginObject.Home.Add(nextHome);
-                                }
-
-
-
-                                //smart router
-                                foreach (var nextRouterList in item.UserHomeLinks.Select(x => x.Home).Select(x => x.SmartRouterInfoes))
-                                {
-                                    Mapper.CreateMap<SmartRouterInfo, SmartRouterEntity>();
-                                    IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(nextRouterList);
-                                    oLoginObject.RouterInfo = new List<SmartRouterEntity>();
-                                    foreach (SmartRouterEntity nextRouter in oSmartRouterEntity)
-                                    {
-                                        oLoginObject.RouterInfo.Add(nextRouter);
-                                    }
-                                }
-                                    
-
-
-                                //room
-                                foreach (var nextRoomList in item.UserHomeLinks.Select(x => x.Home).Select(x => x.Rooms))
-                                {
-                                    Mapper.CreateMap<Room, RoomEntity>();
-                                    IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(nextRoomList);
-                                    oLoginObject.Room = new List<RoomEntity>();
-                                    foreach (RoomEntity nextRoom in oRoomEntity)
-                                    {
-                                        oLoginObject.Room.Add(nextRoom);
-                                    }
-
-                                    
-
-
-                                    //smart device
-                                    oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
-                                    oLoginObject.Channel = new List<ChannelEntity>();
-                                    oLoginObject.Device = new List<DeviceEntity>();
-                                    oLoginObject.DeviceStatus = new List<DeviceStatusEntity>();
-                                    foreach (var nextSmartDeviceList in nextRoomList.Select(x => x.SmartDevices))
-                                    {
-                                        Mapper.CreateMap<SmartDevice, DeviceEntity>();
-                                        IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(nextSmartDeviceList);
-
-                                        foreach (DeviceEntity nextDevice in oDeviceEntity)
-                                        {
-                                            oLoginObject.Device.Add(nextDevice);
-                                        }
-                                        //d-status
-                                        foreach (var nextDeviceStatusList in nextSmartDeviceList.Select(x => x.DeviceStatus))
-                                        {
-                                            Mapper.CreateMap<DeviceStatus, DeviceStatusEntity>();
-                                            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(nextDeviceStatusList);
-
-                                            foreach (DeviceStatusEntity nextDeviceStatus in oDeviceStatusEntity)
-                                            {
-                                                oLoginObject.DeviceStatus.Add(nextDeviceStatus);
-                                            }
-
-                                        }
-                                        //channel
-
-                                        foreach (var nextChannelList in nextSmartDeviceList.Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).Select(x => ((SmartSwitch)x).Channels))
-                                        {
-                                            Mapper.CreateMap<Channel, ChannelEntity>();
-                                            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(nextChannelList);
-
-                                            foreach (ChannelEntity nextChannel in oChannelEntity)
-                                            {
-                                                oLoginObject.Channel.Add(nextChannel);
-                                            }
-
-
-                                            foreach (var nextChannelStatusList in nextChannelList.Select(x => x.ChannelStatuses))
-                                            {
-                                                Mapper.CreateMap<ChannelStatus, ChannelStatusEntity>();
-                                                IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(nextChannelStatusList);
-
-                                                foreach (ChannelStatusEntity nextChannelStatus in oChannelStatusEntity)
-                                                {
-                                                    oLoginObject.ChannelStatus.Add(nextChannelStatus);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                             oRootObject.data = new LoginObjectEntity();
                             oRootObject.data = oLoginObject;
 
@@ -543,10 +419,9 @@ namespace SmartHome.WebAPI.Controllers
                             oRootObject.MESSAGE = new LoginMessage();
                             oRootObject.MESSAGE = oLoginMessage;
                             msg = JsonConvert.SerializeObject(oRootObject);
-                            response = Request.CreateResponse(HttpStatusCode.NotFound, msg, Configuration.Formatters.JsonFormatter);//failure
+                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
                             unitOfWork.Rollback();
                         }
-                        //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(oRootObject), new JsonMediaTypeFormatter(), "application/json");//success
                         response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
                     }
                     else
@@ -567,6 +442,124 @@ namespace SmartHome.WebAPI.Controllers
                 }
             }
             return null;
+        }
+
+        private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            FillUserInfoToLoginObject(oLoginObject, oUserEntity);
+
+            FillUserHomeLinkInfoToLoginObject(oLoginObject, oUserEntity);
+
+            FillHomeInfoToLoginObject(oLoginObject, oUserEntity);
+
+            //smart router
+            FillSmartRouterInfoToLoginObject(oLoginObject, oUserEntity);
+
+            //room
+
+            FillRoomInfoToLoginObject(oLoginObject, oUserEntity);
+
+
+            //smart device
+
+
+            FillSmartDeviceInfoToLoginObject(oLoginObject, oUserEntity);
+
+
+            //d-status
+            FillSmartDeviceStatusInfoToLoginObject(oLoginObject, oUserEntity);
+
+            //channel
+
+            FillChannelInfoToLoginObject(oLoginObject, oUserEntity);
+            //c-status
+            FillChannelStatusInfoToLoginObject(oLoginObject, oUserEntity);
+        }
+
+        private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<ChannelStatus, ChannelStatusEntity>();
+            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels).SelectMany(x => x.ChannelStatuses));
+            oLoginObject.ChannelStatus.AddRange(oChannelStatusEntity);
+        }
+
+        private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<Channel, ChannelEntity>();
+            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels));
+            oLoginObject.Channel.AddRange(oChannelEntity);
+        }
+
+        private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<DeviceStatus, DeviceStatusEntity>();
+            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus));
+            oLoginObject.DeviceStatus.AddRange(oDeviceStatusEntity);
+        }
+
+        private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<SmartDevice, DeviceEntity>();
+            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices));
+            oLoginObject.Device.AddRange(oDeviceEntity);
+        }
+
+        private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<Room, RoomEntity>();
+            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms));
+            oLoginObject.Room.AddRange(oRoomEntity);
+        }
+
+        private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<SmartRouterInfo, SmartRouterEntity>();
+            IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.SmartRouterInfoes));
+            oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
+        }
+
+        private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<Home, HomeEntity>()
+                                              .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
+            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home));
+            oLoginObject.Home.AddRange(oHomeEntity);
+        }
+
+        private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
+                                        .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
+                                        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
+                                        .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.Id))
+                                        .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
+            IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks));
+            oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
+        }
+
+        private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<UserInfo, UserInfoEntity>()
+                                        .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Gender))
+                                        .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
+
+            IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserEntity);
+            oLoginObject.UserInfo.Add(oUserInfoEntity.First());
+        }
+
+        private void ObjectInitialization(LoginObjectEntity oLoginObject)
+        {
+            oLoginObject.UserInfo = new List<UserInfoEntity>();
+            oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
+            oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
+            oLoginObject.RgbwStatus = new List<RgbwStatusEntity>();
+            oLoginObject.Home = new List<HomeEntity>();
+            oLoginObject.RouterInfo = new List<SmartRouterEntity>();
+            oLoginObject.Room = new List<RoomEntity>();
+            oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
+            oLoginObject.Channel = new List<ChannelEntity>();
+            oLoginObject.Device = new List<DeviceEntity>();
+            oLoginObject.DeviceStatus = new List<DeviceStatusEntity>();
         }
 
         [NonAction]
