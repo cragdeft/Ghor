@@ -55,14 +55,25 @@ namespace SmartHome.Entity
 
     public class LoginObjectEntity
     {
-
-
+        public LoginObjectEntity()
+        {
+            UserInfo = new List<UserInfoEntity>();
+            UserHomeLink = new List<UserHomeLinkEntity>();
+            UserRoomLink = new List<UserRoomLinkEntity>();
+            Home = new List<HomeEntity>();
+            Room = new List<RoomEntity>();
+            Device = new List<DeviceEntity>();
+            Channel = new List<ChannelEntity>();
+            ChannelStatus = new List<ChannelStatusEntity>();
+            RgbwStatus = new List<RgbwStatusEntity>();
+            RouterInfo = new List<SmartRouterEntity>();
+        }
         public List<UserInfoEntity> UserInfo { get; set; }
         public List<UserHomeLinkEntity> UserHomeLink { get; set; }
 
         public List<UserRoomLinkEntity> UserRoomLink { get; set; }
 
-        
+
 
         public List<HomeEntity> Home { get; set; }
 
@@ -79,7 +90,7 @@ namespace SmartHome.Entity
         public List<RgbwStatusEntity> RgbwStatus { get; set; }
         public List<SmartRouterEntity> RouterInfo { get; set; }
 
-        
+
 
 
 
