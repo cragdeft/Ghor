@@ -384,8 +384,8 @@ namespace SmartHome.WebAPI.Controllers
 
 
                     var oUserInfo = oLoginObject.UserInfo.First();
-                    oUserInfo.Email = "shuaibmeister@gmail.com";
-                    oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
+                    //oUserInfo.Email = "shuaibmeister@gmail.com";
+                    //oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
                     var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
                     if (isEmailExists)
                     {
@@ -452,6 +452,10 @@ namespace SmartHome.WebAPI.Controllers
 
             FillHomeInfoToLoginObject(oLoginObject, oUserEntity);
 
+
+            //user room link
+            FillUserRoomLinkInfoToLoginObject(oLoginObject, oUserEntity);
+
             //smart router
             FillSmartRouterInfoToLoginObject(oLoginObject, oUserEntity);
 
@@ -479,35 +483,35 @@ namespace SmartHome.WebAPI.Controllers
         private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<ChannelStatus, ChannelStatusEntity>();
-            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels).SelectMany(x => x.ChannelStatuses));
+            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels).SelectMany(x => x.ChannelStatuses));
             oLoginObject.ChannelStatus.AddRange(oChannelStatusEntity);
         }
 
         private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<Channel, ChannelEntity>();
-            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels));
+            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels));
             oLoginObject.Channel.AddRange(oChannelEntity);
         }
 
         private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<DeviceStatus, DeviceStatusEntity>();
-            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus));
+            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus));
             oLoginObject.DeviceStatus.AddRange(oDeviceStatusEntity);
         }
 
         private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<SmartDevice, DeviceEntity>();
-            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms).SelectMany(y => y.SmartDevices));
+            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(x => x.SmartDevices));
             oLoginObject.Device.AddRange(oDeviceEntity);
         }
 
         private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<Room, RoomEntity>();
-            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.Rooms));
+            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room));
             oLoginObject.Room.AddRange(oRoomEntity);
         }
 
@@ -521,7 +525,7 @@ namespace SmartHome.WebAPI.Controllers
         private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             Mapper.CreateMap<Home, HomeEntity>()
-                                              .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
+                  .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
             IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home));
             oLoginObject.Home.AddRange(oHomeEntity);
         }
@@ -535,6 +539,17 @@ namespace SmartHome.WebAPI.Controllers
                                         .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
             IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks));
             oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
+        }
+
+
+        private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        {
+            Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
+                                        //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
+                                        .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id))
+                                        .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.Id));
+            IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks));
+            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity);
         }
 
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)

@@ -38,6 +38,7 @@ namespace SmartHome.Json
             {
                 RootObjectEntity oRootObject = JsonDesrialized(JsonString);
                 SaveUpdateHomeLink(oRootObject);
+                SaveUpdateUserRoomLink(oRootObject);
                 SaveUpdateVersion(oRootObject);
                 SaveUpdateDevice(oRootObject);
             }
@@ -77,6 +78,8 @@ namespace SmartHome.Json
             StoreVersionAndVersionDetail(oVersion);
         }
 
+
+
         private void SaveUpdateHomeLink(RootObjectEntity oRootObject)
         {
             IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
@@ -87,6 +90,21 @@ namespace SmartHome.Json
             oUserHomeLink = MergeHomeAndRoomAndUser(oHome, oRoom, oUserInfo, oSmartRouterInfo, oRootObject.UserHomeLink);
             StoreHomeAndRoomAndUser(oUserHomeLink);
         }
+
+
+
+
+        private void SaveUpdateUserRoomLink(RootObjectEntity oRootObject)
+        {
+            IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
+            //IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
+            IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
+            IEnumerable<Model.Models.SmartRouterInfo> oSmartRouterInfo = ConfigureSmartRouterInfo(oRootObject);
+            List<UserRoomLink> oUserRoomLink = new List<UserRoomLink>();
+            oUserRoomLink = MergeRoomAndUser(oRoom, oUserInfo, oRootObject.UserRoomLink);
+            StoreRoomAndUser(oUserRoomLink);
+        }
+
         #endregion
 
         //public T JsonProcess<T>(string JsonString)
@@ -144,6 +162,7 @@ namespace SmartHome.Json
 
                 var userHomeLink = new UserHomeLink
                 {
+                    Id = item.Id,
                     HId = Convert.ToInt32(item.Home),
                     UInfoId = Convert.ToInt32(item.User),
                     Home = oHome.FirstOrDefault(p => p.Id == item.Home),
@@ -155,6 +174,31 @@ namespace SmartHome.Json
                 oUserHomeList.Add(userHomeLink);
             }
             return oUserHomeList;
+
+        }
+
+
+        private List<UserRoomLink> MergeRoomAndUser(IEnumerable<Room> oRoom, IEnumerable<UserInfo> oUserInfo,  IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity)
+        {
+          
+
+            List<UserRoomLink> oUserRoomLink = new List<UserRoomLink>();
+            foreach (var item in oUserRoomLinkEntity)
+            {
+
+                var userRoomLink = new UserRoomLink
+                {
+                    Id = item.Id,
+                    RId = Convert.ToInt32(item.Room),                    
+                    UInfoId = Convert.ToInt32(item.User),
+                    Room = oRoom.FirstOrDefault(p => p.Id == item.Room),
+                    UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User),
+                    IsSynced = item.IsSynced,
+                    ObjectState = ObjectState.Added
+                };
+                oUserRoomLink.Add(userRoomLink);
+            }
+            return oUserRoomLink;
 
         }
 
@@ -207,7 +251,7 @@ namespace SmartHome.Json
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);
             }
-            
+
         }
 
 
@@ -314,7 +358,7 @@ namespace SmartHome.Json
 
         #endregion
 
-        
+
 
 
         #region UserInfo
@@ -367,6 +411,30 @@ namespace SmartHome.Json
                 {
                     unitOfWork.BeginTransaction();
                     service.AddOrUpdateHomeGraphRange(oUserHomeLink);
+                    var changes = unitOfWork.SaveChanges();
+                    unitOfWork.Commit();
+
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.Rollback();
+                }
+            }
+
+        }
+
+
+        private void StoreRoomAndUser(IEnumerable<Model.Models.UserRoomLink> oUserRoomLink)
+        {
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            {
+                IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
+
+                try
+                {
+                    unitOfWork.BeginTransaction();
+                    service.AddOrUpdateRoomGraphRange(oUserRoomLink);
                     var changes = unitOfWork.SaveChanges();
                     unitOfWork.Commit();
 

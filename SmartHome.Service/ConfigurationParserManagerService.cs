@@ -20,6 +20,7 @@ namespace SmartHome.Service
         // private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
+        private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
@@ -34,6 +35,7 @@ namespace SmartHome.Service
             // _unitOfWorkAsync = unitOfWork;
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
+            _userRoomLinkRepository = unitOfWork.RepositoryAsync<UserRoomLink>();
             _homeRepository = unitOfWork.RepositoryAsync<Home>();
             _versionRepository = unitOfWork.RepositoryAsync<Version>();
             _deviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
@@ -41,6 +43,87 @@ namespace SmartHome.Service
             _roomRepository = unitOfWork.RepositoryAsync<Room>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
         }
+
+
+        #region MyRegion
+
+        //AddOrUpdateRoomGraphRange
+
+        public IEnumerable<UserRoomLink> AddOrUpdateRoomGraphRange(IEnumerable<UserRoomLink> model)
+        {
+            List<UserRoomLink> userRoomLink = new List<UserRoomLink>();
+            userRoomLink = FillRoomInformations(model, userRoomLink);
+            _userRoomLinkRepository.InsertOrUpdateGraphRange(userRoomLink);
+            return userRoomLink;
+        }
+
+        public List<UserRoomLink> FillRoomInformations(IEnumerable<UserRoomLink> model, List<UserRoomLink> roomModel)
+        {
+            foreach (var item in model)
+            {
+                //check already exist or not.
+                IEnumerable<UserRoomLink> temp = IsRoomAndUserExists(item.RId, item.UInfoId);
+
+                if (temp.Count() == 0)
+                {
+                    //check for room unique
+
+                    IEnumerable<Room> tempRoomCheck = IsRoomExists(item.RId.ToString());
+                    if (tempRoomCheck.Count() > 0)
+                    {
+                        item.Room = new Room();
+                        item.Room.ObjectState = ObjectState.Modified;
+                        item.Room = tempRoomCheck.FirstOrDefault();
+                    }
+
+                    //check for user unique
+
+                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(item.UInfoId.ToString());
+                    if (tempUserCheck.Count() > 0)
+                    {
+                        item.UserInfo = new UserInfo();
+                        item.UserInfo.ObjectState = ObjectState.Modified;
+                        item.UserInfo = tempUserCheck.FirstOrDefault();
+                    }
+
+                    //new item
+                    roomModel.Add(item);
+                    continue;
+                }
+                else
+                {
+                    //existing item               
+                    // versionModel = temp;
+                    foreach (var existingItem in temp.ToList())
+                    {
+
+                        FillExistingRoomInfo(item.Room, existingItem.Room);
+                        FillExistingUserInfo(item.UserInfo, existingItem.UserInfo);
+
+
+
+                    }
+                }
+            }
+
+            return roomModel;
+        }
+
+
+        //private void FillExistingRoomInfo(Room item, Room existingItem)
+        //{
+        //    existingItem.Id = item.Id;
+        //    existingItem.HId = item.HId;
+        //    existingItem.Name = item.Name;
+        //    existingItem.RoomNumber = item.RoomNumber;
+        //    existingItem.Comment = item.Comment;
+        //    existingItem.IsMasterRoom = item.IsMasterRoom;
+        //    existingItem.IsActive = item.IsActive;
+        //    existingItem.ObjectState = ObjectState.Modified;
+            
+        //}
+
+        #endregion
 
 
 
@@ -207,7 +290,16 @@ namespace SmartHome.Service
         {
             //return _userHomeLinkRepository.Query(e => e.HId == HId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Select();
             return _homeRepository.Query(e => e.Id == HId).Include(x => x.SmartRouterInfoes).Include(x => x.Rooms).Select();
+
         }
+
+        private IEnumerable<Room> IsRoomExists(string RId)
+        {
+            return _roomRepository.Query(e => e.Id == RId).Select();
+
+        }
+
+
 
 
 
@@ -217,7 +309,12 @@ namespace SmartHome.Service
             return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
 
-        //.Include(x => x.Channels.Select(y => y.ChannelStatuses))
+        private IEnumerable<UserRoomLink> IsRoomAndUserExists(int RId, int UInfoId)
+        {
+            return _userRoomLinkRepository.Query(e => e.RId == RId && e.UInfoId == UInfoId).Include(x => x.Room).Include(x => x.UserInfo).Select();
+        }
+
+
 
 
 

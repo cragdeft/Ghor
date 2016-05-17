@@ -15,6 +15,7 @@ namespace SmartHome.Model.Models
         public int HId { get; set; }
         [Key, Column(Order = 1)]
         public int UInfoId { get; set; }
+        public string Id { get; set; }
         public virtual Home Home { get; set; }
         public virtual UserInfo UserInfo { get; set; }
         public bool IsAdmin { get; set; }

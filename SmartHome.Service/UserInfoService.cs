@@ -56,13 +56,10 @@ namespace SmartHome.Service
 
             return _userInfoRepository.Queryable().Where(x => x.Email == email && x.Password == pass)
                 .Include(x => x.UserHomeLinks.Select(y => y.Home.SmartRouterInfoes))
-                .Include(x => x.UserHomeLinks.Select(y => y.Home.Rooms.Select(z => z.SmartDevices.Select(p => p.DeviceStatus))))
-                .Include(x => x.UserRooms.Select(y => y.Room)).ToList();
+                .Include(x => x.UserHomeLinks.Select(y => y.Home))
+                .Include(x => x.UserRoomLinks.Select(y => y.Room.SmartDevices.Select(p => p.DeviceStatus))).ToList();
 
-            //return _userInfoRepository.Query(x => x.Email == email && x.Password == pass)
-            //    .Include(x => x.UserHomeLinks.Select(y => y.Home))
-            //    .Include(x => x.UserHomeLinks.Select(y => y.Home.Rooms.Select(z => z.SmartDevices.Select(p => p.DeviceStatus))))
-            //    .Include(x => x.UserRooms.Select(y => y.Room)).Select();
+
         }
 
 
