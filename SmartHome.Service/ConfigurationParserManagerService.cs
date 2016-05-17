@@ -20,6 +20,7 @@ namespace SmartHome.Service
         // private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
+        private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<SmartDevice> _smartDeviceRepository;
@@ -33,6 +34,7 @@ namespace SmartHome.Service
             // _unitOfWorkAsync = unitOfWork;
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
+            _homeRepository = unitOfWork.RepositoryAsync<Home>();
             _versionRepository = unitOfWork.RepositoryAsync<Version>();
             _deviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
             _smartDeviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
@@ -56,9 +58,30 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<UserHomeLink> temp = IsHomeExists(item.HId, item.UInfoId);
+                IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(item.HId, item.UInfoId);
+
                 if (temp.Count() == 0)
                 {
+                    //check for home unique
+
+                    IEnumerable<Home> tempHomeCheck = IsHomeExists(item.HId.ToString());
+                    if (tempHomeCheck.Count() > 0)
+                    {
+                        item.Home = new Home();
+                        item.Home.ObjectState = ObjectState.Modified;
+                        item.Home = tempHomeCheck.FirstOrDefault();
+                    }
+
+                    //check for user unique
+
+                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(item.UInfoId.ToString());
+                    if (tempUserCheck.Count() > 0)
+                    {
+                        item.UserInfo = new UserInfo();
+                        item.UserInfo.ObjectState = ObjectState.Modified;
+                        item.UserInfo = tempUserCheck.FirstOrDefault();
+                    }
+
                     //new item
                     homeModel.Add(item);
                     continue;
@@ -69,6 +92,7 @@ namespace SmartHome.Service
                     // versionModel = temp;
                     foreach (var existingItem in temp.ToList())
                     {
+                        existingItem.ObjectState = ObjectState.Modified;
                         //modify version                    
                         //var temp2 = item.Home;
 
@@ -142,7 +166,7 @@ namespace SmartHome.Service
             tempExistingRouterDetail.IsSynced = nextRouterDetail.IsSynced;
             tempExistingRouterDetail.IsActive = nextRouterDetail.IsActive;
             tempExistingRouterDetail.AuditField = new AuditFields();
-        } 
+        }
         #endregion
 
 
@@ -179,7 +203,16 @@ namespace SmartHome.Service
             tempExistingRoomDetail.AuditField = new AuditFields();
         }
 
-        private IEnumerable<UserHomeLink> IsHomeExists(int HId, int UInfoId)
+        private IEnumerable<Home> IsHomeExists(string HId)
+        {
+            //return _userHomeLinkRepository.Query(e => e.HId == HId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Select();
+            return _homeRepository.Query(e => e.Id == HId).Include(x => x.SmartRouterInfoes).Include(x => x.Rooms).Select();
+        }
+
+
+
+
+        private IEnumerable<UserHomeLink> IsHomeAndUserExists(int HId, int UInfoId)
         {
             return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
@@ -527,7 +560,7 @@ namespace SmartHome.Service
 
                         if (item.DeviceStatus != null && item.DeviceStatus.Count > 0)
                         {
-                            AddOrEditExistingDeviceStatus(item, existingItem);                            
+                            AddOrEditExistingDeviceStatus(item, existingItem);
 
                         }
 
