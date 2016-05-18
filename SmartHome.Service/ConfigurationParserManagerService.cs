@@ -27,6 +27,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartDevice> _smartDeviceRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
+        private readonly IRepositoryAsync<SmartRouterInfo> _smartRouterInfoRepository;
         // private string _email;
         #endregion
 
@@ -42,6 +43,7 @@ namespace SmartHome.Service
             _smartDeviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
             _roomRepository = unitOfWork.RepositoryAsync<Room>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
+            _smartRouterInfoRepository = unitOfWork.RepositoryAsync<SmartRouterInfo>();
         }
 
 
@@ -120,7 +122,7 @@ namespace SmartHome.Service
         //    existingItem.IsMasterRoom = item.IsMasterRoom;
         //    existingItem.IsActive = item.IsActive;
         //    existingItem.ObjectState = ObjectState.Modified;
-            
+
         //}
 
         #endregion
@@ -138,35 +140,36 @@ namespace SmartHome.Service
 
         public List<UserHomeLink> FillHomeInformations(IEnumerable<UserHomeLink> model, List<UserHomeLink> homeModel)
         {
-            foreach (var item in model)
+            foreach (var nextHome in model)
             {
+                // var nextHome = model.FirstOrDefault(p => p.HId == item.Key);
                 //check already exist or not.
-                IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(item.HId, item.UInfoId);
+                IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(nextHome.HId, nextHome.UInfoId);
 
                 if (temp.Count() == 0)
                 {
                     //check for home unique
 
-                    IEnumerable<Home> tempHomeCheck = IsHomeExists(item.HId.ToString());
+                    IEnumerable<Home> tempHomeCheck = IsHomeExists(nextHome.HId.ToString());
                     if (tempHomeCheck.Count() > 0)
                     {
-                        item.Home = new Home();
-                        item.Home.ObjectState = ObjectState.Modified;
-                        item.Home = tempHomeCheck.FirstOrDefault();
+                        nextHome.Home = new Home();
+                        nextHome.Home.ObjectState = ObjectState.Modified;
+                        nextHome.Home = tempHomeCheck.FirstOrDefault();
                     }
 
                     //check for user unique
 
-                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(item.UInfoId.ToString());
+                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(nextHome.UInfoId.ToString());
                     if (tempUserCheck.Count() > 0)
                     {
-                        item.UserInfo = new UserInfo();
-                        item.UserInfo.ObjectState = ObjectState.Modified;
-                        item.UserInfo = tempUserCheck.FirstOrDefault();
+                        nextHome.UserInfo = new UserInfo();
+                        nextHome.UserInfo.ObjectState = ObjectState.Modified;
+                        nextHome.UserInfo = tempUserCheck.FirstOrDefault();
                     }
 
                     //new item
-                    homeModel.Add(item);
+                    homeModel.Add(nextHome);
                     continue;
                 }
                 else
@@ -175,21 +178,12 @@ namespace SmartHome.Service
                     // versionModel = temp;
                     foreach (var existingItem in temp.ToList())
                     {
-                        existingItem.ObjectState = ObjectState.Modified;
-                        //modify version                    
-                        //var temp2 = item.Home;
-
-                        FillExistingHomeInfo(item.Home, existingItem.Home);
-                        FillExistingUserInfo(item.UserInfo, existingItem.UserInfo);
-
-                        //if (item.Home != null)
-                        //{
-                        //    AddOrEditExistingHomeItems(item.Home, existingItem.Home);
-                        //}
-
+                        FillExistingHomeInfo(nextHome.Home, existingItem.Home);
+                        FillExistingUserInfo(nextHome.UserInfo, existingItem.UserInfo);
                     }
                 }
             }
+
 
             return homeModel;
         }
@@ -219,13 +213,17 @@ namespace SmartHome.Service
 
         #region Smart router
 
+
+
+
         private void AddOrEditExistingRourterItems(Home item, Home existingItem)
         {
             foreach (var nextRouter in item.SmartRouterInfoes)
             {
-                var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id).FirstOrDefault();
-                if (tempExistingRouter != null)
+                var tempRouter = _smartRouterInfoRepository.Query(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).Select();
+                if (tempRouter != null && tempRouter.Count() > 0)
                 {
+                    var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).FirstOrDefault();
                     //modify
                     FillExistingRouterInfo(nextRouter, tempExistingRouter);
                 }
@@ -351,11 +349,6 @@ namespace SmartHome.Service
                     {
                         //modify version                    
                         FillExistingUserInfo(item, existingItem);
-
-                        //if (item.Rooms != null && item.Rooms.Count > 0)
-                        //{
-                        //    AddOrEditExistingRoomItems(item, existingItem);
-                        //}
 
                     }
                 }
@@ -771,7 +764,7 @@ namespace SmartHome.Service
             //channel status
             foreach (var nextChannelStatus in nextChannel.ChannelStatuses)
             {
-                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.Id == nextChannelStatus.Id).FirstOrDefault();
+                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.Id == nextChannelStatus.Id && p.CId == nextChannelStatus.CId).FirstOrDefault();
                 if (tempExistingChannelStatus != null)
                 {
                     //modify
@@ -790,8 +783,8 @@ namespace SmartHome.Service
             tempExistingChannelStatus.ObjectState = ObjectState.Modified;
             tempExistingChannelStatus.Id = nextChannelStatus.Id;
             tempExistingChannelStatus.CId = nextChannelStatus.CId;
-            tempExistingChannelStatus.DId = nextChannelStatus.DId;
-            tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
+            //tempExistingChannelStatus.DId = nextChannelStatus.DId;
+            //tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
             tempExistingChannelStatus.Status = nextChannelStatus.Status;
             tempExistingChannelStatus.Value = nextChannelStatus.Value;
             tempExistingChannelStatus.AuditField = new AuditFields();
@@ -1015,34 +1008,18 @@ namespace SmartHome.Service
 
         public List<UserHomeLink> GetsHomesAllInfo()
         {
-
-            ////var temp = _userHomeLinkRepository.Query().Include(x => x.Home).Include(x => x.Home.Rooms.Select(y => y.Devices.Select(z => z.DeviceStatus))).Include(x => x.UserInfo).Select().ToList();
-            //var temp = _userHomeLinkRepository.Queryable().Include(x => x.Home)
-            //    //.Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => ((SmartSwitch)z).Channels.Select(a => a.ChannelStatuses))))
-            //    //.Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => ((SmartSwitch)z).Channels)))
-            //    .Include(x => x.Home.Rooms.Select(y => y.SmartDevices.OfType<SmartSwitch>()))
-            //    .Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus)))
-            //    .Include(x => x.UserInfo).ToList();
-
-            //return temp;
-            //myContext.BaseClass.OfType<PQR1>();
-
             try
             {
                 var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
                 var temp = _userHomeLinkRepository.Queryable().Include(x => x.Home).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
-
                 return temp;
             }
             catch (System.Exception ex)
             {
-
                 throw;
             }
 
             return null;
-
-
         }
 
         #endregion

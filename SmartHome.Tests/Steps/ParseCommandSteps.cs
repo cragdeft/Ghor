@@ -223,7 +223,7 @@ namespace SmartHome.Tests.Steps
                 {
                     Channel = demoChannel,
                     AuditField = null,
-                    ChannelNo = 1,
+                    //ChannelNo = 1,
                     ChannelStatusId = 1,
                     Status = ChannelStatusType.Dimmable,
                     Value = 1

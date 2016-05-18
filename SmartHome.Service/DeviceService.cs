@@ -124,8 +124,8 @@ namespace SmartHome.Service
             tempExistingChannelStatus.ObjectState = ObjectState.Modified;
             tempExistingChannelStatus.Id = nextChannelStatus.Id;
             tempExistingChannelStatus.CId = nextChannelStatus.CId;
-            tempExistingChannelStatus.DId = nextChannelStatus.DId;
-            tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
+            //tempExistingChannelStatus.DId = nextChannelStatus.DId;
+            //tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
             tempExistingChannelStatus.Status = nextChannelStatus.Status;
             tempExistingChannelStatus.Value = nextChannelStatus.Value;
             tempExistingChannelStatus.AuditField = new AuditFields();

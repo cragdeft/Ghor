@@ -420,7 +420,7 @@ namespace SmartHome.Json
             {
                 Channel = channel,
                 Status = (ChannelStatusType)channelValue.Status,
-                ChannelNo = channelValue.ChannelNo,
+                //ChannelNo = channelValue.ChannelNo,
                 Value = Convert.ToInt32(channelValue.Value)
             };
             _commandPerserService.AddChannelStatus(status);
