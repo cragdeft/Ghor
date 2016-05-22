@@ -60,6 +60,7 @@ namespace SmartHome.Web.Controllers
                             serializeModel.FirstName = user.FirstName;
                             serializeModel.LastName = user.LastName;
                             serializeModel.Email = user.Email;
+                            serializeModel.IsAdmin = user.UserHomeLinks.FirstOrDefault().IsAdmin;
                             serializeModel.roles = roles;
 
                             string userData = JsonConvert.SerializeObject(serializeModel);

@@ -80,7 +80,8 @@ namespace SmartHome.Web.Controllers
                 try
                 {
                     unitOfWork.BeginTransaction();
-                    var oUserHomeLink = service.GetsHomesAllInfo();
+                    
+                    var oUserHomeLink = service.GetsHomesAllInfo(User.UserInfoId,User.IsAdmin);
                     var oVersion = service.GetsAppVersionAllInfo();
                     unitOfWork.Commit();
 
