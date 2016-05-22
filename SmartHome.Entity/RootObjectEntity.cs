@@ -68,6 +68,7 @@ namespace SmartHome.Entity
             ChannelStatus = new List<ChannelStatusEntity>();
             RgbwStatus = new List<RgbwStatusEntity>();
             RouterInfo = new List<SmartRouterEntity>();
+            DeviceStatus = new List<DeviceStatusEntity>();
         }
         public List<UserInfoEntity> UserInfo { get; set; }
         public List<UserHomeLinkEntity> UserHomeLink { get; set; }

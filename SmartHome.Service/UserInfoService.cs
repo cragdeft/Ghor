@@ -20,6 +20,7 @@ namespace SmartHome.Service
     {
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
+        private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
 
         //public UserInfoService(IRepositoryAsync<UserInfo> repository) : base(repository)
         //{
@@ -28,17 +29,24 @@ namespace SmartHome.Service
         //}       
 
 
-        public UserInfoService(IUnitOfWorkAsync unitOfWor)
+        public UserInfoService(IUnitOfWorkAsync unitOfWork)
         {
-            _userInfoRepository = unitOfWor.RepositoryAsync<UserInfo>();
-            _channelRepository = unitOfWor.RepositoryAsync<Channel>();
+            _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
+            _channelRepository = unitOfWork.RepositoryAsync<Channel>();
+            _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
         }
 
         public IEnumerable<UserInfo> GetsUserInfos()
         {
             return _userInfoRepository.Query().Select();
+        }
+
+        public IEnumerable<UserInfo> GetsUserInfos(string username, string password)
+        {
+            return _userInfoRepository.Query(p => p.UserName == username && p.Password == password).Select();
 
         }
+
         public bool IsLoginIdUnique(string email)
         {
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
@@ -73,8 +81,13 @@ namespace SmartHome.Service
 
             _userInfoRepository.Insert(model);
             return entity;
+            
+        }
 
 
+        public IEnumerable<WebPagesRole> GetsWebPagesRoles()
+        {
+            return _webPagesRoleRepository.Query().Select();
         }
 
     }

@@ -444,6 +444,92 @@ namespace SmartHome.WebAPI.Controllers
             return null;
         }
 
+        [Route("api/IsUserExist")]
+        [HttpPost]
+        public HttpResponseMessage PostIsUserExist(JObject encryptedString)
+        {
+            #region MyRegion
+
+            HttpResponseMessage response;
+            LoginObjectEntity oLoginObject = new LoginObjectEntity();
+            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
+            string msg = string.Empty;            
+
+            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+            if (string.IsNullOrEmpty(msg))
+            {
+                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");//failure
+            }
+
+            oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
+            var oUserInfo = oLoginObject.UserInfo.First();
+
+            #endregion
+
+
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            {
+                IUserInfoService service = new UserInfoService(unitOfWork);
+
+                try
+                {
+
+
+                    try
+                    {
+                        oRootObject.data = new LoginObjectEntity();
+                        var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
+                        if (isEmailExists)
+                        {
+
+                            
+                            LoginMessage oLoginMessage = SetLoginMessage("User already exist", HttpStatusCode.Conflict);
+                            oRootObject.MESSAGE = new LoginMessage();
+                            oRootObject.MESSAGE = oLoginMessage;
+                            msg = JsonConvert.SerializeObject(oRootObject);
+                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+
+                        }
+                        else
+                        {
+                            LoginMessage oLoginMessage = SetLoginMessage("User not exist", HttpStatusCode.OK);
+                            oRootObject.MESSAGE = new LoginMessage();
+                            oRootObject.MESSAGE = oLoginMessage;
+                            msg = JsonConvert.SerializeObject(oRootObject);
+                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        oRootObject.data = new LoginObjectEntity();
+                        LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
+                        oRootObject.MESSAGE = new LoginMessage();
+                        oRootObject.MESSAGE = oLoginMessage;
+                        msg = JsonConvert.SerializeObject(oRootObject);
+                        //already exist                        
+                        response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+
+                    }
+
+                    return response;
+
+                }
+                catch (Exception ex)
+                {
+                    unitOfWork.Rollback();
+                }
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
+        }
+
+
+
+
         private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
             FillUserInfoToLoginObject(oLoginObject, oUserEntity);

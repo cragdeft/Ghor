@@ -13,6 +13,10 @@ namespace SmartHome.Service.Interfaces
     public interface IUserInfoService 
     {
         IEnumerable<UserInfo> GetsUserInfos();
+
+        IEnumerable<UserInfo> GetsUserInfos(string username,string password);
+
+        IEnumerable<WebPagesRole> GetsWebPagesRoles();
         bool IsLoginIdUnique(string email);
 
         bool IsValidLogin(string email, string pass);
