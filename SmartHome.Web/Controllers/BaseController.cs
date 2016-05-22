@@ -1,4 +1,5 @@
-﻿using SmartHome.Web.Filters;
+﻿
+using SmartHome.Web.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;

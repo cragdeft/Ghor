@@ -6,8 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-
-namespace SmartHome.Web.Filters
+namespace SmartHome.Web.Security
 {
     public class CustomAuthorizeAttribute : AuthorizeAttribute
     {
@@ -42,7 +41,7 @@ namespace SmartHome.Web.Filters
 
                 if (!String.IsNullOrEmpty(Users))
                 {
-                    if (!Users.Contains(CurrentUser.UserId.ToString()))
+                    if (!Users.Contains(CurrentUser.UserInfoId.ToString()))
                     {
                         filterContext.Result = new RedirectToRouteResult(new
                      RouteValueDictionary(new { controller = "Error", action = "AccessDenied" }));
@@ -51,9 +50,10 @@ namespace SmartHome.Web.Filters
                     }
                 }
             }
+
             else
             {
-                base.OnAuthorization(filterContext); //returns to login url
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Index", returnUrl = filterContext.HttpContext.Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.SafeUnescaped) }));
             }
 
         }

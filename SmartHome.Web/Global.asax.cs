@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SmartHome.Model.ModelDataContext;
-using SmartHome.Web.Filters;
+using SmartHome.Web.Security;
 using SmartHome.Web.Utility;
 using System;
 using System.Data.Entity;
@@ -35,9 +34,10 @@ namespace SmartHome.Web
                 FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
                 CustomPrincipalSerializeModel serializeModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(authTicket.UserData);
                 CustomPrincipal newUser = new CustomPrincipal(authTicket.Name);
-                newUser.UserId = serializeModel.UserId;
+                newUser.UserInfoId = serializeModel.UserInfoId;
                 newUser.FirstName = serializeModel.FirstName;
                 newUser.LastName = serializeModel.LastName;
+                newUser.Email = serializeModel.Email;
                 newUser.roles = serializeModel.roles;
 
                 HttpContext.Current.User = newUser;

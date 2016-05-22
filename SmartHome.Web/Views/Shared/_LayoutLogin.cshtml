@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Smart home app</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/fontawesome/css/font-awesome")
+    
+
+
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div id="header-sticky">
+        </div>
+        <div class="container">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                @*<div class="pull-left ">
+                   
+                </div>*@
+                @*<img class="pull-left navbar-header-smarthome-image" src="~/Images/SmartHome.png" />
+
+                @Html.ActionLink("Smart Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+
+            <div class="navbar-collapse collapse">
+
+                @*<ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Version", "Index", "Version")</li>
+                    <li>@Html.ActionLink("Configure", "Configure", "Home")</li>
+                    <li>@Html.ActionLink("Configure Tree", "ConfigureTree", "Home")</li>
+                    <li>@Html.ActionLink("Login", "Login", "UserInfo")</li>
+                </ul>*@
+                <div class="pull-right">
+
+                    @*<span class="header-title-right">Sign in | Sign up &nbsp;</span>
+                    <span class="social-icon">
+                        <i class="fa fa-user "></i>
+                    </span>*@
+                </div>
+                @*@Html.Partial("_LoginPartial")*@
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        @*<footer class="footer-color">
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
+    </div>
+
+    <div id="footer-sticky">
+        <div class="container">
+            <div class="pull-left ">
+                <img class="footer-sinepulse-image"  src="~/Images/CompanyLogo.png"/>
+                <span class="text-muted">&copy; @DateTime.Now.Year - Aplomb tech bd</span>
+            </div>
+            <span class="social-icon pull-right">
+                <i class="fa fa-rss social-icon-rss"></i>
+                <i class="fa fa-facebook social-icon-fb"></i>
+                <i class="fa fa-twitter social-icon-twitter"></i>
+            </span>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/themes/base/all")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

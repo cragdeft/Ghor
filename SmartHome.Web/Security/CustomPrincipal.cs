@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Web;
 
-namespace SmartHome.Web.Filters
+namespace SmartHome.Web.Security
 {
     public class CustomPrincipal : IPrincipal
     {
@@ -26,16 +26,18 @@ namespace SmartHome.Web.Filters
             this.Identity = new GenericIdentity(Username);
         }
 
-        public int UserId { get; set; }
+        public int UserInfoId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
         public string[] roles { get; set; }
     }
 
     public class CustomPrincipalSerializeModel
     {
-        public int UserId { get; set; }
+        public int UserInfoId { get; set; }
         public string FirstName { get; set; }
+        public string Email { get; set; }
         public string LastName { get; set; }
         public string[] roles { get; set; }
     }

@@ -250,15 +250,16 @@
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="CustomHtmlHelpers\CustomHtmlHelpers.cs" />
-    <Compile Include="Filters\CustomAuthorizeAttribute.cs" />
-    <Compile Include="Filters\CustomPrincipal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\m2mMessageViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\BaseViewPage.cs" />
+    <Compile Include="Security\CustomAuthorizeAttribute.cs" />
+    <Compile Include="Security\CustomPrincipal.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utility\MqttClientWrapperAdapter.cs" />
   </ItemGroup>
@@ -423,6 +424,8 @@
     <Content Include="Views\Home\_SmartHomeMain.cshtml" />
     <Content Include="Views\Home\_SmartHomeDevice.cshtml" />
     <Content Include="Views\Home\_SmartHomeDeviceRouter.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

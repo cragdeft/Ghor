@@ -5,12 +5,14 @@ using SmartHome.Model.ModelDataContext;
 using SmartHome.Service;
 using SmartHome.Service.Interfaces;
 using SmartHome.Web.Models;
+using SmartHome.Web.Security;
 using SmartHome.Web.Utility;
 using System;
 using System.Web.Mvc;
 
 namespace SmartHome.Web.Controllers
 {
+    [CustomAuthorize(Roles = "Admin")]
     public class HomeController : BaseController
     {
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
