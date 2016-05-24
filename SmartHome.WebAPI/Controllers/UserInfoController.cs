@@ -31,14 +31,14 @@ using System.Web.Http.Filters;
 namespace SmartHome.WebAPI.Controllers
 {
     public class UserInfoController : ApiController
-    {      
+    {
 
         public UserInfoController()
         {
 
         }
 
- 
+
         [Route("api/GetRegisteredUser")]
         public HttpResponseMessage PostRegisteredUserByEmail(JObject encryptedString)
         {
@@ -149,7 +149,7 @@ namespace SmartHome.WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
         }
 
-      
+
         [Route("api/CheckUser")]
         [HttpPost]
         public HttpResponseMessage PostUniqueUserByEmail(JObject encryptedString)
@@ -248,7 +248,7 @@ namespace SmartHome.WebAPI.Controllers
             HttpResponseMessage response;
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
             LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
-            string msg = string.Empty;            
+            string msg = string.Empty;
 
             msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
             if (string.IsNullOrEmpty(msg))
@@ -278,7 +278,7 @@ namespace SmartHome.WebAPI.Controllers
                         if (isEmailExists)
                         {
 
-                            
+
                             LoginMessage oLoginMessage = SetLoginMessage("User already exist", HttpStatusCode.Conflict);
                             oRootObject.MESSAGE = new LoginMessage();
                             oRootObject.MESSAGE = oLoginMessage;
@@ -321,9 +321,6 @@ namespace SmartHome.WebAPI.Controllers
 
             return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
         }
-
-
-
 
         private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
         {
