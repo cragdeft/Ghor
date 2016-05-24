@@ -138,91 +138,98 @@ namespace SmartHome.WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
         }
 
-
         [Route("api/CheckUser")]
         [HttpPost]
         public HttpResponseMessage PostUniqueUserByEmail(JObject encryptedString)
         {
-
             HttpResponseMessage response;
             LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
 
-
             string msg = string.Empty;
 
             using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                IUserInfoService service = new UserInfoService(unitOfWork);
-
-                try
+                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-                    msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                    if (string.IsNullOrEmpty(msg))
+                    IUserInfoService service = new UserInfoService(unitOfWork);
+
+                    try
                     {
-                        return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");//failure
-                    }
-
-                    oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
-
-
-                    var oUserInfo = oLoginObject.UserInfo.First();
-                    //oUserInfo.Email = "shuaibmeister@gmail.com";
-                    //oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
-                    var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
-                    if (isEmailExists)
-                    {
-
-
-                        unitOfWork.BeginTransaction();
-                        try
+                        msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                        if (string.IsNullOrEmpty(msg))
                         {
-                            ObjectInitialization(oLoginObject);
+                            return
+                                response =
+                                    Request.CreateResponse(HttpStatusCode.BadRequest,
+                                        "Not have sufficient information to process."); //failure
+                        }
 
-                            var oUserEntity = service.GetUserInfos(oUserInfo.Email, oUserInfo.Password);
-                            FillLoginObjectByData(oLoginObject, oUserEntity);
+                        oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
 
+                        var oUserInfo = oLoginObject.UserInfo.First();
+                        //oUserInfo.Email = "shuaibmeister@gmail.com";
+                        //oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
+                        var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
+                        if (isEmailExists)
+                        {
+                            unitOfWork.BeginTransaction();
+                            try
+                            {
+                                ObjectInitialization(oLoginObject);
+
+                                var oUserEntity = service.GetUserInfos(oUserInfo.Email, oUserInfo.Password);
+                                FillLoginObjectByData(oLoginObject, oUserEntity);
+
+                                oRootObject.data = new LoginObjectEntity();
+                                oRootObject.data = oLoginObject;
+
+                                LoginMessage oLoginMessage = SetLoginMessage("Success", HttpStatusCode.OK);
+                                oRootObject.MESSAGE = new LoginMessage();
+                                oRootObject.MESSAGE = oLoginMessage;
+                                msg = JsonConvert.SerializeObject(oRootObject);
+
+                                msg = msg.Replace("false", "0");
+                                msg = msg.Replace("true", "1");
+                                unitOfWork.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                oRootObject.data = new LoginObjectEntity();
+                                LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
+                                oRootObject.MESSAGE = new LoginMessage();
+                                oRootObject.MESSAGE = oLoginMessage;
+                                msg = JsonConvert.SerializeObject(oRootObject);
+                                response = new HttpResponseMessage()
+                                {
+                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                                };
+                                unitOfWork.Rollback();
+                            }
+                            response = new HttpResponseMessage()
+                            {
+                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                            };
+                        }
+                        else
+                        {
                             oRootObject.data = new LoginObjectEntity();
-                            oRootObject.data = oLoginObject;
-
-                            LoginMessage oLoginMessage = SetLoginMessage("Success", HttpStatusCode.OK);
+                            LoginMessage oLoginMessage = SetLoginMessage("User not found", HttpStatusCode.NotFound);
                             oRootObject.MESSAGE = new LoginMessage();
                             oRootObject.MESSAGE = oLoginMessage;
                             msg = JsonConvert.SerializeObject(oRootObject);
-
-                            msg = msg.Replace("false", "0");
-                            msg = msg.Replace("true", "1");
-                            unitOfWork.Commit();
+                            response = new HttpResponseMessage()
+                            {
+                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                            };
+                            //response = Request.CreateResponse(HttpStatusCode.NotFound, msg);//failure
                         }
-                        catch (Exception ex)
-                        {
-
-                            oRootObject.data = new LoginObjectEntity();
-                            LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
-                            oRootObject.MESSAGE = new LoginMessage();
-                            oRootObject.MESSAGE = oLoginMessage;
-                            msg = JsonConvert.SerializeObject(oRootObject);
-                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-                            unitOfWork.Rollback();
-                        }
-                        response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+                        return response;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        oRootObject.data = new LoginObjectEntity();
-                        LoginMessage oLoginMessage = SetLoginMessage("User not found", HttpStatusCode.NotFound);
-                        oRootObject.MESSAGE = new LoginMessage();
-                        oRootObject.MESSAGE = oLoginMessage;
-                        msg = JsonConvert.SerializeObject(oRootObject);
-                        response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-                        //response = Request.CreateResponse(HttpStatusCode.NotFound, msg);//failure
+                        unitOfWork.Rollback();
                     }
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
                 }
             }
             return null;
