@@ -52,8 +52,8 @@ namespace SmartHome.Tests.Steps
         [When]
         public void When_I_save_the_UserInfoEntity()
         {
-            HttpResponseMessage = UserInfoController.RegisterUser(ScenarioContext.Current.Get<UserInfoEntity>());
-            ScenarioContext.Current.Set<HttpResponseMessage>(HttpResponseMessage, "SaveResult");
+            //HttpResponseMessage = UserInfoController.RegisterUser(ScenarioContext.Current.Get<UserInfoEntity>());
+            //ScenarioContext.Current.Set<HttpResponseMessage>(HttpResponseMessage, "SaveResult");
         }
         
         [Then]
