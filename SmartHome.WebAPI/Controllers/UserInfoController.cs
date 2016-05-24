@@ -257,64 +257,65 @@ namespace SmartHome.WebAPI.Controllers
 
             #endregion
 
-
             using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                IUserInfoService service = new UserInfoService(unitOfWork);
-
-                try
+                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-
+                    IUserInfoService service = new UserInfoService(unitOfWork);
 
                     try
                     {
-                        oRootObject.data = new LoginObjectEntity();
-                        var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
-                        if (isEmailExists)
+                        try
                         {
+                            oRootObject.data = new LoginObjectEntity();
+                            var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
+                            if (isEmailExists)
+                            {
+                                LoginMessage oLoginMessage = SetLoginMessage("User already exist",
+                                    HttpStatusCode.Conflict);
+                                oRootObject.MESSAGE = new LoginMessage();
+                                oRootObject.MESSAGE = oLoginMessage;
+                                msg = JsonConvert.SerializeObject(oRootObject);
+                                response = new HttpResponseMessage()
+                                {
+                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                                };
 
-
-                            LoginMessage oLoginMessage = SetLoginMessage("User already exist", HttpStatusCode.Conflict);
+                            }
+                            else
+                            {
+                                LoginMessage oLoginMessage = SetLoginMessage("User not exist", HttpStatusCode.OK);
+                                oRootObject.MESSAGE = new LoginMessage();
+                                oRootObject.MESSAGE = oLoginMessage;
+                                msg = JsonConvert.SerializeObject(oRootObject);
+                                response = new HttpResponseMessage()
+                                {
+                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                                };
+                            }
+                        }
+                        catch (Exception ex)
+                        {                       
+                            oRootObject.data = new LoginObjectEntity();
+                            LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
                             oRootObject.MESSAGE = new LoginMessage();
                             oRootObject.MESSAGE = oLoginMessage;
                             msg = JsonConvert.SerializeObject(oRootObject);
-                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-
+                            //already exist                        
+                            response = new HttpResponseMessage()
+                            {
+                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
+                            };
                         }
-                        else
-                        {
-                            LoginMessage oLoginMessage = SetLoginMessage("User not exist", HttpStatusCode.OK);
-                            oRootObject.MESSAGE = new LoginMessage();
-                            oRootObject.MESSAGE = oLoginMessage;
-                            msg = JsonConvert.SerializeObject(oRootObject);
-                            response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
 
-
-                        }
+                        return response;
                     }
                     catch (Exception ex)
                     {
-
-                        oRootObject.data = new LoginObjectEntity();
-                        LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
-                        oRootObject.MESSAGE = new LoginMessage();
-                        oRootObject.MESSAGE = oLoginMessage;
-                        msg = JsonConvert.SerializeObject(oRootObject);
-                        //already exist                        
-                        response = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-
+                        unitOfWork.Rollback();
                     }
-
-                    return response;
-
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
                 }
             }
-
             return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
         }
 
