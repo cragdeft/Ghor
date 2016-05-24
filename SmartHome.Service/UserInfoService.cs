@@ -22,41 +22,29 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
 
-        //public UserInfoService(IRepositoryAsync<UserInfo> repository) : base(repository)
-        //{
-        //    _repository = repository;
-
-        //}       
-
-
         public UserInfoService(IUnitOfWorkAsync unitOfWork)
         {
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
         }
-
         public IEnumerable<UserInfo> GetsUserInfos()
         {
             return _userInfoRepository.Query().Select();
         }
-
         public IEnumerable<UserInfo> GetsUserInfos(string username, string password)
         {
             return _userInfoRepository.Query(p => p.UserName == username && p.Password == password).Include(x=>x.UserHomeLinks).Select();
 
         }
-
         public bool IsLoginIdUnique(string email)
         {
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
-
         public bool IsValidLogin(string email, string pass)
         {
             return _userInfoRepository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
         }
-
         public IEnumerable<UserInfo> GetUserInfos(string email, string pass)
         {
             var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
@@ -68,8 +56,6 @@ namespace SmartHome.Service
 
             return temp;
         }
-
-
         public UserInfoEntity Add(UserInfoEntity entity)
         {
             Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
@@ -82,12 +68,9 @@ namespace SmartHome.Service
             return entity;
             
         }
-
-
         public IEnumerable<WebPagesRole> GetsWebPagesRoles()
         {
             return _webPagesRoleRepository.Query().Select();
         }
-
     }
 }
