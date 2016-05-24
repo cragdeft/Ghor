@@ -61,27 +61,10 @@ namespace SmartHome.Service
         {
             var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
 
-
-
             var temp=_userInfoRepository.Queryable().Where(x => x.Email == email && x.Password == pass)
                 .Include(x => x.UserHomeLinks.Select(y => y.Home.SmartRouterInfoes))
                 .Include(x => x.UserHomeLinks.Select(y => y.Home))
                 .Include(x => x.UserRoomLinks.Select(y => y.Room.SmartDevices.Select(p => p.DeviceStatus))).ToList();
-
-
-            //for admin
-            //var tempHomeLink = temp.SelectMany(x => x.UserHomeLinks);
-            //if (tempHomeLink.First().IsAdmin==true)
-            //{
-            //    var tempURoomLink = _userInfoRepository.Queryable().Where(x => x.Email == email && x.Password == pass)
-            //                   .SelectMany(x => x.UserHomeLinks.SelectMany(y => y.Home.Rooms.SelectMany(z => z.UserRoomLinks)))
-            //                   .Include(x=>x.Room.SmartDevices.Select(p=>p.DeviceStatus)).ToList();
-            //    temp.First().UserRoomLinks = new List<UserRoomLink>();
-            //    temp.First().UserRoomLinks = tempURoomLink;
-            //}
-
-         
-
 
             return temp;
         }
