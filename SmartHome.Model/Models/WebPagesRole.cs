@@ -22,7 +22,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-        public virtual ICollection<UserInfo> UserInfos { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
 
         #endregion
     }

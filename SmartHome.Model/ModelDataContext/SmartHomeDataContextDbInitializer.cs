@@ -45,9 +45,26 @@ namespace SmartHome.Model.ModelDataContext
             //    new UserInfo { UserName = "a", Email = "admin@ymail.com", FirstName = "Admin", LastName = "User", IsSMSRecipient = false, IsEmailRecipient = false, DateOfBirth = DateTime.Now, Password = "123", IsActive = true }     );
             // user1.WebPagesRoles.Add(role1);
 
-            context.SaveChanges();
+            
 
             #endregion
+
+           
+
+            
+            
+
+
+        }
+
+        public void ProjectSeed(SmartHomeDataContext context)
+        {
+            context.WebPagesRoles.AddOrUpdate(p => p.RoleName,
+                   new WebPagesRole() { RoleName = "Admin", Description = "Admin user", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added },
+                   new WebPagesRole() { RoleName = "User", Description = "General user", ObjectState = Repository.Pattern.Infrastructure.ObjectState.Added }
+                   );
+            context.SaveChanges();
+            
         }
     }
 }

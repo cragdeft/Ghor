@@ -55,15 +55,15 @@ namespace SmartHome.Model.ModelDataContext
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserInfo>()
-              .HasMany(u => u.WebPagesRoles)
-              .WithMany(r => r.UserInfos)
-              .Map(m =>
-              {
-                  m.ToTable("UserRoles");
-                  m.MapLeftKey("UserInfoId");
-                  m.MapRightKey("RoleId");
-              });
+            //modelBuilder.Entity<UserInfo>()
+            //  .HasMany(u => u.WebPagesRoles)
+            //  .WithMany(r => r.UserInfos)
+            //  .Map(m =>
+            //  {
+            //      m.ToTable("UserRoles");
+            //      m.MapLeftKey("UserInfoId");
+            //      m.MapRightKey("RoleId");
+            //  });
 
            modelBuilder.Entity<SmartDevice>()
           .Map<SmartSwitch>(m => m.Requires("Discriminator").HasValue("SmartSwitch"))

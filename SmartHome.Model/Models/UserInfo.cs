@@ -56,7 +56,7 @@ namespace SmartHome.Model.Models
         //public virtual ICollection<Home> Homes { get; set; }
         //public virtual ICollection<Address> Addresses { get; set; }
         //public virtual Room Room { get; set; } 
-        public virtual ICollection<WebPagesRole> WebPagesRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<UserRoomLink> UserRoomLinks { get; set; }
         #endregion
 
