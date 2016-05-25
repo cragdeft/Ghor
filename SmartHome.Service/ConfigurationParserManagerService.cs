@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System;
 
 namespace SmartHome.Service
 {
@@ -22,12 +23,14 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<Home> _homeRepository;
-        private readonly IRepositoryAsync<Version> _versionRepository;
+        private readonly IRepositoryAsync<Model.Models.Version> _versionRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<SmartDevice> _smartDeviceRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<SmartRouterInfo> _smartRouterInfoRepository;
+        private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
+        private readonly IRepositoryAsync<UserRole> _userRoleRepository;
         // private string _email;
         #endregion
 
@@ -38,12 +41,14 @@ namespace SmartHome.Service
             _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
             _userRoomLinkRepository = unitOfWork.RepositoryAsync<UserRoomLink>();
             _homeRepository = unitOfWork.RepositoryAsync<Home>();
-            _versionRepository = unitOfWork.RepositoryAsync<Version>();
+            _versionRepository = unitOfWork.RepositoryAsync<Model.Models.Version>();
             _deviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
             _smartDeviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
             _roomRepository = unitOfWork.RepositoryAsync<Room>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _smartRouterInfoRepository = unitOfWork.RepositoryAsync<SmartRouterInfo>();
+            _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
+            _userRoleRepository = unitOfWork.RepositoryAsync<UserRole>();
         }
 
 
@@ -80,7 +85,7 @@ namespace SmartHome.Service
 
                     //check for user unique
 
-                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(item.UInfoId.ToString());
+                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(item.UserInfo.Email.ToString(), item.UserInfo.Password.ToString());
                     if (tempUserCheck.Count() > 0)
                     {
                         item.UserInfo = new UserInfo();
@@ -160,12 +165,47 @@ namespace SmartHome.Service
 
                     //check for user unique
 
-                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(nextHome.UInfoId.ToString());
-                    if (tempUserCheck.Count() > 0)
+                    //need to check
+                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(nextHome.UserInfo.Email.ToString(), nextHome.UserInfo.Password.ToString());
+                    var wRole = GetWebPagesRole(nextHome.IsAdmin == true ? 1 : 2);
+                    if (tempUserCheck.Count() == 0)
+                    {
+                        nextHome.UserInfo.UserRoles = new List<UserRole>();
+                        var userRole = new UserRole
+                        {
+                            WebPagesRole = wRole,
+                            UserInfo = nextHome.UserInfo,
+                            ObjectState = ObjectState.Added
+                        };
+                        nextHome.UserInfo.UserRoles.Add(userRole);
+                    }
+                    else
                     {
                         nextHome.UserInfo = new UserInfo();
                         nextHome.UserInfo.ObjectState = ObjectState.Modified;
                         nextHome.UserInfo = tempUserCheck.FirstOrDefault();
+                        var uRole = GetUserRole(nextHome.UserInfo.UserInfoId);
+
+                        //new
+                        if (uRole == null)
+                        {
+                            nextHome.UserInfo.UserRoles = new List<UserRole>();
+                            var userRole = new UserRole
+                            {
+                                WebPagesRole = wRole,
+                                UserInfo = nextHome.UserInfo,
+                                ObjectState = ObjectState.Added
+                            };
+                            nextHome.UserInfo.UserRoles.Add(userRole);
+                        }
+                        //existing
+                        else
+                        {
+                            uRole.ObjectState = ObjectState.Modified;
+                            uRole.UserInfo = nextHome.UserInfo;
+                            uRole.WebPagesRole = wRole;
+                        }
+
                     }
 
                     //new item
@@ -179,13 +219,28 @@ namespace SmartHome.Service
                     foreach (var existingItem in temp.ToList())
                     {
                         FillExistingHomeInfo(nextHome.Home, existingItem.Home);
+                        FillExistingUserRoles(nextHome, existingItem);
                         FillExistingUserInfo(nextHome.UserInfo, existingItem.UserInfo);
+                        FillExistingUserHomeLinks(nextHome, existingItem);
                     }
                 }
             }
 
 
             return homeModel;
+        }
+
+        private void FillExistingUserHomeLinks(UserHomeLink nextHome, UserHomeLink existingItem)
+        {
+            existingItem.HId = nextHome.HId;
+            existingItem.UInfoId = nextHome.UInfoId;
+            existingItem.IsAdmin = nextHome.IsAdmin;
+            existingItem.IsSynced = nextHome.IsSynced;
+            //existingItem.Home = new Home();
+            //existingItem.UserInfo = new UserInfo();
+            existingItem.Home = existingItem.Home;
+            existingItem.UserInfo = existingItem.UserInfo;
+            existingItem.ObjectState = ObjectState.Modified;
         }
 
         private void FillExistingHomeInfo(Home item, Home existingItem)
@@ -207,8 +262,23 @@ namespace SmartHome.Service
             existingItem.IsInternet = item.IsInternet;
             existingItem.ObjectState = ObjectState.Modified;
 
+
+
+
+
+
+
             AddOrEditExistingRoomItems(item, existingItem);
             AddOrEditExistingRourterItems(item, existingItem);
+        }
+
+        private void FillExistingUserRoles(UserHomeLink nextHome, UserHomeLink existingItem)
+        {
+            var wRole = GetWebPagesRole(nextHome.IsAdmin == true ? 1 : 2);
+            var uRole = GetUserRole(existingItem.UserInfo.UserInfoId);
+            uRole.ObjectState = ObjectState.Modified;
+            uRole.WebPagesRole = wRole;
+
         }
 
         #region Smart router
@@ -298,10 +368,6 @@ namespace SmartHome.Service
         }
 
 
-
-
-
-
         private IEnumerable<UserHomeLink> IsHomeAndUserExists(int HId, int UInfoId)
         {
             return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
@@ -333,7 +399,7 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<UserInfo> temp = IsUserExists(item.Id);
+                IEnumerable<UserInfo> temp = IsUserExists(item.Email, item.Password);
                 if (temp.Count() == 0)
                 {
                     item.DateOfBirth = System.DateTime.Now;
@@ -389,9 +455,24 @@ namespace SmartHome.Service
             existingItem.ObjectState = ObjectState.Modified;
         }
 
-        private IEnumerable<UserInfo> IsUserExists(string key)
+        private IEnumerable<UserInfo> IsUserExists(string email, string password)
         {
-            return _userInfoRepository.Query(e => e.Id == key).Select();
+            return _userInfoRepository.Query(e => e.Email == email && e.Password == password).Select();
+        }
+
+        //private IEnumerable<UserInfo> IsUserExists(string email, string password)
+        //{
+        //    return _userInfoRepository.Query(e => e.Id == key).Select();
+        //}
+
+        private WebPagesRole GetWebPagesRole(int roleId)
+        {
+            return _webPagesRoleRepository.Query(e => e.RoleId == roleId).Select().FirstOrDefault();
+        }
+
+        private UserRole GetUserRole(int userInfoId)
+        {
+            return _userRoleRepository.Query(e => e.UserInfo.UserInfoId == userInfoId).Select().FirstOrDefault();
         }
 
 
@@ -507,20 +588,20 @@ namespace SmartHome.Service
 
 
         #region version AddOrUpdateGraphRange
-        public IEnumerable<Version> AddOrUpdateVersionGraphRange(IEnumerable<Version> model)
+        public IEnumerable<Model.Models.Version> AddOrUpdateVersionGraphRange(IEnumerable<Model.Models.Version> model)
         {
-            List<Version> versionModel = new List<Version>();
+            List<Model.Models.Version> versionModel = new List<Model.Models.Version>();
             versionModel = FillVersionInformations(model, versionModel);
             _versionRepository.InsertOrUpdateGraphRange(versionModel);
             return versionModel;
         }
 
-        public List<Version> FillVersionInformations(IEnumerable<Version> model, List<Version> versionModel)
+        public List<Model.Models.Version> FillVersionInformations(IEnumerable<Model.Models.Version> model, List<Model.Models.Version> versionModel)
         {
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<Version> temp = IsVersionExists(item.Id, item.Mac);
+                IEnumerable<Model.Models.Version> temp = IsVersionExists(item.Id, item.Mac);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -550,7 +631,7 @@ namespace SmartHome.Service
 
 
 
-        private void AddOrEditExistingVDetailItems(Version item, Version existingItem)
+        private void AddOrEditExistingVDetailItems(Model.Models.Version item, Model.Models.Version existingItem)
         {
             foreach (var nextVDetail in item.VersionDetails)
             {
@@ -578,7 +659,7 @@ namespace SmartHome.Service
             tempExistingVDetail.AuditField = new AuditFields();
         }
 
-        private void FillExistingVersionInfo(Version item, Version existingItem)
+        private void FillExistingVersionInfo(Model.Models.Version item, Model.Models.Version existingItem)
         {
             existingItem.AppName = item.AppName;
             existingItem.AppVersion = item.AppVersion;
@@ -589,7 +670,7 @@ namespace SmartHome.Service
             existingItem.ObjectState = ObjectState.Modified;
         }
 
-        private IEnumerable<Version> IsVersionExists(string key, string Mac)
+        private IEnumerable<Model.Models.Version> IsVersionExists(string key, string Mac)
         {
             return _versionRepository.Query(e => e.Id == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
         }
@@ -983,7 +1064,7 @@ namespace SmartHome.Service
             int parentSequence = 0;
             List<VersionInfoEntity> vInfoEntity = new List<VersionInfoEntity>();
             var version = _versionRepository.Query().Include(x => x.VersionDetails).Select().ToList();
-            foreach (Version nextVersion in version)
+            foreach (Model.Models.Version nextVersion in version)
             {
                 //AppName,AuthCode,PassPhrase
                 VersionInfoEntity versionInfo = new VersionInfoEntity();
@@ -1006,12 +1087,34 @@ namespace SmartHome.Service
 
         #region Gets homes infos
 
-        public List<UserHomeLink> GetsHomesAllInfo()
+        public List<UserHomeLink> GetsHomesAllInfo(int userInfoId, bool IsAdmin)
         {
             try
             {
+
                 var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
-                var temp = _userHomeLinkRepository.Queryable().Include(x => x.Home).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
+                var temp = _userHomeLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfoId).Include(x => x.UserInfo).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms.Select(q => q.UserRoomLinks)).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
+                if (IsAdmin == false)
+                {
+
+                    var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
+
+                    temp.First().Home.Rooms = new List<Room>();
+                    temp.First().Home.Rooms = tempRoom;
+
+
+                    //temp.Select(x => x.Home.Rooms = tempRoom);
+                    //foreach (UserHomeLink item in temp.First())
+                    //{
+                    //    item.Home.Rooms = new List<Room>();
+                    //    item.Home.Rooms = tempRoom;
+
+
+                    //}
+
+
+
+                }
                 return temp;
             }
             catch (System.Exception ex)
@@ -1026,7 +1129,7 @@ namespace SmartHome.Service
 
         #region Gets App version infos
 
-        public List<Version> GetsAppVersionAllInfo()
+        public List<Model.Models.Version> GetsAppVersionAllInfo()
         {
 
             var temp = _versionRepository.Query()
