@@ -5,6 +5,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Service;
 using SmartHome.Service.Interfaces;
+using SmartHome.Utility.EncryptionAndDecryption;
 using SmartHome.Web.Models;
 using SmartHome.Web.Security;
 using System;
@@ -41,59 +42,63 @@ namespace SmartHome.Web.Controllers
             if (ModelState.IsValid)
             {
                 using (IDataContextAsync context = new SmartHomeDataContext())
-                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-                    IUserInfoService service = new UserInfoService(unitOfWork);
-                    try
+                    using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                     {
-                        unitOfWork.BeginTransaction();
-                        var user = service.GetsUserInfos(model.Username, model.Password).FirstOrDefault();
-
-                        #region Login Logic
-
-                        if (user != null)
+                        IUserInfoService service = new UserInfoService(unitOfWork);
+                        try
                         {
-                            var roles = service.GetsWebPagesRoles().Select(p => p.RoleName).ToArray();//user.Roles.Select(m => m.RoleName).ToArray();
+                            unitOfWork.BeginTransaction();
+                            // string en = SecurityManager.PassEncrypt(model.Password.Trim());
+                            string de = SecurityManager.PassDecrypt("46tUX/XbJOPCnTLtU283wg==");
+                            var user = service.GetsUserInfos(model.Username, SecurityManager.PassEncrypt(model.Password.Trim())).FirstOrDefault();
 
-                            CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
-                            serializeModel.UserInfoId = user.UserInfoId;
-                            serializeModel.FirstName = user.FirstName;
-                            serializeModel.LastName = user.LastName;
-                            serializeModel.Email = user.Email;
-                            serializeModel.IsAdmin = user.UserHomeLinks.FirstOrDefault().IsAdmin;
-                            serializeModel.roles = roles;
+                            #region Login Logic
 
-                            string userData = JsonConvert.SerializeObject(serializeModel);
-                            FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
-                                     user.UserInfoId,
-                                    user.Email,
-                                     DateTime.Now,
-                                     DateTime.Now.AddMinutes(15),
-                                     model.RememberMe,
-                                     userData);
-
-                            string encTicket = FormsAuthentication.Encrypt(authTicket);
-                            HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
-                            if (model.RememberMe)
+                            if (user != null)
                             {
-                                faCookie.Expires = DateTime.Now.AddMinutes(30);
+                                var roles = service.GetsWebPagesRoles().Select(p => p.RoleName).ToArray();//user.Roles.Select(m => m.RoleName).ToArray();
+
+                                CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
+                                serializeModel.UserInfoId = user.UserInfoId;
+                                serializeModel.FirstName = user.FirstName;
+                                serializeModel.LastName = user.LastName;
+                                serializeModel.Email = user.Email;
+                                serializeModel.IsAdmin = user.UserHomeLinks.FirstOrDefault()==null?false: user.UserHomeLinks.FirstOrDefault().IsAdmin;
+                                serializeModel.roles = roles;
+
+                                string userData = JsonConvert.SerializeObject(serializeModel);
+                                FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
+                                         user.UserInfoId,
+                                        user.Email,
+                                         DateTime.Now,
+                                         DateTime.Now.AddMinutes(15),
+                                         model.RememberMe,
+                                         userData);
+
+                                string encTicket = FormsAuthentication.Encrypt(authTicket);
+                                HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                                if (model.RememberMe)
+                                {
+                                    faCookie.Expires = DateTime.Now.AddMinutes(30);
+                                }
+
+                                Response.Cookies.Add(faCookie);
+                                string redirectUrl = FormsAuthentication.GetRedirectUrl(model.Username, false);
+                                Response.Redirect(redirectUrl.Contains(".aspx") ? "/" : redirectUrl);
+
                             }
 
-                            Response.Cookies.Add(faCookie);
-                            string redirectUrl = FormsAuthentication.GetRedirectUrl(model.Username, false);
-                            Response.Redirect(redirectUrl.Contains(".aspx") ? "/" : redirectUrl);
+                            #endregion
+
+
+                            unitOfWork.Commit();
 
                         }
-
-                        #endregion
-
-
-                        unitOfWork.Commit();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        unitOfWork.Rollback();
+                        catch (Exception ex)
+                        {
+                            unitOfWork.Rollback();
+                        }
                     }
                 }
 

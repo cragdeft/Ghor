@@ -56,7 +56,7 @@ namespace SmartHome.MQTT.Client
                         LocalBrokerConnection(BrokerAddress);
                     }
 
-                    else if (BrokerAddress == "192.168.2.156")
+                    else if (BrokerAddress == "192.168.2.1")
                     {
                         BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
                     }

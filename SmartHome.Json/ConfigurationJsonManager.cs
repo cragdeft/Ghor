@@ -39,6 +39,7 @@ namespace SmartHome.Json
                 RootObjectEntity oRootObject = JsonDesrialized(JsonString);
                 SaveUpdateHomeLink(oRootObject);
                 SaveUpdateUserRoomLink(oRootObject);
+                SaveUpdateUserRoles(oRootObject);
                 SaveUpdateVersion(oRootObject);
                 SaveUpdateDevice(oRootObject);
             }
@@ -105,6 +106,19 @@ namespace SmartHome.Json
             StoreRoomAndUser(oUserRoomLink);
         }
 
+        private void SaveUpdateUserRoles(RootObjectEntity oRootObject)
+        {
+            //IEnumerable<Model.Models.UserInfo> oUserInfo = ConfigureUserInfo(oRootObject);
+            ////IEnumerable<Model.Models.Home> oHome = ConfigureHome(oRootObject);
+            //IEnumerable<Model.Models.Room> oRoom = ConfigureRoom(oRootObject);
+            //IEnumerable<Model.Models.SmartRouterInfo> oSmartRouterInfo = ConfigureSmartRouterInfo(oRootObject);
+            //List<UserRoomLink> oUserRoomLink = new List<UserRoomLink>();
+            //oUserRoomLink = MergeRoomAndUser(oRoom, oUserInfo, oRootObject.UserRoomLink);
+            //StoreRoomAndUser(oUserRoomLink);
+        }
+
+        
+
         #endregion
 
         //public T JsonProcess<T>(string JsonString)
@@ -155,7 +169,7 @@ namespace SmartHome.Json
                 item.Rooms = oRoom.Where(p => p.HId == item.Id).ToArray();
                 item.SmartRouterInfoes = oSmartRouterInfo.Where(p => p.HId == item.Id).ToArray();
             }
-
+            
             List<UserHomeLink> oUserHomeList = new List<UserHomeLink>();
             foreach (var item in oUserHomeLink)
             {

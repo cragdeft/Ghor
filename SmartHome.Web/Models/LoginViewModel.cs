@@ -9,7 +9,7 @@ namespace SmartHome.Web.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Email")]
         public string Username { get; set; }
 
         [Required]

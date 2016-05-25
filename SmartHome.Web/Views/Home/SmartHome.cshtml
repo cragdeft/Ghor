@@ -6,7 +6,7 @@
     List<SmartHome.Model.Models.Version> appVersion = ViewBag.AppVersion;
 }
 
-<h4>Welcome : @User.FirstName</h4>
+@*<h4>Welcome : @User.FirstName</h4>*@
 <h2 class="padding-bottom-9">
     <span>
         Welcome to
@@ -38,7 +38,7 @@
     <div id="tabs-2">
         <div class="row">
             @foreach (var item in Model)
-            {
+            {                
                 @Html.Partial("_SmartHomeRoom", item.Home.Rooms.ToList())
             }
         </div>

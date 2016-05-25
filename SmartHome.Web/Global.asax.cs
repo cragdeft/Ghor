@@ -38,6 +38,7 @@ namespace SmartHome.Web
                 newUser.FirstName = serializeModel.FirstName;
                 newUser.LastName = serializeModel.LastName;
                 newUser.Email = serializeModel.Email;
+                newUser.IsAdmin = serializeModel.IsAdmin;
                 newUser.roles = serializeModel.roles;
 
                 HttpContext.Current.User = newUser;
