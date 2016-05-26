@@ -18,7 +18,7 @@ namespace SmartHome.Service
     public class ConfigurationParserManagerService : IConfigurationParserManagerService
     {
         #region PrivateProperty
-        // private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
@@ -31,12 +31,11 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartRouterInfo> _smartRouterInfoRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
         private readonly IRepositoryAsync<UserRole> _userRoleRepository;
-        // private string _email;
+
         #endregion
 
         public ConfigurationParserManagerService(IUnitOfWorkAsync unitOfWork)
         {
-            // _unitOfWorkAsync = unitOfWork;
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
             _userRoomLinkRepository = unitOfWork.RepositoryAsync<UserRoomLink>();
@@ -53,8 +52,6 @@ namespace SmartHome.Service
 
 
         #region MyRegion
-
-        //AddOrUpdateRoomGraphRange
 
         public IEnumerable<UserRoomLink> AddOrUpdateRoomGraphRange(IEnumerable<UserRoomLink> model)
         {
@@ -116,20 +113,6 @@ namespace SmartHome.Service
             return roomModel;
         }
 
-
-        //private void FillExistingRoomInfo(Room item, Room existingItem)
-        //{
-        //    existingItem.Id = item.Id;
-        //    existingItem.HId = item.HId;
-        //    existingItem.Name = item.Name;
-        //    existingItem.RoomNumber = item.RoomNumber;
-        //    existingItem.Comment = item.Comment;
-        //    existingItem.IsMasterRoom = item.IsMasterRoom;
-        //    existingItem.IsActive = item.IsActive;
-        //    existingItem.ObjectState = ObjectState.Modified;
-
-        //}
-
         #endregion
 
 
@@ -147,87 +130,100 @@ namespace SmartHome.Service
         {
             foreach (var nextHome in model)
             {
-                // var nextHome = model.FirstOrDefault(p => p.HId == item.Key);
                 //check already exist or not.
                 IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(nextHome.HId, nextHome.UInfoId);
-
+                //new item
                 if (temp.Count() == 0)
                 {
-                    //check for home unique
-
-                    IEnumerable<Home> tempHomeCheck = IsHomeExists(nextHome.HId.ToString());
-                    if (tempHomeCheck.Count() > 0)
-                    {
-                        nextHome.Home = new Home();
-                        nextHome.Home.ObjectState = ObjectState.Modified;
-                        nextHome.Home = tempHomeCheck.FirstOrDefault();
-                    }
-
-                    //check for user unique
-
-                    //need to check
-                    IEnumerable<UserInfo> tempUserCheck = IsUserExists(nextHome.UserInfo.Email.ToString(), nextHome.UserInfo.Password.ToString());
-                    var wRole = GetWebPagesRole(nextHome.IsAdmin == true ? 1 : 2);
-                    if (tempUserCheck.Count() == 0)
-                    {
-                        nextHome.UserInfo.UserRoles = new List<UserRole>();
-                        var userRole = new UserRole
-                        {
-                            WebPagesRole = wRole,
-                            UserInfo = nextHome.UserInfo,
-                            ObjectState = ObjectState.Added
-                        };
-                        nextHome.UserInfo.UserRoles.Add(userRole);
-                    }
-                    else
-                    {
-                        nextHome.UserInfo = new UserInfo();
-                        nextHome.UserInfo.ObjectState = ObjectState.Modified;
-                        nextHome.UserInfo = tempUserCheck.FirstOrDefault();
-                        var uRole = GetUserRole(nextHome.UserInfo.UserInfoId);
-
-                        //new
-                        if (uRole == null)
-                        {
-                            nextHome.UserInfo.UserRoles = new List<UserRole>();
-                            var userRole = new UserRole
-                            {
-                                WebPagesRole = wRole,
-                                UserInfo = nextHome.UserInfo,
-                                ObjectState = ObjectState.Added
-                            };
-                            nextHome.UserInfo.UserRoles.Add(userRole);
-                        }
-                        //existing
-                        else
-                        {
-                            uRole.ObjectState = ObjectState.Modified;
-                            uRole.UserInfo = nextHome.UserInfo;
-                            uRole.WebPagesRole = wRole;
-                        }
-
-                    }
-
-                    //new item
+                    FillNewUserHomeLinksByInfomation(nextHome);
                     homeModel.Add(nextHome);
                     continue;
                 }
                 else
                 {
-                    //existing item               
-                    // versionModel = temp;
-                    foreach (var existingItem in temp.ToList())
-                    {
-                        FillExistingHomeInfo(nextHome.Home, existingItem.Home);
-                        FillExistingUserRoles(nextHome, existingItem);
-                        FillExistingUserInfo(nextHome.UserInfo, existingItem.UserInfo);
-                        FillExistingUserHomeLinks(nextHome, existingItem);
-                    }
+                    //existing item                                   
+                    FillUserHomeLinksByExistingInformation(nextHome, temp);
                 }
             }
 
 
             return homeModel;
+        }
+
+        private void FillUserHomeLinksByExistingInformation(UserHomeLink nextHome, IEnumerable<UserHomeLink> temp)
+        {
+            foreach (var existingItem in temp.ToList())
+            {
+                FillExistingHomeInfo(nextHome.Home, existingItem.Home);
+                FillExistingUserRoles(nextHome, existingItem);
+                FillExistingUserInfo(nextHome.UserInfo, existingItem.UserInfo);
+                FillExistingUserHomeLinks(nextHome, existingItem);
+            }
+        }
+
+        private void FillNewUserHomeLinksByInfomation(UserHomeLink nextHome)
+        {
+            //check for home unique
+            IEnumerable<Home> tempHomeCheck = IsHomeExists(nextHome.HId.ToString());
+            FillNewUserHomeLInksByHomeInformation(nextHome, tempHomeCheck);
+
+            //check for user unique
+            IEnumerable<UserInfo> tempUserCheck = IsUserExists(nextHome.UserInfo.Email.ToString(), nextHome.UserInfo.Password.ToString());
+            var wRole = GetWebPagesRole(nextHome.IsAdmin == true ? 1 : 2);
+            FillNewUserHomeLinksByUserInfomation(nextHome, tempUserCheck, wRole);
+        }
+
+        private void FillNewUserHomeLinksByUserInfomation(UserHomeLink nextHome, IEnumerable<UserInfo> tempUserCheck, WebPagesRole wRole)
+        {
+            if (tempUserCheck.Count() == 0)
+            {
+                nextHome.UserInfo.UserRoles = new List<UserRole>();
+                var userRole = new UserRole
+                {
+                    WebPagesRole = wRole,
+                    UserInfo = nextHome.UserInfo,
+                    ObjectState = ObjectState.Added
+                };
+                nextHome.UserInfo.UserRoles.Add(userRole);
+            }
+            else
+            {
+                nextHome.UserInfo = new UserInfo();
+                nextHome.UserInfo.ObjectState = ObjectState.Modified;
+                nextHome.UserInfo = tempUserCheck.FirstOrDefault();
+                var uRole = GetUserRole(nextHome.UserInfo.UserInfoId);
+
+                //new
+                if (uRole == null)
+                {
+                    nextHome.UserInfo.UserRoles = new List<UserRole>();
+                    var userRole = new UserRole
+                    {
+                        WebPagesRole = wRole,
+                        UserInfo = nextHome.UserInfo,
+                        ObjectState = ObjectState.Added
+                    };
+                    nextHome.UserInfo.UserRoles.Add(userRole);
+                }
+                //existing
+                else
+                {
+                    uRole.ObjectState = ObjectState.Modified;
+                    uRole.UserInfo = nextHome.UserInfo;
+                    uRole.WebPagesRole = wRole;
+                }
+
+            }
+        }
+
+        private void FillNewUserHomeLInksByHomeInformation(UserHomeLink nextHome, IEnumerable<Home> tempHomeCheck)
+        {
+            if (tempHomeCheck.Count() > 0)
+            {
+                nextHome.Home = new Home();
+                nextHome.Home.ObjectState = ObjectState.Modified;
+                nextHome.Home = tempHomeCheck.FirstOrDefault();
+            }
         }
 
         private void FillExistingUserHomeLinks(UserHomeLink nextHome, UserHomeLink existingItem)
@@ -262,12 +258,6 @@ namespace SmartHome.Service
             existingItem.IsInternet = item.IsInternet;
             existingItem.ObjectState = ObjectState.Modified;
 
-
-
-
-
-
-
             AddOrEditExistingRoomItems(item, existingItem);
             AddOrEditExistingRourterItems(item, existingItem);
         }
@@ -291,6 +281,7 @@ namespace SmartHome.Service
             foreach (var nextRouter in item.SmartRouterInfoes)
             {
                 var tempRouter = _smartRouterInfoRepository.Query(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).Select();
+                //var tempRouter = _smartRouterInfoRepository.Query(p => p.MacAddress==nextRouter.MacAddress).Select();
                 if (tempRouter != null && tempRouter.Count() > 0)
                 {
                     var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).FirstOrDefault();
@@ -1096,11 +1087,19 @@ namespace SmartHome.Service
                 var temp = _userHomeLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfoId).Include(x => x.UserInfo).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms.Select(q => q.UserRoomLinks)).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
                 if (IsAdmin == false)
                 {
+                    if (temp.Count > 0)
+                    {
+                        var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
+                        if (tempRoom != null && tempRoom.Count > 0)
+                        {
+                            var tempUserRoom= tempRoom.First().UserRoomLinks.Where(p => p.UserInfo.UserInfoId == userInfoId).ToList();
+                            tempRoom.First().UserRoomLinks = new List<UserRoomLink>();
+                            tempRoom.First().UserRoomLinks = tempUserRoom;
+                        }                        
+                        temp.First().Home.Rooms = new List<Room>();
+                        temp.First().Home.Rooms = tempRoom;
+                    }
 
-                    var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
-
-                    temp.First().Home.Rooms = new List<Room>();
-                    temp.First().Home.Rooms = tempRoom;
 
 
                     //temp.Select(x => x.Home.Rooms = tempRoom);
