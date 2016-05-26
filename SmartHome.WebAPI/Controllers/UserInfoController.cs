@@ -32,15 +32,18 @@ namespace SmartHome.WebAPI.Controllers
 {
     public class UserInfoController : ApiController
     {
+
         public UserInfoController()
         {
 
         }
 
-        [Route("api/GetRegisteredUser")]
-        public HttpResponseMessage PostRegisteredUserByEmail(JObject encryptedString)
+
+        // [Route("api/GetRegisteredUser")]
+        [Route("api/RegisterUser")]
+        public HttpResponseMessage RegisterUser(JObject encryptedString)
         {
-            #region MyRegion
+            #region Initialization
 
             HttpResponseMessage response;
             LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
@@ -55,9 +58,8 @@ namespace SmartHome.WebAPI.Controllers
             msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
             if (string.IsNullOrEmpty(msg))
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");//failure
+                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
             }
-
             oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
             var oUserInfo = oLoginObject.UserInfo.First();
 
@@ -68,178 +70,56 @@ namespace SmartHome.WebAPI.Controllers
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IUserInfoService service = new UserInfoService(unitOfWork);
-
-                    try
-                    {
-                        try
-                        {
-                            var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
-                            if (isEmailExists)
-                            {
-                                oRootObject.data = new LoginObjectEntity();
-                                LoginMessage oLoginMessage = SetLoginMessage("User already exist",
-                                    HttpStatusCode.Conflict);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-
-                                response = new HttpResponseMessage()
-                                {
-                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                                };
-                            }
-                            else
-                            {
-                                unitOfWork.BeginTransaction();
-                                try
-                                {
-                                    service.Add(oUserInfo);
-                                    var changes = unitOfWork.SaveChanges();
-                                    unitOfWork.Commit();
-                                }
-                                catch (Exception ex)
-                                {
-                                    unitOfWork.Rollback();
-                                }
-
-                                oRootObject.data = new LoginObjectEntity();
-                                LoginMessage oLoginMessage = SetLoginMessage("Unique user", HttpStatusCode.OK);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-
-                                response = new HttpResponseMessage()
-                                {
-                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                                };
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            oRootObject.data = new LoginObjectEntity();
-                            LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
-                            oRootObject.MESSAGE = new LoginMessage();
-                            oRootObject.MESSAGE = oLoginMessage;
-                            msg = JsonConvert.SerializeObject(oRootObject);
-                            response = new HttpResponseMessage()
-                            {
-                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                            };
-                        }
-
-                        return response;
-                    }
-                    catch (Exception ex)
-                    {
-                        unitOfWork.Rollback();
-                    }
+                    response = ProcessGetRegisteredUser(oRootObject, oUserInfo, unitOfWork, service);
                 }
             }
-            return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
-        }
+            return response;
+        }      
 
-        [Route("api/CheckUser")]
+        [Route("api/GetUserInfo")]
         [HttpPost]
-        public HttpResponseMessage PostUniqueUserByEmail(JObject encryptedString)
+        public HttpResponseMessage GetUserInfo(JObject encryptedString)
         {
-            HttpResponseMessage response;
-            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
-            LoginObjectEntity oLoginObject = new LoginObjectEntity();
+            #region Initialization
 
+            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
+            HttpResponseMessage response = new HttpResponseMessage();
+            LoginObjectEntity oLoginObject = new LoginObjectEntity();
             string msg = string.Empty;
 
+            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+            if (string.IsNullOrEmpty(msg))
+            {
+                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+            }
+
+            #endregion
             using (IDataContextAsync context = new SmartHomeDataContext())
             {
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IUserInfoService service = new UserInfoService(unitOfWork);
-
+                    IConfigurationParserManagerService serviceConfigure = new ConfigurationParserManagerService(unitOfWork);
                     try
                     {
-                        msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                        if (string.IsNullOrEmpty(msg))
-                        {
-                            return
-                                response =
-                                    Request.CreateResponse(HttpStatusCode.BadRequest,
-                                        "Not have sufficient information to process."); //failure
-                        }
-
-                        oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
-
-                        var oUserInfo = oLoginObject.UserInfo.First();
-                        //oUserInfo.Email = "shuaibmeister@gmail.com";
-                        //oUserInfo.Password = "dJOreK9VX5ZEdu8j8sqDVg==";
-                        var isEmailExists = service.IsValidLogin(oUserInfo.Email, oUserInfo.Password);
-                        if (isEmailExists)
-                        {
-                            unitOfWork.BeginTransaction();
-                            try
-                            {
-                                ObjectInitialization(oLoginObject);
-
-                                var oUserEntity = service.GetUserInfos(oUserInfo.Email, oUserInfo.Password);
-                                FillLoginObjectByData(oLoginObject, oUserEntity);
-
-                                oRootObject.data = new LoginObjectEntity();
-                                oRootObject.data = oLoginObject;
-
-                                LoginMessage oLoginMessage = SetLoginMessage("Success", HttpStatusCode.OK);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-
-                                msg = msg.Replace("false", "0");
-                                msg = msg.Replace("true", "1");
-                                unitOfWork.Commit();
-                            }
-                            catch (Exception ex)
-                            {
-                                oRootObject.data = new LoginObjectEntity();
-                                LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-                                response = new HttpResponseMessage()
-                                {
-                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                                };
-                                unitOfWork.Rollback();
-                            }
-                            response = new HttpResponseMessage()
-                            {
-                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                            };
-                        }
-                        else
-                        {
-                            oRootObject.data = new LoginObjectEntity();
-                            LoginMessage oLoginMessage = SetLoginMessage("User not found", HttpStatusCode.NotFound);
-                            oRootObject.MESSAGE = new LoginMessage();
-                            oRootObject.MESSAGE = oLoginMessage;
-                            msg = JsonConvert.SerializeObject(oRootObject);
-                            response = new HttpResponseMessage()
-                            {
-                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                            };
-                            //response = Request.CreateResponse(HttpStatusCode.NotFound, msg);//failure
-                        }
-                        return response;
+                        ProcessUserInfomations(oRootObject, response, oLoginObject, msg, service, serviceConfigure);
                     }
                     catch (Exception ex)
                     {
-                        unitOfWork.Rollback();
+                        oRootObject.data = new LoginObjectEntity();
+                        response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
                     }
                 }
             }
-            return null;
+            return response;
         }
 
+        // [Route("api/IsUserExist")]
         [Route("api/IsUserExist")]
         [HttpPost]
-        public HttpResponseMessage PostIsUserExist(JObject encryptedString)
+        public HttpResponseMessage IsUserExist(JObject encryptedString)
         {
-            #region MyRegion
+            #region Initialization
 
             HttpResponseMessage response;
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
@@ -249,7 +129,7 @@ namespace SmartHome.WebAPI.Controllers
             msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
             if (string.IsNullOrEmpty(msg))
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");//failure
+                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
             }
 
             oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
@@ -262,169 +142,244 @@ namespace SmartHome.WebAPI.Controllers
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IUserInfoService service = new UserInfoService(unitOfWork);
+                    response = ProcessIsUserExist(oRootObject, oUserInfo, service);
+                }
+            }
+            return response;
+        }
 
+        #region No Action Methods
+        [NonAction]
+        private HttpResponseMessage ProcessIsUserExist(LoginRootObjectEntity oRootObject, UserInfoEntity oUserInfo, IUserInfoService service)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                oRootObject.data = new LoginObjectEntity();
+                var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
+                if (isEmailExists)
+                {
+                    response = PrepareJsonResponse(oRootObject, "User already exist", HttpStatusCode.Conflict);
+                }
+                else
+                {
+                    response = PrepareJsonResponse(oRootObject, "User not exist", HttpStatusCode.OK);
+                }
+            }
+            catch (Exception ex)
+            {
+                oRootObject.data = new LoginObjectEntity();
+                response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
+
+            }
+
+            return response;
+        }
+
+        [NonAction]
+        private HttpResponseMessage ProcessGetRegisteredUser(LoginRootObjectEntity oRootObject, UserInfoEntity oUserInfo, IUnitOfWorkAsync unitOfWork, IUserInfoService service)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
+                if (isEmailExists)
+                {
+                    oRootObject.data = new LoginObjectEntity();
+                    response = PrepareJsonResponse(oRootObject, "User already exist", HttpStatusCode.Conflict);
+                }
+                else
+                {
+                    unitOfWork.BeginTransaction();
                     try
                     {
-                        try
-                        {
-                            oRootObject.data = new LoginObjectEntity();
-                            var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
-                            if (isEmailExists)
-                            {
-                                LoginMessage oLoginMessage = SetLoginMessage("User already exist",
-                                    HttpStatusCode.Conflict);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-                                response = new HttpResponseMessage()
-                                {
-                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                                };
-
-                            }
-                            else
-                            {
-                                LoginMessage oLoginMessage = SetLoginMessage("User not exist", HttpStatusCode.OK);
-                                oRootObject.MESSAGE = new LoginMessage();
-                                oRootObject.MESSAGE = oLoginMessage;
-                                msg = JsonConvert.SerializeObject(oRootObject);
-                                response = new HttpResponseMessage()
-                                {
-                                    Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                                };
-                            }
-                        }
-                        catch (Exception ex)
-                        {                       
-                            oRootObject.data = new LoginObjectEntity();
-                            LoginMessage oLoginMessage = SetLoginMessage(ex.ToString(), HttpStatusCode.BadRequest);
-                            oRootObject.MESSAGE = new LoginMessage();
-                            oRootObject.MESSAGE = oLoginMessage;
-                            msg = JsonConvert.SerializeObject(oRootObject);
-                            //already exist                        
-                            response = new HttpResponseMessage()
-                            {
-                                Content = new StringContent(msg, Encoding.UTF8, "application/json")
-                            };
-                        }
-
-                        return response;
+                        service.Add(oUserInfo);
+                        var changes = unitOfWork.SaveChanges();
+                        unitOfWork.Commit();
                     }
                     catch (Exception ex)
                     {
                         unitOfWork.Rollback();
+                        oRootObject.data = new LoginObjectEntity();
+                        response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
                     }
+                    oRootObject.data = new LoginObjectEntity();
+                    response = PrepareJsonResponse(oRootObject, "Unique user", HttpStatusCode.OK);
                 }
             }
-            return Request.CreateResponse(HttpStatusCode.InternalServerError, "Internal Server Error");
+            catch (Exception ex)
+            {
+                oRootObject.data = new LoginObjectEntity();
+                response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
+            }
+
+            return response;
         }
 
-        private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private HttpResponseMessage ProcessUserInfomations(LoginRootObjectEntity oRootObject, HttpResponseMessage response, LoginObjectEntity oLoginObject, string msg, IUserInfoService service, IConfigurationParserManagerService serviceConfigure)
         {
-            FillUserInfoToLoginObject(oLoginObject, oUserEntity);
-
-            FillUserHomeLinkInfoToLoginObject(oLoginObject, oUserEntity);
-
-            FillHomeInfoToLoginObject(oLoginObject, oUserEntity);
-
-
-            //user room link
-            FillUserRoomLinkInfoToLoginObject(oLoginObject, oUserEntity);
-
-            //smart router
-            FillSmartRouterInfoToLoginObject(oLoginObject, oUserEntity);
-
-            //room
-
-            FillRoomInfoToLoginObject(oLoginObject, oUserEntity);
-
-
-            //smart device
-
-
-            FillSmartDeviceInfoToLoginObject(oLoginObject, oUserEntity);
-
-
-            //d-status
-            FillSmartDeviceStatusInfoToLoginObject(oLoginObject, oUserEntity);
-
-            //channel
-
-            FillChannelInfoToLoginObject(oLoginObject, oUserEntity);
-            //c-status
-            FillChannelStatusInfoToLoginObject(oLoginObject, oUserEntity);
+            oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
+            var oUserInfo = oLoginObject.UserInfo.First();
+            var user = service.GetsUserInfos(oUserInfo.Email, oUserInfo.Password).FirstOrDefault();
+            if (user != null)
+            {
+                try
+                {
+                    response = GetUserInformationsFormDatabase(oRootObject, oLoginObject, serviceConfigure, user);
+                }
+                catch (Exception ex)
+                {
+                    oRootObject.data = new LoginObjectEntity();
+                    response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
+                }
+            }
+            else
+            {
+                oRootObject.data = new LoginObjectEntity();
+                response = PrepareJsonResponse(oRootObject, "User not found", HttpStatusCode.NotFound);
+            }
+            return response;
         }
-        private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+
+        [NonAction]
+        private HttpResponseMessage GetUserInformationsFormDatabase(LoginRootObjectEntity oRootObject, LoginObjectEntity oLoginObject, IConfigurationParserManagerService serviceConfigure, UserInfo user)
+        {
+            HttpResponseMessage response;
+            ObjectInitialization(oLoginObject);
+            var oUserHomeLink = serviceConfigure.GetsHomesAllInfo(user.UserInfoId, user.UserHomeLinks.FirstOrDefault() == null ? false : user.UserHomeLinks.FirstOrDefault().IsAdmin);
+            FillLoginObjectByData(oLoginObject, oUserHomeLink);
+            oRootObject.data = new LoginObjectEntity();
+            oRootObject.data = oLoginObject;
+            response = PrepareJsonResponseForGetUserInfos(oRootObject, "Success", HttpStatusCode.OK);
+            return response;
+        }
+        [NonAction]
+        private HttpResponseMessage PrepareJsonResponseForGetUserInfos(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
+        {
+            oRootObject.MESSAGE = new LoginMessage();
+            oRootObject.MESSAGE = SetLoginMessage(message, code);
+            string msg = JsonConvert.SerializeObject(oRootObject);
+            msg = msg.Replace("false", "0");
+            msg = msg.Replace("true", "1");
+            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+        }
+
+
+        [NonAction]
+        private HttpResponseMessage PrepareJsonResponse(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
+        {
+            oRootObject.MESSAGE = new LoginMessage();
+            oRootObject.MESSAGE = SetLoginMessage(message, code);
+            string msg = JsonConvert.SerializeObject(oRootObject);
+            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
+        }
+        private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        {
+            FillUserInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillUserHomeLinkInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillHomeInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //user room link
+            FillUserRoomLinkInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //smart router
+            FillSmartRouterInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //room
+            FillRoomInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //smart device
+            FillSmartDeviceInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //d-status
+            FillSmartDeviceStatusInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //channel
+            FillChannelInfoToLoginObject(oLoginObject, oUserHomeLink);
+            //c-status
+            FillChannelStatusInfoToLoginObject(oLoginObject, oUserHomeLink);
+        }
+        [NonAction]
+        private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<ChannelStatus, ChannelStatusEntity>();
-            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels).SelectMany(x => x.ChannelStatuses));
+            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(p => ((SmartSwitch)p).Channels).SelectMany(z => z.ChannelStatuses)));
             oLoginObject.ChannelStatus.AddRange(oChannelStatusEntity);
         }
-        private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<Channel, ChannelEntity>();
-            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(x => ((SmartSwitch)x).Channels));
+            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(z => ((SmartSwitch)z).Channels)));
             oLoginObject.Channel.AddRange(oChannelEntity);
         }
-        private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<DeviceStatus, DeviceStatusEntity>();
-            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus));
+            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus)));
             oLoginObject.DeviceStatus.AddRange(oDeviceStatusEntity);
         }
-        private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<SmartDevice, DeviceEntity>();
-            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room).SelectMany(x => x.SmartDevices));
+            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(z => z.SmartDevices)));
             oLoginObject.Device.AddRange(oDeviceEntity);
         }
-        private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<Room, RoomEntity>();
-            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks).Select(x => x.Room));
+            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms));
             oLoginObject.Room.AddRange(oRoomEntity);
         }
-        private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<SmartRouterInfo, SmartRouterEntity>();
-            IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home).SelectMany(x => x.SmartRouterInfoes));
+            IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.SmartRouterInfoes));
             oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
         }
-        private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<Home, HomeEntity>()
                   .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
-            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks).Select(x => x.Home));
+            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserHomeLink.Select(p => p.Home));
             oLoginObject.Home.AddRange(oHomeEntity);
         }
-        private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
                                         .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
                                         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
                                         .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.Id))
                                         .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
-            IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserEntity.SelectMany(p => p.UserHomeLinks));
+            IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserHomeLink);
             oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
         }
-        private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+
+        [NonAction]
+        private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
+            var temp = oUserHomeLink.Select(e => e.UInfoId).First();
+            
             Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
                                         //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
                                         .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id))
                                         .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.Id));
-            IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserEntity.SelectMany(p => p.UserRoomLinks));
-            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity);
+            IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p=>p.UserInfo.UserInfoId==temp)));
+            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.User==temp.ToString()));
         }
-        private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserInfo> oUserEntity)
+        [NonAction]
+        private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<UserInfo, UserInfoEntity>()
                                         .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Gender))
                                         .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
 
-            IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserEntity);
+            IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserHomeLink.Select(x => x.UserInfo));
             oLoginObject.UserInfo.Add(oUserInfoEntity.First());
         }
+
+        [NonAction]
         private void ObjectInitialization(LoginObjectEntity oLoginObject)
         {
             oLoginObject.UserInfo = new List<UserInfoEntity>();
@@ -448,6 +403,7 @@ namespace SmartHome.WebAPI.Controllers
             oLoginMessage.HTTP_STATUS = (int)code;
             return oLoginMessage;
         }
+        #endregion
     }
 }
 
