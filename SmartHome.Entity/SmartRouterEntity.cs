@@ -14,10 +14,10 @@ namespace SmartHome.Entity
         public int Id { get; set; }
         public string LocalBrokerUsername { get; set; }
         public string LocalBrokerPassword { get; set; }
-
         [JsonProperty("Home")]
         public int HId { get; set; }
-
+        [JsonProperty("macAddress")]
+        public string MacAddress { get; set; }
         public string Ssid { get; set; }
         public bool IsSynced { get; set; }        
         #endregion

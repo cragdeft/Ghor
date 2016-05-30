@@ -16,40 +16,66 @@ namespace SmartHome.Json
 {
     public class JsonParser
     {
-        public RoomJsonEntity _roomJsonEntity { get; set; }
+        public HomeJsonEntity _homeJsonEntity { get; private set; }
         private IUnitOfWorkAsync _unitOfWorkAsync;
-        private IJsonParserService _jsonParserService;
-        public JsonParser(RoomJsonEntity roomJsonEntity)
+        private IHomeJsonParserService _homeJsonParserService;
+        public JsonParser(string jsonString)
         {
-            _roomJsonEntity = roomJsonEntity;
-            InitializeParameters(roomJsonEntity);
+            _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
+            InitializeParameters();
         }
 
-        private void InitializeParameters(RoomJsonEntity roomJsonEntity)
+        private void InitializeParameters()
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
-            _jsonParserService = new JsonParserService(_unitOfWorkAsync);
+            _homeJsonParserService = new HomeJsonParserService(_unitOfWorkAsync);
         }
 
-        public void Parse()
+        public void Save()
         {
-            if (_roomJsonEntity == null)
+            if (_homeJsonEntity == null)
                 return;
+            SaveHomeAndRouter();
+        }
 
-            if (_roomJsonEntity.RouterInfo[0] != null)
+        private void SaveHomeAndRouter()
+        {
+            SmartRouterEntity router = _homeJsonParserService.GetRouter(_homeJsonEntity.RouterInfo[0].MacAddress);
+            if (router != null)
             {
-                HomeEntity home = _roomJsonEntity.Home.Find(x => x.Id == _roomJsonEntity.RouterInfo[0].HId);
-                if (!_jsonParserService.IsHomeExists(home))
-                {
-                    home.SmartRouter.Add(_roomJsonEntity.RouterInfo[0]);
-                    _jsonParserService.SaveHome(home);
-                }
-                else
-                {
-                    home.SmartRouter.Add(_roomJsonEntity.RouterInfo[0]);
-                    _jsonParserService.UpdateHome(home);
-                }
+                HomeEntity home = _homeJsonParserService.GetHome(router.HId);
+                SaveOrUpdateHome(home);
+                SaveOrUpdateRouter(router);
+            }
+            else
+            {
+                SaveOrUpdateHome(null);
+                SaveOrUpdateRouter(null);
+            }
+        }
+
+        private void SaveOrUpdateRouter(SmartRouterEntity router)
+        {
+            if (router == null)
+            {
+                _homeJsonParserService.SaveRouter(_homeJsonEntity.RouterInfo[0]);
+            }
+            else
+            {
+                _homeJsonParserService.UpdateRouter(_homeJsonEntity.RouterInfo[0]);
+            }
+        }
+
+        private void SaveOrUpdateHome(HomeEntity home)
+        {
+            if (home == null)
+            {
+                _homeJsonParserService.InsertHome(_homeJsonEntity.Home[0]);
+            }
+            else
+            {
+                _homeJsonParserService.UpdateHome(_homeJsonEntity.Home[0]);
             }
         }
 

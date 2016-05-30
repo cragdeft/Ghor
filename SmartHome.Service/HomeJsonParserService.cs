@@ -12,7 +12,7 @@ using SmartHome.Model.Models;
 
 namespace SmartHome.Service
 {
-    public class JsonParserService:IJsonParserService
+    public class HomeJsonParserService : IHomeJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -21,32 +21,31 @@ namespace SmartHome.Service
         private string _email;
         #endregion
 
-        public JsonParserService(IUnitOfWorkAsync unitOfWorkAsync)
+        public HomeJsonParserService(IUnitOfWorkAsync unitOfWorkAsync)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _routerRepository = _unitOfWorkAsync.RepositoryAsync<SmartRouter>();
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
         }
-        public bool IsRouterExists(SmartRouter router)
+        public SmartRouterEntity GetRouter(string macAddress)
         {
-            return
-            _routerRepository
-                .Queryable().Where(u => u.Ssid == router.Ssid.ToString()).FirstOrDefault() != null;
+            SmartRouter router = _routerRepository
+                .Queryable().Where(u => u.MacAddress == macAddress).FirstOrDefault();
+
+            Mapper.CreateMap<SmartRouter, SmartRouterEntity>();
+            return Mapper.Map<SmartRouter, SmartRouterEntity>(router);
         }
 
-        public bool IsHomeExists(HomeEntity home)
+        public HomeEntity GetHome(int homeId)
         {
-            return
-            _homeRepository
-                .Queryable().Where(u => u.Id == home.Id.ToString()).FirstOrDefault() != null;
+            Home home = _homeRepository
+                .Queryable().Where(u => u.Id == homeId.ToString()).FirstOrDefault();
+
+            Mapper.CreateMap<Home, HomeEntity>();
+            return Mapper.Map<Home, HomeEntity>(home);
         }
 
-        public void SaveHome(HomeEntity home)
-        {
-            InsertHome(home);
-        }
-
-        private void InsertHome(HomeEntity home)
+        public void InsertHome(HomeEntity home)
         {
             _unitOfWorkAsync.BeginTransaction();
             Mapper.CreateMap<HomeEntity, Home>();
@@ -56,7 +55,6 @@ namespace SmartHome.Service
                 model.ObjectState = ObjectState.Added;
                 model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _homeRepository.Insert(model);
-                SaveHomeRouter(home);
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
@@ -77,7 +75,6 @@ namespace SmartHome.Service
                 model.ObjectState = ObjectState.Modified;
                 model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _homeRepository.Update(model);
-                UpdateHomeRouter(home);
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
@@ -88,29 +85,43 @@ namespace SmartHome.Service
             }
         }
 
-        private void SaveHomeRouter(HomeEntity home)
+        public void SaveRouter(SmartRouterEntity router)
         {
-            foreach (var smartRouterEntity in home.SmartRouter)
+
+            Mapper.CreateMap<SmartRouterEntity, SmartRouter>();
+            var entity = Mapper.Map<SmartRouterEntity, SmartRouter>(router);
+            _unitOfWorkAsync.BeginTransaction();
+            try
             {
-                Mapper.CreateMap<SmartRouterEntity, SmartRouter>();
-                var entity = Mapper.Map<SmartRouterEntity, SmartRouter>(smartRouterEntity);
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 entity.ObjectState = ObjectState.Added;
                 _routerRepository.Insert(entity);
-                _routerRepository.FindAsync(smartRouterEntity);
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+            }
+            catch (Exception ex)
+            {
+
+                _unitOfWorkAsync.Rollback();
             }
         }
 
-        private void UpdateHomeRouter(HomeEntity home)
+        public void UpdateRouter(SmartRouterEntity router)
         {
-            foreach (var smartRouterEntity in home.SmartRouter)
+            Mapper.CreateMap<SmartRouterEntity, SmartRouter>();
+            var entity = Mapper.Map<SmartRouterEntity, SmartRouter>(router);
+            try
             {
-                Mapper.CreateMap<SmartRouterEntity, SmartRouter>();
-                var entity = Mapper.Map<SmartRouterEntity, SmartRouter>(smartRouterEntity);
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 entity.ObjectState = ObjectState.Modified;
                 _routerRepository.Update(entity);
-                _routerRepository.FindAsync(smartRouterEntity);
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+            }
+            catch (Exception ex)
+            {
+
+                _unitOfWorkAsync.Rollback();
             }
         }
     }

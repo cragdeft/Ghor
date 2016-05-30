@@ -39,9 +39,8 @@ namespace SmartHome.Web.Utility
         {
             if (customEventArgs.ReceivedTopic == "jsonparse")// CommandType.Configuration.ToString()
             {
-                RoomJsonEntity jsonObject = JsonParser.JsonDesrialized<RoomJsonEntity>(customEventArgs.ReceivedMessage);
-                JsonParser jsonManager = new JsonParser(jsonObject);
-                jsonManager.Parse();
+                JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
+                jsonManager.Save();
             }
             if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
             {

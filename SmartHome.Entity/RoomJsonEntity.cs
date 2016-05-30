@@ -8,7 +8,7 @@ namespace SmartHome.Entity
 {
     
 
-    public class RoomJsonEntity
+    public class HomeJsonEntity
     {
         public List<VersionDetailEntity> VersionDetails { get; set; }
         public List<HomeEntity> Home { get; set; }
