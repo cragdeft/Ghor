@@ -42,17 +42,14 @@ namespace SmartHome.Json
         private void SaveHomeAndRouter()
         {
             SmartRouterEntity router = _homeJsonParserService.GetRouter(_homeJsonEntity.RouterInfo[0].MacAddress);
+            HomeEntity home = null;
             if (router != null)
             {
-                HomeEntity home = _homeJsonParserService.GetHome(router.HId);
-                SaveOrUpdateHome(home);
-                SaveOrUpdateRouter(router);
+                home = _homeJsonParserService.GetHome(router.HId);
             }
-            else
-            {
-                SaveOrUpdateHome(null);
-                SaveOrUpdateRouter(null);
-            }
+
+            SaveOrUpdateHome(home);
+            SaveOrUpdateRouter(router);
         }
 
         private void SaveOrUpdateRouter(SmartRouterEntity router)
