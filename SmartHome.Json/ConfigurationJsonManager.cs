@@ -166,8 +166,8 @@ namespace SmartHome.Json
         {
             foreach (var item in oHome)
             {
-                item.Rooms = oRoom.Where(p => p.HId == item.Id).ToArray();
-                item.SmartRouterInfoes = oSmartRouterInfo.Where(p => p.HId == item.Id).ToArray();
+                item.Rooms = oRoom.Where(p => p.HId == item.HomeId.ToString()).ToArray();
+                item.SmartRouterInfoes = oSmartRouterInfo.Where(p => p.HId == item.AppsHomeId.ToString()).ToArray();
             }
             
             List<UserHomeLink> oUserHomeList = new List<UserHomeLink>();
@@ -179,7 +179,7 @@ namespace SmartHome.Json
                     Id = item.Id,
                     HId = Convert.ToInt32(item.Home),
                     UInfoId = Convert.ToInt32(item.User),
-                    Home = oHome.FirstOrDefault(p => p.Id == item.Home),
+                    Home = oHome.FirstOrDefault(p => p.AppsHomeId.ToString() == item.Home),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User),
                     IsAdmin = item.IsAdmin,
                     IsSynced = item.IsSynced,

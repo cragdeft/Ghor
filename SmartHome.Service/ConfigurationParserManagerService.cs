@@ -242,16 +242,16 @@ namespace SmartHome.Service
         private void FillExistingHomeInfo(Home item, Home existingItem)
         {
 
-            existingItem.Id = item.Id;
+            existingItem.HomeId = item.HomeId;
             existingItem.Name = item.Name;
             existingItem.TimeZone = item.TimeZone;
             //existingItem.RegistrationKey = item.RegistrationKey;
             //existingItem.HardwareId = item.HardwareId;
             //existingItem.TrialCount = item.TrialCount;
-            existingItem.Comment = item.Comment;
+            //existingItem.Comment = item.Comment;
             existingItem.IsActive = item.IsActive;
             existingItem.IsDefault = item.IsDefault;
-            existingItem.IsAdmin = item.IsAdmin;
+            //existingItem.IsAdmin = item.IsAdmin;
             existingItem.MeshMode = item.MeshMode;
             existingItem.Phone = item.Phone;
             existingItem.PassPhrase = item.PassPhrase;
@@ -348,7 +348,7 @@ namespace SmartHome.Service
         private IEnumerable<Home> IsHomeExists(string HId)
         {
             //return _userHomeLinkRepository.Query(e => e.HId == HId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Select();
-            return _homeRepository.Query(e => e.Id == HId).Include(x => x.SmartRouterInfoes).Include(x => x.Rooms).Select();
+            return _homeRepository.Query(e => e.AppsHomeId.ToString() == HId).Include(x => x.SmartRouterInfoes).Include(x => x.Rooms).Select();
 
         }
 

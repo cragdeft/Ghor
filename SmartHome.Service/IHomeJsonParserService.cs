@@ -10,11 +10,6 @@ namespace SmartHome.Service
 {
     public interface IHomeJsonParserService
     {
-        SmartRouterEntity GetRouter(string macAddress);
-        void InsertHome(HomeEntity home);
-        HomeEntity GetHome(int homeId);
-        void UpdateHome(HomeEntity home);
-        void UpdateRouter(SmartRouterEntity router);
-        void SaveRouter(SmartRouterEntity router);
+        bool SaveJsonData();
     }
 }

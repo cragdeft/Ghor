@@ -34,17 +34,23 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         HomeId = c.Int(nullable: false, identity: true),
-                        Id = c.String(),
+                        AppsHomeId = c.Int(nullable: false),
                         Name = c.String(),
+                        Address1 = c.String(),
+                        Address2 = c.String(),
+                        Block = c.String(),
+                        City = c.String(),
+                        ZipCode = c.String(),
+                        Country = c.String(),
                         TimeZone = c.String(),
-                        Comment = c.String(),
                         IsActive = c.Boolean(nullable: false),
                         IsDefault = c.Boolean(nullable: false),
-                        IsAdmin = c.Boolean(nullable: false),
                         MeshMode = c.Int(nullable: false),
                         Phone = c.String(),
                         PassPhrase = c.String(),
+                        Zone = c.String(),
                         IsInternet = c.Boolean(nullable: false),
+                        IsSynced = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -93,22 +99,24 @@ namespace SmartHome.Model.Migrations
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
                         AuditField_LastUpdatedDateTime = c.DateTime(),
-                        HId = c.String(),
-                        IP = c.String(),
+                        AppsRouterId = c.Int(),
+                        LocalBrokerIp = c.String(),
+                        LocalBrokerPort = c.String(),
                         MacAddress = c.String(),
-                        Port = c.String(),
                         Ssid = c.String(),
+                        SsidPassword = c.String(),
                         LocalBrokerUsername = c.String(),
                         LocalBrokerPassword = c.String(),
-                        IsActive = c.Boolean(),
-                        IsDefault = c.Boolean(),
                         IsSynced = c.Boolean(),
                         Room_RoomId = c.Int(),
+                        Parent_HomeId = c.Int(),
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.DeviceId)
                 .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
-                .Index(t => t.Room_RoomId);
+                .ForeignKey("dbo.Homes", t => t.Parent_HomeId)
+                .Index(t => t.Room_RoomId)
+                .Index(t => t.Parent_HomeId);
             
             CreateTable(
                 "dbo.DeviceStatus",
@@ -429,6 +437,7 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.UserRoomLinks", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.Channels", "SmartSwitch_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.ChannelStatus", "Channel_ChannelId", "dbo.Channels");
+            DropForeignKey("dbo.SmartDevices", "Parent_HomeId", "dbo.Homes");
             DropForeignKey("dbo.RgbwStatus", "SmartRainbow_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.RgbwStatus", "SmartDevice_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.SmartDevices", "Room_RoomId", "dbo.Rooms");
@@ -449,6 +458,7 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.RgbwStatus", new[] { "SmartRainbow_DeviceId" });
             DropIndex("dbo.RgbwStatus", new[] { "SmartDevice_DeviceId" });
             DropIndex("dbo.DeviceStatus", new[] { "SmartDevice_DeviceId" });
+            DropIndex("dbo.SmartDevices", new[] { "Parent_HomeId" });
             DropIndex("dbo.SmartDevices", new[] { "Room_RoomId" });
             DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });

@@ -13,7 +13,7 @@ namespace SmartHome.Model.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201605281030003_initialCreate"; }
+            get { return "201605300956309_initialCreate"; }
         }
         
         string IMigrationMetadata.Source

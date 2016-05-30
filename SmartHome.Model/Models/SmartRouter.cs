@@ -16,15 +16,15 @@ namespace SmartHome.Model.Models
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //public int SmartRouterId { get; set; }
         //public int Id { get; set; }
-        public string HId { get; set; }
-        public string IP { get; set; }
+        
+        public int AppsRouterId { get; set; }
+        public string LocalBrokerIp { get; set; }
+        public string LocalBrokerPort { get; set; }
         public string MacAddress { get; set; }
-        public string Port { get; set; }
         public string Ssid { get; set; }
+        public string SsidPassword { get; set; }
         public string LocalBrokerUsername { get; set; }
         public string LocalBrokerPassword { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDefault { get; set; }
         public bool IsSynced { get; set; }
         #endregion
 
@@ -33,7 +33,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
-       // public virtual Home Home { get; set; }         
+        public virtual Home Parent { get; set; }         
         #endregion
     }
 }

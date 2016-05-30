@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SmartHome.Entity
 {
@@ -13,8 +14,9 @@ namespace SmartHome.Entity
             SmartRouter = new List<SmartRouterEntity>();
         }
         #region Primitive Properties 
-
-        public int Id { get; set; }
+        public int HomeId { get; set; }
+        [JsonProperty("id")]
+        public int AppsHomeId { get; set; }
         public string Name { get; set; }
         public string Address1 { get; set; }
 
@@ -32,7 +34,7 @@ namespace SmartHome.Entity
 
         public string PassPhrase { get; set; }
 
-        public string MeshMode { get; set; }
+        public int MeshMode { get; set; }
 
         public string Zone { get; set; }
 

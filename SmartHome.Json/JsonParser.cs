@@ -29,51 +29,14 @@ namespace SmartHome.Json
         {
             IDataContextAsync context = new SmartHomeDataContext();
             _unitOfWorkAsync = new UnitOfWork(context);
-            _homeJsonParserService = new HomeJsonParserService(_unitOfWorkAsync);
+            _homeJsonParserService = new HomeJsonParserService(_unitOfWorkAsync,_homeJsonEntity);
         }
 
         public void Save()
         {
             if (_homeJsonEntity == null)
                 return;
-            SaveHomeAndRouter();
-        }
-
-        private void SaveHomeAndRouter()
-        {
-            SmartRouterEntity router = _homeJsonParserService.GetRouter(_homeJsonEntity.RouterInfo[0].MacAddress);
-            HomeEntity home = null;
-            if (router != null)
-            {
-                home = _homeJsonParserService.GetHome(router.HId);
-            }
-
-            SaveOrUpdateHome(home);
-            SaveOrUpdateRouter(router);
-        }
-
-        private void SaveOrUpdateRouter(SmartRouterEntity router)
-        {
-            if (router == null)
-            {
-                _homeJsonParserService.SaveRouter(_homeJsonEntity.RouterInfo[0]);
-            }
-            else
-            {
-                _homeJsonParserService.UpdateRouter(_homeJsonEntity.RouterInfo[0]);
-            }
-        }
-
-        private void SaveOrUpdateHome(HomeEntity home)
-        {
-            if (home == null)
-            {
-                _homeJsonParserService.InsertHome(_homeJsonEntity.Home[0]);
-            }
-            else
-            {
-                _homeJsonParserService.UpdateHome(_homeJsonEntity.Home[0]);
-            }
+            _homeJsonParserService.SaveJsonData();
         }
 
         public static T JsonDesrialized<T>(string jsonString)

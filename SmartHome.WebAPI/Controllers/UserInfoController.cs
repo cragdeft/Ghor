@@ -350,7 +350,7 @@ namespace SmartHome.WebAPI.Controllers
             Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
                                         .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
                                         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
-                                        .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.Id))
+                                        .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.AppsHomeId))
                                         .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
             IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserHomeLink);
             oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
