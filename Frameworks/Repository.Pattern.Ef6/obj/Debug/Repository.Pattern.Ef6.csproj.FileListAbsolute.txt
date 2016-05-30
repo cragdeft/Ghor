@@ -110,3 +110,7 @@ C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\bin\Debug\Micr
 C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.csprojResolveAssemblyReference.cache
 C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.dll
 C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern.Ef6\obj\Debug\Repository.Pattern.Ef6.pdb
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\bin\Debug\LinqKit.dll
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+F:\Projects\Smart Home Web\Frameworks\Repository.Pattern.Ef6\bin\Debug\Microsoft.Practices.ServiceLocation.xml

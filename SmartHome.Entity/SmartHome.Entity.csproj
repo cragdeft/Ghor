@@ -61,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RgbwStatusEntity.cs" />
     <Compile Include="RoomEntity.cs" />
+    <Compile Include="RoomJsonEntity.cs" />
     <Compile Include="RootObjectEntity.cs" />
     <Compile Include="SmartRouterEntity.cs" />
     <Compile Include="UserHomeLinkEntity.cs" />

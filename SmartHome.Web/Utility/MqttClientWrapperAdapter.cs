@@ -37,6 +37,12 @@ namespace SmartHome.Web.Utility
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
+            if (customEventArgs.ReceivedTopic == "jsonparse")// CommandType.Configuration.ToString()
+            {
+                RoomJsonEntity jsonObject = JsonParser.JsonDesrialized<RoomJsonEntity>(customEventArgs.ReceivedMessage);
+                JsonParser jsonManager = new JsonParser(jsonObject);
+                jsonManager.Parse();
+            }
             if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
             {
                 new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
@@ -51,6 +57,12 @@ namespace SmartHome.Web.Utility
             }
 
             if (customEventArgs.ReceivedTopic == "command/kanok")//CommandType.Command.ToString()
+            {
+                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
+                new CommandJsonManager().CommandLog(jsonObject);
+            }
+
+            if (customEventArgs.ReceivedTopic == "json")//CommandType.Command.ToString()
             {
                 var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
                 new CommandJsonManager().CommandLog(jsonObject);

@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace SmartHome.Web.Controllers
 {
-    [CustomAuthorize(Roles = "Admin")]
+    
     public class HomeController : BaseController
     {
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;

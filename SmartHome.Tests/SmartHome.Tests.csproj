@@ -154,6 +154,7 @@
     <Compile Include="Controllers\TestVersionController.cs" />
     <Compile Include="Services\TestVersionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestJsonParser.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>

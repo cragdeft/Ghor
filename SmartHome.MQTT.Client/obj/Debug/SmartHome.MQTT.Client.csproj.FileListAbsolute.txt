@@ -104,7 +104,6 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Newtonsoft.Json.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\EntityFramework.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.dll
-F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\LinqKit.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Json.pdb
@@ -116,7 +115,6 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Entity.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef6.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\EntityFramework.xml
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.pdb
-F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
@@ -225,3 +223,7 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.C
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Elmah.dll
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.pdb
+F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.WebBrokerResouce.resources

@@ -157,3 +157,8 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Service\bin\Debug\Microsoft.Web.Infras
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.csprojResolveAssemblyReference.cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Service\obj\Debug\SmartHome.Service.pdb
+F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\SmartHome.Service.dll.config
+F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+F:\Projects\Smart Home Web\SmartHome.Service\bin\Debug\Microsoft.Practices.ServiceLocation.xml

@@ -51,7 +51,7 @@ namespace SmartHome.MQTT.Client
             {
                 if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
-                    if (BrokerAddress == "192.168.11.245")
+                    if (BrokerAddress == "192.168.11.175")
                     {
                         LocalBrokerConnection(BrokerAddress);
                     }
@@ -82,7 +82,7 @@ namespace SmartHome.MQTT.Client
             catch (Exception ex)
             {
 
-                Logger.LogError(ex, string.Format("Could not stablished connection to MQ broker: {1}", ex.Message));
+                //Logger.LogError(ex, string.Format("Could not stablished connection to MQ broker: {1}", ex.Message));
 
                 //don't leave the client connected
                 if (SmartHomeMQTT != null && SmartHomeMQTT.IsConnected)

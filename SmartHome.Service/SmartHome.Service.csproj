@@ -56,11 +56,13 @@
     <Compile Include="CommandParserService.cs" />
     <Compile Include="ConfigurationParserManagerService.cs" />
     <Compile Include="DeviceService.cs" />
+    <Compile Include="IJsonParserService.cs" />
     <Compile Include="Interfaces\ICommandPerserService.cs" />
     <Compile Include="Interfaces\IConfigurationParserManagerService.cs" />
     <Compile Include="Interfaces\IDeviceService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
+    <Compile Include="JsonParserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInfoService.cs" />
     <Compile Include="VersionService.cs" />

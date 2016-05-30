@@ -120,3 +120,5 @@ C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\bin\Debug\Microsoft.Web.Inf
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.csprojResolveAssemblyReference.cache
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.dll
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.Repository\obj\Debug\SmartHome.Repository.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+F:\Projects\Smart Home Web\SmartHome.Repository\bin\Debug\Microsoft.Practices.ServiceLocation.xml

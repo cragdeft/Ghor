@@ -559,7 +559,6 @@ F:\Projects\Smart Home Web\SmartHome.Web\bin\System.Web.WebPages.Razor.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\WebActivatorEx.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\WebGrease.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\SmartHome.Json.dll
-F:\Projects\Smart Home Web\SmartHome.Web\bin\SmartHome.Repository.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\AutoMapper.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\LinqKit.dll
 F:\Projects\Smart Home Web\SmartHome.Web\bin\Service.Pattern.pdb
@@ -610,7 +609,6 @@ F:\Projects\Smart Home Web\SmartHome.Web\bin\Microsoft.Owin.Security.Google.xml
 F:\Projects\Smart Home Web\SmartHome.Web\bin\Microsoft.Owin.Security.Twitter.xml
 F:\Projects\Smart Home Web\SmartHome.Web\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 F:\Projects\Smart Home Web\SmartHome.Web\bin\SmartHome.Json.pdb
-F:\Projects\Smart Home Web\SmartHome.Web\bin\SmartHome.Repository.pdb
 F:\Projects\Smart Home Web\SmartHome.Web\obj\Debug\SmartHome.Web.csprojResolveAssemblyReference.cache
 F:\Projects\Smart Home Web\SmartHome.Web\obj\Debug\SmartHome.Web.dll
 F:\Projects\Smart Home Web\SmartHome.Web\obj\Debug\SmartHome.Web.pdb
