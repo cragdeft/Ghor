@@ -10,6 +10,7 @@ namespace SmartHome.Entity
     public class RoomEntity
     {
         #region Primitive Properties 
+        public int RoomId { get; set; }
         public int Id { get; set; }
         [JsonProperty("Home")]
         public int HId { get; set; }

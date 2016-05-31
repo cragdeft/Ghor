@@ -49,7 +49,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties
         public virtual ICollection<UserType> UserTypes { get; set; }
-        //public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
+        public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<UserStatus> UserStatuses { get; set; }
 
         public virtual ICollection<UserHomeLink> UserHomeLinks { get; set; }

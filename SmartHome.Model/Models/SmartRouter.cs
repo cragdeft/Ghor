@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
+    
     public class SmartRouter: SmartDevice
     {
         #region Primitive Properties

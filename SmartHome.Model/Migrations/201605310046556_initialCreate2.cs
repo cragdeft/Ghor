@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialCreate : DbMigration
+    public partial class initialCreate2 : DbMigration
     {
         public override void Up()
         {
@@ -75,10 +75,13 @@ namespace SmartHome.Model.Migrations
                         AuditField_LastUpdatedBy = c.String(),
                         AuditField_LastUpdatedDateTime = c.DateTime(),
                         Home_HomeId = c.Int(),
+                        Home_HomeId1 = c.Int(),
                     })
                 .PrimaryKey(t => t.RoomId)
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId)
-                .Index(t => t.Home_HomeId);
+                .ForeignKey("dbo.Homes", t => t.Home_HomeId1, cascadeDelete: true)
+                .Index(t => t.Home_HomeId)
+                .Index(t => t.Home_HomeId1);
             
             CreateTable(
                 "dbo.SmartDevices",
@@ -110,13 +113,16 @@ namespace SmartHome.Model.Migrations
                         IsSynced = c.Boolean(),
                         Room_RoomId = c.Int(),
                         Parent_HomeId = c.Int(),
+                        Room_RoomId1 = c.Int(),
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.DeviceId)
                 .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
                 .ForeignKey("dbo.Homes", t => t.Parent_HomeId)
+                .ForeignKey("dbo.Rooms", t => t.Room_RoomId1, cascadeDelete: true)
                 .Index(t => t.Room_RoomId)
-                .Index(t => t.Parent_HomeId);
+                .Index(t => t.Parent_HomeId)
+                .Index(t => t.Room_RoomId1);
             
             CreateTable(
                 "dbo.DeviceStatus",
@@ -133,10 +139,13 @@ namespace SmartHome.Model.Migrations
                         AuditField_LastUpdatedBy = c.String(),
                         AuditField_LastUpdatedDateTime = c.DateTime(),
                         SmartDevice_DeviceId = c.Int(),
+                        SmartDevice_DeviceId1 = c.Int(),
                     })
                 .PrimaryKey(t => t.DeviceStatusId)
                 .ForeignKey("dbo.SmartDevices", t => t.SmartDevice_DeviceId)
-                .Index(t => t.SmartDevice_DeviceId);
+                .ForeignKey("dbo.SmartDevices", t => t.SmartDevice_DeviceId1, cascadeDelete: true)
+                .Index(t => t.SmartDevice_DeviceId)
+                .Index(t => t.SmartDevice_DeviceId1);
             
             CreateTable(
                 "dbo.RgbwStatus",
@@ -182,7 +191,7 @@ namespace SmartHome.Model.Migrations
                         SmartSwitch_DeviceId = c.Int(),
                     })
                 .PrimaryKey(t => t.ChannelId)
-                .ForeignKey("dbo.SmartDevices", t => t.SmartSwitch_DeviceId)
+                .ForeignKey("dbo.SmartDevices", t => t.SmartSwitch_DeviceId, cascadeDelete: true)
                 .Index(t => t.SmartSwitch_DeviceId);
             
             CreateTable(
@@ -199,10 +208,13 @@ namespace SmartHome.Model.Migrations
                         AuditField_LastUpdatedBy = c.String(),
                         AuditField_LastUpdatedDateTime = c.DateTime(),
                         Channel_ChannelId = c.Int(),
+                        Channel_ChannelId1 = c.Int(),
                     })
                 .PrimaryKey(t => t.ChannelStatusId)
                 .ForeignKey("dbo.Channels", t => t.Channel_ChannelId)
-                .Index(t => t.Channel_ChannelId);
+                .ForeignKey("dbo.Channels", t => t.Channel_ChannelId1, cascadeDelete: true)
+                .Index(t => t.Channel_ChannelId)
+                .Index(t => t.Channel_ChannelId1);
             
             CreateTable(
                 "dbo.UserRoomLinks",
@@ -214,12 +226,15 @@ namespace SmartHome.Model.Migrations
                         IsSynced = c.Boolean(nullable: false),
                         Room_RoomId = c.Int(),
                         UserInfo_UserInfoId = c.Int(),
+                        Room_RoomId1 = c.Int(),
                     })
                 .PrimaryKey(t => new { t.RId, t.UInfoId })
                 .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
                 .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId)
+                .ForeignKey("dbo.Rooms", t => t.Room_RoomId1, cascadeDelete: true)
                 .Index(t => t.Room_RoomId)
-                .Index(t => t.UserInfo_UserInfoId);
+                .Index(t => t.UserInfo_UserInfoId)
+                .Index(t => t.Room_RoomId1);
             
             CreateTable(
                 "dbo.UserInfoes",
@@ -258,6 +273,29 @@ namespace SmartHome.Model.Migrations
                 .PrimaryKey(t => t.UserInfoId);
             
             CreateTable(
+                "dbo.SyncStatus",
+                c => new
+                    {
+                        SyncStatusId = c.Int(nullable: false, identity: true),
+                        Status = c.String(),
+                        IsActive = c.Boolean(nullable: false),
+                        AuditField_InsertedBy = c.String(),
+                        AuditField_InsertedDateTime = c.DateTime(),
+                        AuditField_LastUpdatedBy = c.String(),
+                        AuditField_LastUpdatedDateTime = c.DateTime(),
+                        Room_RoomId = c.Int(),
+                        UserProfile_UserInfoId = c.Int(),
+                        UserInfo_UserInfoId = c.Int(),
+                    })
+                .PrimaryKey(t => t.SyncStatusId)
+                .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
+                .ForeignKey("dbo.UserInfoes", t => t.UserProfile_UserInfoId)
+                .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId, cascadeDelete: true)
+                .Index(t => t.Room_RoomId)
+                .Index(t => t.UserProfile_UserInfoId)
+                .Index(t => t.UserInfo_UserInfoId);
+            
+            CreateTable(
                 "dbo.UserHomeLinks",
                 c => new
                     {
@@ -268,12 +306,15 @@ namespace SmartHome.Model.Migrations
                         IsSynced = c.Boolean(nullable: false),
                         Home_HomeId = c.Int(),
                         UserInfo_UserInfoId = c.Int(),
+                        Home_HomeId1 = c.Int(),
                     })
                 .PrimaryKey(t => new { t.HId, t.UInfoId })
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId)
                 .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId)
+                .ForeignKey("dbo.Homes", t => t.Home_HomeId1, cascadeDelete: true)
                 .Index(t => t.Home_HomeId)
-                .Index(t => t.UserInfo_UserInfoId);
+                .Index(t => t.UserInfo_UserInfoId)
+                .Index(t => t.Home_HomeId1);
             
             CreateTable(
                 "dbo.UserRoles",
@@ -426,7 +467,10 @@ namespace SmartHome.Model.Migrations
         {
             DropForeignKey("dbo.VersionDetails", "Version_VersionId", "dbo.Versions");
             DropForeignKey("dbo.Addresses", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.UserHomeLinks", "Home_HomeId1", "dbo.Homes");
             DropForeignKey("dbo.SmartRouterInfoes", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.Rooms", "Home_HomeId1", "dbo.Homes");
+            DropForeignKey("dbo.UserRoomLinks", "Room_RoomId1", "dbo.Rooms");
             DropForeignKey("dbo.UserTypes", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserStatus", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserRoomLinks", "UserInfo_UserInfoId", "dbo.UserInfoes");
@@ -434,13 +478,19 @@ namespace SmartHome.Model.Migrations
             DropForeignKey("dbo.UserRoles", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserHomeLinks", "UserInfo_UserInfoId", "dbo.UserInfoes");
             DropForeignKey("dbo.UserHomeLinks", "Home_HomeId", "dbo.Homes");
+            DropForeignKey("dbo.SyncStatus", "UserInfo_UserInfoId", "dbo.UserInfoes");
+            DropForeignKey("dbo.SyncStatus", "UserProfile_UserInfoId", "dbo.UserInfoes");
+            DropForeignKey("dbo.SyncStatus", "Room_RoomId", "dbo.Rooms");
             DropForeignKey("dbo.UserRoomLinks", "Room_RoomId", "dbo.Rooms");
+            DropForeignKey("dbo.SmartDevices", "Room_RoomId1", "dbo.Rooms");
             DropForeignKey("dbo.Channels", "SmartSwitch_DeviceId", "dbo.SmartDevices");
+            DropForeignKey("dbo.ChannelStatus", "Channel_ChannelId1", "dbo.Channels");
             DropForeignKey("dbo.ChannelStatus", "Channel_ChannelId", "dbo.Channels");
             DropForeignKey("dbo.SmartDevices", "Parent_HomeId", "dbo.Homes");
             DropForeignKey("dbo.RgbwStatus", "SmartRainbow_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.RgbwStatus", "SmartDevice_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.SmartDevices", "Room_RoomId", "dbo.Rooms");
+            DropForeignKey("dbo.DeviceStatus", "SmartDevice_DeviceId1", "dbo.SmartDevices");
             DropForeignKey("dbo.DeviceStatus", "SmartDevice_DeviceId", "dbo.SmartDevices");
             DropForeignKey("dbo.Rooms", "Home_HomeId", "dbo.Homes");
             DropIndex("dbo.VersionDetails", new[] { "Version_VersionId" });
@@ -449,17 +499,26 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.UserStatus", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.UserRoles", new[] { "WebPagesRole_RoleId" });
             DropIndex("dbo.UserRoles", new[] { "UserInfo_UserInfoId" });
+            DropIndex("dbo.UserHomeLinks", new[] { "Home_HomeId1" });
             DropIndex("dbo.UserHomeLinks", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.UserHomeLinks", new[] { "Home_HomeId" });
+            DropIndex("dbo.SyncStatus", new[] { "UserInfo_UserInfoId" });
+            DropIndex("dbo.SyncStatus", new[] { "UserProfile_UserInfoId" });
+            DropIndex("dbo.SyncStatus", new[] { "Room_RoomId" });
+            DropIndex("dbo.UserRoomLinks", new[] { "Room_RoomId1" });
             DropIndex("dbo.UserRoomLinks", new[] { "UserInfo_UserInfoId" });
             DropIndex("dbo.UserRoomLinks", new[] { "Room_RoomId" });
+            DropIndex("dbo.ChannelStatus", new[] { "Channel_ChannelId1" });
             DropIndex("dbo.ChannelStatus", new[] { "Channel_ChannelId" });
             DropIndex("dbo.Channels", new[] { "SmartSwitch_DeviceId" });
             DropIndex("dbo.RgbwStatus", new[] { "SmartRainbow_DeviceId" });
             DropIndex("dbo.RgbwStatus", new[] { "SmartDevice_DeviceId" });
+            DropIndex("dbo.DeviceStatus", new[] { "SmartDevice_DeviceId1" });
             DropIndex("dbo.DeviceStatus", new[] { "SmartDevice_DeviceId" });
+            DropIndex("dbo.SmartDevices", new[] { "Room_RoomId1" });
             DropIndex("dbo.SmartDevices", new[] { "Parent_HomeId" });
             DropIndex("dbo.SmartDevices", new[] { "Room_RoomId" });
+            DropIndex("dbo.Rooms", new[] { "Home_HomeId1" });
             DropIndex("dbo.Rooms", new[] { "Home_HomeId" });
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
             DropTable("dbo.Versions");
@@ -471,6 +530,7 @@ namespace SmartHome.Model.Migrations
             DropTable("dbo.WebPagesRoles");
             DropTable("dbo.UserRoles");
             DropTable("dbo.UserHomeLinks");
+            DropTable("dbo.SyncStatus");
             DropTable("dbo.UserInfoes");
             DropTable("dbo.UserRoomLinks");
             DropTable("dbo.ChannelStatus");

@@ -21,6 +21,7 @@ namespace SmartHome.Service
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<SmartRouter> _routerRepository;
         private readonly IRepositoryAsync<Home> _homeRepository;
+        private readonly IRepositoryAsync<Room> _roomRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         private string _email;
         #endregion
@@ -30,6 +31,7 @@ namespace SmartHome.Service
             _unitOfWorkAsync = unitOfWorkAsync;
             _routerRepository = _unitOfWorkAsync.RepositoryAsync<SmartRouter>();
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
+            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _homeJsonEntity = homeJsonEntity;
         }
         public SmartRouterEntity GetRouter(string macAddress)
@@ -45,7 +47,7 @@ namespace SmartHome.Service
         public HomeEntity GetHome(int homeId)
         {
             Home home = _homeRepository
-                .Queryable().Where(u => u.HomeId == homeId).FirstOrDefault();
+                .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).FirstOrDefault();
 
             Mapper.CreateMap<Home, HomeEntity>();
             return Mapper.Map<Home, HomeEntity>(home);
@@ -116,8 +118,56 @@ namespace SmartHome.Service
 
             Home model = SaveOrUpdateHome(home);
             SaveOrUpdateRouter(router,model);
+            SaveOrUpdateRoom(model);
+            SaveOrUpdateDevice(model);
         }
 
+        private void SaveOrUpdateDevice(Home model)
+        {
+            //foreach (var room in model.Rooms)
+            //{
+            //    if(room.SmartDevices != null)
+            //    {
+            //        Droom.ObjectState = ObjectState.Deleted;
+            //        _roomRepository.Delete(room);
+            //    }
+            //}
+        }
+
+        private void DeleteAllDevices()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveOrUpdateRoom(Home model)
+        {
+            if (model.Rooms != null)
+            {
+                DeleteAllRooms(model.Rooms);
+                InsertAllRooms(model);
+            }
+        }
+
+        private void InsertAllRooms(Home home)
+        {
+            foreach (var room in _homeJsonEntity.Room)
+            {
+                var entity = Mapper.Map<RoomEntity, Room>(room);
+                entity.Home = home;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                entity.ObjectState = ObjectState.Added;
+                _roomRepository.Insert(entity);
+            }
+        }
+
+        private void DeleteAllRooms(ICollection<Room> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                room.ObjectState = ObjectState.Deleted;
+                _roomRepository.Delete(room);
+            }
+        }
 
 
         private void SaveOrUpdateRouter(SmartRouterEntity router,Home home)

@@ -70,16 +70,58 @@ namespace SmartHome.Model.ModelDataContext
           .Map<SmartRouter>(m => m.Requires("Discriminator").HasValue("SmartRouter"))
           .Map<SmartRainbow>(m => m.Requires("Discriminator").HasValue("SmartRainbow"));
 
+            modelBuilder.Entity<Home>()
+             .HasMany(u => u.Rooms)
+             .WithOptional().WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<UserInfo>()
-            // .HasMany(u => u.Rooms)
-            // .WithMany(r => r.UserInfos)
-            // .Map(m =>
-            // {
-            //     m.ToTable("UserRooms");
-            //     m.MapLeftKey("RoomId");
-            //     m.MapRightKey("UserInfoId");
-            // });
+            //modelBuilder.Entity<Home>()
+            // .HasMany(u => u.SmartRouterInfoes)
+            // .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Home>()
+             .HasMany(u => u.UserHomeLinks)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Room>()
+             .HasMany(u => u.SmartDevices)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Room>()
+             .HasMany(u => u.UserRoomLinks)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<SmartDevice>()
+             .HasMany(u => u.DeviceStatus)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            ////modelBuilder.Entity<SmartDevice>()
+            //// .HasMany(u => u.RgbwStatuses)
+            //// .WithOptional().WillCascadeOnDelete(true);
+
+            //modelBuilder.Entity<Home>()
+            // .HasMany(u => u.SmartRouters)
+            // .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Channel>()
+             .HasMany(u => u.ChannelStatuses)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<SmartSwitch>()
+             .HasMany(u => u.Channels)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<SmartSwitch>()
+             .HasMany(u => u.DeviceStatus)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<UserInfo>()
+             .HasMany(u => u.SyncStatuses)
+             .WithOptional().WillCascadeOnDelete(true);
+
+            //modelBuilder.Entity<Room>()
+            // .HasMany(u => u.SmartDevices)
+            // .WithOptional().WillCascadeOnDelete(true);
+
 
             //modelBuilder.Entity<UserInfo>()
             //.HasMany(u => u.Homes)
