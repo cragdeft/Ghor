@@ -364,9 +364,9 @@ namespace SmartHome.WebAPI.Controllers
             Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
                                         //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
                                         .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id))
-                                        .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.Id));
+                                        .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.AppsRoomId));
             IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p=>p.UserInfo.UserInfoId==temp)));
-            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.User==temp.ToString()));
+            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.User.ToString()==temp.ToString()));
         }
         [NonAction]
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)

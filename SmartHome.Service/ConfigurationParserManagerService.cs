@@ -318,7 +318,7 @@ namespace SmartHome.Service
         {
             foreach (var nextRoom in item.Rooms)
             {
-                var tempExistingRoom = existingItem.Rooms.Where(p => p.Id == nextRoom.Id).FirstOrDefault();
+                var tempExistingRoom = existingItem.Rooms.Where(p => p.AppsRoomId == nextRoom.AppsRoomId).FirstOrDefault();
                 if (tempExistingRoom != null)
                 {
                     //modify
@@ -335,8 +335,8 @@ namespace SmartHome.Service
         private void FillExistingRoomInfo(Room nextRoomDetail, Room tempExistingRoomDetail)
         {
             tempExistingRoomDetail.ObjectState = ObjectState.Modified;
-            tempExistingRoomDetail.Id = nextRoomDetail.Id;
-            tempExistingRoomDetail.HId = nextRoomDetail.HId;
+            tempExistingRoomDetail.AppsRoomId = nextRoomDetail.AppsRoomId;
+            tempExistingRoomDetail.AppsHomeId = nextRoomDetail.AppsHomeId;
             tempExistingRoomDetail.Name = nextRoomDetail.Name;
             tempExistingRoomDetail.RoomNumber = nextRoomDetail.RoomNumber;
             tempExistingRoomDetail.Comment = nextRoomDetail.Comment;
@@ -354,7 +354,7 @@ namespace SmartHome.Service
 
         private IEnumerable<Room> IsRoomExists(string RId)
         {
-            return _roomRepository.Query(e => e.Id == RId).Select();
+            return _roomRepository.Query(e => e.AppsRoomId == RId).Select();
 
         }
 
@@ -680,7 +680,7 @@ namespace SmartHome.Service
             //#region MyRegion
             foreach (SmartDevice item in model)
             {
-                item.Room = _roomRepository.Find(modelEntity.FirstOrDefault(p => p.Id == item.Id).RoomId);
+                item.Room = _roomRepository.Find(modelEntity.FirstOrDefault(p => p.AppsDeviceId == item.AppsDeviceId).AppsRoomId);
             }
 
             //#endregion
@@ -706,7 +706,7 @@ namespace SmartHome.Service
             foreach (var item in model.Where(p => p.DeviceType == Model.Enums.DeviceType.SmartRouter))
             {
                 //check already exist or not.
-                IEnumerable<SmartDevice> temp = IsDeviceRouterExists(item.Id, item.DeviceHash);
+                IEnumerable<SmartDevice> temp = IsDeviceRouterExists(item.AppsDeviceId, item.DeviceHash);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -741,7 +741,7 @@ namespace SmartHome.Service
             foreach (var item in model.Where(p => p.DeviceType == Model.Enums.DeviceType.SmartRainbow12))
             {
                 //check already exist or not.
-                IEnumerable<SmartDevice> temp = IsDeviceRainboxExists(item.Id, item.DeviceHash);
+                IEnumerable<SmartDevice> temp = IsDeviceRainboxExists(item.AppsDeviceId, item.DeviceHash);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -772,7 +772,7 @@ namespace SmartHome.Service
             foreach (var item in model.Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g))
             {
                 //check already exist or not.
-                IEnumerable<SmartDevice> temp = IsDeviceSwitchExists(item.Id, item.DeviceHash);
+                IEnumerable<SmartDevice> temp = IsDeviceSwitchExists(item.AppsDeviceId, item.DeviceHash);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -802,7 +802,7 @@ namespace SmartHome.Service
         {
             foreach (var nextChannel in ((SmartSwitch)item).Channels)
             {
-                var tempExistingChannel = ((SmartSwitch)existingItem).Channels.Where(p => p.Id == nextChannel.Id).FirstOrDefault();
+                var tempExistingChannel = ((SmartSwitch)existingItem).Channels.Where(p => p.AppsChannelId == nextChannel.AppsChannelId).FirstOrDefault();
                 if (tempExistingChannel != null)
                 {
                     //modify
@@ -819,8 +819,8 @@ namespace SmartHome.Service
         private void FillExistingChannelInfo(Channel nextChannel, Channel tempExistingChannel)
         {
             tempExistingChannel.ObjectState = ObjectState.Modified;
-            tempExistingChannel.Id = nextChannel.Id;
-            tempExistingChannel.DId = nextChannel.DId;
+            tempExistingChannel.AppsChannelId = nextChannel.AppsChannelId;
+            tempExistingChannel.AppsDeviceTableId = nextChannel.AppsDeviceTableId;
             tempExistingChannel.ChannelNo = nextChannel.ChannelNo;
             tempExistingChannel.LoadName = nextChannel.LoadName;
             tempExistingChannel.LoadType = nextChannel.LoadType;
@@ -932,14 +932,14 @@ namespace SmartHome.Service
         {
             existingItem.ObjectState = ObjectState.Modified;
 
-            existingItem.Id = item.Id;
-            existingItem.DId = item.DId;
+            existingItem.AppsDeviceId = item.AppsDeviceId;
+            existingItem.AppsBleId = item.AppsBleId;
             existingItem.DeviceName = item.DeviceName;
             existingItem.DeviceHash = item.DeviceHash;
             existingItem.DeviceVersion = item.DeviceVersion;
             existingItem.IsDeleted = item.IsDeleted;
             existingItem.Watt = item.Watt;
-            existingItem.Mac = item.Mac;
+            //existingItem.Mac = item.Mac;
             existingItem.DeviceType = item.DeviceType;
             existingItem.AuditField = new AuditFields();
             existingItem.Room = item.Room;
@@ -949,19 +949,19 @@ namespace SmartHome.Service
 
         private IEnumerable<SmartDevice> IsDeviceSwitchExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartSwitch>().Where(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.Channels).Include(x => x.Room).Include(x => x.Channels.Select(y => y.ChannelStatuses)).ToList();
+            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartSwitch>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.Channels).Include(x => x.Room).Include(x => x.Channels.Select(y => y.ChannelStatuses)).ToList();
 
         }
 
         private IEnumerable<SmartDevice> IsDeviceRainboxExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRainbow>().Where(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.RgbwStatuses).Include(x => x.Room).ToList();
+            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRainbow>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.RgbwStatuses).Include(x => x.Room).ToList();
 
         }
 
         private IEnumerable<SmartDevice> IsDeviceRouterExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRouter>().Where(e => e.Id == key && e.DeviceHash == deviceHash).ToList();
+            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRouter>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).ToList();
 
         }
 
@@ -970,7 +970,7 @@ namespace SmartHome.Service
         private IEnumerable<SmartDevice> IsDeviceExists(int key, string deviceHash)
         {
 
-            return _deviceRepository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Room).Include(x => ((SmartRainbow)x).RgbwStatuses).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select();
+            return _deviceRepository.Query(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => x.Room).Include(x => ((SmartRainbow)x).RgbwStatuses).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select();
         }
 
 
@@ -1032,7 +1032,7 @@ namespace SmartHome.Service
 
         private void FillDeviceInfo(out int parentSequence, out string displayCaption, List<DeviceInfoEntity> dInfoEntity, SmartDevice nextDeviceInfo, out DeviceInfoEntity deviceInfo)
         {
-            displayCaption = "DId--" + nextDeviceInfo.DId + ", DeviceName--" + nextDeviceInfo.DeviceName + ", DeviceHash--" + nextDeviceInfo.DeviceHash + ", DType--" + nextDeviceInfo.DeviceType.ToString();
+            displayCaption = "DId--" + nextDeviceInfo.AppsBleId + ", DeviceName--" + nextDeviceInfo.DeviceName + ", DeviceHash--" + nextDeviceInfo.DeviceHash + ", DType--" + nextDeviceInfo.DeviceType.ToString();
             deviceInfo = AddCaption(0, displayCaption, dInfoEntity);
             parentSequence = deviceInfo.SequenceId;
         }

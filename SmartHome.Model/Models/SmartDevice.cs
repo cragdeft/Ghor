@@ -16,15 +16,15 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeviceId { get; set; }
-        public int Id { get; set; }
-        public int DId { get; set; }
+        public int AppsDeviceId { get; set; }
+        public int AppsRoomId { get; set; }
+        public int AppsBleId { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
         public string DeviceVersion { get; set; }
         public bool IsDeleted { get; set; }
         public string Watt { get; set; }
-        public string Mac { get; set; }
-        public string DType { get; set; }
+        public bool IsSynced { get; set; }
         public DeviceType DeviceType { get; set; }
         #endregion
 

@@ -16,7 +16,7 @@ namespace SmartHome.Model.Models
         [Key, Column(Order = 1)]
         public int UInfoId { get; set; }
 
-        public string Id { get; set; }
+        public int AppsUserRoomLinkId { get; set; }
 
         public virtual Room Room { get; set; }
         public virtual UserInfo UserInfo { get; set; }       

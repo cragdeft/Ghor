@@ -12,10 +12,11 @@ namespace SmartHome.Entity
     public class SmartDeviceEntity
     {
         #region Primitive Properties        
-        //public int DeviceId { get; set; }        
-        public int Id { get; set; }
+        //public int DeviceId { get; set; }
+        [JsonProperty("Id")]
+        public int AppsDeviceId { get; set; }
         [JsonProperty("DeviceId")]
-        public int DId { get; set; }
+        public int AppsBleId { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
         [JsonProperty("Version")]
@@ -27,7 +28,9 @@ namespace SmartHome.Entity
         public DeviceType? DeviceType { get; set; }
         public int Watt { get; set; }
         [JsonProperty("Room")]
-        public int RoomId { get; set; }
+        public int AppsRoomId { get; set; }
+
+        public bool IsSynced { get; set; }
         #endregion
 
     }

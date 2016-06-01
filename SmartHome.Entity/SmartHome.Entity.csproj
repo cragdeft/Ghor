@@ -51,7 +51,7 @@
     <Compile Include="ChannelEntity.cs" />
     <Compile Include="ChannelStatusEntity.cs" />
     <Compile Include="CommandJsonEntity.cs" />
-    <Compile Include="DeviceEntity.cs" />
+    <Compile Include="SmartDeviceEntity.cs" />
     <Compile Include="DeviceInfoEntity.cs" />
     <Compile Include="DeviceStatusEntity.cs" />
     <Compile Include="EmailEntity.cs" />

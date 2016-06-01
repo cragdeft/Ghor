@@ -39,7 +39,7 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<SmartDevice> temp = IsDeviceExists(item.Id, item.DeviceHash);
+                IEnumerable<SmartDevice> temp = IsDeviceExists(item.AppsDeviceId, item.DeviceHash);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -71,7 +71,7 @@ namespace SmartHome.Service
         {
             foreach (var nextChannel in ((SmartSwitch)item).Channels)
             {
-                var tempExistingChannel = ((SmartSwitch)existingItem).Channels.Where(p => p.Id == nextChannel.Id).FirstOrDefault();
+                var tempExistingChannel = ((SmartSwitch)existingItem).Channels.Where(p => p.AppsChannelId == nextChannel.AppsChannelId).FirstOrDefault();
                 if (tempExistingChannel != null)
                 {
                     //modify
@@ -88,8 +88,8 @@ namespace SmartHome.Service
         private void FillExistingChannelInfo(Channel nextChannel, Channel tempExistingChannel)
         {
             tempExistingChannel.ObjectState = ObjectState.Modified;
-            tempExistingChannel.Id = nextChannel.Id;
-            tempExistingChannel.DId = nextChannel.DId;
+            tempExistingChannel.AppsChannelId = nextChannel.AppsChannelId;
+            tempExistingChannel.AppsDeviceTableId = nextChannel.AppsDeviceTableId;
             tempExistingChannel.ChannelNo = nextChannel.ChannelNo;
             tempExistingChannel.LoadName = nextChannel.LoadName;
             tempExistingChannel.LoadType = nextChannel.LoadType;
@@ -163,14 +163,14 @@ namespace SmartHome.Service
         {
             existingItem.ObjectState = ObjectState.Modified;
 
-            existingItem.Id = item.Id;
-            existingItem.DId = item.DId;
+            existingItem.AppsDeviceId = item.AppsDeviceId;
+            existingItem.AppsBleId = item.AppsBleId;
             existingItem.DeviceName = item.DeviceName;
             existingItem.DeviceHash = item.DeviceHash;
             existingItem.DeviceVersion = item.DeviceVersion;
             existingItem.IsDeleted = item.IsDeleted;
             existingItem.Watt = item.Watt;
-            existingItem.Mac = item.Mac;
+            //existingItem.Mac = item.Mac;
             existingItem.DeviceType = item.DeviceType;
             existingItem.AuditField = new AuditFields();
 
@@ -178,7 +178,7 @@ namespace SmartHome.Service
 
         private IEnumerable<SmartDevice> IsDeviceExists(int key, string deviceHash)
         {
-            return _repository.Query(e => e.Id == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select();
+            return _repository.Query(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.DeviceStatus).Include(x => ((SmartSwitch)x).Channels.Select(y => y.ChannelStatuses)).Select();
         }
 
 
@@ -197,7 +197,7 @@ namespace SmartHome.Service
             {
                 //DId,DeviceName,DeviceHash,DType
                 DeviceInfoEntity deviceInfo = new DeviceInfoEntity();
-                deviceInfo.DisplayName = "DId--" + nextDeviceInfo.DId + ", DeviceName--" + nextDeviceInfo.DeviceName + ", DeviceHash--" + nextDeviceInfo.DeviceHash + ", DType--" + nextDeviceInfo.DeviceType.ToString();
+                deviceInfo.DisplayName = "DId--" + nextDeviceInfo.AppsBleId + ", DeviceName--" + nextDeviceInfo.DeviceName + ", DeviceHash--" + nextDeviceInfo.DeviceHash + ", DType--" + nextDeviceInfo.DeviceType.ToString();
                 deviceInfo.ParentId = 0;
                 deviceInfo.SequenceId = dInfoEntity.Count() + 1;
                 parentSequence = deviceInfo.SequenceId;

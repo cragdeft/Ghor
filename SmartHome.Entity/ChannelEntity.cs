@@ -10,20 +10,15 @@ namespace SmartHome.Entity
     public class ChannelEntity
     {
         #region Primitive Properties
-        
-        
-        //[JsonProperty("ChannelNo")]
-        public int Id { get; set; }
+        [JsonProperty("Id")]
+        public int AppsChannelId { get; set; }
         [JsonProperty("DeviceTableId")]        
-        public int DId { get; set; }
+        public int AppsDeviceTableId { get; set; }
         public int ChannelNo { get; set; }
         public string LoadName { get; set; }
-        //public int Status { get; set; }
-        //public int Value { get; set; }
         public int LoadType { get; set; }
-
         public int LoadWatt { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
-        
     }
 }

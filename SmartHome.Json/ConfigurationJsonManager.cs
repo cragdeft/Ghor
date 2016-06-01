@@ -166,7 +166,7 @@ namespace SmartHome.Json
         {
             foreach (var item in oHome)
             {
-                item.Rooms = oRoom.Where(p => p.HId == item.HomeId.ToString()).ToArray();
+                item.Rooms = oRoom.Where(p => p.AppsHomeId == item.HomeId.ToString()).ToArray();
                 item.SmartRouterInfoes = oSmartRouterInfo.Where(p => p.HId == item.AppsHomeId.ToString()).ToArray();
             }
             
@@ -202,11 +202,11 @@ namespace SmartHome.Json
 
                 var userRoomLink = new UserRoomLink
                 {
-                    Id = item.Id,
+                    AppsUserRoomLinkId = item.AppsUserRoomLinkId,
                     RId = Convert.ToInt32(item.Room),                    
                     UInfoId = Convert.ToInt32(item.User),
-                    Room = oRoom.FirstOrDefault(p => p.Id == item.Room),
-                    UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User),
+                    Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.Room),
+                    UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User.ToString()),
                     IsSynced = item.IsSynced,
                     ObjectState = ObjectState.Added
                 };
@@ -229,13 +229,13 @@ namespace SmartHome.Json
         {
             foreach (var item in oChannel)
             {
-                item.ChannelStatuses = oChannelStatus.Where(p => p.CId == item.Id).ToArray();
+                item.ChannelStatuses = oChannelStatus.Where(p => p.CId == item.AppsChannelId).ToArray();
             }
 
             foreach (var item in oDevice)
             {
-                item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+                item.Channels = oChannel.Where(p => p.AppsDeviceTableId == item.AppsDeviceId).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);
@@ -247,7 +247,7 @@ namespace SmartHome.Json
 
             foreach (var item in oDevice)
             {
-                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.Id).ToArray();
+                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);
@@ -260,7 +260,7 @@ namespace SmartHome.Json
             foreach (var item in oDevice)
             {
                 //item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.Id).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);
