@@ -282,10 +282,10 @@ namespace SmartHome.Json
 
         private IEnumerable<T> MapSmartDeviceObject<T>(RootObjectEntity myObj, DeviceType dType)
         {
-            Mapper.CreateMap<DeviceEntity, T>();
+            Mapper.CreateMap<SmartDeviceEntity, T>();
             //.ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
             //.ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state            
-            IEnumerable<T> oDevice = Mapper.Map<IEnumerable<DeviceEntity>, IEnumerable<T>>(myObj.Device.Where(x => x.DeviceType == dType));
+            IEnumerable<T> oDevice = Mapper.Map<IEnumerable<SmartDeviceEntity>, IEnumerable<T>>(myObj.Device.Where(x => x.DeviceType == dType));
             return oDevice;
         }
 
@@ -393,7 +393,7 @@ namespace SmartHome.Json
         #endregion
 
         #region Store
-        private void StoreDeviceAndChannel(IEnumerable<Model.Models.SmartDevice> oDevice, IEnumerable<DeviceEntity> oDeviceEntity)
+        private void StoreDeviceAndChannel(IEnumerable<Model.Models.SmartDevice> oDevice, IEnumerable<SmartDeviceEntity> oDeviceEntity)
         {
             using (IDataContextAsync context = new SmartHomeDataContext())
             using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))

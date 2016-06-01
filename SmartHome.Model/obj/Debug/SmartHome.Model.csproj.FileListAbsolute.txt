@@ -122,3 +122,4 @@ F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Microsoft.Practices.Service
 F:\Projects\Smart Home Web\SmartHome.Model\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate2.resources
 F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.csproj.GenerateResource.Cache
+F:\Projects\Smart Home Web\SmartHome.Model\obj\Debug\SmartHome.Model.Migrations.initialCreate3.resources

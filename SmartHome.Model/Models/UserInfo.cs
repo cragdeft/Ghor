@@ -26,8 +26,8 @@ namespace SmartHome.Model.Models
         public string FullName { get; }
         public string AccNo { get; set; }
         public string CellPhone { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Gender { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string Sex { get; set; }
         public string Email { get; set; }
         public DateTime? ExpireDate { get; set; }
         public string OldAcc { get; set; }

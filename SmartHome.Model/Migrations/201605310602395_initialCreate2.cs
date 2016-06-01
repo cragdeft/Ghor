@@ -251,7 +251,7 @@ namespace SmartHome.Model.Migrations
                         AccNo = c.String(),
                         CellPhone = c.String(),
                         DateOfBirth = c.DateTime(nullable: false),
-                        Gender = c.String(),
+                        Sex = c.String(),
                         Email = c.String(),
                         ExpireDate = c.DateTime(),
                         OldAcc = c.String(),

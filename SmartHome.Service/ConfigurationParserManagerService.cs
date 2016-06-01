@@ -428,7 +428,7 @@ namespace SmartHome.Service
             existingItem.AccNo = item.AccNo;
             existingItem.CellPhone = item.CellPhone;
             existingItem.DateOfBirth = item.DateOfBirth;
-            existingItem.Gender = item.Gender;
+            existingItem.Sex = item.Sex;
             existingItem.Email = item.Email;
             existingItem.ExpireDate = item.ExpireDate;
             existingItem.OldAcc = item.OldAcc;
@@ -674,7 +674,7 @@ namespace SmartHome.Service
         #region device AddOrUpdateGraphRange
 
 
-        public IEnumerable<SmartDevice> AddOrUpdateDeviceGraphRange(IEnumerable<SmartDevice> model, IEnumerable<DeviceEntity> modelEntity)
+        public IEnumerable<SmartDevice> AddOrUpdateDeviceGraphRange(IEnumerable<SmartDevice> model, IEnumerable<SmartDeviceEntity> modelEntity)
         {
             List<SmartDevice> deviceModel = new List<SmartDevice>();
             //#region MyRegion

@@ -318,8 +318,8 @@ namespace SmartHome.WebAPI.Controllers
         [NonAction]
         private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
-            Mapper.CreateMap<SmartDevice, DeviceEntity>();
-            IEnumerable<DeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<DeviceEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(z => z.SmartDevices)));
+            Mapper.CreateMap<SmartDevice, SmartDeviceEntity>();
+            IEnumerable<SmartDeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<SmartDeviceEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(z => z.SmartDevices)));
             oLoginObject.Device.AddRange(oDeviceEntity);
         }
         [NonAction]
@@ -372,7 +372,7 @@ namespace SmartHome.WebAPI.Controllers
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<UserInfo, UserInfoEntity>()
-                                        .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Gender))
+                                        .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Sex))
                                         .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
 
             IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserHomeLink.Select(x => x.UserInfo));
@@ -391,7 +391,7 @@ namespace SmartHome.WebAPI.Controllers
             oLoginObject.Room = new List<RoomEntity>();
             oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
             oLoginObject.Channel = new List<ChannelEntity>();
-            oLoginObject.Device = new List<DeviceEntity>();
+            oLoginObject.Device = new List<SmartDeviceEntity>();
             oLoginObject.DeviceStatus = new List<DeviceStatusEntity>();
         }
 

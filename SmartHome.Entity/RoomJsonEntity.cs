@@ -13,7 +13,7 @@ namespace SmartHome.Entity
         public List<VersionDetailEntity> VersionDetails { get; set; }
         public List<HomeEntity> Home { get; set; }
         public List<ChannelEntity> Channel { get; set; }
-        public List<DeviceEntity> Device { get; set; }
+        public List<SmartDeviceEntity> Device { get; set; }
         public List<UserRoomLinkEntity> UserRoomLink { get; set; }
         public List<NextAssociatedDeviceEntity> NextAssociatedDeviceId { get; set; }
         public List<SmartRouterEntity> RouterInfo { get; set; }

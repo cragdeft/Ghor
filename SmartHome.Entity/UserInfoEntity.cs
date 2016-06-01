@@ -24,7 +24,7 @@ namespace SmartHome.Entity
         public string AccNo { get; set; }
         [JsonProperty("MobileNumber")]
         public string CellPhone { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string Sex { get; set; }
         public string Email { get; set; }
         public DateTime? ExpireDate { get; set; }

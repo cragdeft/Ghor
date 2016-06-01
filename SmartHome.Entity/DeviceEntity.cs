@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SmartHome.Entity
 {
 
-    public class DeviceEntity
+    public class SmartDeviceEntity
     {
         #region Primitive Properties        
         //public int DeviceId { get; set; }        

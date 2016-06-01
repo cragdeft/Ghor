@@ -22,6 +22,8 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartRouter> _routerRepository;
         private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
+        private readonly IRepositoryAsync<UserInfo> _userRepository;
+        private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         private string _email;
         #endregion
@@ -32,6 +34,8 @@ namespace SmartHome.Service
             _routerRepository = _unitOfWorkAsync.RepositoryAsync<SmartRouter>();
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
             _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
+            _userRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
+            _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _homeJsonEntity = homeJsonEntity;
         }
         public SmartRouterEntity GetRouter(string macAddress)
@@ -53,6 +57,15 @@ namespace SmartHome.Service
             return Mapper.Map<Home, HomeEntity>(home);
         }
 
+        public UserInfoEntity GetUser(string email)
+        {
+            UserInfo user = _userRepository
+                .Queryable().Where(u => u.Email == email).FirstOrDefault();
+
+            Mapper.CreateMap<UserInfo, UserInfoEntity>();
+            return Mapper.Map<UserInfo, UserInfoEntity>(user);
+        }
+
         public Home InsertHome(HomeEntity home)
         {
             Home model = Mapper.Map<HomeEntity, Home>(home);
@@ -60,6 +73,56 @@ namespace SmartHome.Service
             model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _homeRepository.Insert(model);
             return model;
+        }
+
+        public void InsertDevice(SmartDeviceEntity device)
+        {
+            SmartDevice model = Mapper.Map<SmartDeviceEntity, SmartDevice>(device);
+            if (device.DeviceType == DeviceType.SmartSwitch6g)
+            {
+                List<DeviceStatusEntity> deviceStatuses =
+                    _homeJsonEntity.DeviceStatus.FindAll(x => x.DId == device.Id.ToString());
+                SmartSwitch sswitch = (SmartSwitch) model;
+                foreach (var deviceStatusEntity in deviceStatuses)
+                {
+                    var entity = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
+                    entity.ObjectState = ObjectState.Added;
+                    entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                    sswitch.DeviceStatus.Add(entity);
+                }
+                sswitch.ObjectState = ObjectState.Added;
+                sswitch.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceRepository.Insert(sswitch);
+                List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.DId == device.Id);
+                InsertChannel(model, channelList);
+            }
+            
+        }
+
+        public void InsertChannel(SmartDevice model, List<ChannelEntity> channels)
+        {
+            if (model.DeviceType == DeviceType.SmartSwitch6g)
+            {
+                SmartSwitch sswitch = (SmartSwitch)model;
+                foreach (var channel in channels)
+                {
+                    var entity = Mapper.Map<ChannelEntity, Channel>(channel);
+                    List<ChannelStatusEntity> channelStatuses =
+                        _homeJsonEntity.ChannelStatus.FindAll(x => x.CId == channel.Id);
+                    foreach (var channelStatusEntity in channelStatuses)
+                    {
+                        var channelStatusModel = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
+                        channelStatusModel.ObjectState = ObjectState.Added;
+                        channelStatusModel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                        entity.ChannelStatuses.Add(channelStatusModel);
+                    }
+                    entity.ObjectState = ObjectState.Added;
+                    entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                    sswitch.Channels.Add(entity);
+                }
+                _deviceRepository.Insert(sswitch);
+            }
+
         }
 
         public Home UpdateHome(HomeEntity home)
@@ -119,19 +182,55 @@ namespace SmartHome.Service
             Home model = SaveOrUpdateHome(home);
             SaveOrUpdateRouter(router,model);
             SaveOrUpdateRoom(model);
+            SaveOrUpdateUser(model);
             SaveOrUpdateDevice(model);
+        }
+
+        private void SaveOrUpdateUser(Home model)
+        {
+            foreach (var userInfoEntity in _homeJsonEntity.UserInfo)
+            {
+                var dbUserEntity = GetUser(userInfoEntity.Email);
+                if (dbUserEntity == null)
+                    InsertUser(userInfoEntity);
+                else
+                {
+                    UpdateUser(userInfoEntity);
+                }
+            }
+        }
+
+        private UserInfo UpdateUser(UserInfoEntity userInfoEntity)
+        {
+            var entity = MapUserProperty(userInfoEntity);
+            entity.ObjectState = ObjectState.Modified;
+            _userRepository.Update(entity);
+            return entity;
+        }
+
+        
+
+        private UserInfo InsertUser(UserInfoEntity userInfoEntity)
+        {
+            UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
+            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.ObjectState = ObjectState.Added;
+            _userRepository.Insert(entity);
+            return entity;
         }
 
         private void SaveOrUpdateDevice(Home model)
         {
-            //foreach (var room in model.Rooms)
-            //{
-            //    if(room.SmartDevices != null)
-            //    {
-            //        Droom.ObjectState = ObjectState.Deleted;
-            //        _roomRepository.Delete(room);
-            //    }
-            //}
+            foreach (var room in model.Rooms)
+            {
+                if (room.SmartDevices != null && room.SmartDevices.Count != 0)
+                {
+                    foreach (var smartDevice in room.SmartDevices)
+                    {
+                        InsertDevice(Mapper.Map<SmartDevice, SmartDeviceEntity>(smartDevice));
+                    }
+                }
+            }
         }
 
         private void DeleteAllDevices()
@@ -144,8 +243,8 @@ namespace SmartHome.Service
             if (model.Rooms != null)
             {
                 DeleteAllRooms(model.Rooms);
-                InsertAllRooms(model);
             }
+            InsertAllRooms(model);
         }
 
         private void InsertAllRooms(Home home)
@@ -200,6 +299,8 @@ namespace SmartHome.Service
         {
             Mapper.CreateMap<HomeEntity, Home>();
             Mapper.CreateMap<SmartRouterEntity, SmartRouter>();
+            Mapper.CreateMap<RoomEntity, Room>();
+            Mapper.CreateMap<UserInfoEntity, UserInfo>();
         }
 
         private Home MapHomeProperty(HomeEntity home)
@@ -244,6 +345,26 @@ namespace SmartHome.Service
             model.LocalBrokerPassword = router.LocalBrokerPassword;
             model.LocalBrokerPort = router.LocalBrokerPort;
             model.LocalBrokerUsername = router.LocalBrokerUsername;
+
+            return model;
+        }
+
+        private UserInfo MapUserProperty(UserInfoEntity userEntity)
+        {
+            UserInfo model = _userRepository
+               .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
+
+            model.Id = userEntity.Id.ToString();
+            model.LoginStatus = userEntity.LoginStatus;
+            model.Password = userEntity.Password;
+            model.RegStatus = userEntity.RegStatus;
+            model.UserName = userEntity.UserName;
+            model.IsSynced = userEntity.IsSynced;
+            model.Country = userEntity.Country;
+            model.CellPhone = userEntity.CellPhone;
+            model.Sex = userEntity.Sex;
+            model.AuditField.LastUpdatedBy = "admin";
+            model.AuditField.LastUpdatedDateTime = DateTime.Now;
 
             return model;
         }
