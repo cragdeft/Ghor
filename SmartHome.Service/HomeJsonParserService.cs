@@ -87,14 +87,17 @@ namespace SmartHome.Service
             return model;
         }
 
-        public void InsertDevice(SmartDeviceEntity device)
+        public void InsertDevice(SmartDeviceEntity device, Room room)
         {
             SmartDevice model = Mapper.Map<SmartDeviceEntity, SmartDevice>(device);
+
+            List<DeviceStatusEntity> deviceStatuses =
+                    _homeJsonEntity.DeviceStatus.FindAll(x => x.DId == device.AppsDeviceId.ToString());
+
             if (device.DeviceType == DeviceType.SmartSwitch6g)
             {
-                List<DeviceStatusEntity> deviceStatuses =
-                    _homeJsonEntity.DeviceStatus.FindAll(x => x.DId == device.AppsDeviceId.ToString());
                 SmartSwitch sswitch = MapToSmartSwitch(model);
+                sswitch.Room = room;
                 sswitch.ObjectState = ObjectState.Added;
                 sswitch.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _deviceRepository.Insert(sswitch);
@@ -131,36 +134,34 @@ namespace SmartHome.Service
             entity.DeviceType = model.DeviceType;
             entity.DeviceStatus = new List<DeviceStatus>();
             return entity;
-
-
         }
 
         public void InsertChannel(SmartSwitch model, List<ChannelEntity> channels)
         {
-            if (model.DeviceType == DeviceType.SmartSwitch6g)
-            {
-                SmartSwitch sswitch = model;
-                sswitch.Channels = new List<Channel>();
-                foreach (var channel in channels)
-                {
-                    var entity = Mapper.Map<ChannelEntity, Channel>(channel);
-                    entity.ObjectState = ObjectState.Added;
-                    entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                    _channelRepository.Insert(entity);
-                    entity.ChannelStatuses = new List<ChannelStatus>();
-                    List<ChannelStatusEntity> channelStatuses =
-                        _homeJsonEntity.ChannelStatus.FindAll(x => x.CId == channel.AppsChannelId);
-                    foreach (var channelStatusEntity in channelStatuses)
-                    {
-                        var channelStatusModel = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
-                        channelStatusModel.ObjectState = ObjectState.Added;
-                        channelStatusModel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                        _channelStatusRepository.Insert(channelStatusModel);
-                        entity.ChannelStatuses.Add(channelStatusModel);
-                    }
 
-                    sswitch.Channels.Add(entity);
+            SmartSwitch sswitch = model;
+            sswitch.Channels = new List<Channel>();
+            foreach (var channel in channels)
+            {
+                var entity = Mapper.Map<ChannelEntity, Channel>(channel);
+
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _channelRepository.Insert(entity);
+                entity.ChannelStatuses = new List<ChannelStatus>();
+                List<ChannelStatusEntity> channelStatuses =
+                    _homeJsonEntity.ChannelStatus.FindAll(x => x.CId == channel.AppsChannelId);
+
+                foreach (var channelStatusEntity in channelStatuses)
+                {
+                    var channelStatusModel = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
+                    channelStatusModel.ObjectState = ObjectState.Added;
+                    channelStatusModel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                    _channelStatusRepository.Insert(channelStatusModel);
+                    entity.ChannelStatuses.Add(channelStatusModel);
                 }
+
+                sswitch.Channels.Add(entity);
             }
 
         }
@@ -220,13 +221,13 @@ namespace SmartHome.Service
             }
 
             Home model = SaveOrUpdateHome(home);
-            SaveOrUpdateUser(model);
+            SaveOrUpdateUser();
 
             SaveOrUpdateRouter(router, model);
             model = SaveOrUpdateRoom(model);
             //AddUserHomeLink();
-            //SaveOrUpdateDevice(model);
-            //SaveOrUpdateNextAssociatedDevice();
+            SaveOrUpdateDevice(model);
+            SaveOrUpdateNextAssociatedDevice();
         }
 
         private void SaveOrUpdateNextAssociatedDevice()
@@ -254,7 +255,7 @@ namespace SmartHome.Service
         {
             foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
             {
-                UserInfoEntity userInfo = _homeJsonEntity.UserInfo.Find(x => x.Id.ToString() == userRoomLinkEntity.User);
+                UserInfoEntity userInfo = _homeJsonEntity.UserInfo.Find(x => x.Id == userRoomLinkEntity.User);
                 UserInfo user = _userRepository
                 .Queryable().Where(u => u.Email == userInfo.Email).FirstOrDefault();
 
@@ -272,7 +273,7 @@ namespace SmartHome.Service
             }
         }
 
-        private void SaveOrUpdateUser(Home model)
+        private void SaveOrUpdateUser()
         {
             foreach (var userInfoEntity in _homeJsonEntity.UserInfo)
             {
@@ -323,7 +324,7 @@ namespace SmartHome.Service
 
                 foreach (var smartDevice in deviceList)
                 {
-                    InsertDevice(smartDevice);
+                    InsertDevice(smartDevice, room);
                 }
             }
         }
@@ -374,7 +375,7 @@ namespace SmartHome.Service
                     userRoom.Room = entity;
                     userRoom.IsSynced = userRoomLinkEntity.IsSynced;
                     userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
-                    userRoom.ObjectState=ObjectState.Added;
+                    userRoom.ObjectState = ObjectState.Added;
                     _userRoomLinkRepository.Insert(userRoom);
                 }
             }
