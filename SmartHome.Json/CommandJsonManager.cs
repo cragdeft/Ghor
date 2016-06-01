@@ -268,8 +268,8 @@ namespace SmartHome.Json
             ChannelStatusEntity channelStatus = new ChannelStatusEntity
             {
                 ChannelNo = channelNo,
-                Status = (int)type,
-                Value = value.ToString()
+                StatusType = (int)type,
+                StatusValue = value
             };
             ChannelStatusList.Add(channelStatus);
 
@@ -402,7 +402,7 @@ namespace SmartHome.Json
 
         private void AddOrUpdateChannelStatus(Channel channel, ChannelStatusEntity channelValue)
         {
-            var status = channel.ChannelStatuses.FirstOrDefault(x => x.Status == (ChannelStatusType)channelValue.Status);
+            var status = channel.ChannelStatuses.FirstOrDefault(x => x.StatusType == (ChannelStatusType)channelValue.StatusType);
 
             if (status != null)
             {
@@ -419,16 +419,16 @@ namespace SmartHome.Json
             var status = new ChannelStatus
             {
                 Channel = channel,
-                Status = (ChannelStatusType)channelValue.Status,
+                StatusType = (ChannelStatusType)channelValue.StatusType,
                 //ChannelNo = channelValue.ChannelNo,
-                Value = Convert.ToInt32(channelValue.Value)
+                StatusValue = Convert.ToInt32(channelValue.StatusValue)
             };
             _commandPerserService.AddChannelStatus(status);
         }
 
         private void UpdateChannelStatus(ChannelStatus status, ChannelStatusEntity channelValue)
         {
-            status.Value = Convert.ToInt32(channelValue.Value);
+            status.StatusValue = Convert.ToInt32(channelValue.StatusValue);
             _commandPerserService.UpdateChannelStatus(status);
         }
 
@@ -506,9 +506,9 @@ namespace SmartHome.Json
         {
             ChannelStatusEntity channelStatus = new ChannelStatusEntity
             {
-                Status = (int)status,
+                StatusType = (int)status,
                 ChannelNo = GetChannelNoOfCommunicationProtocol(),
-                Value = Get3RdBitValueOfCommunicationProtocol().ToString()
+                StatusValue = Get3RdBitValueOfCommunicationProtocol()
             };
             ChannelStatusList.Add(channelStatus);
         }

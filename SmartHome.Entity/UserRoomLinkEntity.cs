@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SmartHome.Entity
 {
@@ -10,8 +11,10 @@ namespace SmartHome.Entity
     {
         public int UserRoomLinkEntityId { get; set; }
         public int AppsUserRoomLinkId { get; set; }
-        public int User { get; set; }
-        public string Room { get; set; }
+        [JsonProperty("User")]
+        public int AppsUserId { get; set; }
+        [JsonProperty("Room")]
+        public int AppsRoomId { get; set; }
         public bool IsSynced { get; set; }
     }
 }

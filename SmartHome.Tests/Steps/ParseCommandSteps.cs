@@ -53,7 +53,7 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_onoff_status()
         {
-            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].Value);
+            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].StatusValue);
         }
 
         [Then]
@@ -65,8 +65,8 @@ namespace SmartHome.Tests.Steps
         [Then]
         public void Then_I_will_check_dimmingEnableDisable_status()
         {
-            Assert.AreEqual(StatusType.DimmingEnableDisableFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].Status);
-            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].Value);
+            Assert.AreEqual(StatusType.DimmingEnableDisableFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].StatusType);
+            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].StatusValue);
         }
 
         [Then]
@@ -86,65 +86,65 @@ namespace SmartHome.Tests.Steps
             Assert.AreEqual("2", _CommandJsonManager.Object.DeviceStatusList[1].Value);
 
             //channel 1
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[0].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[0].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[1].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[1].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[1].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[1].StatusValue);
 
             //channel 2
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[2].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[2].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[2].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[2].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[3].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[3].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[3].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[3].StatusValue);
 
             //channel 3
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[4].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[4].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[4].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[4].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[5].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[5].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[5].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[5].StatusValue);
 
             //channel 4
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[6].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[6].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[6].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[6].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[7].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[7].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[7].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[7].StatusValue);
 
             //chanel 5
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[8].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[8].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[8].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[8].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[9].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[9].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[9].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[9].StatusValue);
 
             //channel 6
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[10].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[10].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[10].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[10].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[11].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[11].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[11].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[11].StatusValue);
         }
 
         [Then]
 
         public void Then_I_will_check_CurrentLoadStatusEightByte_status()
         {
-            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[0].Value);
+            Assert.AreEqual(StatusType.OnOffFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[0].StatusValue);
 
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[1].Status);
-            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[1].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[1].StatusType);
+            Assert.AreEqual("2", _CommandJsonManager.Object.ChannelStatusList[1].StatusValue);
         }
 
 
         [Then]
         public void Then_I_will_check_DimmingFeedback_status()
         {
-            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].Status);
-            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].Value);
+            Assert.AreEqual(StatusType.DimmingFeedback, (StatusType)_CommandJsonManager.Object.ChannelStatusList[0].StatusType);
+            Assert.AreEqual("1", _CommandJsonManager.Object.ChannelStatusList[0].StatusValue);
         }
 
         [Then]
@@ -225,8 +225,8 @@ namespace SmartHome.Tests.Steps
                     AuditField = null,
                     //ChannelNo = 1,
                     ChannelStatusId = 1,
-                    Status = ChannelStatusType.Dimmable,
-                    Value = 1
+                    StatusType = ChannelStatusType.Dimmable,
+                    StatusValue = 1
                 }
             };
         }

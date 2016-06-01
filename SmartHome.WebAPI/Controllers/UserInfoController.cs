@@ -348,10 +348,10 @@ namespace SmartHome.WebAPI.Controllers
         private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
             Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
-                                        .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
-                                        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
-                                        .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.AppsHomeId))
-                                        .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
+                                        .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.AppsHomeId))
+                                        .ForMember(dest => dest.AppsUserHomeLinkId, opt => opt.MapFrom(src => src.AppsHomeId))
+                                        .ForMember(dest => dest.AppsHomeId, opt => opt.MapFrom(src => src.Home.AppsHomeId))
+                                        .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId));
             IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserHomeLink);
             oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
         }
@@ -359,14 +359,14 @@ namespace SmartHome.WebAPI.Controllers
         [NonAction]
         private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
-            var temp = oUserHomeLink.Select(e => e.UInfoId).First();
+            var temp = oUserHomeLink.Select(e => e.AppsUserId).First();
             
             Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
                                         //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
-                                        .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id))
-                                        .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.AppsRoomId));
+                                        .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId))
+                                        .ForMember(dest => dest.AppsRoomId, opt => opt.MapFrom(src => src.Room.AppsRoomId));
             IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p=>p.UserInfo.UserInfoId==temp)));
-            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.User.ToString()==temp.ToString()));
+            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.AppsUserId.ToString()==temp.ToString()));
         }
         [NonAction]
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)

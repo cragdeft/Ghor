@@ -176,11 +176,11 @@ namespace SmartHome.Json
 
                 var userHomeLink = new UserHomeLink
                 {
-                    Id = item.Id,
-                    HId = Convert.ToInt32(item.Home),
-                    UInfoId = Convert.ToInt32(item.User),
-                    Home = oHome.FirstOrDefault(p => p.AppsHomeId.ToString() == item.Home),
-                    UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User),
+                    AppsUserHomeLinkId = item.AppsUserHomeLinkId,
+                    AppsHomeId = Convert.ToInt32(item.AppsHomeId),
+                    AppsUserId = Convert.ToInt32(item.AppsUserId),
+                    Home = oHome.FirstOrDefault(p => p.AppsHomeId == item.AppsHomeId),
+                    UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
                     IsAdmin = item.IsAdmin,
                     IsSynced = item.IsSynced,
                     ObjectState = ObjectState.Added
@@ -203,10 +203,10 @@ namespace SmartHome.Json
                 var userRoomLink = new UserRoomLink
                 {
                     AppsUserRoomLinkId = item.AppsUserRoomLinkId,
-                    RId = Convert.ToInt32(item.Room),                    
-                    UInfoId = Convert.ToInt32(item.User),
-                    Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.Room),
-                    UserInfo = oUserInfo.FirstOrDefault(p => p.Id == item.User.ToString()),
+                    RId = Convert.ToInt32(item.AppsRoomId),                    
+                    UInfoId = Convert.ToInt32(item.AppsUserId),
+                    Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.AppsRoomId),
+                    UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
                     IsSynced = item.IsSynced,
                     ObjectState = ObjectState.Added
                 };
@@ -229,7 +229,7 @@ namespace SmartHome.Json
         {
             foreach (var item in oChannel)
             {
-                item.ChannelStatuses = oChannelStatus.Where(p => p.CId == item.AppsChannelId).ToArray();
+                item.ChannelStatuses = oChannelStatus.Where(p => p.AppsChannelId == item.AppsChannelId).ToArray();
             }
 
             foreach (var item in oDevice)

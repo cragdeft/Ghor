@@ -15,7 +15,8 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RoomId { get; set; }
-        public string AppsRoomId { get; set; }
+
+        public int AppsRoomId { get; set; }
 
         public string AppsHomeId { get; set; }
 

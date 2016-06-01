@@ -12,8 +12,8 @@ namespace SmartHome.Entity
         #region Primitive Properties
 
         public int UserInfoId { get; set; }
-
-        public int Id { get; set; }
+        [JsonProperty("Id")]
+        public int AppsUserId { get; set; }
         public string LocalId { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }

@@ -12,10 +12,10 @@ namespace SmartHome.Model.Models
     public class UserHomeLink: Entity
     {
         [Key, Column(Order = 0)]
-        public int HId { get; set; }
+        public int AppsHomeId { get; set; }
         [Key, Column(Order = 1)]
-        public int UInfoId { get; set; }
-        public string Id { get; set; }
+        public int AppsUserId { get; set; }
+        public int AppsUserHomeLinkId { get; set; }
         public virtual Home Home { get; set; }
         public virtual UserInfo UserInfo { get; set; }
         public bool IsAdmin { get; set; }

@@ -105,7 +105,7 @@ namespace SmartHome.Service
             //channel status
             foreach (var nextChannelStatus in nextChannel.ChannelStatuses)
             {
-                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.Id == nextChannelStatus.Id).FirstOrDefault();
+                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.AppsChannelStatusId == nextChannelStatus.AppsChannelStatusId).FirstOrDefault();
                 if (tempExistingChannelStatus != null)
                 {
                     //modify
@@ -122,12 +122,12 @@ namespace SmartHome.Service
         private void FillExistingChannelStatusInfo(ChannelStatus nextChannelStatus, ChannelStatus tempExistingChannelStatus)
         {
             tempExistingChannelStatus.ObjectState = ObjectState.Modified;
-            tempExistingChannelStatus.Id = nextChannelStatus.Id;
-            tempExistingChannelStatus.CId = nextChannelStatus.CId;
+            tempExistingChannelStatus.AppsChannelStatusId = nextChannelStatus.AppsChannelStatusId;
+            tempExistingChannelStatus.AppsChannelId = nextChannelStatus.AppsChannelId;
             //tempExistingChannelStatus.DId = nextChannelStatus.DId;
             //tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
-            tempExistingChannelStatus.Status = nextChannelStatus.Status;
-            tempExistingChannelStatus.Value = nextChannelStatus.Value;
+            tempExistingChannelStatus.StatusType = nextChannelStatus.StatusType;
+            tempExistingChannelStatus.StatusValue = nextChannelStatus.StatusValue;
             tempExistingChannelStatus.AuditField = new AuditFields();
         }
 
@@ -224,7 +224,7 @@ namespace SmartHome.Service
                     foreach (ChannelStatus nextCStatus in nextChannelInfo.ChannelStatuses)
                     {
                         deviceInfo = new DeviceInfoEntity();
-                        deviceInfo.DisplayName = " Status--" + nextCStatus.Status.ToString() + ", Value--" + nextCStatus.Value.ToString();//nextChannelInfo.ChannelNo.ToString();
+                        deviceInfo.DisplayName = " Status--" + nextCStatus.StatusType.ToString() + ", Value--" + nextCStatus.StatusValue.ToString();//nextChannelInfo.ChannelNo.ToString();
                         deviceInfo.SequenceId = dInfoEntity.Count() + 1;
                         deviceInfo.ParentId = deviceCInfo.SequenceId;
                         dInfoEntity.Add(deviceInfo);

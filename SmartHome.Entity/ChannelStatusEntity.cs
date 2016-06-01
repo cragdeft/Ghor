@@ -10,13 +10,11 @@ namespace SmartHome.Entity
     public class ChannelStatusEntity
     {
         [JsonProperty("ChannelTableId")]
-        public int CId { get; set; }
+        public int AppsChannelId { get; set; }
         //public int DeviceId { get; set; }
-        public int Id { get; set; }
+        public int AppsChannelStatusId { get; set; }
         public int ChannelNo { get; set; }
-        [JsonProperty("StatusType")]
-        public int Status { get; set; }
-        [JsonProperty("StatusValue")]
-        public string Value { get; set; }
+        public int StatusType { get; set; }
+        public int StatusValue { get; set; }
     }
 }

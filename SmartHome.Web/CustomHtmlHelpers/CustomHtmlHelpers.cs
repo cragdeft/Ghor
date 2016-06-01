@@ -58,13 +58,13 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
             foreach (var nextCStatus in channel.ChannelStatuses)
             {
-                switch (nextCStatus.Status)
+                switch (nextCStatus.StatusType)
                 {
                     case ChannelStatusType.Switchable:
-                        cLoadPicture = nextCStatus.Value == 0 ? cLoadName + "_off" : cLoadName + "_on";
+                        cLoadPicture = nextCStatus.StatusValue == 0 ? cLoadName + "_off" : cLoadName + "_on";
                         break;
                     case ChannelStatusType.Dimmable:
-                        cLoadDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        cLoadDim = nextCStatus.StatusValue == 0 ? nextCStatus.StatusValue.ToString() : nextCStatus.StatusValue.ToString();
                         if (channel.LoadType != LoadType.DimmableBulb)
                         {
                             cLoadDim = cLoadName;
@@ -72,7 +72,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
                         break;
                     case ChannelStatusType.HardwareDimSwitchable:
-                        cLoadHardwareDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        cLoadHardwareDim = nextCStatus.StatusValue == 0 ? nextCStatus.StatusValue.ToString() : nextCStatus.StatusValue.ToString();
                         break;
                 }
             }
@@ -317,13 +317,13 @@ namespace SmartHome.Web.CustomHtmlHelpers
             string cLoadHardwareDim = string.Empty;
             foreach (var nextCStatus in channel.ChannelStatuses)
             {
-                switch (nextCStatus.Status)
+                switch (nextCStatus.StatusType)
                 {
                     case ChannelStatusType.Switchable:
-                        cLoadPicture = nextCStatus.Value == 0 ? channelLoad + "_off" : channelLoad + "_on";
+                        cLoadPicture = nextCStatus.StatusValue == 0 ? channelLoad + "_off" : channelLoad + "_on";
                         break;
                     case ChannelStatusType.Dimmable:
-                        cLoadDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        cLoadDim = nextCStatus.StatusValue == 0 ? nextCStatus.StatusValue.ToString() : nextCStatus.StatusValue.ToString();
                         if (channel.LoadType != LoadType.DimmableBulb)
                         {
                             cLoadDim = channel.LoadName;
@@ -331,7 +331,7 @@ namespace SmartHome.Web.CustomHtmlHelpers
 
                         break;
                     case ChannelStatusType.HardwareDimSwitchable:
-                        cLoadHardwareDim = nextCStatus.Value == 0 ? nextCStatus.Value.ToString() : nextCStatus.Value.ToString();
+                        cLoadHardwareDim = nextCStatus.StatusValue == 0 ? nextCStatus.StatusValue.ToString() : nextCStatus.StatusValue.ToString();
                         break;
                 }
             }

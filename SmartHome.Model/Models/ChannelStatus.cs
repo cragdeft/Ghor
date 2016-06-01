@@ -16,12 +16,12 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ChannelStatusId { get; set; }
-        public int Id { get; set; }
-        public int CId { get; set; }
+        public int AppsChannelStatusId { get; set; }
+        public int AppsChannelId { get; set; }
         //public int DId { get; set; }
         //public int ChannelNo { get; set; }
-        public ChannelStatusType Status { get; set; }
-        public int Value { get; set; }
+        public ChannelStatusType StatusType { get; set; }
+        public int StatusValue { get; set; }
         #endregion
 
         #region Complex Properties

@@ -131,7 +131,7 @@ namespace SmartHome.Service
             foreach (var nextHome in model)
             {
                 //check already exist or not.
-                IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(nextHome.HId, nextHome.UInfoId);
+                IEnumerable<UserHomeLink> temp = IsHomeAndUserExists(nextHome.AppsHomeId, nextHome.AppsUserId);
                 //new item
                 if (temp.Count() == 0)
                 {
@@ -164,7 +164,7 @@ namespace SmartHome.Service
         private void FillNewUserHomeLinksByInfomation(UserHomeLink nextHome)
         {
             //check for home unique
-            IEnumerable<Home> tempHomeCheck = IsHomeExists(nextHome.HId.ToString());
+            IEnumerable<Home> tempHomeCheck = IsHomeExists(nextHome.AppsHomeId.ToString());
             FillNewUserHomeLInksByHomeInformation(nextHome, tempHomeCheck);
 
             //check for user unique
@@ -228,8 +228,8 @@ namespace SmartHome.Service
 
         private void FillExistingUserHomeLinks(UserHomeLink nextHome, UserHomeLink existingItem)
         {
-            existingItem.HId = nextHome.HId;
-            existingItem.UInfoId = nextHome.UInfoId;
+            existingItem.AppsHomeId = nextHome.AppsHomeId;
+            existingItem.AppsUserId = nextHome.AppsUserId;
             existingItem.IsAdmin = nextHome.IsAdmin;
             existingItem.IsSynced = nextHome.IsSynced;
             //existingItem.Home = new Home();
@@ -354,14 +354,14 @@ namespace SmartHome.Service
 
         private IEnumerable<Room> IsRoomExists(string RId)
         {
-            return _roomRepository.Query(e => e.AppsRoomId == RId).Select();
+            return _roomRepository.Query(e => e.AppsRoomId.ToString() == RId).Select();
 
         }
 
 
         private IEnumerable<UserHomeLink> IsHomeAndUserExists(int HId, int UInfoId)
         {
-            return _userHomeLinkRepository.Query(e => e.HId == HId && e.UInfoId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
+            return _userHomeLinkRepository.Query(e => e.AppsHomeId == HId && e.AppsUserId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
 
         private IEnumerable<UserRoomLink> IsRoomAndUserExists(int RId, int UInfoId)
@@ -417,7 +417,7 @@ namespace SmartHome.Service
 
         private void FillExistingUserInfo(UserInfo item, UserInfo existingItem)
         {
-            existingItem.Id = item.Id;
+            existingItem.AppsUserId = item.AppsUserId;
             existingItem.LocalId = item.LocalId;
             existingItem.Password = item.Password;
             existingItem.UserName = item.UserName;
@@ -836,7 +836,7 @@ namespace SmartHome.Service
             //channel status
             foreach (var nextChannelStatus in nextChannel.ChannelStatuses)
             {
-                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.Id == nextChannelStatus.Id && p.CId == nextChannelStatus.CId).FirstOrDefault();
+                var tempExistingChannelStatus = tempExistingChannel.ChannelStatuses.Where(p => p.AppsChannelStatusId == nextChannelStatus.AppsChannelStatusId && p.AppsChannelId == nextChannelStatus.AppsChannelId).FirstOrDefault();
                 if (tempExistingChannelStatus != null)
                 {
                     //modify
@@ -853,12 +853,12 @@ namespace SmartHome.Service
         private void FillExistingChannelStatusInfo(ChannelStatus nextChannelStatus, ChannelStatus tempExistingChannelStatus)
         {
             tempExistingChannelStatus.ObjectState = ObjectState.Modified;
-            tempExistingChannelStatus.Id = nextChannelStatus.Id;
-            tempExistingChannelStatus.CId = nextChannelStatus.CId;
+            tempExistingChannelStatus.AppsChannelStatusId = nextChannelStatus.AppsChannelStatusId;
+            tempExistingChannelStatus.AppsChannelId = nextChannelStatus.AppsChannelId;
             //tempExistingChannelStatus.DId = nextChannelStatus.DId;
             //tempExistingChannelStatus.ChannelNo = nextChannelStatus.ChannelNo;
-            tempExistingChannelStatus.Status = nextChannelStatus.Status;
-            tempExistingChannelStatus.Value = nextChannelStatus.Value;
+            tempExistingChannelStatus.StatusType = nextChannelStatus.StatusType;
+            tempExistingChannelStatus.StatusValue = nextChannelStatus.StatusValue;
             tempExistingChannelStatus.AuditField = new AuditFields();
         }
 
@@ -1019,7 +1019,7 @@ namespace SmartHome.Service
 
                     foreach (ChannelStatus nextCStatus in nextChannelInfo.ChannelStatuses)
                     {
-                        displayCaption = " Status--" + nextCStatus.Status.ToString() + ", Value--" + nextCStatus.Value.ToString();//nextChannelInfo.ChannelNo.ToString();
+                        displayCaption = " Status--" + nextCStatus.StatusType.ToString() + ", Value--" + nextCStatus.StatusValue.ToString();//nextChannelInfo.ChannelNo.ToString();
                         AddCaption(deviceInfo.SequenceId, displayCaption, dInfoEntity);
                     }
                 }

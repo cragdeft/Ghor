@@ -150,7 +150,7 @@ namespace SmartHome.Service
                 _channelRepository.Insert(entity);
                 entity.ChannelStatuses = new List<ChannelStatus>();
                 List<ChannelStatusEntity> channelStatuses =
-                    _homeJsonEntity.ChannelStatus.FindAll(x => x.CId == channel.AppsChannelId);
+                    _homeJsonEntity.ChannelStatus.FindAll(x => x.AppsChannelId == channel.AppsChannelId);
 
                 foreach (var channelStatusEntity in channelStatuses)
                 {
@@ -235,8 +235,6 @@ namespace SmartHome.Service
             var nextDevice = _nextAssociatedDeviceRepository
                 .Queryable().FirstOrDefault();
 
-            nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
-
             if (nextDevice == null)
             {
                 nextDevice.ObjectState = ObjectState.Added;
@@ -244,18 +242,18 @@ namespace SmartHome.Service
             }
             else
             {
+                nextDevice = new NextAssociatedDevice();
+                nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
                 nextDevice.ObjectState = ObjectState.Added;
                 _nextAssociatedDeviceRepository.Insert(nextDevice);
             }
-
-
         }
 
         private void AddUserRoomLink()
         {
             foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
             {
-                UserInfoEntity userInfo = _homeJsonEntity.UserInfo.Find(x => x.Id == userRoomLinkEntity.User);
+                UserInfoEntity userInfo = _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
                 UserInfo user = _userRepository
                 .Queryable().Where(u => u.Email == userInfo.Email).FirstOrDefault();
 
@@ -320,7 +318,7 @@ namespace SmartHome.Service
         {
             foreach (var room in model.Rooms)
             {
-                List<SmartDeviceEntity> deviceList = _homeJsonEntity.Device.FindAll(x => x.AppsRoomId.ToString() == room.AppsRoomId);
+                List<SmartDeviceEntity> deviceList = _homeJsonEntity.Device.FindAll(x => x.AppsRoomId == room.AppsRoomId);
 
                 foreach (var smartDevice in deviceList)
                 {
@@ -362,13 +360,13 @@ namespace SmartHome.Service
 
         private void SaveRoomUser(Room entity)
         {
-            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.Room == entity.AppsRoomId);
+            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
             if (roomLinkList != null && roomLinkList.Count > 0)
             {
                 foreach (var userRoomLinkEntity in roomLinkList)
                 {
                     UserInfoEntity userentity =
-                        _homeJsonEntity.UserInfo.Find(x => x.Id.ToString() == userRoomLinkEntity.User.ToString());
+                        _homeJsonEntity.UserInfo.Find(x => x.AppsUserId.ToString() == userRoomLinkEntity.AppsUserId.ToString());
                     UserRoomLink userRoom = new UserRoomLink();
                     userRoom.UserInfo = _userRepository
                 .Queryable().Where(u => u.Email == userentity.Email).FirstOrDefault();
@@ -482,7 +480,7 @@ namespace SmartHome.Service
             UserInfo model = _userRepository
                .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
 
-            model.Id = userEntity.Id.ToString();
+            model.AppsUserId = userEntity.AppsUserId;
             model.LoginStatus = userEntity.LoginStatus;
             model.Password = userEntity.Password;
             model.RegStatus = userEntity.RegStatus;

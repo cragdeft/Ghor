@@ -15,7 +15,7 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserInfoId { get; set; }
-        public string Id { get; set; }
+        public int AppsUserId { get; set; }
         public string LocalId { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }
