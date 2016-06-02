@@ -303,15 +303,16 @@ namespace SmartHome.Service
 
             if (nextDevice == null)
             {
+                nextDevice = new NextAssociatedDevice();
+                nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
                 nextDevice.ObjectState = ObjectState.Added;
                 _nextAssociatedDeviceRepository.Insert(nextDevice);
             }
             else
             {
-                nextDevice = new NextAssociatedDevice();
                 nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
-                nextDevice.ObjectState = ObjectState.Added;
-                _nextAssociatedDeviceRepository.Insert(nextDevice);
+                nextDevice.ObjectState = ObjectState.Modified;
+                _nextAssociatedDeviceRepository.Update(nextDevice);
             }
         }
 

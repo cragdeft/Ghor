@@ -56,6 +56,10 @@
     <Compile Include="Migrations\201606020310539_initialCreate3.Designer.cs">
       <DependentUpon>201606020310539_initialCreate3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606020340520_initialCreate2.cs" />
+    <Compile Include="Migrations\201606020340520_initialCreate2.Designer.cs">
+      <DependentUpon>201606020340520_initialCreate2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
@@ -104,6 +108,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201606020310539_initialCreate3.resx">
       <DependentUpon>201606020310539_initialCreate3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606020340520_initialCreate2.resx">
+      <DependentUpon>201606020340520_initialCreate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
