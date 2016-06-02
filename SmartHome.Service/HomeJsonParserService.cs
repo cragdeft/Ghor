@@ -455,10 +455,10 @@ namespace SmartHome.Service
 
         private void SaveHomeUser(Home home)
         {
-            var roomUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
-            if (roomUserList != null && roomUserList.Count > 0)
+            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
+            if (homeUserList != null && homeUserList.Count > 0)
             {
-                foreach (var userRoomLinkEntity in roomUserList)
+                foreach (var userRoomLinkEntity in homeUserList)
                 {
                     UserInfoEntity userentity =
                         _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
