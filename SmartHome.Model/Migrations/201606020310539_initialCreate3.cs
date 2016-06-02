@@ -170,7 +170,7 @@ namespace SmartHome.Model.Migrations
                     })
                 .PrimaryKey(t => t.RgbwStatusId)
                 .ForeignKey("dbo.SmartDevices", t => t.SmartDevice_DeviceId)
-                .ForeignKey("dbo.SmartDevices", t => t.SmartRainbow_DeviceId)
+                .ForeignKey("dbo.SmartDevices", t => t.SmartRainbow_DeviceId, cascadeDelete: true)
                 .Index(t => t.SmartDevice_DeviceId)
                 .Index(t => t.SmartRainbow_DeviceId);
             

@@ -50,7 +50,7 @@ namespace SmartHome.Model.ModelDataContext
 
         //public IDbSet<RgbwStatus> RgbwStatuses { get; set; }
 
-        //public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
+        public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
