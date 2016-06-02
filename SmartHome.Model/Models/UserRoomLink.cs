@@ -11,9 +11,11 @@ namespace SmartHome.Model.Models
 {   
     public class UserRoomLink : Entity
     {
-        [Key, Column(Order = 0)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserRoomLinkId { get; set; }
+        
         public int AppsRoomId { get; set; }
-        [Key, Column(Order = 1)]
         public int AppsUserId { get; set; }
 
         public int AppsUserRoomLinkId { get; set; }

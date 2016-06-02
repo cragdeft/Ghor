@@ -83,7 +83,7 @@ namespace SmartHome.Service
         public UserInfoEntity GetUser(string email)
         {
             UserInfo user = _userRepository
-                .Queryable().Where(u => u.Email == email).FirstOrDefault();
+                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
 
             Mapper.CreateMap<UserInfo, UserInfoEntity>();
             return Mapper.Map<UserInfo, UserInfoEntity>(user);
@@ -279,8 +279,8 @@ namespace SmartHome.Service
             model = SaveOrUpdateRoom(model);
             SaveHomeUser(model);
             SaveOrUpdateDevice(model);
-            SaveOrUpdateNextAssociatedDevice();
-            SaveOrUpdateVersion();
+            //SaveOrUpdateNextAssociatedDevice();
+            //SaveOrUpdateVersion();
         }
 
         private void SaveOrUpdateVersion()
@@ -363,12 +363,25 @@ namespace SmartHome.Service
             return entity;
         }
 
+        private void DeleteHomeUser(UserInfo entity)
+        {
+            if (entity.UserHomeLinks != null && entity.UserHomeLinks.Count > 0)
+                foreach (var userHomeLink in entity.UserHomeLinks)
+                {
+                    userHomeLink.UserInfo = null;
+                    userHomeLink.Home = null;
+                    userHomeLink.ObjectState = ObjectState.Modified;
+                    _userHomeRepository.Delete(userHomeLink);
+                }
+        }
+
         private void DeleteRoomUser(UserInfo entity)
         {
             if (entity.UserRoomLinks != null && entity.UserRoomLinks.Count > 0)
                 foreach (var userRoomLink in entity.UserRoomLinks)
                 {
                     userRoomLink.UserInfo = null;
+                    userRoomLink.Room = null;
                     userRoomLink.ObjectState = ObjectState.Modified;
                     _userRoomRepository.Delete(userRoomLink);
                 }

@@ -12,7 +12,9 @@ namespace SmartHome.Entity
         public int UserHomeLinkEntityId { get; set; }
         [JsonProperty("Id")]
         public int AppsUserHomeLinkId { get; set; }
+        [JsonProperty("Home")]
         public int AppsHomeId { get; set; }
+        [JsonProperty("User")]
         public int AppsUserId { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsSynced { get; set; }
