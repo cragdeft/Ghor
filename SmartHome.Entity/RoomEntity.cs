@@ -11,7 +11,7 @@ namespace SmartHome.Entity
     {
         #region Primitive Properties 
         public int RoomId { get; set; }
-    
+        [JsonProperty("Id")]
         public int AppsRoomId { get; set; }
         [JsonProperty("Home")]
         public int AppsHomeId { get; set; }

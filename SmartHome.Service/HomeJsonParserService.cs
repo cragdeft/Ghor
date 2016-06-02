@@ -34,7 +34,8 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<NextAssociatedDevice> _nextAssociatedDeviceRepository;
         private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
-        private readonly IVersionService _versionService;
+        private readonly IRepositoryAsync<Version> _versionRepository;
+        private readonly IRepositoryAsync<VersionDetail> _versionDetailRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         private string _email;
         #endregion
@@ -55,8 +56,9 @@ namespace SmartHome.Service
             _nextAssociatedDeviceRepository = _unitOfWorkAsync.RepositoryAsync<NextAssociatedDevice>();
             _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
-            var versionService = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
-            _versionService = new VersionService(versionService);
+            _versionRepository= _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _versionDetailRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.VersionDetail>();
             _homeJsonEntity = homeJsonEntity;
         }
         public SmartRouterEntity GetRouter(string macAddress)
@@ -291,9 +293,9 @@ namespace SmartHome.Service
                 versionEntity.VersionDetails =
                     _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
                 
+                
             }
             List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
-            _versionService.AddOrUpdateGraphRange(versionList);
         }
 
         private void SaveOrUpdateNextAssociatedDevice()

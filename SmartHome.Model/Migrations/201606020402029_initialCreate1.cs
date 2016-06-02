@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialCreate3 : DbMigration
+    public partial class initialCreate1 : DbMigration
     {
         public override void Up()
         {
@@ -425,6 +425,15 @@ namespace SmartHome.Model.Migrations
                 .PrimaryKey(t => t.CommandJsonId);
             
             CreateTable(
+                "dbo.NextAssociatedDevices",
+                c => new
+                    {
+                        NextAssociatedDeviceId = c.Int(nullable: false, identity: true),
+                        NextDeviceId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.NextAssociatedDeviceId);
+            
+            CreateTable(
                 "dbo.VersionDetails",
                 c => new
                     {
@@ -525,6 +534,7 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
             DropTable("dbo.Versions");
             DropTable("dbo.VersionDetails");
+            DropTable("dbo.NextAssociatedDevices");
             DropTable("dbo.CommandJsons");
             DropTable("dbo.SmartRouterInfoes");
             DropTable("dbo.UserTypes");
