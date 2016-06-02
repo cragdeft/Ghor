@@ -15,7 +15,7 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VersionId { get; set; }
-        public string Id { get; set; }
+        public int AppsVersionId { get; set; }
         public string AppName { get; set; }
         public string AppVersion { get; set; }
         public string AuthCode { get; set; }

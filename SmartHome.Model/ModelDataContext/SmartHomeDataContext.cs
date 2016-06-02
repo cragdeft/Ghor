@@ -50,7 +50,7 @@ namespace SmartHome.Model.ModelDataContext
 
         //public IDbSet<RgbwStatus> RgbwStatuses { get; set; }
 
-        //public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
+        public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -94,9 +94,9 @@ namespace SmartHome.Model.ModelDataContext
              .HasMany(u => u.DeviceStatus)
              .WithOptional().WillCascadeOnDelete(true);
 
-            ////modelBuilder.Entity<SmartDevice>()
-            //// .HasMany(u => u.RgbwStatuses)
-            //// .WithOptional().WillCascadeOnDelete(true);
+            modelBuilder.Entity<SmartRainbow>()
+             .HasMany(u => u.RgbwStatuses)
+             .WithOptional().WillCascadeOnDelete(true);
 
             //modelBuilder.Entity<Home>()
             // .HasMany(u => u.SmartRouters)

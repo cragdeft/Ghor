@@ -3,7 +3,7 @@ namespace SmartHome.Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initialCreate2 : DbMigration
+    public partial class initialCreate1 : DbMigration
     {
         public override void Up()
         {
@@ -63,8 +63,8 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         RoomId = c.Int(nullable: false, identity: true),
-                        Id = c.String(),
-                        HId = c.String(),
+                        AppsRoomId = c.Int(nullable: false),
+                        AppsHomeId = c.String(),
                         Name = c.String(),
                         RoomNumber = c.Int(nullable: false),
                         Comment = c.String(),
@@ -88,15 +88,15 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         DeviceId = c.Int(nullable: false, identity: true),
-                        Id = c.Int(nullable: false),
-                        DId = c.Int(nullable: false),
+                        AppsDeviceId = c.Int(nullable: false),
+                        AppsRoomId = c.Int(nullable: false),
+                        AppsBleId = c.Int(nullable: false),
                         DeviceName = c.String(),
                         DeviceHash = c.String(),
                         DeviceVersion = c.String(),
                         IsDeleted = c.Boolean(nullable: false),
                         Watt = c.String(),
-                        Mac = c.String(),
-                        DType = c.String(),
+                        IsSynced = c.Boolean(nullable: false),
                         DeviceType = c.Int(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
@@ -110,7 +110,6 @@ namespace SmartHome.Model.Migrations
                         SsidPassword = c.String(),
                         LocalBrokerUsername = c.String(),
                         LocalBrokerPassword = c.String(),
-                        IsSynced = c.Boolean(),
                         Room_RoomId = c.Int(),
                         Parent_HomeId = c.Int(),
                         Room_RoomId1 = c.Int(),
@@ -152,8 +151,8 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         RgbwStatusId = c.Int(nullable: false, identity: true),
-                        Id = c.Int(nullable: false),
-                        DId = c.Int(nullable: false),
+                        AppsRgbtStatusId = c.Int(nullable: false),
+                        AppsDeviceId = c.Int(nullable: false),
                         RGBColorStatusType = c.Int(nullable: false),
                         IsPowerOn = c.Boolean(nullable: false),
                         ColorR = c.Int(nullable: false),
@@ -161,6 +160,7 @@ namespace SmartHome.Model.Migrations
                         ColorB = c.Int(nullable: false),
                         IsWhiteEnabled = c.Boolean(nullable: false),
                         DimmingValue = c.Int(nullable: false),
+                        IsSynced = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -170,7 +170,7 @@ namespace SmartHome.Model.Migrations
                     })
                 .PrimaryKey(t => t.RgbwStatusId)
                 .ForeignKey("dbo.SmartDevices", t => t.SmartDevice_DeviceId)
-                .ForeignKey("dbo.SmartDevices", t => t.SmartRainbow_DeviceId)
+                .ForeignKey("dbo.SmartDevices", t => t.SmartRainbow_DeviceId, cascadeDelete: true)
                 .Index(t => t.SmartDevice_DeviceId)
                 .Index(t => t.SmartRainbow_DeviceId);
             
@@ -179,11 +179,12 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         ChannelId = c.Int(nullable: false, identity: true),
-                        Id = c.Int(nullable: false),
-                        DId = c.Int(nullable: false),
+                        AppsChannelId = c.Int(nullable: false),
+                        AppsDeviceTableId = c.Int(nullable: false),
                         ChannelNo = c.Int(nullable: false),
                         LoadName = c.String(),
                         LoadType = c.Int(nullable: false),
+                        IsSynced = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -199,10 +200,10 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         ChannelStatusId = c.Int(nullable: false, identity: true),
-                        Id = c.Int(nullable: false),
-                        CId = c.Int(nullable: false),
-                        Status = c.Int(nullable: false),
-                        Value = c.Int(nullable: false),
+                        AppsChannelStatusId = c.Int(nullable: false),
+                        AppsChannelId = c.Int(nullable: false),
+                        StatusType = c.Int(nullable: false),
+                        StatusValue = c.Int(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -220,15 +221,15 @@ namespace SmartHome.Model.Migrations
                 "dbo.UserRoomLinks",
                 c => new
                     {
-                        RId = c.Int(nullable: false),
-                        UInfoId = c.Int(nullable: false),
-                        Id = c.String(),
+                        AppsRoomId = c.Int(nullable: false),
+                        AppsUserId = c.Int(nullable: false),
+                        AppsUserRoomLinkId = c.Int(nullable: false),
                         IsSynced = c.Boolean(nullable: false),
                         Room_RoomId = c.Int(),
                         UserInfo_UserInfoId = c.Int(),
                         Room_RoomId1 = c.Int(),
                     })
-                .PrimaryKey(t => new { t.RId, t.UInfoId })
+                .PrimaryKey(t => new { t.AppsRoomId, t.AppsUserId })
                 .ForeignKey("dbo.Rooms", t => t.Room_RoomId)
                 .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId)
                 .ForeignKey("dbo.Rooms", t => t.Room_RoomId1, cascadeDelete: true)
@@ -241,7 +242,7 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         UserInfoId = c.Int(nullable: false, identity: true),
-                        Id = c.String(),
+                        AppsUserId = c.Int(nullable: false),
                         LocalId = c.String(),
                         Password = c.String(),
                         UserName = c.String(),
@@ -250,7 +251,7 @@ namespace SmartHome.Model.Migrations
                         MiddleName = c.String(),
                         AccNo = c.String(),
                         CellPhone = c.String(),
-                        DateOfBirth = c.DateTime(nullable: false),
+                        DateOfBirth = c.DateTime(),
                         Sex = c.String(),
                         Email = c.String(),
                         ExpireDate = c.DateTime(),
@@ -299,16 +300,16 @@ namespace SmartHome.Model.Migrations
                 "dbo.UserHomeLinks",
                 c => new
                     {
-                        HId = c.Int(nullable: false),
-                        UInfoId = c.Int(nullable: false),
-                        Id = c.String(),
+                        AppsHomeId = c.Int(nullable: false),
+                        AppsUserId = c.Int(nullable: false),
+                        AppsUserHomeLinkId = c.Int(nullable: false),
                         IsAdmin = c.Boolean(nullable: false),
                         IsSynced = c.Boolean(nullable: false),
                         Home_HomeId = c.Int(),
                         UserInfo_UserInfoId = c.Int(),
                         Home_HomeId1 = c.Int(),
                     })
-                .PrimaryKey(t => new { t.HId, t.UInfoId })
+                .PrimaryKey(t => new { t.AppsHomeId, t.AppsUserId })
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId)
                 .ForeignKey("dbo.UserInfoes", t => t.UserInfo_UserInfoId)
                 .ForeignKey("dbo.Homes", t => t.Home_HomeId1, cascadeDelete: true)
@@ -424,15 +425,25 @@ namespace SmartHome.Model.Migrations
                 .PrimaryKey(t => t.CommandJsonId);
             
             CreateTable(
+                "dbo.NextAssociatedDevices",
+                c => new
+                    {
+                        NextAssociatedDeviceId = c.Int(nullable: false, identity: true),
+                        NextDeviceId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.NextAssociatedDeviceId);
+            
+            CreateTable(
                 "dbo.VersionDetails",
                 c => new
                     {
                         VersionDetailId = c.Int(nullable: false, identity: true),
-                        Id = c.Int(nullable: false),
-                        VId = c.String(),
+                        AppsVersionDetailId = c.Int(nullable: false),
+                        AppsVersionId = c.Int(nullable: false),
                         HardwareVersion = c.String(),
                         DType = c.String(),
                         DeviceType = c.Int(),
+                        IsSynced = c.Boolean(nullable: false),
                         AuditField_InsertedBy = c.String(),
                         AuditField_InsertedDateTime = c.DateTime(),
                         AuditField_LastUpdatedBy = c.String(),
@@ -448,7 +459,7 @@ namespace SmartHome.Model.Migrations
                 c => new
                     {
                         VersionId = c.Int(nullable: false, identity: true),
-                        Id = c.String(),
+                        AppsVersionId = c.Int(nullable: false),
                         AppName = c.String(),
                         AppVersion = c.String(),
                         AuthCode = c.String(),
@@ -523,6 +534,7 @@ namespace SmartHome.Model.Migrations
             DropIndex("dbo.Addresses", new[] { "Home_HomeId" });
             DropTable("dbo.Versions");
             DropTable("dbo.VersionDetails");
+            DropTable("dbo.NextAssociatedDevices");
             DropTable("dbo.CommandJsons");
             DropTable("dbo.SmartRouterInfoes");
             DropTable("dbo.UserTypes");

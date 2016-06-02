@@ -66,13 +66,13 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<UserRoomLink> temp = IsRoomAndUserExists(item.RId, item.UInfoId);
+                IEnumerable<UserRoomLink> temp = IsRoomAndUserExists(item.AppsRoomId, item.AppsUserId);
 
                 if (temp.Count() == 0)
                 {
                     //check for room unique
 
-                    IEnumerable<Room> tempRoomCheck = IsRoomExists(item.RId.ToString());
+                    IEnumerable<Room> tempRoomCheck = IsRoomExists(item.AppsRoomId.ToString());
                     if (tempRoomCheck.Count() > 0)
                     {
                         item.Room = new Room();
@@ -366,7 +366,7 @@ namespace SmartHome.Service
 
         private IEnumerable<UserRoomLink> IsRoomAndUserExists(int RId, int UInfoId)
         {
-            return _userRoomLinkRepository.Query(e => e.RId == RId && e.UInfoId == UInfoId).Include(x => x.Room).Include(x => x.UserInfo).Select();
+            return _userRoomLinkRepository.Query(e => e.AppsRoomId == RId && e.AppsUserId == UInfoId).Include(x => x.Room).Include(x => x.UserInfo).Select();
         }
 
 
@@ -592,7 +592,7 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<Model.Models.Version> temp = IsVersionExists(item.Id, item.Mac);
+                IEnumerable<Model.Models.Version> temp = IsVersionExists(item.AppsVersionId, item.Mac);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -626,7 +626,7 @@ namespace SmartHome.Service
         {
             foreach (var nextVDetail in item.VersionDetails)
             {
-                var tempExistingVDetail = existingItem.VersionDetails.Where(p => p.Id == nextVDetail.Id).FirstOrDefault();
+                var tempExistingVDetail = existingItem.VersionDetails.Where(p => p.AppsVersionDetailId == nextVDetail.AppsVersionDetailId).FirstOrDefault();
                 if (tempExistingVDetail != null)
                 {
                     //modify
@@ -643,8 +643,8 @@ namespace SmartHome.Service
         private void FillExistingVDetailInfo(VersionDetail nextVDetail, VersionDetail tempExistingVDetail)
         {
             tempExistingVDetail.ObjectState = ObjectState.Modified;
-            tempExistingVDetail.Id = nextVDetail.Id;
-            tempExistingVDetail.VId = nextVDetail.VId;
+            tempExistingVDetail.AppsVersionDetailId = nextVDetail.AppsVersionDetailId;
+            tempExistingVDetail.AppsVersionId = nextVDetail.AppsVersionId;
             tempExistingVDetail.HardwareVersion = nextVDetail.HardwareVersion;
             tempExistingVDetail.DeviceType = nextVDetail.DeviceType;
             tempExistingVDetail.AuditField = new AuditFields();
@@ -657,13 +657,13 @@ namespace SmartHome.Service
             existingItem.AuditField = new AuditFields();
             existingItem.AuthCode = item.AuthCode;
             existingItem.Mac = item.Mac;
-            existingItem.Id = item.Id;
+            existingItem.AppsVersionId = item.AppsVersionId;
             existingItem.ObjectState = ObjectState.Modified;
         }
 
-        private IEnumerable<Model.Models.Version> IsVersionExists(string key, string Mac)
+        private IEnumerable<Model.Models.Version> IsVersionExists(int key, string Mac)
         {
-            return _versionRepository.Query(e => e.Id == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
+            return _versionRepository.Query(e => e.AppsVersionId == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
         }
 
 
@@ -868,7 +868,7 @@ namespace SmartHome.Service
         {
             foreach (var nextStatus in ((SmartRainbow)item).RgbwStatuses)
             {
-                var tempExistingDStatus = ((SmartRainbow)existingItem).RgbwStatuses.Where(p => p.Id == nextStatus.Id).FirstOrDefault();
+                var tempExistingDStatus = ((SmartRainbow)existingItem).RgbwStatuses.Where(p => p.AppsRgbtStatusId == nextStatus.AppsRgbtStatusId).FirstOrDefault();
                 if (tempExistingDStatus != null)
                 {
                     //modify
@@ -885,8 +885,8 @@ namespace SmartHome.Service
         private void FillExistingRgbInfo(RgbwStatus nextStatus, RgbwStatus tempExistingStatus)
         {
             tempExistingStatus.ObjectState = ObjectState.Modified;
-            tempExistingStatus.Id = nextStatus.Id;
-            tempExistingStatus.DId = nextStatus.DId;
+            tempExistingStatus.AppsRgbtStatusId = nextStatus.AppsRgbtStatusId;
+            tempExistingStatus.AppsDeviceId = nextStatus.AppsDeviceId;
             tempExistingStatus.RGBColorStatusType = nextStatus.RGBColorStatusType;
             tempExistingStatus.IsPowerOn = nextStatus.IsPowerOn;
             tempExistingStatus.ColorR = nextStatus.ColorR;

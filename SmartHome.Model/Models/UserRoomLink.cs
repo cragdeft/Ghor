@@ -12,9 +12,9 @@ namespace SmartHome.Model.Models
     public class UserRoomLink : Entity
     {
         [Key, Column(Order = 0)]
-        public int RId { get; set; }
+        public int AppsRoomId { get; set; }
         [Key, Column(Order = 1)]
-        public int UInfoId { get; set; }
+        public int AppsUserId { get; set; }
 
         public int AppsUserRoomLinkId { get; set; }
 

@@ -12,6 +12,8 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.Interfaces;
+using Version = SmartHome.Model.Models.Version;
 
 namespace SmartHome.Service
 {
@@ -30,6 +32,10 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<NextAssociatedDevice> _nextAssociatedDeviceRepository;
+        private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
+        private readonly IRepositoryAsync<Version> _versionRepository;
+        private readonly IRepositoryAsync<VersionDetail> _versionDetailRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         private string _email;
         #endregion
@@ -48,6 +54,11 @@ namespace SmartHome.Service
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
             _nextAssociatedDeviceRepository = _unitOfWorkAsync.RepositoryAsync<NextAssociatedDevice>();
+            _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _versionRepository= _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _versionDetailRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.VersionDetail>();
             _homeJsonEntity = homeJsonEntity;
         }
         public SmartRouterEntity GetRouter(string macAddress)
@@ -115,13 +126,55 @@ namespace SmartHome.Service
 
                 List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
                 InsertChannel(sswitch, channelList);
+                
             }
 
+            if (device.DeviceType == DeviceType.SmartRainbow12)
+            {
+                SmartRainbow rainbow = MapToSmartRainbow(model);
+                rainbow.Room = room;
+                rainbow.ObjectState = ObjectState.Added;
+                rainbow.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceRepository.Insert(rainbow);
+                List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId);
+                InsertRgbwStatus(rainbow, rgbtStatusList);
+            }
+
+        }
+
+        private void InsertRgbwStatus(SmartRainbow sswitch, List<RgbwStatusEntity> rgbtStatusList)
+        {
+            foreach (var rgbtStatus in rgbtStatusList)
+            {
+                var entity = Mapper.Map<RgbwStatusEntity, RgbwStatus>(rgbtStatus);
+                entity.SmartDevice = sswitch;
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _rgbwStatusRepository.Insert(entity);
+            }
         }
 
         private SmartSwitch MapToSmartSwitch(SmartDevice model)
         {
             SmartSwitch entity = new SmartSwitch();
+            entity.DeviceId = model.DeviceId;
+            entity.AppsDeviceId = model.AppsDeviceId;
+            entity.AppsBleId = model.AppsBleId;
+            entity.DeviceName = model.DeviceName;
+            entity.DeviceHash = model.DeviceHash;
+            entity.DeviceVersion = model.DeviceVersion;
+            entity.IsDeleted = model.IsDeleted;
+            entity.Watt = model.Watt;
+            //entity.Mac = model.Mac;
+            //entity.DType = model.DType;
+            entity.DeviceType = model.DeviceType;
+            entity.DeviceStatus = new List<DeviceStatus>();
+            return entity;
+        }
+
+        private SmartRainbow MapToSmartRainbow(SmartDevice model)
+        {
+            SmartRainbow entity = new SmartRainbow();
             entity.DeviceId = model.DeviceId;
             entity.AppsDeviceId = model.AppsDeviceId;
             entity.AppsBleId = model.AppsBleId;
@@ -223,12 +276,27 @@ namespace SmartHome.Service
 
             Home model = SaveOrUpdateHome(home);
             SaveOrUpdateUser();
-
             SaveOrUpdateRouter(router, model);
             model = SaveOrUpdateRoom(model);
-            //AddUserHomeLink();
+            SaveHomeUser(model);
             SaveOrUpdateDevice(model);
             SaveOrUpdateNextAssociatedDevice();
+            SaveOrUpdateVersion();
+        }
+
+        private void SaveOrUpdateVersion()
+        {
+            List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
+            
+            foreach (var versionEntity in versionEntityList)
+            {
+                versionEntity.VersionDetails = new List<VersionDetailEntity>();
+                versionEntity.VersionDetails =
+                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
+                
+                
+            }
+            List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
         }
 
         private void SaveOrUpdateNextAssociatedDevice()
@@ -238,15 +306,16 @@ namespace SmartHome.Service
 
             if (nextDevice == null)
             {
+                nextDevice = new NextAssociatedDevice();
+                nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
                 nextDevice.ObjectState = ObjectState.Added;
                 _nextAssociatedDeviceRepository.Insert(nextDevice);
             }
             else
             {
-                nextDevice = new NextAssociatedDevice();
                 nextDevice.NextDeviceId = _homeJsonEntity.NextAssociatedDeviceId[0].NextDeviceId;
-                nextDevice.ObjectState = ObjectState.Added;
-                _nextAssociatedDeviceRepository.Insert(nextDevice);
+                nextDevice.ObjectState = ObjectState.Modified;
+                _nextAssociatedDeviceRepository.Update(nextDevice);
             }
         }
 
@@ -374,8 +443,35 @@ namespace SmartHome.Service
                     userRoom.Room = entity;
                     userRoom.IsSynced = userRoomLinkEntity.IsSynced;
                     userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
+                    userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
+                    userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
                     userRoom.ObjectState = ObjectState.Added;
                     _userRoomLinkRepository.Insert(userRoom);
+                }
+            }
+
+
+        }
+
+        private void SaveHomeUser(Home home)
+        {
+            var roomUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
+            if (roomUserList != null && roomUserList.Count > 0)
+            {
+                foreach (var userRoomLinkEntity in roomUserList)
+                {
+                    UserInfoEntity userentity =
+                        _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
+                    UserHomeLink userHome = new UserHomeLink();
+                    userHome.UserInfo = _userRepository
+                .Queryable().Where(u => u.Email == userentity.Email).FirstOrDefault();
+                    userHome.Home = home;
+                    userHome.IsSynced = userRoomLinkEntity.IsSynced;
+                    userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
+                    userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
+                    userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
+                    userHome.ObjectState = ObjectState.Added;
+                    _userHomeRepository.Insert(userHome);
                 }
             }
 
@@ -428,6 +524,9 @@ namespace SmartHome.Service
             Mapper.CreateMap<ChannelStatusEntity, ChannelStatus>();
             Mapper.CreateMap<DeviceStatusEntity, DeviceStatus>();
             Mapper.CreateMap<ChannelEntity, Channel>();
+            Mapper.CreateMap<RgbwStatusEntity, RgbwStatus>();
+            Mapper.CreateMap<VersionEntity, Version>();
+            Mapper.CreateMap<VersionDetailEntity, VersionDetail>();
         }
 
         private Home MapHomeProperty(HomeEntity home)

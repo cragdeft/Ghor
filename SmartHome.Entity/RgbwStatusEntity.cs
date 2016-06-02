@@ -9,10 +9,11 @@ namespace SmartHome.Entity
 {
     public class RgbwStatusEntity
     {
-        #region Primitive Properties        
-        public int Id { get; set; }
+        #region Primitive Properties  
+        [JsonProperty("Id")]
+        public int AppsRgbtStatusId { get; set; }
         [JsonProperty("DeviceTableId")]
-        public int DId { get; set; }
+        public int AppsDeviceId { get; set; }
         [JsonProperty("StatusType")]        
         public int RGBColorStatusType { get; set; }
         public bool IsPowerOn { get; set; }
@@ -21,7 +22,7 @@ namespace SmartHome.Entity
         public int ColorB { get; set; }
         public bool IsWhiteEnabled { get; set; }
         public int DimmingValue { get; set; }
-
+        public bool IsSynced { get; set; }
 
         #endregion
     }
