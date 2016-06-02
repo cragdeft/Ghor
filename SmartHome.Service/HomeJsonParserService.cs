@@ -13,6 +13,7 @@ using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
 using SmartHome.Service.Interfaces;
+using Version = SmartHome.Model.Models.Version;
 
 namespace SmartHome.Service
 {
@@ -122,13 +123,23 @@ namespace SmartHome.Service
 
                 List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
                 InsertChannel(sswitch, channelList);
+                
+            }
+
+            if (device.DeviceType == DeviceType.SmartRainbow12)
+            {
+                SmartRainbow rainbow = MapToSmartRainbow(model);
+                rainbow.Room = room;
+                rainbow.ObjectState = ObjectState.Added;
+                rainbow.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceRepository.Insert(rainbow);
                 List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId);
-                InsertRgbwStatus(sswitch, rgbtStatusList);
+                InsertRgbwStatus(rainbow, rgbtStatusList);
             }
 
         }
 
-        private void InsertRgbwStatus(SmartSwitch sswitch, List<RgbwStatusEntity> rgbtStatusList)
+        private void InsertRgbwStatus(SmartRainbow sswitch, List<RgbwStatusEntity> rgbtStatusList)
         {
             foreach (var rgbtStatus in rgbtStatusList)
             {
@@ -143,6 +154,24 @@ namespace SmartHome.Service
         private SmartSwitch MapToSmartSwitch(SmartDevice model)
         {
             SmartSwitch entity = new SmartSwitch();
+            entity.DeviceId = model.DeviceId;
+            entity.AppsDeviceId = model.AppsDeviceId;
+            entity.AppsBleId = model.AppsBleId;
+            entity.DeviceName = model.DeviceName;
+            entity.DeviceHash = model.DeviceHash;
+            entity.DeviceVersion = model.DeviceVersion;
+            entity.IsDeleted = model.IsDeleted;
+            entity.Watt = model.Watt;
+            //entity.Mac = model.Mac;
+            //entity.DType = model.DType;
+            entity.DeviceType = model.DeviceType;
+            entity.DeviceStatus = new List<DeviceStatus>();
+            return entity;
+        }
+
+        private SmartRainbow MapToSmartRainbow(SmartDevice model)
+        {
+            SmartRainbow entity = new SmartRainbow();
             entity.DeviceId = model.DeviceId;
             entity.AppsDeviceId = model.AppsDeviceId;
             entity.AppsBleId = model.AppsBleId;
@@ -244,21 +273,27 @@ namespace SmartHome.Service
 
             Home model = SaveOrUpdateHome(home);
             SaveOrUpdateUser();
-
             SaveOrUpdateRouter(router, model);
             model = SaveOrUpdateRoom(model);
             SaveHomeUser(model);
             SaveOrUpdateDevice(model);
             SaveOrUpdateNextAssociatedDevice();
-            //SaveOrUpdateVersion();
+            SaveOrUpdateVersion();
         }
 
         private void SaveOrUpdateVersion()
         {
-            foreach (var versionEntity in _homeJsonEntity.Version)
+            List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
+            
+            foreach (var versionEntity in versionEntityList)
             {
-                _versionService.Add(versionEntity);
+                versionEntity.VersionDetails = new List<VersionDetailEntity>();
+                versionEntity.VersionDetails =
+                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
+                
             }
+            List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
+            _versionService.AddOrUpdateGraphRange(versionList);
         }
 
         private void SaveOrUpdateNextAssociatedDevice()
@@ -486,6 +521,8 @@ namespace SmartHome.Service
             Mapper.CreateMap<DeviceStatusEntity, DeviceStatus>();
             Mapper.CreateMap<ChannelEntity, Channel>();
             Mapper.CreateMap<RgbwStatusEntity, RgbwStatus>();
+            Mapper.CreateMap<VersionEntity, Version>();
+            Mapper.CreateMap<VersionDetailEntity, VersionDetail>();
         }
 
         private Home MapHomeProperty(HomeEntity home)

@@ -20,5 +20,7 @@ namespace SmartHome.Entity
         public string PassPhrase { get; set; }
         public string Mac { get; set; }
         #endregion
+
+        public virtual ICollection<VersionDetailEntity> VersionDetails { get; set; }
     }
 }

@@ -94,9 +94,9 @@ namespace SmartHome.Model.ModelDataContext
              .HasMany(u => u.DeviceStatus)
              .WithOptional().WillCascadeOnDelete(true);
 
-            ////modelBuilder.Entity<SmartDevice>()
-            //// .HasMany(u => u.RgbwStatuses)
-            //// .WithOptional().WillCascadeOnDelete(true);
+            modelBuilder.Entity<SmartRainbow>()
+             .HasMany(u => u.RgbwStatuses)
+             .WithOptional().WillCascadeOnDelete(true);
 
             //modelBuilder.Entity<Home>()
             // .HasMany(u => u.SmartRouters)
