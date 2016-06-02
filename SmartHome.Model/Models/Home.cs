@@ -54,10 +54,8 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties        
-        public virtual ICollection<UserHomeLink> UserHomeLinks { get; set; }
         public virtual ICollection<Room> Rooms { get; set; }
-        //public virtual ICollection<SmartRouter> SmartRouters { get; set; }
-        public virtual ICollection<SmartRouterInfo> SmartRouterInfoes { get; set; }
+        public virtual ICollection<RouterInfo> SmartRouterInfoes { get; set; }
         #endregion
     }
 }

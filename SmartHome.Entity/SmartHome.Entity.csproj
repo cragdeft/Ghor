@@ -63,7 +63,7 @@
     <Compile Include="RoomEntity.cs" />
     <Compile Include="RoomJsonEntity.cs" />
     <Compile Include="RootObjectEntity.cs" />
-    <Compile Include="SmartRouterEntity.cs" />
+    <Compile Include="RouterInfoEntity.cs" />
     <Compile Include="UserHomeLinkEntity.cs" />
     <Compile Include="UserInfoEntity.cs" />
     <Compile Include="UserRoomLinkEntity.cs" />

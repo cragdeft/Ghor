@@ -28,6 +28,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region Navigation Properties
+        public virtual Home Home { get; set; }
         public virtual ICollection<VersionDetail> VersionDetails { get; set; }         
         #endregion
     }

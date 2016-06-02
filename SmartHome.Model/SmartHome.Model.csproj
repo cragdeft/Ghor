@@ -52,11 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SmartEnumDataType.cs" />
-    <Compile Include="Migrations\201606020402029_initialCreate1.cs" />
-    <Compile Include="Migrations\201606020402029_initialCreate1.Designer.cs">
-      <DependentUpon>201606020402029_initialCreate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelDataContext\ISmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContext.cs" />
     <Compile Include="ModelDataContext\SmartHomeDataContextDbInitializer.cs" />
@@ -73,7 +68,7 @@
     <Compile Include="Models\SmartDevice.cs" />
     <Compile Include="Models\SmartRainbow.cs" />
     <Compile Include="Models\SmartRouter.cs" />
-    <Compile Include="Models\SmartRouterInfo.cs" />
+    <Compile Include="Models\RouterInfo.cs" />
     <Compile Include="Models\SmartSwitch.cs" />
     <Compile Include="Models\SyncStatus.cs" />
     <Compile Include="Models\UserHomeLink.cs" />
@@ -100,11 +95,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606020402029_initialCreate1.resx">
-      <DependentUpon>201606020402029_initialCreate1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

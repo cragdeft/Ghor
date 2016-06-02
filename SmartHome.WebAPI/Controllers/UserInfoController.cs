@@ -50,7 +50,7 @@ namespace SmartHome.WebAPI.Controllers
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
             oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
             oLoginObject.UserInfo = new List<UserInfoEntity>();
-            oLoginObject.Home = new List<HomeEntity>();
+            oLoginObject.Home = new List<Entity.HomeEntity>();
             oLoginObject.Room = new List<RoomEntity>();
             string msg = string.Empty;
 
@@ -332,17 +332,17 @@ namespace SmartHome.WebAPI.Controllers
         [NonAction]
         private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
-            Mapper.CreateMap<SmartRouterInfo, SmartRouterEntity>();
-            IEnumerable<SmartRouterEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<SmartRouterInfo>, IEnumerable<SmartRouterEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.SmartRouterInfoes));
+            Mapper.CreateMap<RouterInfo, RouterInfoEntity>();
+            IEnumerable<RouterInfoEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<RouterInfo>, IEnumerable<RouterInfoEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.SmartRouterInfoes));
             oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
         }
         [NonAction]
         private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
         {
-            Mapper.CreateMap<Home, HomeEntity>()
+            Mapper.CreateMap<Home, Home>()
                   .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
-            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserHomeLink.Select(p => p.Home));
-            oLoginObject.Home.AddRange(oHomeEntity);
+            //IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<Home>>(oUserHomeLink.Select(p => p.Home));
+            //oLoginObject.Home.AddRange(oHomeEntity);
         }
         [NonAction]
         private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
@@ -365,8 +365,8 @@ namespace SmartHome.WebAPI.Controllers
                                         //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
                                         .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId))
                                         .ForMember(dest => dest.AppsRoomId, opt => opt.MapFrom(src => src.Room.AppsRoomId));
-            IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p=>p.UserInfo.UserInfoId==temp)));
-            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.AppsUserId.ToString()==temp.ToString()));
+            //IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p=>p.UserInfo.UserInfoId==temp)));
+            //oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity.Where(p=>p.AppsUserId.ToString()==temp.ToString()));
         }
         [NonAction]
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
@@ -386,8 +386,8 @@ namespace SmartHome.WebAPI.Controllers
             oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
             oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
             oLoginObject.RgbwStatus = new List<RgbwStatusEntity>();
-            oLoginObject.Home = new List<HomeEntity>();
-            oLoginObject.RouterInfo = new List<SmartRouterEntity>();
+            oLoginObject.Home = new List<Entity.HomeEntity>();
+            oLoginObject.RouterInfo = new List<RouterInfoEntity>();
             oLoginObject.Room = new List<RoomEntity>();
             oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
             oLoginObject.Channel = new List<ChannelEntity>();

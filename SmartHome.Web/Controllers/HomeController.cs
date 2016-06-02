@@ -79,18 +79,15 @@ namespace SmartHome.Web.Controllers
                 IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
                 try
                 {
-                    unitOfWork.BeginTransaction();
-                    
                     var oUserHomeLink = service.GetsHomesAllInfo(User.UserInfoId,User.IsAdmin);
                     var oVersion = service.GetsAppVersionAllInfo();
-                    unitOfWork.Commit();
 
                     ViewBag.AppVersion = oVersion;
                     return View(oUserHomeLink);
                 }
                 catch (Exception ex)
                 {
-                    unitOfWork.Rollback();
+                    //unitOfWork.Rollback();
                 }
             }
             ViewBag.AppVersion = null;

@@ -11,7 +11,7 @@ namespace SmartHome.Entity
     {
         public HomeEntity()
         {
-            SmartRouter = new List<SmartRouterEntity>();
+            SmartRouter = new List<RouterInfoEntity>();
         }
         #region Primitive Properties 
         public int HomeId { get; set; }
@@ -46,7 +46,7 @@ namespace SmartHome.Entity
 
         public bool IsSynced { get; set; }
 
-        public List<SmartRouterEntity> SmartRouter { get; set; }
+        public List<RouterInfoEntity> SmartRouter { get; set; }
 
         #endregion
     }

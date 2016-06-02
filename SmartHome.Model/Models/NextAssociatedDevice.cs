@@ -16,5 +16,9 @@ namespace SmartHome.Model.Models
         public int NextAssociatedDeviceId { get; set; }
         
         public int NextDeviceId { get; set; }
+
+        #region Navigation Properties
+        public virtual Home Home { get; set; }
+        #endregion
     }
 }

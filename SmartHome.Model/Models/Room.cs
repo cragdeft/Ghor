@@ -15,11 +15,8 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RoomId { get; set; }
-
         public int AppsRoomId { get; set; }
-
         public string AppsHomeId { get; set; }
-
         public string Name { get; set; }
         public int RoomNumber { get; set; }
         public string Comment { get; set; }
@@ -31,10 +28,8 @@ namespace SmartHome.Model.Models
         public AuditFields AuditField { get; set; }
         #endregion
 
-        #region Navigation Properties
-        
+        #region Navigation Properties        
         public virtual ICollection<SmartDevice> SmartDevices { get; set; }        
-        public virtual ICollection<UserRoomLink> UserRoomLinks { get; set; }
         public virtual Home Home { get; set; }
         #endregion
     }

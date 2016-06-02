@@ -11,9 +11,10 @@ namespace SmartHome.Model.Models
 {
     public class UserHomeLink: Entity
     {
-        [Key, Column(Order = 0)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserHomeLinkId { get; set; }
         public int AppsHomeId { get; set; }
-        [Key, Column(Order = 1)]
         public int AppsUserId { get; set; }
         public int AppsUserHomeLinkId { get; set; }
         public virtual Home Home { get; set; }

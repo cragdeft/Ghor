@@ -22,9 +22,6 @@ namespace SmartHome.Entity
         [JsonProperty("Version")]
         public string DeviceVersion { get; set; }
         public bool IsDeleted { get; set; }
-        public string Mac { get; set; }
-        //[JsonProperty("DeviceType")]
-       // public string DeviceType { get; set; }
         public DeviceType? DeviceType { get; set; }
         public int Watt { get; set; }
         [JsonProperty("Room")]

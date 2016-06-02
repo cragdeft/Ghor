@@ -130,47 +130,6 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlSe
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.xml
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.Resource.resources
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef6.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Entity.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Json.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Model.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Service.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\LinqKit.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Newtonsoft.Json.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\AutoMapper.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef6.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Entity.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Json.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Model.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Service.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Repository.pdb
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
-E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.xml
 C:\AplombSmartHome\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll
@@ -227,3 +186,51 @@ F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\Elmah.dll
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.pdb
 F:\Projects\Smart Home Web\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.WebBrokerResouce.resources
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.MQTT.Client.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef6.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Entity.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Json.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Model.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Service.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\LinqKit.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Newtonsoft.Json.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\AutoMapper.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Elmah.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Web.Infrastructure.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\System.Data.SqlServerCe.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.Ef6.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Repository.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Service.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Entity.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Json.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Logging.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Model.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\SmartHome.Service.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\EntityFramework.SqlServer.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\M2Mqtt.Net.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.ServiceLocation.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Practices.Unity.RegistrationByConvention.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\System.Web.Mvc.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\bin\Debug\Microsoft.Web.Infrastructure.xml
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csprojResolveAssemblyReference.cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.Resource.resources
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.WebBrokerResouce.resources
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.csproj.GenerateResource.Cache
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.dll
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\SmartHome.MQTT.Client\obj\Debug\SmartHome.MQTT.Client.pdb

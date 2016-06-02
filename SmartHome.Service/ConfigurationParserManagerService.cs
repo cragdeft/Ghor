@@ -28,7 +28,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartDevice> _smartDeviceRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
-        private readonly IRepositoryAsync<SmartRouterInfo> _smartRouterInfoRepository;
+        private readonly IRepositoryAsync<RouterInfo> _smartRouterInfoRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
         private readonly IRepositoryAsync<UserRole> _userRoleRepository;
 
@@ -45,7 +45,7 @@ namespace SmartHome.Service
             _smartDeviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
             _roomRepository = unitOfWork.RepositoryAsync<Room>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
-            _smartRouterInfoRepository = unitOfWork.RepositoryAsync<SmartRouterInfo>();
+            _smartRouterInfoRepository = unitOfWork.RepositoryAsync<RouterInfo>();
             _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
             _userRoleRepository = unitOfWork.RepositoryAsync<UserRole>();
         }
@@ -278,35 +278,35 @@ namespace SmartHome.Service
 
         private void AddOrEditExistingRourterItems(Home item, Home existingItem)
         {
-            foreach (var nextRouter in item.SmartRouterInfoes)
-            {
-                var tempRouter = _smartRouterInfoRepository.Query(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).Select();
-                //var tempRouter = _smartRouterInfoRepository.Query(p => p.MacAddress==nextRouter.MacAddress).Select();
-                if (tempRouter != null && tempRouter.Count() > 0)
-                {
-                    var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).FirstOrDefault();
-                    //modify
-                    FillExistingRouterInfo(nextRouter, tempExistingRouter);
-                }
-                else
-                {
-                    //add
-                    existingItem.SmartRouterInfoes.Add(nextRouter);
-                }
-            }
+            //foreach (var nextRouter in item.SmartRouterInfoes)
+            //{
+            //    var tempRouter = _smartRouterInfoRepository.Query(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).Select();
+            //    //var tempRouter = _smartRouterInfoRepository.Query(p => p.MacAddress==nextRouter.MacAddress).Select();
+            //    if (tempRouter != null && tempRouter.Count() > 0)
+            //    {
+            //        var tempExistingRouter = existingItem.SmartRouterInfoes.Where(p => p.Id == nextRouter.Id && p.HId == nextRouter.HId).FirstOrDefault();
+            //        //modify
+            //        FillExistingRouterInfo(nextRouter, tempExistingRouter);
+            //    }
+            //    else
+            //    {
+            //        //add
+            //        existingItem.SmartRouterInfoes.Add(nextRouter);
+            //    }
+            //}
         }
 
 
-        private void FillExistingRouterInfo(SmartRouterInfo nextRouterDetail, SmartRouterInfo tempExistingRouterDetail)
+        private void FillExistingRouterInfo(RouterInfo nextRouterDetail, RouterInfo tempExistingRouterDetail)
         {
             tempExistingRouterDetail.ObjectState = ObjectState.Modified;
-            tempExistingRouterDetail.Id = nextRouterDetail.Id;
-            tempExistingRouterDetail.HId = nextRouterDetail.HId;
+            //tempExistingRouterDetail.Id = nextRouterDetail.Id;
+            //tempExistingRouterDetail.HId = nextRouterDetail.HId;
             tempExistingRouterDetail.LocalBrokerUsername = nextRouterDetail.LocalBrokerUsername;
             tempExistingRouterDetail.LocalBrokerPassword = nextRouterDetail.LocalBrokerPassword;
             tempExistingRouterDetail.Ssid = nextRouterDetail.Ssid;
             tempExistingRouterDetail.IsSynced = nextRouterDetail.IsSynced;
-            tempExistingRouterDetail.IsActive = nextRouterDetail.IsActive;
+            //tempExistingRouterDetail.IsActive = nextRouterDetail.IsActive;
             tempExistingRouterDetail.AuditField = new AuditFields();
         }
         #endregion
@@ -1083,22 +1083,22 @@ namespace SmartHome.Service
             try
             {
 
-                var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
-                var temp = _userHomeLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfoId).Include(x => x.UserInfo).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms.Select(q => q.UserRoomLinks)).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
-                if (IsAdmin == false)
-                {
-                    if (temp.Count > 0)
-                    {
-                        var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
-                        if (tempRoom != null && tempRoom.Count > 0)
-                        {
-                            var tempUserRoom= tempRoom.First().UserRoomLinks.Where(p => p.UserInfo.UserInfoId == userInfoId).ToList();
-                            tempRoom.First().UserRoomLinks = new List<UserRoomLink>();
-                            tempRoom.First().UserRoomLinks = tempUserRoom;
-                        }                        
-                        temp.First().Home.Rooms = new List<Room>();
-                        temp.First().Home.Rooms = tempRoom;
-                    }
+                //var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
+                //var temp = _userHomeLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfoId).Include(x => x.UserInfo).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms.Select(q => q.UserRoomLinks)).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
+                //if (IsAdmin == false)
+                //{
+                //    if (temp.Count > 0)
+                //    {
+                //        var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
+                //        if (tempRoom != null && tempRoom.Count > 0)
+                //        {
+                //            var tempUserRoom= tempRoom.First().UserRoomLinks.Where(p => p.UserInfo.UserInfoId == userInfoId).ToList();
+                //            tempRoom.First().UserRoomLinks = new List<UserRoomLink>();
+                //            tempRoom.First().UserRoomLinks = tempUserRoom;
+                //        }                        
+                //        temp.First().Home.Rooms = new List<Room>();
+                //        temp.First().Home.Rooms = tempRoom;
+                //    }
 
 
 
@@ -1113,8 +1113,8 @@ namespace SmartHome.Service
 
 
 
-                }
-                return temp;
+                //}
+                //return temp;
             }
             catch (System.Exception ex)
             {

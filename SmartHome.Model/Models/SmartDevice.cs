@@ -33,9 +33,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region  Navigation Properties
-
         public virtual ICollection<DeviceStatus> DeviceStatus { get; set; }
-        //public virtual ICollection<RgbwStatus> RgbwStatuses { get; set; }
         public virtual Room Room { get; set; }
         #endregion
     }

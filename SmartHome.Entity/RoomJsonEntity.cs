@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace SmartHome.Entity
 {
     
-
     public class HomeJsonEntity
     {
         public List<VersionDetailEntity> VersionDetails { get; set; }
@@ -16,7 +15,7 @@ namespace SmartHome.Entity
         public List<SmartDeviceEntity> Device { get; set; }
         public List<UserRoomLinkEntity> UserRoomLink { get; set; }
         public List<NextAssociatedDeviceEntity> NextAssociatedDeviceId { get; set; }
-        public List<SmartRouterEntity> RouterInfo { get; set; }
+        public List<RouterInfoEntity> RouterInfo { get; set; }
         public List<ChannelStatusEntity> ChannelStatus { get; set; }
         public List<RoomEntity> Room { get; set; }
         public int DatabaseVersion { get; set; }

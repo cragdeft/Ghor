@@ -34,7 +34,7 @@ namespace SmartHome.Entity
 
         public IEnumerable<RoomEntity> Room { get; set; }
 
-        public IEnumerable<SmartRouterEntity> RouterInfo { get; set; }
+        public IEnumerable<RouterInfoEntity> RouterInfo { get; set; }
 
     }
 
@@ -67,7 +67,7 @@ namespace SmartHome.Entity
             Channel = new List<ChannelEntity>();
             ChannelStatus = new List<ChannelStatusEntity>();
             RgbwStatus = new List<RgbwStatusEntity>();
-            RouterInfo = new List<SmartRouterEntity>();
+            RouterInfo = new List<RouterInfoEntity>();
             DeviceStatus = new List<DeviceStatusEntity>();
         }
         public List<UserInfoEntity> UserInfo { get; set; }
@@ -90,7 +90,7 @@ namespace SmartHome.Entity
 
 
         public List<RgbwStatusEntity> RgbwStatus { get; set; }
-        public List<SmartRouterEntity> RouterInfo { get; set; }
+        public List<RouterInfoEntity> RouterInfo { get; set; }
 
 
 
