@@ -372,7 +372,7 @@ namespace SmartHome.Service
                 {
                     userHomeLink.UserInfo = null;
                     userHomeLink.Home = null;
-                    userHomeLink.ObjectState = ObjectState.Modified;
+                    userHomeLink.ObjectState = ObjectState.Deleted;
                     _userHomeRepository.Delete(userHomeLink);
                 }
         }
@@ -384,7 +384,7 @@ namespace SmartHome.Service
                 {
                     userRoomLink.UserInfo = null;
                     userRoomLink.Room = null;
-                    userRoomLink.ObjectState = ObjectState.Modified;
+                    userRoomLink.ObjectState = ObjectState.Deleted;
                     _userRoomRepository.Delete(userRoomLink);
                 }
         }
