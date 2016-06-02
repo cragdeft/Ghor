@@ -80,13 +80,14 @@ namespace SmartHome.Service
             return Mapper.Map<Home, HomeEntity>(home);
         }
 
-        public UserInfoEntity GetUser(string email)
+        public UserInfo GetUser(string email)
         {
             UserInfo user = _userRepository
                 .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
 
-            Mapper.CreateMap<UserInfo, UserInfoEntity>();
-            return Mapper.Map<UserInfo, UserInfoEntity>(user);
+            //Mapper.CreateMap<UserInfo, UserInfoEntity>();
+            //return Mapper.Map<UserInfo, UserInfoEntity>(user);
+            return user;
         }
 
         public Home InsertHome(HomeEntity home)
@@ -349,17 +350,18 @@ namespace SmartHome.Service
                     InsertUser(userInfoEntity);
                 else
                 {
-                    UpdateUser(userInfoEntity);
+                    UpdateUser(userInfoEntity, dbUserEntity);
                 }
             }
         }
 
-        private UserInfo UpdateUser(UserInfoEntity userInfoEntity)
+        private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
         {
-            var entity = MapUserProperty(userInfoEntity);
+            var entity = MapUserProperty(userInfoEntity, dbUserEntity);
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
             DeleteRoomUser(entity);
+            DeleteHomeUser(entity);
             return entity;
         }
 
@@ -467,10 +469,10 @@ namespace SmartHome.Service
 
         private void SaveHomeUser(Home home)
         {
-            var roomUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
-            if (roomUserList != null && roomUserList.Count > 0)
+            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
+            if (homeUserList != null && homeUserList.Count > 0)
             {
-                foreach (var userRoomLinkEntity in roomUserList)
+                foreach (var userRoomLinkEntity in homeUserList)
                 {
                     UserInfoEntity userentity =
                         _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
@@ -587,10 +589,10 @@ namespace SmartHome.Service
             return model;
         }
 
-        private UserInfo MapUserProperty(UserInfoEntity userEntity)
+        private UserInfo MapUserProperty(UserInfoEntity userEntity, UserInfo model)
         {
-            UserInfo model = _userRepository
-               .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
+            //UserInfo model = _userRepository
+            //   .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
 
             model.AppsUserId = userEntity.AppsUserId;
             model.LoginStatus = userEntity.LoginStatus;
