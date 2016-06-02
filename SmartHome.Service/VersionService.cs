@@ -80,7 +80,7 @@ namespace SmartHome.Service
             foreach (var item in model)
             {
                 //check already exist or not.
-                IEnumerable<Version> temp = IsVersionExists(item.Id, item.Mac);
+                IEnumerable<Version> temp = IsVersionExists(item.AppsVersionId, item.Mac);
                 if (temp.Count() == 0)
                 {
                     //new item
@@ -114,7 +114,7 @@ namespace SmartHome.Service
         {
             foreach (var nextVDetail in item.VersionDetails)
             {
-                var tempExistingVDetail = existingItem.VersionDetails.Where(p => p.Id == nextVDetail.Id).FirstOrDefault();
+                var tempExistingVDetail = existingItem.VersionDetails.Where(p => p.AppsVersionDetailId == nextVDetail.AppsVersionDetailId).FirstOrDefault();
                 if (tempExistingVDetail != null)
                 {
                     //modify
@@ -131,8 +131,8 @@ namespace SmartHome.Service
         private void FillExistingVDetailInfo(VersionDetail nextVDetail, VersionDetail tempExistingVDetail)
         {
             tempExistingVDetail.ObjectState = ObjectState.Modified;
-            tempExistingVDetail.Id = nextVDetail.Id;
-            tempExistingVDetail.VId = nextVDetail.VId;
+            tempExistingVDetail.AppsVersionDetailId = nextVDetail.AppsVersionDetailId;
+            tempExistingVDetail.AppsVersionId = nextVDetail.AppsVersionId;
             tempExistingVDetail.HardwareVersion = nextVDetail.HardwareVersion;
             tempExistingVDetail.DeviceType = nextVDetail.DeviceType;
             tempExistingVDetail.AuditField = new AuditFields();
@@ -145,17 +145,15 @@ namespace SmartHome.Service
             existingItem.AuditField = new AuditFields();
             existingItem.AuthCode = item.AuthCode;
             existingItem.Mac = item.Mac;
-            existingItem.Id = item.Id;
+            existingItem.AppsVersionId = item.AppsVersionId;
             existingItem.ObjectState = ObjectState.Modified;
         }
 
-        private IEnumerable<Version> IsVersionExists(string key, string Mac)
+        private IEnumerable<Version> IsVersionExists(int key, string Mac)
         {
-            return _repository.Query(e => e.Id == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
+            return _repository.Query(e => e.AppsVersionId == key && e.Mac == Mac).Include(x => x.VersionDetails).Select();
         }
-
-
-
+        
         #endregion
 
         public VersionEntity Modify(VersionEntity entity)
@@ -174,13 +172,11 @@ namespace SmartHome.Service
                 throw;
             }
         }
-
         public void Remove(string id)
         {
 
             base.Delete(id);
         }
-
         public void Remove(VersionEntity entity)
         {
             Version model = Mapper.Map<VersionEntity, Version>(entity);
@@ -188,9 +184,6 @@ namespace SmartHome.Service
             model.ObjectState = ObjectState.Deleted;
             base.Delete(model);
         }
-
-
-
         public IEnumerable<VersionInfoEntity> GetsAllVersion()
         {
             // add business logic here

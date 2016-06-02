@@ -12,6 +12,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.Interfaces;
 
 namespace SmartHome.Service
 {
@@ -30,6 +31,9 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<NextAssociatedDevice> _nextAssociatedDeviceRepository;
+        private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
+        private readonly IVersionService _versionService;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         private string _email;
         #endregion
@@ -48,6 +52,10 @@ namespace SmartHome.Service
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
             _nextAssociatedDeviceRepository = _unitOfWorkAsync.RepositoryAsync<NextAssociatedDevice>();
+            _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            var versionService = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
+            _versionService = new VersionService(versionService);
             _homeJsonEntity = homeJsonEntity;
         }
         public SmartRouterEntity GetRouter(string macAddress)
@@ -114,8 +122,22 @@ namespace SmartHome.Service
 
                 List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
                 InsertChannel(sswitch, channelList);
+                List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId);
+                InsertRgbwStatus(sswitch, rgbtStatusList);
             }
 
+        }
+
+        private void InsertRgbwStatus(SmartSwitch sswitch, List<RgbwStatusEntity> rgbtStatusList)
+        {
+            foreach (var rgbtStatus in rgbtStatusList)
+            {
+                var entity = Mapper.Map<RgbwStatusEntity, RgbwStatus>(rgbtStatus);
+                entity.SmartDevice = sswitch;
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _rgbwStatusRepository.Insert(entity);
+            }
         }
 
         private SmartSwitch MapToSmartSwitch(SmartDevice model)
@@ -225,9 +247,18 @@ namespace SmartHome.Service
 
             SaveOrUpdateRouter(router, model);
             model = SaveOrUpdateRoom(model);
-            //AddUserHomeLink();
+            SaveHomeUser(model);
             SaveOrUpdateDevice(model);
             SaveOrUpdateNextAssociatedDevice();
+            //SaveOrUpdateVersion();
+        }
+
+        private void SaveOrUpdateVersion()
+        {
+            foreach (var versionEntity in _homeJsonEntity.Version)
+            {
+                _versionService.Add(versionEntity);
+            }
         }
 
         private void SaveOrUpdateNextAssociatedDevice()
@@ -373,8 +404,35 @@ namespace SmartHome.Service
                     userRoom.Room = entity;
                     userRoom.IsSynced = userRoomLinkEntity.IsSynced;
                     userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
+                    userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
+                    userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
                     userRoom.ObjectState = ObjectState.Added;
                     _userRoomLinkRepository.Insert(userRoom);
+                }
+            }
+
+
+        }
+
+        private void SaveHomeUser(Home home)
+        {
+            var roomUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
+            if (roomUserList != null && roomUserList.Count > 0)
+            {
+                foreach (var userRoomLinkEntity in roomUserList)
+                {
+                    UserInfoEntity userentity =
+                        _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
+                    UserHomeLink userHome = new UserHomeLink();
+                    userHome.UserInfo = _userRepository
+                .Queryable().Where(u => u.Email == userentity.Email).FirstOrDefault();
+                    userHome.Home = home;
+                    userHome.IsSynced = userRoomLinkEntity.IsSynced;
+                    userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
+                    userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
+                    userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
+                    userHome.ObjectState = ObjectState.Added;
+                    _userHomeRepository.Insert(userHome);
                 }
             }
 
@@ -427,6 +485,7 @@ namespace SmartHome.Service
             Mapper.CreateMap<ChannelStatusEntity, ChannelStatus>();
             Mapper.CreateMap<DeviceStatusEntity, DeviceStatus>();
             Mapper.CreateMap<ChannelEntity, Channel>();
+            Mapper.CreateMap<RgbwStatusEntity, RgbwStatus>();
         }
 
         private Home MapHomeProperty(HomeEntity home)

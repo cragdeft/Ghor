@@ -10,6 +10,7 @@ namespace SmartHome.Entity
     public class UserRoomLinkEntity
     {
         public int UserRoomLinkEntityId { get; set; }
+        [JsonProperty("Id")]
         public int AppsUserRoomLinkId { get; set; }
         [JsonProperty("User")]
         public int AppsUserId { get; set; }

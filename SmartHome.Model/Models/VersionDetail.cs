@@ -16,12 +16,12 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int VersionDetailId { get; set; }
-        public int Id { get; set; }
-        public string VId { get; set; }
+        public int AppsVersionDetailId { get; set; }
+        public int AppsVersionId { get; set; }
         public string HardwareVersion { get; set; }
-
         public string DType { get; set; }
         public DeviceType? DeviceType { get; set; }
+        public bool IsSynced { get; set; }
 
         #endregion
 

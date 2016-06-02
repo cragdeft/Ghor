@@ -16,8 +16,8 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RgbwStatusId { get; set; }
-        public int Id { get; set; }
-        public int DId { get; set; }
+        public int AppsRgbtStatusId { get; set; }
+        public int AppsDeviceId { get; set; }
         public RGBColorStatusType RGBColorStatusType { get; set; }
         public bool IsPowerOn { get; set; }
         public int ColorR { get; set; }
@@ -25,6 +25,7 @@ namespace SmartHome.Model.Models
         public int ColorB { get; set; }
         public bool IsWhiteEnabled { get; set; }
         public int DimmingValue { get; set; }
+        public bool IsSynced { get; set; }
 
         #endregion
 

@@ -203,8 +203,8 @@ namespace SmartHome.Json
                 var userRoomLink = new UserRoomLink
                 {
                     AppsUserRoomLinkId = item.AppsUserRoomLinkId,
-                    RId = Convert.ToInt32(item.AppsRoomId),                    
-                    UInfoId = Convert.ToInt32(item.AppsUserId),
+                    AppsRoomId = Convert.ToInt32(item.AppsRoomId),                    
+                    AppsUserId = Convert.ToInt32(item.AppsUserId),
                     Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.AppsRoomId),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
                     IsSynced = item.IsSynced,
@@ -220,7 +220,7 @@ namespace SmartHome.Json
         {
             foreach (var item in oVersion)
             {
-                item.VersionDetails = oVersionDetail.Where(p => p.VId == item.Id).ToArray();
+                item.VersionDetails = oVersionDetail.Where(p => p.AppsVersionId == item.AppsVersionId).ToArray();
             }
         }
 
@@ -247,7 +247,7 @@ namespace SmartHome.Json
 
             foreach (var item in oDevice)
             {
-                item.RgbwStatuses = oRgbwStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
+                item.RgbwStatuses = oRgbwStatus.Where(p => p.AppsDeviceId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);

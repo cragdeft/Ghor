@@ -12,12 +12,13 @@ namespace SmartHome.Entity
         #region Primitive Properties
 
         public int VersionDetailId { get; set; }
-        //[JsonProperty("ID")]
-        public int Id { get; set; }
+        [JsonProperty("ID")]
+        public int AppsVersionDetailId { get; set; }
         [JsonProperty("VersionId")]
-        public string VId { get; set; }
+        public int AppsVersionId { get; set; }
         public string HardwareVersion { get; set; }
         public int DeviceType { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
 
