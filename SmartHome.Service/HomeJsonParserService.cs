@@ -69,13 +69,14 @@ namespace SmartHome.Service
             return Mapper.Map<Home, HomeEntity>(home);
         }
 
-        public UserInfoEntity GetUser(string email)
+        public UserInfo GetUser(string email)
         {
             UserInfo user = _userRepository
                 .Queryable().Where(u => u.Email == email).FirstOrDefault();
 
-            Mapper.CreateMap<UserInfo, UserInfoEntity>();
-            return Mapper.Map<UserInfo, UserInfoEntity>(user);
+            //Mapper.CreateMap<UserInfo, UserInfoEntity>();
+            //return Mapper.Map<UserInfo, UserInfoEntity>(user);
+            return user;
         }
 
         public Home InsertHome(HomeEntity home)
@@ -280,14 +281,14 @@ namespace SmartHome.Service
                     InsertUser(userInfoEntity);
                 else
                 {
-                    UpdateUser(userInfoEntity);
+                    UpdateUser(userInfoEntity, dbUserEntity);
                 }
             }
         }
 
-        private UserInfo UpdateUser(UserInfoEntity userInfoEntity)
+        private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
         {
-            var entity = MapUserProperty(userInfoEntity);
+            var entity = MapUserProperty(userInfoEntity, dbUserEntity);
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
             DeleteRoomUser(entity);
@@ -475,10 +476,10 @@ namespace SmartHome.Service
             return model;
         }
 
-        private UserInfo MapUserProperty(UserInfoEntity userEntity)
+        private UserInfo MapUserProperty(UserInfoEntity userEntity, UserInfo model)
         {
-            UserInfo model = _userRepository
-               .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
+            //UserInfo model = _userRepository
+            //   .Queryable().Where(u => u.Email == userEntity.Email).FirstOrDefault();
 
             model.AppsUserId = userEntity.AppsUserId;
             model.LoginStatus = userEntity.LoginStatus;
