@@ -294,10 +294,9 @@ namespace SmartHome.Service
             model = SaveOrUpdateRoom(model, listOfUsers);
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
-            //SaveOrUpdateNextAssociatedDevice(model);
+            SaveOrUpdateNextAssociatedDevice(model);
             //SaveOrUpdateVersion(model);
         }
-
         private void SaveOrUpdateVersion()
         {
             List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
@@ -312,7 +311,6 @@ namespace SmartHome.Service
             }
             List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
         }
-
         private void SaveOrUpdateNextAssociatedDevice(Model.Models.Home home)
         {
             var nextDevice = _nextAssociatedDeviceRepository
@@ -333,29 +331,6 @@ namespace SmartHome.Service
                 _nextAssociatedDeviceRepository.Update(nextDevice);
             }
         }
-
-        private void AddUserRoomLink()
-        {
-            foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
-            {
-                UserInfoEntity userInfo = _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
-                UserInfo user = _userRepository
-                .Queryable().Where(u => u.Email == userInfo.Email).FirstOrDefault();
-
-                if (user.UserRoomLinks != null && user.UserRoomLinks.Count > 0)
-                {
-                    var userRoomLinkList = user.UserRoomLinks.ToList().FindAll(x => x.UserInfo.Email == userInfo.Email);
-                    foreach (var b in userRoomLinkList)
-                    {
-                        b.UserInfo = null;
-                        b.ObjectState = ObjectState.Modified;
-                        _userRoomLinkRepository.Insert(b);
-
-                    }
-                }
-            }
-        }
-
         private IList<UserInfo> SaveOrUpdateUser()
         {
             IList<UserInfo> listOfUsers = new List<UserInfo>();
@@ -374,7 +349,6 @@ namespace SmartHome.Service
             }
             return listOfUsers;
         }
-
         private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
         {
             var entity = MapUserProperty(userInfoEntity, dbUserEntity);
@@ -384,7 +358,6 @@ namespace SmartHome.Service
             DeleteHomeUser(entity);
             return entity;
         }
-
         private void DeleteHomeUser(UserInfo entity)
         {
             IList<int> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
@@ -395,7 +368,6 @@ namespace SmartHome.Service
                 _userHomeRepository.Delete(userHomeLink);
             }
         }
-
         private void DeleteRoomUser(UserInfo entity)
         {
             IList<int> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
@@ -406,7 +378,6 @@ namespace SmartHome.Service
                 _userRoomRepository.Delete(userRoomLink);
             }
         }
-
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
         {
             UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
@@ -415,7 +386,6 @@ namespace SmartHome.Service
             _userRepository.Insert(entity);
             return entity;
         }
-
         private void SaveOrUpdateDevice(Home model)
         {
             foreach (var room in model.Rooms)
@@ -427,13 +397,7 @@ namespace SmartHome.Service
                     InsertDevice(smartDevice, room);
                 }
             }
-        }
-
-        private void DeleteAllDevices()
-        {
-            throw new NotImplementedException();
-        }
-
+        }       
         private Home SaveOrUpdateRoom(Home model, IList<UserInfo> listOfUsers)
         {
             if (model.Rooms != null)
@@ -444,7 +408,6 @@ namespace SmartHome.Service
             }
             return InsertAllRooms(model, listOfUsers);
         }
-
         private Home InsertAllRooms(Home home, IList<UserInfo> listOfUsers)
         {
             home.Rooms = new List<Room>();
@@ -460,7 +423,6 @@ namespace SmartHome.Service
 
             return home;
         }
-
         private void SaveRoomUser(Room entity, IList<UserInfo> listOfUsers)
         {
             var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
@@ -479,7 +441,6 @@ namespace SmartHome.Service
                 _userRoomLinkRepository.Insert(userRoom);
             }
         }
-
         private void SaveHomeUser(Model.Models.Home home, IList<UserInfo> listOfUsers)
         {
             var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
@@ -498,7 +459,6 @@ namespace SmartHome.Service
                 _userHomeRepository.Insert(userHome);
             }
         }
-
         private void DeleteAllRooms(IList<int> roomIds)
         {
             foreach (var roomId in roomIds)
@@ -510,8 +470,6 @@ namespace SmartHome.Service
                 _roomRepository.Delete(dbRoom);
             }
         }
-
-
         private void SaveOrUpdateRouter(RouterInfoEntity router, Home home)
         {
             if (router == null)
@@ -523,7 +481,6 @@ namespace SmartHome.Service
                 UpdateRouter(_homeJsonEntity.RouterInfo[0]);
             }
         }
-
         private Home SaveOrUpdateHome(HomeEntity homeEntity)
         {
             if (homeEntity == null)
@@ -534,7 +491,6 @@ namespace SmartHome.Service
             {
                 return UpdateHome(_homeJsonEntity.Home[0]);
             }
-
         }
 
         #region Mapping
