@@ -85,7 +85,7 @@ namespace SmartHome.Service
         public UserInfo GetUser(string email)
         {
             UserInfo user = _userRepository
-                .Queryable().Where(u => u.Email == email).FirstOrDefault();
+                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
 
             //Mapper.CreateMap<UserInfo, UserInfoEntity>();
             //return Mapper.Map<UserInfo, UserInfoEntity>(user);
@@ -282,8 +282,13 @@ namespace SmartHome.Service
             model = SaveOrUpdateRoom(model, listOfUsers);
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
+<<<<<<< HEAD
             //SaveOrUpdateNextAssociatedDevice(model);
             //SaveOrUpdateVersion(model);
+=======
+            //SaveOrUpdateNextAssociatedDevice();
+            //SaveOrUpdateVersion();
+>>>>>>> d10c3a7e114a29b790e7629ed9723e18dcc11261
         }
 
         private void SaveOrUpdateVersion()
@@ -369,7 +374,20 @@ namespace SmartHome.Service
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
             DeleteRoomUser(entity);
+            DeleteHomeUser(entity);
             return entity;
+        }
+
+        private void DeleteHomeUser(UserInfo entity)
+        {
+            if (entity.UserHomeLinks != null && entity.UserHomeLinks.Count > 0)
+                foreach (var userHomeLink in entity.UserHomeLinks)
+                {
+                    userHomeLink.UserInfo = null;
+                    userHomeLink.Home = null;
+                    userHomeLink.ObjectState = ObjectState.Deleted;
+                    _userHomeRepository.Delete(userHomeLink);
+                }
         }
 
         private void DeleteRoomUser(UserInfo entity)
@@ -378,7 +396,8 @@ namespace SmartHome.Service
                 foreach (var userRoomLink in entity.UserRoomLinks)
                 {
                     userRoomLink.UserInfo = null;
-                    userRoomLink.ObjectState = ObjectState.Modified;
+                    userRoomLink.Room = null;
+                    userRoomLink.ObjectState = ObjectState.Deleted;
                     _userRoomRepository.Delete(userRoomLink);
                 }
         }
