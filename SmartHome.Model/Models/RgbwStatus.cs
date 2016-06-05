@@ -34,7 +34,7 @@ namespace SmartHome.Model.Models
         #endregion
 
         #region  Navigation Properties
-        public virtual SmartDevice SmartDevice { get; set; }
+        public virtual SmartRainbow SmartRainbow { get; set; }
         #endregion
 
     }

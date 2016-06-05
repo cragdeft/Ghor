@@ -3,6 +3,7 @@ using SmartHome.Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,40 +46,37 @@ namespace SmartHome.Model.ModelDataContext
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-           modelBuilder.Entity<SmartDevice>()
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            modelBuilder.Entity<SmartDevice>()
           .Map<SmartSwitch>(m => m.Requires("Discriminator").HasValue("SmartSwitch"))
           .Map<SmartRouter>(m => m.Requires("Discriminator").HasValue("SmartRouter"))
           .Map<SmartRainbow>(m => m.Requires("Discriminator").HasValue("SmartRainbow"));
 
-            //modelBuilder.Entity<Room>()
-            // .HasMany(u => u.SmartDevices)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
+            modelBuilder.Entity<SmartDevice>()
+            .HasRequired(t => t.Room)
+            .WithMany(c => c.SmartDevices)
+            .WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<SmartDevice>()
-            // .HasMany(u => u.DeviceStatus)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
+            modelBuilder.Entity<DeviceStatus>()
+            .HasRequired(t => t.SmartDevice)
+            .WithMany(c => c.DeviceStatus)
+            .WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<SmartRainbow>()
-            // .HasMany(u => u.RgbwStatuses)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
+            modelBuilder.Entity<RgbwStatus>()
+            .HasRequired(t => t.SmartRainbow)
+            .WithMany(c => c.RgbwStatuses)
+            .WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<Channel>()
-            // .HasMany(u => u.ChannelStatuses)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
+            modelBuilder.Entity<Channel>()
+            .HasRequired(t => t.SmartSwitch)
+            .WithMany(c => c.Channels)
+            .WillCascadeOnDelete(true);
 
-            //modelBuilder.Entity<SmartSwitch>()
-            // .HasMany(u => u.Channels)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
-
-            //modelBuilder.Entity<SmartSwitch>()
-            // .HasMany(u => u.DeviceStatus)
-            // .WithOptional()
-            // .WillCascadeOnDelete(true);
+            modelBuilder.Entity<ChannelStatus>()
+            .HasRequired(t => t.Channel)
+            .WithMany(c => c.ChannelStatuses)
+            .WillCascadeOnDelete(true);
 
             base.OnModelCreating(modelBuilder);
         }

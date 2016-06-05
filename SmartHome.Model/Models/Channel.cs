@@ -29,8 +29,8 @@ namespace SmartHome.Model.Models
         public AuditFields AuditField { get; set; }
         #endregion
 
-        #region Navigation Properties
-     
+        #region Navigation Properties    
+        public virtual SmartSwitch SmartSwitch { get; set; }
         public virtual ICollection<ChannelStatus> ChannelStatuses { get; set; }
         #endregion
 

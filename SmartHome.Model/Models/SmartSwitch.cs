@@ -9,8 +9,7 @@ namespace SmartHome.Model.Models
     public class SmartSwitch : SmartDevice
     {
         #region  Navigation Properties      
-        public virtual ICollection<Channel> Channels { get; set; }
-      
+        public virtual ICollection<Channel> Channels { get; set; }      
         #endregion
     }
 }

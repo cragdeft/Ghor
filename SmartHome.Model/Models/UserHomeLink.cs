@@ -21,8 +21,5 @@ namespace SmartHome.Model.Models
         public virtual UserInfo UserInfo { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsSynced { get; set; }
-
-
-       
     }
 }

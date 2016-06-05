@@ -110,46 +110,58 @@ namespace SmartHome.Service
 
             if (device.DeviceType == DeviceType.SmartSwitch6g)
             {
-                SmartSwitch sswitch = MapToSmartSwitch(model);
-                sswitch.Room = room;
-                sswitch.ObjectState = ObjectState.Added;
-                sswitch.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                _deviceRepository.Insert(sswitch);
-
-                foreach (var deviceStatusEntity in deviceStatuses)
-                {
-                    var entity = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
-                    entity.ObjectState = ObjectState.Added;
-                    entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                    _deviceStatusRepository.Insert(entity);
-                    sswitch.DeviceStatus.Add(entity);
-                }
-
-
-                List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
-                InsertChannel(sswitch, channelList);
-                
+                InsertSmartDevices(device, room, model, deviceStatuses);
             }
-
             if (device.DeviceType == DeviceType.SmartRainbow12)
             {
-                SmartRainbow rainbow = MapToSmartRainbow(model);
-                rainbow.Room = room;
-                rainbow.ObjectState = ObjectState.Added;
-                rainbow.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                _deviceRepository.Insert(rainbow);
-                List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId);
-                InsertRgbwStatus(rainbow, rgbtStatusList);
+                InsertSmartRainbow(device, model, room);
             }
-
+            if (device.DeviceType == DeviceType.SmartRouter)
+            {
+                //InsertSmartSmartRouter(device, model, room);
+            }
         }
 
+        private void InsertSmartDevices(SmartDeviceEntity device, Room room, SmartDevice model, List<DeviceStatusEntity> deviceStatuses)
+        {
+            SmartSwitch sswitch = MapToSmartSwitch(model);
+            sswitch.Room = room;
+            sswitch.ObjectState = ObjectState.Added;
+            sswitch.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            _deviceRepository.Insert(sswitch);
+
+            InsertDeviceStatus(sswitch, deviceStatuses);
+
+            List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
+            InsertChannel(sswitch, channelList);
+        }
+        private void InsertDeviceStatus(SmartSwitch sswitch, List<DeviceStatusEntity> deviceStatuses)
+        {
+            foreach (var deviceStatusEntity in deviceStatuses)
+            {
+                var entity = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceStatusRepository.Insert(entity);
+                sswitch.DeviceStatus.Add(entity);
+            }
+        }
+        private void InsertSmartRainbow(SmartDeviceEntity device, SmartDevice model, Room room)
+        {
+            SmartRainbow rainbow = MapToSmartRainbow(model);
+            rainbow.Room = room;
+            rainbow.ObjectState = ObjectState.Added;
+            rainbow.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            _deviceRepository.Insert(rainbow);
+            List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId);
+            InsertRgbwStatus(rainbow, rgbtStatusList);
+        }
         private void InsertRgbwStatus(SmartRainbow sswitch, List<RgbwStatusEntity> rgbtStatusList)
         {
             foreach (var rgbtStatus in rgbtStatusList)
             {
                 var entity = Mapper.Map<RgbwStatusEntity, RgbwStatus>(rgbtStatus);
-                entity.SmartDevice = sswitch;
+                entity.SmartRainbow = sswitch;
                 entity.ObjectState = ObjectState.Added;
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _rgbwStatusRepository.Insert(entity);
@@ -224,7 +236,7 @@ namespace SmartHome.Service
 
         public Home UpdateHome(Entity.HomeEntity homeEntity)
         {
-            Model.Models.Home model = MapHomeProperty(homeEntity);
+            Home model = MapHomeProperty(homeEntity);
             model.ObjectState = ObjectState.Modified;
             _homeRepository.Update(model);
             return model;
@@ -282,13 +294,8 @@ namespace SmartHome.Service
             model = SaveOrUpdateRoom(model, listOfUsers);
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
-<<<<<<< HEAD
             //SaveOrUpdateNextAssociatedDevice(model);
             //SaveOrUpdateVersion(model);
-=======
-            //SaveOrUpdateNextAssociatedDevice();
-            //SaveOrUpdateVersion();
->>>>>>> d10c3a7e114a29b790e7629ed9723e18dcc11261
         }
 
         private void SaveOrUpdateVersion()
@@ -380,26 +387,24 @@ namespace SmartHome.Service
 
         private void DeleteHomeUser(UserInfo entity)
         {
-            if (entity.UserHomeLinks != null && entity.UserHomeLinks.Count > 0)
-                foreach (var userHomeLink in entity.UserHomeLinks)
-                {
-                    userHomeLink.UserInfo = null;
-                    userHomeLink.Home = null;
-                    userHomeLink.ObjectState = ObjectState.Deleted;
-                    _userHomeRepository.Delete(userHomeLink);
-                }
+            IList<int> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
+            foreach (var id in userHomeLinkIds)
+            {
+                UserHomeLink userHomeLink = _userHomeRepository.Find(id);
+                userHomeLink.ObjectState = ObjectState.Deleted;
+                _userHomeRepository.Delete(userHomeLink);
+            }
         }
 
         private void DeleteRoomUser(UserInfo entity)
         {
-            if (entity.UserRoomLinks != null && entity.UserRoomLinks.Count > 0)
-                foreach (var userRoomLink in entity.UserRoomLinks)
-                {
-                    userRoomLink.UserInfo = null;
-                    userRoomLink.Room = null;
-                    userRoomLink.ObjectState = ObjectState.Deleted;
-                    _userRoomRepository.Delete(userRoomLink);
-                }
+            IList<int> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
+            foreach (int userRoomLinkid in userHomeLinkIds)
+            {
+                UserRoomLink userRoomLink = _userRoomRepository.Find(userRoomLinkid);
+                userRoomLink.ObjectState = ObjectState.Deleted;
+                _userRoomRepository.Delete(userRoomLink);
+            }
         }
 
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
@@ -436,7 +441,6 @@ namespace SmartHome.Service
                 IList<int> roomIds = model.Rooms.Select(s => s.RoomId).ToList();
                 model.Rooms = new List<Room>();
                 DeleteAllRooms(roomIds);
-                return model;
             }
             return InsertAllRooms(model, listOfUsers);
         }
