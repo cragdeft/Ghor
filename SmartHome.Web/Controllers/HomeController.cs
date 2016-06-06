@@ -76,20 +76,22 @@ namespace SmartHome.Web.Controllers
         public ActionResult SmartHome()
         {
             using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
-                IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
-                try
+                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
-                    var homeViewModel = service.GetsHomesAllInfo(User.UserInfoId);
-                    var oVersion = service.GetsAppVersionAllInfo();
+                    IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
+                    try
+                    {
+                        var homeViewModel = service.GetsHomesAllInfo(User.UserInfoId);
+                        var oVersion = service.GetsAppVersionAllInfo();
 
-                    ViewBag.AppVersion = oVersion;
-                    return View(homeViewModel.UserHomeLinks.ToList());
-                }
-                catch (Exception ex)
-                {
-                    //unitOfWork.Rollback();
+                        ViewBag.AppVersion = oVersion;
+                        return View(homeViewModel.UserHomeLinks.ToList());
+                    }
+                    catch (Exception ex)
+                    {
+                        //unitOfWork.Rollback();
+                    }
                 }
             }
             ViewBag.AppVersion = null;
