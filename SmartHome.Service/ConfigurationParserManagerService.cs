@@ -1079,7 +1079,7 @@ namespace SmartHome.Service
 
         #region Gets homes infos
 
-        public HomeViewModel GetsHomesAllInfo(int userInfoId, bool IsAdmin)
+        public HomeViewModel GetsHomesAllInfo(int userInfoId)
         {
             try
             {

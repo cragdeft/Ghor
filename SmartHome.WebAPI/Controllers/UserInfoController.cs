@@ -248,7 +248,7 @@ namespace SmartHome.WebAPI.Controllers
         {
             HttpResponseMessage response;
             ObjectInitialization(oLoginObject);
-            var homeViewModel = serviceConfigure.GetsHomesAllInfo(user.UserInfoId, user.UserHomeLinks.FirstOrDefault() == null ? false : user.UserHomeLinks.FirstOrDefault().IsAdmin);
+            var homeViewModel = serviceConfigure.GetsHomesAllInfo(user.UserInfoId);
             FillLoginObjectByData(oLoginObject, homeViewModel);
             oRootObject.data = new LoginObjectEntity();
             oRootObject.data = oLoginObject;

@@ -8,7 +8,9 @@ using SmartHome.Web.Models;
 using SmartHome.Web.Security;
 using SmartHome.Web.Utility;
 using System;
+using System.Linq;
 using System.Web.Mvc;
+using SmartHome.Model.Models;
 
 namespace SmartHome.Web.Controllers
 {
@@ -79,11 +81,11 @@ namespace SmartHome.Web.Controllers
                 IConfigurationParserManagerService service = new ConfigurationParserManagerService(unitOfWork);
                 try
                 {
-                    var oUserHomeLink = service.GetsHomesAllInfo(User.UserInfoId,User.IsAdmin);
+                    var homeViewModel = service.GetsHomesAllInfo(User.UserInfoId);
                     var oVersion = service.GetsAppVersionAllInfo();
 
                     ViewBag.AppVersion = oVersion;
-                    return View(oUserHomeLink);
+                    return View(homeViewModel.UserHomeLinks.ToList());
                 }
                 catch (Exception ex)
                 {
