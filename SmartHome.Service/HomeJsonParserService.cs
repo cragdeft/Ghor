@@ -331,7 +331,6 @@ namespace SmartHome.Service
                 InsertVersion(home, versionEntity, versionDetails);
             }
         }
-
         private void InsertVersion(Home home, VersionEntity versionEntity, List<VersionDetailEntity> versionDetails)
         {
             Version version = Mapper.Map<VersionEntity, Version>(versionEntity);
@@ -341,8 +340,7 @@ namespace SmartHome.Service
             _versionRepository.Insert(version);
 
             InsertVersionDetails(version, versionDetails);
-        }
-        
+        }       
         private void InsertVersionDetails(Version version, List<VersionDetailEntity> versionDetailsEntity)
         {
             foreach (var verDetail in versionDetailsEntity)
