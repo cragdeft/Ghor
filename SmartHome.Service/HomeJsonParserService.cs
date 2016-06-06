@@ -118,10 +118,17 @@ namespace SmartHome.Service
             }
             if (device.DeviceType == DeviceType.SmartRouter)
             {
-                //InsertSmartSmartRouter(device, model, room);
+                InsertSmartRouter(device, model, room);
             }
         }
-
+        private void InsertSmartRouter(SmartDeviceEntity device, SmartDevice model, Room room)
+        {
+            SmartRouter router = MapToSmartRouter(model);
+            router.Room = room;
+            router.ObjectState = ObjectState.Added;
+            router.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            _deviceRepository.Insert(router);            
+        }
         private void InsertSmartDevices(SmartDeviceEntity device, Room room, SmartDevice model, List<DeviceStatusEntity> deviceStatuses)
         {
             SmartSwitch sswitch = MapToSmartSwitch(model);
@@ -145,7 +152,7 @@ namespace SmartHome.Service
                 _deviceStatusRepository.Insert(entity);
                 sswitch.DeviceStatus.Add(entity);
             }
-        }
+        }       
         private void InsertSmartRainbow(SmartDeviceEntity device, SmartDevice model, Room room)
         {
             SmartRainbow rainbow = MapToSmartRainbow(model);
@@ -185,7 +192,21 @@ namespace SmartHome.Service
             entity.DeviceStatus = new List<DeviceStatus>();
             return entity;
         }
-
+        private SmartRouter MapToSmartRouter(SmartDevice model)
+        {
+            SmartRouter entity = new SmartRouter();
+            entity.DeviceId = model.DeviceId;
+            entity.AppsDeviceId = model.AppsDeviceId;
+            entity.AppsBleId = model.AppsBleId;
+            entity.DeviceName = model.DeviceName;
+            entity.DeviceHash = model.DeviceHash;
+            entity.DeviceVersion = model.DeviceVersion;
+            entity.IsDeleted = model.IsDeleted;
+            entity.Watt = model.Watt;
+            entity.DeviceType = model.DeviceType;
+            entity.DeviceStatus = new List<DeviceStatus>();
+            return entity;
+        }
         private SmartRainbow MapToSmartRainbow(SmartDevice model)
         {
             SmartRainbow entity = new SmartRainbow();
@@ -295,19 +316,52 @@ namespace SmartHome.Service
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
             SaveOrUpdateNextAssociatedDevice(model);
-            //SaveOrUpdateVersion(model);
+            SaveOrUpdateVersion(model);
         }
-        private void SaveOrUpdateVersion(Home model)
+        private void SaveOrUpdateVersion(Home home)
         {
+            DeleteVersion(home);
             List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
             
             foreach (var versionEntity in versionEntityList)
             {
-                versionEntity.VersionDetails = new List<VersionDetailEntity>();
-                versionEntity.VersionDetails =
-                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);              
+                List<VersionDetailEntity> versionDetails =
+                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
+                
+                InsertVersion(home, versionEntity, versionDetails);
             }
-            List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
+        }
+
+        private void InsertVersion(Home home, VersionEntity versionEntity, List<VersionDetailEntity> versionDetails)
+        {
+            Version version = Mapper.Map<VersionEntity, Version>(versionEntity);
+            version.Home = home;
+            version.ObjectState = ObjectState.Added;
+            version.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            _versionRepository.Insert(version);
+
+            InsertVersionDetails(version, versionDetails);
+        }
+        
+        private void InsertVersionDetails(Version version, List<VersionDetailEntity> versionDetailsEntity)
+        {
+            foreach (var verDetail in versionDetailsEntity)
+            {
+                VersionDetail versionDetail = Mapper.Map<VersionDetailEntity, VersionDetail>(verDetail);
+                versionDetail.ObjectState = ObjectState.Added;
+                versionDetail.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _versionDetailRepository.Insert(versionDetail);
+                version.VersionDetails.Add(versionDetail);
+            }
+        }
+        private void DeleteVersion(Home home)
+        {
+            Version version = _versionRepository.Queryable().Where(w => w.Home.HomeId == home.HomeId).FirstOrDefault();
+            if (version != null)
+            {
+                version.ObjectState = ObjectState.Deleted;
+                _versionRepository.Delete(version);
+            }
         }
         private void SaveOrUpdateNextAssociatedDevice(Model.Models.Home home)
         {
@@ -463,8 +517,7 @@ namespace SmartHome.Service
             {
                 Room dbRoom = _roomRepository
                 .Queryable().Where(u => u.RoomId == roomId).FirstOrDefault();
-                dbRoom.ObjectState = ObjectState.Deleted;
-                
+                dbRoom.ObjectState = ObjectState.Deleted;              
                 _roomRepository.Delete(dbRoom);
             }
         }

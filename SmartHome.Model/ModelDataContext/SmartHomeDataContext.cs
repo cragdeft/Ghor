@@ -53,6 +53,11 @@ namespace SmartHome.Model.ModelDataContext
           .Map<SmartRouter>(m => m.Requires("Discriminator").HasValue("SmartRouter"))
           .Map<SmartRainbow>(m => m.Requires("Discriminator").HasValue("SmartRainbow"));
 
+            modelBuilder.Entity<VersionDetail>()
+            .HasRequired(t => t.Version)
+            .WithMany(c => c.VersionDetails)
+            .WillCascadeOnDelete(true);
+
             modelBuilder.Entity<SmartDevice>()
             .HasRequired(t => t.Room)
             .WithMany(c => c.SmartDevices)
