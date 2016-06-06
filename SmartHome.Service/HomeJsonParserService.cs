@@ -297,7 +297,7 @@ namespace SmartHome.Service
             SaveOrUpdateNextAssociatedDevice(model);
             //SaveOrUpdateVersion(model);
         }
-        private void SaveOrUpdateVersion()
+        private void SaveOrUpdateVersion(Home model)
         {
             List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
             
@@ -305,9 +305,7 @@ namespace SmartHome.Service
             {
                 versionEntity.VersionDetails = new List<VersionDetailEntity>();
                 versionEntity.VersionDetails =
-                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
-                
-                
+                    _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);              
             }
             List<Version> versionList = Mapper.Map<List<VersionEntity>, List<Version>>(_homeJsonEntity.Version);
         }

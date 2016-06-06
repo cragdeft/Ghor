@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System;
+using SmartHome.Model.ViewModels;
 
 namespace SmartHome.Service
 {
@@ -25,7 +26,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Model.Models.Version> _versionRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
-        private readonly IRepositoryAsync<SmartDevice> _smartDeviceRepository;
+        private readonly IRepositoryAsync<RgbwStatus> _rgbStatusRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<RouterInfo> _smartRouterInfoRepository;
@@ -42,7 +43,7 @@ namespace SmartHome.Service
             _homeRepository = unitOfWork.RepositoryAsync<Home>();
             _versionRepository = unitOfWork.RepositoryAsync<Model.Models.Version>();
             _deviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
-            _smartDeviceRepository = unitOfWork.RepositoryAsync<SmartDevice>();
+            _rgbStatusRepository = unitOfWork.RepositoryAsync<RgbwStatus>();
             _roomRepository = unitOfWork.RepositoryAsync<Room>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _smartRouterInfoRepository = unitOfWork.RepositoryAsync<RouterInfo>();
@@ -348,7 +349,7 @@ namespace SmartHome.Service
         private IEnumerable<Home> IsHomeExists(string HId)
         {
             //return _userHomeLinkRepository.Query(e => e.HId == HId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Select();
-            return _homeRepository.Query(e => e.AppsHomeId.ToString() == HId).Include(x => x.SmartRouterInfoes).Include(x => x.Rooms).Select();
+            return _homeRepository.Query(e => e.AppsHomeId.ToString() == HId).Include(x => x.SmartRouterInfos).Include(x => x.Rooms).Select();
 
         }
 
@@ -361,7 +362,7 @@ namespace SmartHome.Service
 
         private IEnumerable<UserHomeLink> IsHomeAndUserExists(int HId, int UInfoId)
         {
-            return _userHomeLinkRepository.Query(e => e.AppsHomeId == HId && e.AppsUserId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
+            return _userHomeLinkRepository.Query(e => e.AppsHomeId == HId && e.AppsUserId == UInfoId).Include(x => x.Home).Include(x => x.Home.SmartRouterInfos).Include(x => x.Home.Rooms).Include(x => x.UserInfo).Select();
         }
 
         private IEnumerable<UserRoomLink> IsRoomAndUserExists(int RId, int UInfoId)
@@ -686,7 +687,7 @@ namespace SmartHome.Service
             //#endregion
 
             deviceModel = FillDeviceInformations(model, deviceModel);
-            _smartDeviceRepository.InsertOrUpdateGraphRange(deviceModel);
+            _deviceRepository.InsertOrUpdateGraphRange(deviceModel);
             return deviceModel;
         }
 
@@ -949,19 +950,19 @@ namespace SmartHome.Service
 
         private IEnumerable<SmartDevice> IsDeviceSwitchExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartSwitch>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.Channels).Include(x => x.Room).Include(x => x.Channels.Select(y => y.ChannelStatuses)).ToList();
+            return _deviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartSwitch>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.Channels).Include(x => x.Room).Include(x => x.Channels.Select(y => y.ChannelStatuses)).ToList();
 
         }
 
         private IEnumerable<SmartDevice> IsDeviceRainboxExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRainbow>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.RgbwStatuses).Include(x => x.Room).ToList();
+            return _deviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRainbow>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).Include(x => x.RgbwStatuses).Include(x => x.Room).ToList();
 
         }
 
         private IEnumerable<SmartDevice> IsDeviceRouterExists(int key, string deviceHash)
         {
-            return _smartDeviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRouter>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).ToList();
+            return _deviceRepository.Queryable().Include(x => x.DeviceStatus).OfType<SmartRouter>().Where(e => e.AppsDeviceId == key && e.DeviceHash == deviceHash).ToList();
 
         }
 
@@ -1078,52 +1079,110 @@ namespace SmartHome.Service
 
         #region Gets homes infos
 
-        public List<UserHomeLink> GetsHomesAllInfo(int userInfoId, bool IsAdmin)
+        public HomeViewModel GetsHomesAllInfo(int userInfoId, bool IsAdmin)
         {
             try
             {
+                IList<Home> Homes = new List<Home>();
+                IList<UserHomeLink> userHomeLinks = new List<UserHomeLink>();
+                IList<int> roomIds = GetRoomIds(userInfoId);
+                UserHomeLink userHomeLink = GetUserHomeLink(userInfoId, roomIds);
+                IList<UserInfo> users = GetUserInfoList(userHomeLink);
+                userHomeLinks.Add(userHomeLink);
+                Home home = userHomeLink.Home;
+                Homes.Add(home);
+                IList<RouterInfo> routers = home.SmartRouterInfos.ToList();
+                IList<Room> rooms = home.Rooms.ToList();
+                IList<UserRoomLink> userrooms = GetUserRoomLinks(roomIds);               
+                IList<SmartDevice> devices = GetDevices(roomIds);
+                IList<int> deviceIds = devices.Select(s => s.DeviceId).ToList();
+                IList<Channel> channels = GetChannels(deviceIds);
+                IList<RgbwStatus> rgbStatuses = GetRgbStatuses(deviceIds);
 
-                //var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
-                //var temp = _userHomeLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfoId).Include(x => x.UserInfo).Include(x => x.Home.SmartRouterInfoes).Include(x => x.Home.Rooms.Select(q => q.UserRoomLinks)).Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus))).ToList();
-                //if (IsAdmin == false)
-                //{
-                //    if (temp.Count > 0)
-                //    {
-                //        var tempRoom = temp.SelectMany(x => x.Home.Rooms.Where(p => p.UserRoomLinks.Count != 0)).ToList();
-                //        if (tempRoom != null && tempRoom.Count > 0)
-                //        {
-                //            var tempUserRoom= tempRoom.First().UserRoomLinks.Where(p => p.UserInfo.UserInfoId == userInfoId).ToList();
-                //            tempRoom.First().UserRoomLinks = new List<UserRoomLink>();
-                //            tempRoom.First().UserRoomLinks = tempUserRoom;
-                //        }                        
-                //        temp.First().Home.Rooms = new List<Room>();
-                //        temp.First().Home.Rooms = tempRoom;
-                //    }
+                HomeViewModel homeViewModel = new HomeViewModel();
+                homeViewModel.Homes = Homes;
+                homeViewModel.Users = users;
+                homeViewModel.UserHomeLinks = userHomeLinks;
+                homeViewModel.Routers = routers;
+                homeViewModel.Rooms = rooms;
+                homeViewModel.UserRoomLinks = userrooms;
+                homeViewModel.SmartDevices = devices;
+                homeViewModel.Channels = channels;
+                homeViewModel.RgbwStatuses = rgbStatuses;
 
-
-
-                    //temp.Select(x => x.Home.Rooms = tempRoom);
-                    //foreach (UserHomeLink item in temp.First())
-                    //{
-                    //    item.Home.Rooms = new List<Room>();
-                    //    item.Home.Rooms = tempRoom;
-
-
-                    //}
-
-
-
-                //}
-                //return temp;
+                return homeViewModel;
             }
             catch (System.Exception ex)
             {
-                throw;
+                return null; 
             }
 
             return null;
         }
 
+        private IList<int> GetRoomIds(int userInfoId)
+        {
+            IList<int> roomIds = _userRoomLinkRepository.Queryable()
+                    .Where(p => p.UserInfo.UserInfoId == userInfoId).Select(s => s.Room.RoomId).ToList();
+
+            return roomIds;
+        }
+        private UserHomeLink GetUserHomeLink(int userInfoId, IList<int> roomIds)
+        {
+            UserHomeLink userHomeLink =
+                _userHomeLinkRepository.Queryable()
+                    .Where(p => p.UserInfo.UserInfoId == userInfoId)
+                    .Include(x => x.UserInfo)
+                    .Include(x => x.Home)
+                    .Include(x => x.Home.SmartRouterInfos)
+                    .Include(x => x.Home.Rooms.Where(w => roomIds.Contains(w.RoomId)))
+                    .Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus)))
+                    .FirstOrDefault();
+            return userHomeLink;
+        }
+        private IList<UserInfo> GetUserInfoList(UserHomeLink userHomeLink)
+        {
+            IList<UserInfo> users = new List<UserInfo>();
+            if (userHomeLink.IsAdmin)
+            {
+                users = _userInfoRepository.Queryable().ToList();
+            }
+            else
+            {
+                users.Add(userHomeLink.UserInfo);
+            }
+            return users;
+        }
+        private IList<UserRoomLink> GetUserRoomLinks(IList<int> roomIds)
+        {
+            return _userRoomLinkRepository
+                    .Queryable()
+                    .Where(w => roomIds.Contains(w.Room.RoomId))
+                    .ToList();
+        }
+        private IList<SmartDevice> GetDevices(IList<int> roomIds)
+        {
+            return _deviceRepository
+                        .Queryable()
+                        .Where(w => roomIds.Contains(w.Room.RoomId))
+                        .Include(i => i.DeviceStatus)
+                        .ToList();
+        }
+        private IList<Channel> GetChannels(IList<int> deviceIds)
+        {
+            return _channelRepository
+                        .Queryable()
+                        .Where(w => deviceIds.Contains(w.SmartSwitch.DeviceId))
+                        .Include(i => i.ChannelStatuses)
+                        .ToList();
+        }
+        private IList<RgbwStatus> GetRgbStatuses(IList<int> deviceIds)
+        {
+            return _rgbStatusRepository
+                        .Queryable()
+                        .Where(w => deviceIds.Contains(w.SmartRainbow.DeviceId))
+                        .ToList();           
+        } 
         #endregion
 
         #region Gets App version infos

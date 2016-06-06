@@ -1,5 +1,6 @@
 ﻿using SmartHome.Entity;
 using SmartHome.Model.Models;
+using SmartHome.Model.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace SmartHome.Service.Interfaces
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
         IEnumerable<VersionInfoEntity> GetsAllVersion();
 
-        List<UserHomeLink> GetsHomesAllInfo(int userInfoId,bool IsAdmin);
+        HomeViewModel GetsHomesAllInfo(int userInfoId,bool IsAdmin);
         List<Version> GetsAppVersionAllInfo();
     }
 }

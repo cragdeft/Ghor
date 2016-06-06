@@ -55,7 +55,7 @@ namespace SmartHome.Model.Models
 
         #region Navigation Properties        
         public virtual ICollection<Room> Rooms { get; set; }
-        public virtual ICollection<RouterInfo> SmartRouterInfoes { get; set; }
+        public virtual ICollection<RouterInfo> SmartRouterInfos { get; set; }
         #endregion
     }
 }
