@@ -46,7 +46,7 @@ namespace SmartHome.Model.ModelDataContext
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             modelBuilder.Entity<SmartDevice>()
           .Map<SmartSwitch>(m => m.Requires("Discriminator").HasValue("SmartSwitch"))

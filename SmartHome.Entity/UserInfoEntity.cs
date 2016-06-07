@@ -10,7 +10,6 @@ namespace SmartHome.Entity
     public class UserInfoEntity
     {
         #region Primitive Properties
-
         public int UserInfoId { get; set; }
         [JsonProperty("Id")]
         public int AppsUserId { get; set; }
@@ -35,12 +34,10 @@ namespace SmartHome.Entity
         public bool IsSMSRecipient { get; set; }
         public DateTime? LastLogIn { get; set; }
         public bool IsActive { get; set; }
-
         public string Country { get; set; }
-        public bool LoginStatus { get; set; }
-        public bool RegStatus { get; set; }
-        public bool IsSynced { get; set; }
+        public int LoginStatus { get; set; }
+        public int RegStatus { get; set; }
+        public int IsSynced { get; set; }
         #endregion
-
     }
 }

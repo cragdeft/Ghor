@@ -257,7 +257,7 @@ namespace SmartHome.Tests.Steps
                 //Mac = "mac",
                 Watt = null,
                 DeviceId = 32769,
-                DeviceVersion = "0",
+                FirmwareVersion = "0",
                 DeviceStatus = null
                
             };
@@ -274,7 +274,7 @@ namespace SmartHome.Tests.Steps
                 //Mac = "mac",
                 Watt = null,
                 DeviceId = 32767,
-                DeviceVersion = "0",
+                FirmwareVersion = "0",
                 DeviceStatus = null
                
             };

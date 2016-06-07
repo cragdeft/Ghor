@@ -904,7 +904,7 @@ namespace SmartHome.Service
         {
             foreach (var nextDStatus in item.DeviceStatus)
             {
-                var tempExistingDStatus = existingItem.DeviceStatus.Where(p => p.Id == nextDStatus.Id).FirstOrDefault();
+                var tempExistingDStatus = existingItem.DeviceStatus.Where(p => p.AppsDeviceStatusId == nextDStatus.AppsDeviceStatusId).FirstOrDefault();
                 if (tempExistingDStatus != null)
                 {
                     //modify
@@ -921,8 +921,8 @@ namespace SmartHome.Service
         private void FillExistingVDetailInfo(DeviceStatus nextDStatus, DeviceStatus tempExistingDStatus)
         {
             tempExistingDStatus.ObjectState = ObjectState.Modified;
-            tempExistingDStatus.Id = nextDStatus.Id;
-            tempExistingDStatus.DId = nextDStatus.DId;
+            tempExistingDStatus.AppsDeviceStatusId = nextDStatus.AppsDeviceStatusId;
+            tempExistingDStatus.AppsDeviceId = nextDStatus.AppsDeviceId;
             tempExistingDStatus.StatusType = nextDStatus.StatusType;
             tempExistingDStatus.Status = nextDStatus.Status;
             tempExistingDStatus.AuditField = new AuditFields();
@@ -937,7 +937,7 @@ namespace SmartHome.Service
             existingItem.AppsBleId = item.AppsBleId;
             existingItem.DeviceName = item.DeviceName;
             existingItem.DeviceHash = item.DeviceHash;
-            existingItem.DeviceVersion = item.DeviceVersion;
+            existingItem.FirmwareVersion = item.FirmwareVersion;
             existingItem.IsDeleted = item.IsDeleted;
             existingItem.Watt = item.Watt;
             //existingItem.Mac = item.Mac;

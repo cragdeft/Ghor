@@ -16,12 +16,13 @@ namespace SmartHome.Model.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeviceStatusId { get; set; }
-        public int Id { get; set; }
-        public int DId { get; set; }
+        public int AppsDeviceStatusId { get; set; }
+        public int AppsDeviceId { get; set; }
         //public int StatusType { get; set; }
         public StatusType StatusType { get; set; }
         public int Status { get; set; }
         public string Value { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties
@@ -31,6 +32,5 @@ namespace SmartHome.Model.Models
         #region Navigation Properties
         public virtual SmartDevice SmartDevice { get; set; } 
         #endregion
-
     }
 }

@@ -181,8 +181,8 @@ namespace SmartHome.Json
                     AppsUserId = Convert.ToInt32(item.AppsUserId),
                     Home = oHome.FirstOrDefault(p => p.AppsHomeId == item.AppsHomeId),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
-                    IsAdmin = item.IsAdmin,
-                    IsSynced = item.IsSynced,
+                    //IsAdmin = item.IsAdmin,
+                    //IsSynced = item.IsSynced,
                     ObjectState = ObjectState.Added
                 };
                 oUserHomeList.Add(userHomeLink);
@@ -207,7 +207,7 @@ namespace SmartHome.Json
                     AppsUserId = Convert.ToInt32(item.AppsUserId),
                     Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.AppsRoomId),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
-                    IsSynced = item.IsSynced,
+                    IsSynced = Convert.ToBoolean(item.IsSynced),
                     ObjectState = ObjectState.Added
                 };
                 oUserRoomLink.Add(userRoomLink);
@@ -235,7 +235,7 @@ namespace SmartHome.Json
             foreach (var item in oDevice)
             {
                 item.Channels = oChannel.Where(p => p.AppsDeviceTableId == item.AppsDeviceId).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.AppsDeviceId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);
@@ -260,7 +260,7 @@ namespace SmartHome.Json
             foreach (var item in oDevice)
             {
                 //item.Channels = oChannel.Where(p => p.DId == item.Id).ToArray();
-                item.DeviceStatus = oDeviceStatus.Where(p => p.DId == item.AppsDeviceId).ToArray();
+                item.DeviceStatus = oDeviceStatus.Where(p => p.AppsDeviceId == item.AppsDeviceId).ToArray();
                 item.AuditField = new AuditFields();
                 item.ObjectState = ObjectState.Added;
                 oSmartDevice.Add(item);

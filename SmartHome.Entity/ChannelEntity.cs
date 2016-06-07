@@ -18,7 +18,7 @@ namespace SmartHome.Entity
         public string LoadName { get; set; }
         public int LoadType { get; set; }
         public int LoadWatt { get; set; }
-        public bool IsSynced { get; set; }
+        public int IsSynced { get; set; }
         #endregion
     }
 }

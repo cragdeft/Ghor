@@ -267,7 +267,7 @@ namespace SmartHome.Json
         {
             ChannelStatusEntity channelStatus = new ChannelStatusEntity
             {
-                ChannelNo = channelNo,
+                //ChannelNo = channelNo,
                 StatusType = (int)type,
                 StatusValue = value
             };
@@ -378,11 +378,11 @@ namespace SmartHome.Json
         {
             foreach (var channelValue in ChannelStatusList)
             {
-                if (channelValue.ChannelNo > 0)
-                {
-                    SaveSingleChannelStatus(channelValue, device);
-                    //UpdateAllChannelStatus(device, channelValue);
-                }
+                //if (channelValue.ChannelNo > 0)
+                //{
+                //    SaveSingleChannelStatus(channelValue, device);
+                //    //UpdateAllChannelStatus(device, channelValue);
+                //}
             }
         }
 
@@ -396,7 +396,7 @@ namespace SmartHome.Json
             }
             else
             {
-                LogCommand(false, "Channel (DeviceHash = " + _commandJson.DeviceUUId + " and Channel No ( " + channelValue.ChannelNo + " ) ) not found.");
+                //LogCommand(false, "Channel (DeviceHash = " + _commandJson.DeviceUUId + " and Channel No ( " + channelValue.ChannelNo + " ) ) not found.");
             }
         }
 
@@ -507,7 +507,7 @@ namespace SmartHome.Json
             ChannelStatusEntity channelStatus = new ChannelStatusEntity
             {
                 StatusType = (int)status,
-                ChannelNo = GetChannelNoOfCommunicationProtocol(),
+                //ChannelNo = GetChannelNoOfCommunicationProtocol(),
                 StatusValue = Get3RdBitValueOfCommunicationProtocol()
             };
             ChannelStatusList.Add(channelStatus);

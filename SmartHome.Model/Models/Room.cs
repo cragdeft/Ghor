@@ -22,6 +22,7 @@ namespace SmartHome.Model.Models
         public string Comment { get; set; }
         public bool IsMasterRoom { get; set; }
         public bool IsActive { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties

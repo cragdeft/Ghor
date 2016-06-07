@@ -23,7 +23,6 @@ namespace SmartHome.Entity
         public bool IsWhiteEnabled { get; set; }
         public int DimmingValue { get; set; }
         public bool IsSynced { get; set; }
-
         #endregion
     }
 }

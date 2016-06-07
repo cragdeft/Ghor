@@ -18,10 +18,9 @@ namespace SmartHome.Model.Models
         public int ChannelStatusId { get; set; }
         public int AppsChannelStatusId { get; set; }
         public int AppsChannelId { get; set; }
-        //public int DId { get; set; }
-        //public int ChannelNo { get; set; }
         public ChannelStatusType StatusType { get; set; }
         public int StatusValue { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties
@@ -31,6 +30,5 @@ namespace SmartHome.Model.Models
         #region  Navigation Properties
         public virtual Channel Channel { get; set; }
         #endregion
-
     }
 }

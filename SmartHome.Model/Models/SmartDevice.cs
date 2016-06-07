@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
         public int AppsBleId { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
-        public string DeviceVersion { get; set; }
+        public string FirmwareVersion { get; set; }
         public bool IsDeleted { get; set; }
         public string Watt { get; set; }
         public bool IsSynced { get; set; }

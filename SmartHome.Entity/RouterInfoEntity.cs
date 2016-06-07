@@ -24,7 +24,7 @@ namespace SmartHome.Entity
         public string MacAddress { get; set; }
         public string Ssid { get; set; }
         public string SsidPassword { get; set; }
-        public bool IsSynced { get; set; }
+        public int IsSynced { get; set; }
 
         public virtual HomeEntity Parent { get; set; }
         #endregion

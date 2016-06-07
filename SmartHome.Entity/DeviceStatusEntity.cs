@@ -9,16 +9,15 @@ namespace SmartHome.Entity
 {
     public class DeviceStatusEntity
     {
-        #region Primitive Properties
-
-       
-        //[JsonProperty("ID")]
-        public int Id { get; set; }
+        #region Primitive Properties      
+        [JsonProperty("Id")]
+        public int AppsDeviceStatusId { get; set; }
         [JsonProperty("DeviceTableId")]
-        public string DId { get; set; }
+        public string AppsDeviceId { get; set; }
         public int StatusType { get; set; }
         [JsonProperty("StatusValue")]
         public string Value { get; set; }
+        public int IsSynced { get; set; }
         #endregion
     }
 }
