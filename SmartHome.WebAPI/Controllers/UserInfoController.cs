@@ -361,8 +361,17 @@ namespace SmartHome.WebAPI.Controllers
         {
             Mapper.CreateMap<Home, Home>()
                   .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
-            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(homeViewModel.Homes);
-            oLoginObject.Home.AddRange(oHomeEntity);
+            foreach(Home home in homeViewModel.Homes)
+            {
+                HomeEntity oHomeEntity = Mapper.Map<Home, HomeEntity>(home);
+                oHomeEntity.IsInternet = Convert.ToInt32(home.IsInternet);
+                oHomeEntity.IsDefault = Convert.ToInt32(home.IsDefault);
+                oHomeEntity.IsActive = Convert.ToInt32(home.IsActive);
+                oHomeEntity.IsSynced = Convert.ToInt32(home.IsSynced);
+
+                oLoginObject.Home.Add(oHomeEntity);
+            }
+            
         }
         [NonAction]
         private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
@@ -372,8 +381,14 @@ namespace SmartHome.WebAPI.Controllers
                                         .ForMember(dest => dest.AppsUserHomeLinkId, opt => opt.MapFrom(src => src.AppsHomeId))
                                         .ForMember(dest => dest.AppsHomeId, opt => opt.MapFrom(src => src.Home.AppsHomeId))
                                         .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId));
-            IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(homeViewModel.UserHomeLinks);
-            oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
+            
+            foreach (UserHomeLink entity in homeViewModel.UserHomeLinks)
+            {
+                UserHomeLinkEntity linkEntity = Mapper.Map<UserHomeLink, UserHomeLinkEntity>(entity);
+                linkEntity.IsAdmin = Convert.ToInt32(entity.IsAdmin);
+                linkEntity.IsSynced = Convert.ToInt32(entity.IsSynced);
+                oLoginObject.UserHomeLink.Add(linkEntity);
+            }
         }
 
         [NonAction]
@@ -383,8 +398,12 @@ namespace SmartHome.WebAPI.Controllers
                                         //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
                                         .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId))
                                         .ForMember(dest => dest.AppsRoomId, opt => opt.MapFrom(src => src.Room.AppsRoomId));
-            IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(homeViewModel.UserRoomLinks);
-            oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity);
+            foreach (UserRoomLink link in homeViewModel.UserRoomLinks)
+            {
+                UserRoomLinkEntity oUserRoomLinkEntity = Mapper.Map<UserRoomLink, UserRoomLinkEntity>(link);
+                oUserRoomLinkEntity.IsSynced = Convert.ToInt32(link.IsSynced);
+                oLoginObject.UserRoomLink.Add(oUserRoomLinkEntity);
+            }
         }
         [NonAction]
         private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
@@ -396,6 +415,9 @@ namespace SmartHome.WebAPI.Controllers
             foreach (UserInfo user in homeViewModel.Users)
             {
                 UserInfoEntity oUserInfoEntity = Mapper.Map<UserInfo, UserInfoEntity>(user);
+                oUserInfoEntity.LoginStatus = Convert.ToInt32(user.LoginStatus);
+                oUserInfoEntity.RegStatus = Convert.ToInt32(user.RegStatus);
+                oUserInfoEntity.IsSynced = Convert.ToInt32(user.IsSynced);
                 oLoginObject.UserInfo.Add(oUserInfoEntity);
             }            
         }

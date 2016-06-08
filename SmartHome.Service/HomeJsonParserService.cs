@@ -95,6 +95,10 @@ namespace SmartHome.Service
         public Home InsertHome(HomeEntity homeEntity)
         {
             Home model = Mapper.Map<HomeEntity, Home>(homeEntity);
+            model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
+            model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
+            model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
+            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
             model.ObjectState = ObjectState.Added;
             model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _homeRepository.Insert(model);
@@ -583,10 +587,10 @@ namespace SmartHome.Service
             model.HomeId = homeEntity.HomeId;
             model.City = homeEntity.City;
             model.Country = homeEntity.Country;
-            model.IsActive = homeEntity.IsActive;
-            model.IsDefault = homeEntity.IsDefault;
-            model.IsInternet = homeEntity.IsInternet;
-            model.IsSynced = homeEntity.IsSynced;
+            model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
+            model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
+            model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
+            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
             model.MeshMode = (MeshModeType)homeEntity.MeshMode;
             model.PassPhrase = homeEntity.PassPhrase;
             model.Phone = homeEntity.Phone;
