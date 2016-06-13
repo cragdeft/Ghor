@@ -36,15 +36,9 @@ namespace SmartHome.Web.Utility
         }
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
-        {
-            if (customEventArgs.ReceivedTopic == "jsonparse")// CommandType.Configuration.ToString()
-            {
-                JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
-                jsonManager.Save();
-            }
+        {           
             if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
             {
-                //new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
                 JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
                 jsonManager.Save();
             }
