@@ -21,7 +21,7 @@ namespace SmartHome.Model.Models
         public int ChannelNo { get; set; }
         public string LoadName { get; set; }
         public LoadType LoadType { get; set; }
-
+        public int LoadWatt { get; set; }
         public bool IsSynced { get; set; }
         #endregion
 
