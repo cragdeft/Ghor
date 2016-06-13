@@ -44,7 +44,9 @@ namespace SmartHome.Web.Utility
             }
             if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
             {
-                new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
+                //new ConfigurationJsonManager().JsonProcess(customEventArgs.ReceivedMessage);
+                JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
+                jsonManager.Save();
             }
 
             if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
