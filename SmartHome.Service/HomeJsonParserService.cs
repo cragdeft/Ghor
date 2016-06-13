@@ -58,7 +58,7 @@ namespace SmartHome.Service
             _nextAssociatedDeviceRepository = _unitOfWorkAsync.RepositoryAsync<NextAssociatedDevice>();
             _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
-            _versionRepository= _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
+            _versionRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
             _versionDetailRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.VersionDetail>();
             _homeJsonEntity = homeJsonEntity;
@@ -67,30 +67,43 @@ namespace SmartHome.Service
         {
             RouterInfo router = _routerInfoRepository
                 .Queryable().Include(x => x.Parent).Where(u => u.MacAddress == macAddress).FirstOrDefault();
+            MapRouterInfo();
+            return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
 
-            Mapper.CreateMap<Home, HomeEntity>();
-            Mapper.CreateMap<RouterInfo, RouterInfoEntity>();
-            //return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
-            return MapRouterInfo(router);
         }
 
-        private RouterInfoEntity MapRouterInfo(RouterInfo router)
+        private  void MapRouterInfo()
         {
-            RouterInfoEntity routerEntity = new RouterInfoEntity();
-            routerEntity.AppsHomeId = router.AppsHomeId;
-            routerEntity.AppsRouterInfoId = router.AppsRouterInfoId;
-            routerEntity.IsSynced = Convert.ToInt32(router.IsDataSynced);
-            routerEntity.LocalBrokerIp = routerEntity.LocalBrokerIp;
-            routerEntity.LocalBrokerPassword = routerEntity.LocalBrokerPassword;
-            routerEntity.LocalBrokerPort = routerEntity.LocalBrokerPort;
-            routerEntity.LocalBrokerUsername = routerEntity.LocalBrokerUsername;
-            routerEntity.MacAddress = routerEntity.MacAddress;
-            routerEntity.Ssid = router.Ssid;
-            routerEntity.SsidPassword = router.SsidPassword;
-            //routerEntity.
-
-            return routerEntity;
+            //map parent
+            Mapper.CreateMap<Home, HomeEntity>()
+            .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(a => a.IsInternet == true ? 1 : 0))
+            .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(a => a.IsDefault == true ? 1 : 0))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(a => a.IsActive == true ? 1 : 0))
+            .ForMember(dest => dest.IsJsonSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0));
+            //map router
+            Mapper.CreateMap<RouterInfo, RouterInfoEntity>()
+                 .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0))
+                 .ForMember(dest => dest.Parent, opt => opt.MapFrom(a => a.Parent));
         }
+
+        //private RouterInfoEntity MapRouterInfo(RouterInfo router)
+        //{
+        //    RouterInfoEntity routerEntity = new RouterInfoEntity();
+        //    routerEntity.AppsHomeId = router.AppsHomeId;
+        //    routerEntity.AppsRouterInfoId = router.AppsRouterInfoId;
+        //    routerEntity.IsSynced = Convert.ToInt32(router.IsSynced);
+        //    routerEntity.LocalBrokerIp = routerEntity.LocalBrokerIp;
+        //    routerEntity.LocalBrokerPassword = routerEntity.LocalBrokerPassword;
+        //    routerEntity.LocalBrokerPort = routerEntity.LocalBrokerPort;
+        //    routerEntity.LocalBrokerUsername = routerEntity.LocalBrokerUsername;
+        //    routerEntity.MacAddress = routerEntity.MacAddress;
+        //    routerEntity.Ssid = router.Ssid;
+        //    routerEntity.SsidPassword = router.SsidPassword;
+
+        //    //routerEntity.
+
+        //    return routerEntity;
+        //}
         public HomeEntity GetHome(int homeId)
         {
             Home home = _homeRepository
@@ -151,7 +164,7 @@ namespace SmartHome.Service
             router.Room = room;
             router.ObjectState = ObjectState.Added;
             router.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            _deviceRepository.Insert(router);            
+            _deviceRepository.Insert(router);
         }
         private void InsertSmartDevices(SmartDeviceEntity device, Room room, SmartDevice model, List<DeviceStatusEntity> deviceStatuses)
         {
@@ -177,7 +190,7 @@ namespace SmartHome.Service
                 _deviceStatusRepository.Insert(entity);
                 sswitch.DeviceStatus.Add(entity);
             }
-        }       
+        }
         private void InsertSmartRainbow(SmartDeviceEntity device, SmartDevice model, Room room)
         {
             SmartRainbow rainbow = MapToSmartRainbow(model);
@@ -293,7 +306,7 @@ namespace SmartHome.Service
         public void InsertRouter(RouterInfoEntity router, Home home)
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
-            entity.IsDataSynced = Convert.ToBoolean(router.IsSynced);
+            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
             entity.Parent = home;
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
@@ -349,7 +362,7 @@ namespace SmartHome.Service
         {
             DeleteVersion(home);
             List<VersionEntity> versionEntityList = _homeJsonEntity.Version;
-            
+
             foreach (var versionEntity in versionEntityList)
             {
                 List<VersionDetailEntity> versionDetails =
@@ -358,7 +371,7 @@ namespace SmartHome.Service
             }
         }
         private void InsertVersion(Home home, VersionEntity versionEntity, List<VersionDetailEntity> versionDetails)
-        {            
+        {
             Version version = Mapper.Map<VersionEntity, Version>(versionEntity);
             version.Home = home;
             version.IsSynced = Convert.ToBoolean(versionEntity.IsJsonSynced);
@@ -379,12 +392,12 @@ namespace SmartHome.Service
         {
             Version model = _versionRepository
                .Queryable().Where(u => u.Home.HomeId == home.HomeId).FirstOrDefault();
-           
+
             model.AuditField.LastUpdatedBy = "admin";
             model.AuditField.LastUpdatedDateTime = DateTime.Now;
-            
+
             return model;
-        }  
+        }
         private void InsertVersionDetails(Version version, List<VersionDetailEntity> versionDetailsEntity)
         {
             foreach (var verDetail in versionDetailsEntity)
@@ -409,7 +422,7 @@ namespace SmartHome.Service
         private void SaveOrUpdateNextAssociatedDevice(Model.Models.Home home)
         {
             var nextDevice = _nextAssociatedDeviceRepository
-                .Queryable().Where(w=>w.Home.HomeId == home.HomeId).FirstOrDefault();
+                .Queryable().Where(w => w.Home.HomeId == home.HomeId).FirstOrDefault();
 
             if (nextDevice == null)
             {
@@ -495,7 +508,7 @@ namespace SmartHome.Service
                     InsertDevice(smartDevice, room);
                 }
             }
-        }       
+        }
         private Home SaveOrUpdateRoom(Home model, IList<UserInfo> listOfUsers)
         {
             if (model.Rooms != null)
@@ -566,7 +579,7 @@ namespace SmartHome.Service
             {
                 Room dbRoom = _roomRepository
                 .Queryable().Where(u => u.RoomId == roomId).FirstOrDefault();
-                dbRoom.ObjectState = ObjectState.Deleted;              
+                dbRoom.ObjectState = ObjectState.Deleted;
                 _roomRepository.Delete(dbRoom);
             }
         }
@@ -646,7 +659,7 @@ namespace SmartHome.Service
             model.AppsRouterInfoId = router.AppsRouterInfoId;
             model.AuditField.LastUpdatedBy = "admin";
             model.AuditField.LastUpdatedDateTime = DateTime.Now;
-            model.IsDataSynced = Convert.ToBoolean(router.IsSynced);
+            model.IsSynced = Convert.ToBoolean(router.IsSynced);
             model.LocalBrokerIp = router.LocalBrokerIp;
             model.LocalBrokerPassword = router.LocalBrokerPassword;
             model.LocalBrokerPort = router.LocalBrokerPort;
