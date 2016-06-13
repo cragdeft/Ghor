@@ -70,13 +70,9 @@ namespace SmartHome.Web.Utility
             string msg = customEventArgs.ReceivedMessage;
 
         }
-
         static void SubscribedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             string msg = customEventArgs.ReceivedMessage;
         }
-
-
-
     }
 }
