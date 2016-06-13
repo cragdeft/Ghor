@@ -263,7 +263,7 @@ namespace SmartHome.Service
 
         }
 
-        public Home UpdateHome(Entity.HomeEntity homeEntity)
+        public Home UpdateHome(HomeEntity homeEntity)
         {
             Home model = MapHomeProperty(homeEntity);
             model.ObjectState = ObjectState.Modified;
@@ -275,7 +275,7 @@ namespace SmartHome.Service
         public void InsertRouter(RouterInfoEntity router, Home home)
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
-            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
+            entity.IsSynced = Convert.ToBoolean(router.IsJSonSynced);
             entity.Parent = home;
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
@@ -336,12 +336,11 @@ namespace SmartHome.Service
             {
                 List<VersionDetailEntity> versionDetails =
                     _homeJsonEntity.VersionDetails.FindAll(x => x.AppsVersionId == versionEntity.AppsVersionId);
-                
                 InsertVersion(home, versionEntity, versionDetails);
             }
         }
         private void InsertVersion(Home home, VersionEntity versionEntity, List<VersionDetailEntity> versionDetails)
-        {
+        {            
             Version version = Mapper.Map<VersionEntity, Version>(versionEntity);
             version.Home = home;
             version.ObjectState = ObjectState.Added;
@@ -349,7 +348,26 @@ namespace SmartHome.Service
             _versionRepository.Insert(version);
 
             InsertVersionDetails(version, versionDetails);
-        }       
+        }
+
+        private void UpdateVersion(Home home, VersionEntity versionEntity)
+        {
+            Version model = MapVersionProperty(home, versionEntity);
+            model.ObjectState = ObjectState.Modified;
+            _versionRepository.Update(model);
+        }
+        private Version MapVersionProperty(Home home, VersionEntity versionEntity)
+        {
+            Version model = _versionRepository
+               .Queryable().Where(u => u.Home.HomeId == home.HomeId).FirstOrDefault();
+
+            
+            model.AuditField.LastUpdatedBy = "admin";
+            model.AuditField.LastUpdatedDateTime = DateTime.Now;
+            
+
+            return model;
+        }  
         private void InsertVersionDetails(Version version, List<VersionDetailEntity> versionDetailsEntity)
         {
             foreach (var verDetail in versionDetailsEntity)
@@ -573,9 +591,9 @@ namespace SmartHome.Service
             Mapper.CreateMap<VersionDetailEntity, VersionDetail>();
         }
 
-        private Home MapHomeProperty(Entity.HomeEntity homeEntity)
+        private Home MapHomeProperty(HomeEntity homeEntity)
         {
-            Model.Models.Home model = _homeRepository
+            Home model = _homeRepository
                .Queryable().Where(u => u.HomeId == homeEntity.HomeId).FirstOrDefault();
 
             model.Address1 = homeEntity.Address1;
@@ -610,7 +628,7 @@ namespace SmartHome.Service
             model.AppsRouterInfoId = router.AppsRouterInfoId;
             model.AuditField.LastUpdatedBy = "admin";
             model.AuditField.LastUpdatedDateTime = DateTime.Now;
-            model.IsSynced = Convert.ToBoolean(router.IsSynced);
+            model.IsSynced = Convert.ToBoolean(router.IsJSonSynced);
             model.LocalBrokerIp = router.LocalBrokerIp;
             model.LocalBrokerPassword = router.LocalBrokerPassword;
             model.LocalBrokerPort = router.LocalBrokerPort;
