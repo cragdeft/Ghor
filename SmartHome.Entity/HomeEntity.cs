@@ -32,7 +32,8 @@ namespace SmartHome.Entity
         public int IsInternet { get; set; }
         public int IsDefault { get; set; }
         public int IsActive { get; set; }
-        public int IsSynced { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
         public List<RouterInfoEntity> SmartRouter { get; set; }
 
         #endregion

@@ -38,5 +38,6 @@ C:\AplombSmartHome\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Reposito
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll.config
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\bin\Debug\Repository.Pattern.pdb
+E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.csprojResolveAssemblyReference.cache
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Repository.Pattern\obj\Debug\Repository.Pattern.pdb

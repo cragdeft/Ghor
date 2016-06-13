@@ -70,9 +70,27 @@ namespace SmartHome.Service
 
             Mapper.CreateMap<Home, HomeEntity>();
             Mapper.CreateMap<RouterInfo, RouterInfoEntity>();
-            return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
+            //return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
+            return MapRouterInfo(router);
         }
 
+        private RouterInfoEntity MapRouterInfo(RouterInfo router)
+        {
+            RouterInfoEntity routerEntity = new RouterInfoEntity();
+            routerEntity.AppsHomeId = router.AppsHomeId;
+            routerEntity.AppsRouterInfoId = router.AppsRouterInfoId;
+            routerEntity.IsSynced = Convert.ToInt32(router.IsDataSynced);
+            routerEntity.LocalBrokerIp = routerEntity.LocalBrokerIp;
+            routerEntity.LocalBrokerPassword = routerEntity.LocalBrokerPassword;
+            routerEntity.LocalBrokerPort = routerEntity.LocalBrokerPort;
+            routerEntity.LocalBrokerUsername = routerEntity.LocalBrokerUsername;
+            routerEntity.MacAddress = routerEntity.MacAddress;
+            routerEntity.Ssid = router.Ssid;
+            routerEntity.SsidPassword = router.SsidPassword;
+            //routerEntity.
+
+            return routerEntity;
+        }
         public HomeEntity GetHome(int homeId)
         {
             Home home = _homeRepository
@@ -98,7 +116,7 @@ namespace SmartHome.Service
             model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
             model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
             model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
-            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
+            model.IsSynced = Convert.ToBoolean(homeEntity.IsJsonSynced);
             model.ObjectState = ObjectState.Added;
             model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _homeRepository.Insert(model);
@@ -109,7 +127,7 @@ namespace SmartHome.Service
         {
             SmartDevice model = Mapper.Map<SmartDeviceEntity, SmartDevice>(device);
             model.IsDeleted = Convert.ToBoolean(device.IsDeleted);
-            model.IsSynced = Convert.ToBoolean(device.IsSynced);
+            model.IsSynced = Convert.ToBoolean(device.IsJsonSynced);
 
             List<DeviceStatusEntity> deviceStatuses =
                     _homeJsonEntity.DeviceStatus.FindAll(x => x.AppsDeviceId == device.AppsDeviceId.ToString());
@@ -153,7 +171,7 @@ namespace SmartHome.Service
             foreach (var deviceStatusEntity in deviceStatuses)
             {
                 var entity = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
-                entity.IsSynced = Convert.ToBoolean(deviceStatusEntity.IsSynced);
+                entity.IsSynced = Convert.ToBoolean(deviceStatusEntity.IsJsonSynced);
                 entity.ObjectState = ObjectState.Added;
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _deviceStatusRepository.Insert(entity);
@@ -240,7 +258,7 @@ namespace SmartHome.Service
             foreach (var channel in channels)
             {
                 var entity = Mapper.Map<ChannelEntity, Channel>(channel);
-                entity.IsSynced = Convert.ToBoolean(channel.IsSynced);
+                entity.IsSynced = Convert.ToBoolean(channel.IsJsonSynced);
                 entity.ObjectState = ObjectState.Added;
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _channelRepository.Insert(entity);
@@ -251,7 +269,7 @@ namespace SmartHome.Service
                 foreach (var channelStatusEntity in channelStatuses)
                 {
                     var channelStatusModel = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
-                    channelStatusModel.IsSynced = Convert.ToBoolean(channelStatusEntity.IsSynced);
+                    channelStatusModel.IsSynced = Convert.ToBoolean(channelStatusEntity.IsJsonSynced);
                     channelStatusModel.ObjectState = ObjectState.Added;
                     channelStatusModel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                     _channelStatusRepository.Insert(channelStatusModel);
@@ -275,7 +293,7 @@ namespace SmartHome.Service
         public void InsertRouter(RouterInfoEntity router, Home home)
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
-            entity.IsSynced = Convert.ToBoolean(router.IsJSonSynced);
+            entity.IsDataSynced = Convert.ToBoolean(router.IsSynced);
             entity.Parent = home;
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
@@ -343,6 +361,7 @@ namespace SmartHome.Service
         {            
             Version version = Mapper.Map<VersionEntity, Version>(versionEntity);
             version.Home = home;
+            version.IsSynced = Convert.ToBoolean(versionEntity.IsJsonSynced);
             version.ObjectState = ObjectState.Added;
             version.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _versionRepository.Insert(version);
@@ -360,12 +379,10 @@ namespace SmartHome.Service
         {
             Version model = _versionRepository
                .Queryable().Where(u => u.Home.HomeId == home.HomeId).FirstOrDefault();
-
-            
+           
             model.AuditField.LastUpdatedBy = "admin";
             model.AuditField.LastUpdatedDateTime = DateTime.Now;
             
-
             return model;
         }  
         private void InsertVersionDetails(Version version, List<VersionDetailEntity> versionDetailsEntity)
@@ -373,6 +390,7 @@ namespace SmartHome.Service
             foreach (var verDetail in versionDetailsEntity)
             {
                 VersionDetail versionDetail = Mapper.Map<VersionDetailEntity, VersionDetail>(verDetail);
+                versionDetail.IsSynced = Convert.ToBoolean(verDetail.IsJsonSynced);
                 versionDetail.ObjectState = ObjectState.Added;
                 versionDetail.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 _versionDetailRepository.Insert(versionDetail);
@@ -460,7 +478,7 @@ namespace SmartHome.Service
             UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
             entity.LoginStatus = Convert.ToBoolean(userInfoEntity.LoginStatus);
             entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
-            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
+            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsJsonSynced);
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
             _userRepository.Insert(entity);
@@ -495,7 +513,7 @@ namespace SmartHome.Service
             {
                 var entity = Mapper.Map<RoomEntity, Room>(room);
                 entity.IsActive = Convert.ToBoolean(room.IsActive);
-                entity.IsSynced = Convert.ToBoolean(room.IsSynced);
+                entity.IsSynced = Convert.ToBoolean(room.IsJsonSynced);
                 entity.Home = home;
                 entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
                 entity.ObjectState = ObjectState.Added;
@@ -515,7 +533,7 @@ namespace SmartHome.Service
                 UserRoomLink userRoom = new UserRoomLink();
                 userRoom.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
                 userRoom.Room = entity;
-                userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
+                userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsJsonSynced);
                 userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
                 userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
                 userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
@@ -533,7 +551,7 @@ namespace SmartHome.Service
                 UserHomeLink userHome = new UserHomeLink();
                 userHome.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
                 userHome.Home = home;
-                userHome.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
+                userHome.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsJsonSynced);
                 userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
                 userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
                 userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
@@ -608,7 +626,7 @@ namespace SmartHome.Service
             model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
             model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
             model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
-            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
+            model.IsSynced = Convert.ToBoolean(homeEntity.IsJsonSynced);
             model.MeshMode = (MeshModeType)homeEntity.MeshMode;
             model.PassPhrase = homeEntity.PassPhrase;
             model.Phone = homeEntity.Phone;
@@ -628,7 +646,7 @@ namespace SmartHome.Service
             model.AppsRouterInfoId = router.AppsRouterInfoId;
             model.AuditField.LastUpdatedBy = "admin";
             model.AuditField.LastUpdatedDateTime = DateTime.Now;
-            model.IsSynced = Convert.ToBoolean(router.IsJSonSynced);
+            model.IsDataSynced = Convert.ToBoolean(router.IsSynced);
             model.LocalBrokerIp = router.LocalBrokerIp;
             model.LocalBrokerPassword = router.LocalBrokerPassword;
             model.LocalBrokerPort = router.LocalBrokerPort;
@@ -647,7 +665,7 @@ namespace SmartHome.Service
             model.Password = userEntity.Password;
             model.RegStatus = Convert.ToBoolean(userEntity.RegStatus);
             model.UserName = userEntity.UserName;
-            model.IsSynced = Convert.ToBoolean(userEntity.IsSynced);
+            model.IsSynced = Convert.ToBoolean(userEntity.IsJsonSynced);
             model.Country = userEntity.Country;
             model.CellPhone = userEntity.CellPhone;
             model.Sex = userEntity.Sex;

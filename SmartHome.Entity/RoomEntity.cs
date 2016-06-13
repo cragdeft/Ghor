@@ -18,7 +18,8 @@ namespace SmartHome.Entity
         public string Name { get; set; }
         public int RoomNumber { get; set; }
         public int IsActive { get; set; }
-        public int IsSynced { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
         #endregion
     }
 }

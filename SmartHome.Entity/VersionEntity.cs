@@ -19,6 +19,8 @@ namespace SmartHome.Entity
         public string AuthCode { get; set; }
         public string PassPhrase { get; set; }
         public string Mac { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
         #endregion
 
         public virtual ICollection<VersionDetailEntity> VersionDetails { get; set; }

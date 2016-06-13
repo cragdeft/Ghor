@@ -207,7 +207,7 @@ namespace SmartHome.Json
                     AppsUserId = Convert.ToInt32(item.AppsUserId),
                     Room = oRoom.FirstOrDefault(p => p.AppsRoomId == item.AppsRoomId),
                     UserInfo = oUserInfo.FirstOrDefault(p => p.AppsUserId == item.AppsUserId),
-                    IsSynced = Convert.ToBoolean(item.IsSynced),
+                    IsSynced = Convert.ToBoolean(item.IsJsonSynced),
                     ObjectState = ObjectState.Added
                 };
                 oUserRoomLink.Add(userRoomLink);

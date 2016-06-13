@@ -306,7 +306,7 @@ namespace SmartHome.Service
             tempExistingRouterDetail.LocalBrokerUsername = nextRouterDetail.LocalBrokerUsername;
             tempExistingRouterDetail.LocalBrokerPassword = nextRouterDetail.LocalBrokerPassword;
             tempExistingRouterDetail.Ssid = nextRouterDetail.Ssid;
-            tempExistingRouterDetail.IsSynced = nextRouterDetail.IsSynced;
+            tempExistingRouterDetail.IsDataSynced = nextRouterDetail.IsDataSynced;
             //tempExistingRouterDetail.IsActive = nextRouterDetail.IsActive;
             tempExistingRouterDetail.AuditField = new AuditFields();
         }

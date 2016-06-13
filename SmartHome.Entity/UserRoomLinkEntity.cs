@@ -16,6 +16,7 @@ namespace SmartHome.Entity
         public int AppsUserId { get; set; }
         [JsonProperty("Room")]
         public int AppsRoomId { get; set; }
-        public int IsSynced { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
     }
 }

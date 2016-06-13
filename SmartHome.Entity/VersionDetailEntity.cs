@@ -17,7 +17,8 @@ namespace SmartHome.Entity
         public int AppsVersionId { get; set; }
         public string HardwareVersion { get; set; }
         public int DeviceType { get; set; }
-        public bool IsSynced { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
         #endregion
     }
 }

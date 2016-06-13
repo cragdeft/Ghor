@@ -15,6 +15,7 @@ namespace SmartHome.Entity
         public int AppsChannelStatusId { get; set; }
         public int StatusType { get; set; }
         public int StatusValue { get; set; }
-        public int IsSynced { get; set; }
+        [JsonProperty("IsSynced")]
+        public int IsJsonSynced { get; set; }
     }
 }

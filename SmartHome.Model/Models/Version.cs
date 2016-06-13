@@ -21,6 +21,7 @@ namespace SmartHome.Model.Models
         public string AuthCode { get; set; }
         public string PassPhrase { get; set; }
         public string Mac { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties

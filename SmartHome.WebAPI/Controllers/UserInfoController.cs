@@ -367,7 +367,7 @@ namespace SmartHome.WebAPI.Controllers
                 oHomeEntity.IsInternet = Convert.ToInt32(home.IsInternet);
                 oHomeEntity.IsDefault = Convert.ToInt32(home.IsDefault);
                 oHomeEntity.IsActive = Convert.ToInt32(home.IsActive);
-                oHomeEntity.IsSynced = Convert.ToInt32(home.IsSynced);
+                oHomeEntity.IsJsonSynced = Convert.ToInt32(home.IsSynced);
 
                 oLoginObject.Home.Add(oHomeEntity);
             }
@@ -386,7 +386,7 @@ namespace SmartHome.WebAPI.Controllers
             {
                 UserHomeLinkEntity linkEntity = Mapper.Map<UserHomeLink, UserHomeLinkEntity>(entity);
                 linkEntity.IsAdmin = Convert.ToInt32(entity.IsAdmin);
-                linkEntity.IsSynced = Convert.ToInt32(entity.IsSynced);
+                linkEntity.IsJsonSynced = Convert.ToInt32(entity.IsSynced);
                 oLoginObject.UserHomeLink.Add(linkEntity);
             }
         }
@@ -401,7 +401,7 @@ namespace SmartHome.WebAPI.Controllers
             foreach (UserRoomLink link in homeViewModel.UserRoomLinks)
             {
                 UserRoomLinkEntity oUserRoomLinkEntity = Mapper.Map<UserRoomLink, UserRoomLinkEntity>(link);
-                oUserRoomLinkEntity.IsSynced = Convert.ToInt32(link.IsSynced);
+                oUserRoomLinkEntity.IsJsonSynced = Convert.ToInt32(link.IsSynced);
                 oLoginObject.UserRoomLink.Add(oUserRoomLinkEntity);
             }
         }
@@ -417,7 +417,7 @@ namespace SmartHome.WebAPI.Controllers
                 UserInfoEntity oUserInfoEntity = Mapper.Map<UserInfo, UserInfoEntity>(user);
                 oUserInfoEntity.LoginStatus = Convert.ToInt32(user.LoginStatus);
                 oUserInfoEntity.RegStatus = Convert.ToInt32(user.RegStatus);
-                oUserInfoEntity.IsSynced = Convert.ToInt32(user.IsSynced);
+                oUserInfoEntity.IsJsonSynced = Convert.ToInt32(user.IsSynced);
                 oLoginObject.UserInfo.Add(oUserInfoEntity);
             }            
         }
