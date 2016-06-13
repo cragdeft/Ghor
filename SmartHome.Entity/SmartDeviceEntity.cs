@@ -19,6 +19,7 @@ namespace SmartHome.Entity
         public int AppsBleId { get; set; }
         public string DeviceName { get; set; }
         public string DeviceHash { get; set; }
+        [JsonProperty("Version")]
         public string FirmwareVersion { get; set; }
         public int IsDeleted { get; set; }
         public DeviceType? DeviceType { get; set; }

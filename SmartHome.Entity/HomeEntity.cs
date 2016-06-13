@@ -29,10 +29,10 @@ namespace SmartHome.Entity
         public string PassPhrase { get; set; }
         public int MeshMode { get; set; }
         public string Zone { get; set; }
-        public bool IsInternet { get; set; }
-        public bool IsDefault { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsSynced { get; set; }
+        public int IsInternet { get; set; }
+        public int IsDefault { get; set; }
+        public int IsActive { get; set; }
+        public int IsSynced { get; set; }
         public List<RouterInfoEntity> SmartRouter { get; set; }
 
         #endregion
