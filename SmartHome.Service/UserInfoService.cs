@@ -45,6 +45,17 @@ namespace SmartHome.Service
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
 
+        public string PasswordRecoveryByEmail(string email)
+        {
+            var tempPass = _userInfoRepository.Queryable()
+                    .Where(p => p.Email == email)
+                    .FirstOrDefault();
+
+            return tempPass != null ? tempPass.Password : string.Empty;
+        }
+
+
+
         public bool IsValidLogin(string email, string pass)
         {
             return _userInfoRepository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
@@ -67,6 +78,18 @@ namespace SmartHome.Service
         public IEnumerable<WebPagesRole> GetsWebPagesRoles()
         {
             return _webPagesRoleRepository.Query().Select();
+        }
+
+        public IEnumerable<UserInfo> GetUserInfos(string email, string pass)
+        {
+            var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
+
+            var temp = _userInfoRepository.Queryable().Where(x => x.Email == email && x.Password == pass)
+                .Include(x => x.UserHomeLinks.Select(y => y.Home.SmartRouterInfos))
+                .Include(x => x.UserHomeLinks.Select(y => y.Home))
+                .Include(x => x.UserRoomLinks.Select(y => y.Room.SmartDevices.Select(p => p.DeviceStatus))).ToList();
+
+            return temp;
         }
 
     }
