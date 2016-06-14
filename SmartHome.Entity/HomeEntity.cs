@@ -15,7 +15,7 @@ namespace SmartHome.Entity
         }
         #region Primitive Properties 
         public int HomeId { get; set; }
-        [JsonProperty("id")]
+        [JsonProperty("Id")]
         public int AppsHomeId { get; set; }
         public string Name { get; set; }
         public string Address1 { get; set; }
@@ -32,8 +32,8 @@ namespace SmartHome.Entity
         public int IsInternet { get; set; }
         public int IsDefault { get; set; }
         public int IsActive { get; set; }
-        [JsonProperty("IsSynced")]
-        public int IsJsonSynced { get; set; }
+        //[JsonProperty("IsSynced")]
+        public int IsSynced { get; set; }
         public List<RouterInfoEntity> SmartRouter { get; set; }
 
         #endregion

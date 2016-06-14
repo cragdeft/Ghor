@@ -10,17 +10,17 @@ namespace SmartHome.Entity
     public class RouterInfoEntity
     {
         #region Primitive Properties 
-        [JsonProperty("id")]
+        [JsonProperty("Id")]
         public int AppsRouterInfoId { get; set; }
         [JsonProperty("Home")]
         public int AppsHomeId { get; set; }
-        [JsonProperty("localBrokerIp")]
+        [JsonProperty("LocalBrokerIp")]
         public string LocalBrokerIp { get; set; }
-        [JsonProperty("localBrokerPort")]
+        [JsonProperty("LocalBrokerPort")]
         public string LocalBrokerPort { get; set; }
         public string LocalBrokerUsername { get; set; }
         public string LocalBrokerPassword { get; set; }
-        [JsonProperty("macAddress")]
+        [JsonProperty("MacAddress")]
         public string MacAddress { get; set; }
         public string Ssid { get; set; }
         public string SsidPassword { get; set; }

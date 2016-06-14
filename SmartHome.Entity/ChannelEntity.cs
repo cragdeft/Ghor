@@ -18,8 +18,8 @@ namespace SmartHome.Entity
         public string LoadName { get; set; }
         public int LoadType { get; set; }
         public int LoadWatt { get; set; }
-        [JsonProperty("IsSynced")]
-        public int IsJsonSynced { get; set; }
+        //[JsonProperty("IsSynced")]
+        public int IsSynced { get; set; }
         #endregion
     }
 }

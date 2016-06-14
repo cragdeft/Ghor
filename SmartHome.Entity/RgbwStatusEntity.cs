@@ -22,8 +22,8 @@ namespace SmartHome.Entity
         public int ColorB { get; set; }
         public bool IsWhiteEnabled { get; set; }
         public int DimmingValue { get; set; }
-        [JsonProperty("IsSynced")]
-        public bool IsJsonSynced { get; set; }
+        //[JsonProperty("IsSynced")]
+        public bool IsSynced { get; set; }
         #endregion
     }
 }

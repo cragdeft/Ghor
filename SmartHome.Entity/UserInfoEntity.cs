@@ -37,8 +37,8 @@ namespace SmartHome.Entity
         public string Country { get; set; }
         public int LoginStatus { get; set; }
         public int RegStatus { get; set; }
-        [JsonProperty("IsSynced")]
-        public int IsJsonSynced { get; set; }
+        //[JsonProperty("IsSynced")]
+        public int IsSynced { get; set; }
         #endregion
     }
 }

@@ -35,12 +35,27 @@ namespace SmartHome.Service
         public IEnumerable<UserInfo> GetsUserInfos(string username, string password)
         {
             return _userInfoRepository.Query(p => p.UserName == username && p.Password == password).Include(x => x.UserHomeLinks).Select();
-
         }
+
+        public IEnumerable<UserInfo> GetsUserInfosByEmail(string email, string password)
+        {
+            return _userInfoRepository.Query(p => p.Email == email && p.Password == password).Include(x => x.UserHomeLinks).Select();
+        }
+
         public bool IsLoginIdUnique(string email)
         {
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
+
+        public string PasswordRecoveryByEmail(string email)
+        {
+            var tempPass = _userInfoRepository.Queryable()
+                    .Where(p => p.Email == email)
+                    .FirstOrDefault();
+
+            return tempPass != null ? tempPass.Password : string.Empty;
+        }
+
         public bool IsValidLogin(string email, string pass)
         {
             return _userInfoRepository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
