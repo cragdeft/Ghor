@@ -27,6 +27,7 @@ using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using SmartHome.Model.ViewModels;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -50,7 +51,7 @@ namespace SmartHome.WebAPI.Controllers
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
             oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
             oLoginObject.UserInfo = new List<UserInfoEntity>();
-            oLoginObject.Home = new List<HomeEntity>();
+            oLoginObject.Home = new List<Entity.HomeEntity>();
             oLoginObject.Room = new List<RoomEntity>();
             string msg = string.Empty;
 
@@ -102,7 +103,7 @@ namespace SmartHome.WebAPI.Controllers
                     IConfigurationParserManagerService serviceConfigure = new ConfigurationParserManagerService(unitOfWork);
                     try
                     {
-                        response = ProcessUserInfomations(oRootObject, response, oLoginObject, msg, service, serviceConfigure);
+                        ProcessUserInfomations(oRootObject, response, oLoginObject, msg, service, serviceConfigure);
                     }
                     catch (Exception ex)
                     {
@@ -148,75 +149,7 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        //working
-        [Route("api/PasswordRecovery")]
-        [HttpPost]
-        public HttpResponseMessage PasswordRecovery(JObject encryptedString)
-        {
-            #region Initialization
-
-            HttpResponseMessage response;
-            string msg = string.Empty;
-
-            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-            if (string.IsNullOrEmpty(msg))
-            {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-            }
-            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
-
-
-            #endregion
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            {
-                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-                {
-                    IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessPasswordRecovery(Convert.ToString(tempJsonObject.Email), service);
-                }
-            }
-            return response;
-        }
-
         #region No Action Methods
-
-        [NonAction]
-        private HttpResponseMessage ProcessPasswordRecovery(string userEmail, IUserInfoService service)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                var isEmailExists = service.IsLoginIdUnique(userEmail);
-                if (isEmailExists)
-                {
-                    FillPasswordRecoveryInfos(service.PasswordRecoveryByEmail(userEmail), "User password", HttpStatusCode.OK, oRootObject);
-                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos(string.Empty, "User not exist", HttpStatusCode.BadRequest, oRootObject);
-                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-                }
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-        private void FillPasswordRecoveryInfos(string userPassword, string message, HttpStatusCode code, PasswordRecoveryRootObjectEntity oRootObject)
-        {
-            oRootObject.data.Password = userPassword;
-            oRootObject.MESSAGE = new ResponseMessage();
-            oRootObject.MESSAGE = SetResponseMessage(message, code);
-        }
-
         [NonAction]
         private HttpResponseMessage ProcessIsUserExist(LoginRootObjectEntity oRootObject, UserInfoEntity oUserInfo, IUserInfoService service)
         {
@@ -315,9 +248,8 @@ namespace SmartHome.WebAPI.Controllers
         {
             HttpResponseMessage response;
             ObjectInitialization(oLoginObject);
-            //need to work
-            //var oUserHomeLink = serviceConfigure.GetsHomesAllInfo(user.UserInfoId, user.UserHomeLinks.FirstOrDefault() == null ? false : user.UserHomeLinks.FirstOrDefault().IsAdmin);
-            //FillLoginObjectByData(oLoginObject, oUserHomeLink);
+            var homeViewModel = serviceConfigure.GetsHomesAllInfo(user.UserInfoId);
+            FillLoginObjectByData(oLoginObject, homeViewModel);
             oRootObject.data = new LoginObjectEntity();
             oRootObject.data = oLoginObject;
             response = PrepareJsonResponseForGetUserInfos(oRootObject, "Success", HttpStatusCode.OK);
@@ -326,22 +258,11 @@ namespace SmartHome.WebAPI.Controllers
         [NonAction]
         private HttpResponseMessage PrepareJsonResponseForGetUserInfos(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
         {
-            oRootObject.MESSAGE = new ResponseMessage();
-            oRootObject.MESSAGE = SetResponseMessage(message, code);
+            oRootObject.MESSAGE = new LoginMessage();
+            oRootObject.MESSAGE = SetLoginMessage(message, code);
             string msg = JsonConvert.SerializeObject(oRootObject);
             msg = msg.Replace("false", "0");
             msg = msg.Replace("true", "1");
-
-            HttpResponseMessage response2 = new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-
-            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-        }
-
-
-        [NonAction]
-        private HttpResponseMessage PrepareJsonResponse<T>(T oRootObject)
-        {
-            string msg = JsonConvert.SerializeObject(oRootObject);
             return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
         }
 
@@ -349,145 +270,156 @@ namespace SmartHome.WebAPI.Controllers
         [NonAction]
         private HttpResponseMessage PrepareJsonResponse(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
         {
-            oRootObject.MESSAGE = new ResponseMessage();
-            oRootObject.MESSAGE = SetResponseMessage(message, code);
+            oRootObject.MESSAGE = new LoginMessage();
+            oRootObject.MESSAGE = SetLoginMessage(message, code);
             string msg = JsonConvert.SerializeObject(oRootObject);
             return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
         }
-        private void FillLoginObjectByData(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillLoginObjectByData(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
-            FillUserInfoToLoginObject(oLoginObject, oUserHomeLink);
-            FillUserHomeLinkInfoToLoginObject(oLoginObject, oUserHomeLink);
-            FillHomeInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillUserInfoToLoginObject(oLoginObject, homeViewModel);
+            FillUserHomeLinkInfoToLoginObject(oLoginObject, homeViewModel);
+            FillHomeInfoToLoginObject(oLoginObject, homeViewModel);
             //user room link
-            FillUserRoomLinkInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillUserRoomLinkInfoToLoginObject(oLoginObject, homeViewModel);
             //smart router
-            FillSmartRouterInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillSmartRouterInfoToLoginObject(oLoginObject, homeViewModel);
             //room
-            FillRoomInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillRoomInfoToLoginObject(oLoginObject, homeViewModel);
             //smart device
-            FillSmartDeviceInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillSmartDeviceInfoToLoginObject(oLoginObject, homeViewModel);
             //d-status
-            FillSmartDeviceStatusInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillSmartDeviceStatusInfoToLoginObject(oLoginObject, homeViewModel);
             //channel
-            FillChannelInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillChannelInfoToLoginObject(oLoginObject, homeViewModel);
             //c-status
-            FillChannelStatusInfoToLoginObject(oLoginObject, oUserHomeLink);
+            FillChannelStatusInfoToLoginObject(oLoginObject, homeViewModel);
+            //Rgb-status
+            FillRgbwStatusInfoToLoginObject(oLoginObject, homeViewModel);
         }
         [NonAction]
-        private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillRgbwStatusInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
+            Mapper.CreateMap<RgbwStatus, RgbwStatusEntity>();
+            IEnumerable<RgbwStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<RgbwStatus>, IEnumerable<RgbwStatusEntity>>(homeViewModel.RgbwStatuses);
+            oLoginObject.RgbwStatus.AddRange(oDeviceStatusEntity);
+        }
+        [NonAction]
+        private void FillChannelStatusInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
+        {
+            List<ChannelStatus> channelStatuses = new List<ChannelStatus>();
+            foreach (Channel ch in homeViewModel.Channels)
+            {
+                channelStatuses.AddRange(ch.ChannelStatuses);
+            }
             Mapper.CreateMap<ChannelStatus, ChannelStatusEntity>();
-            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(p => ((SmartSwitch)p).Channels).SelectMany(z => z.ChannelStatuses)));
+            IEnumerable<ChannelStatusEntity> oChannelStatusEntity = Mapper.Map<IEnumerable<ChannelStatus>, IEnumerable<ChannelStatusEntity>>(channelStatuses);
             oLoginObject.ChannelStatus.AddRange(oChannelStatusEntity);
         }
         [NonAction]
-        private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillChannelInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
             Mapper.CreateMap<Channel, ChannelEntity>();
-            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).Where(p => p.DeviceType == Model.Enums.DeviceType.SmartSwitch6g).SelectMany(z => ((SmartSwitch)z).Channels)));
+            IEnumerable<ChannelEntity> oChannelEntity = Mapper.Map<IEnumerable<Channel>, IEnumerable<ChannelEntity>>(homeViewModel.Channels);
             oLoginObject.Channel.AddRange(oChannelEntity);
         }
         [NonAction]
-        private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillSmartDeviceStatusInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
+            List<DeviceStatus> deviceStatuses = new List<DeviceStatus>();
+            foreach (SmartDevice device in homeViewModel.SmartDevices)
+            {
+                deviceStatuses.AddRange(device.DeviceStatus);
+            }
             Mapper.CreateMap<DeviceStatus, DeviceStatusEntity>();
-            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(y => y.SmartDevices).SelectMany(z => z.DeviceStatus)));
+            IEnumerable<DeviceStatusEntity> oDeviceStatusEntity = Mapper.Map<IEnumerable<DeviceStatus>, IEnumerable<DeviceStatusEntity>>(deviceStatuses);
             oLoginObject.DeviceStatus.AddRange(oDeviceStatusEntity);
         }
         [NonAction]
-        private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillSmartDeviceInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
             Mapper.CreateMap<SmartDevice, SmartDeviceEntity>();
-            IEnumerable<SmartDeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<SmartDeviceEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms.SelectMany(z => z.SmartDevices)));
+            IEnumerable<SmartDeviceEntity> oDeviceEntity = Mapper.Map<IEnumerable<SmartDevice>, IEnumerable<SmartDeviceEntity>>(homeViewModel.SmartDevices);
             oLoginObject.Device.AddRange(oDeviceEntity);
         }
         [NonAction]
-        private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
             Mapper.CreateMap<Room, RoomEntity>();
-            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.Rooms));
+            IEnumerable<RoomEntity> oRoomEntity = Mapper.Map<IEnumerable<Room>, IEnumerable<RoomEntity>>(homeViewModel.Rooms);
             oLoginObject.Room.AddRange(oRoomEntity);
         }
         [NonAction]
-        private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillSmartRouterInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
             Mapper.CreateMap<RouterInfo, RouterInfoEntity>();
-            IEnumerable<RouterInfoEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<RouterInfo>, IEnumerable<RouterInfoEntity>>(oUserHomeLink.Select(p => p.Home).SelectMany(x => x.SmartRouterInfos));
+            IEnumerable<RouterInfoEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<RouterInfo>, IEnumerable<RouterInfoEntity>>(homeViewModel.Routers);
             oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
         }
         [NonAction]
-        private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillHomeInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
-            Mapper.CreateMap<Home, HomeEntity>()
+            Mapper.CreateMap<Home, Home>()
                   .ForMember(dest => dest.MeshMode, opt => opt.MapFrom(src => (int)src.MeshMode));
-            IEnumerable<HomeEntity> oHomeEntity = Mapper.Map<IEnumerable<Home>, IEnumerable<HomeEntity>>(oUserHomeLink.Select(p => p.Home));
-            oLoginObject.Home.AddRange(oHomeEntity);
+            foreach (Home home in homeViewModel.Homes)
+            {
+                HomeEntity oHomeEntity = Mapper.Map<Home, HomeEntity>(home);
+                oHomeEntity.IsInternet = Convert.ToInt32(home.IsInternet);
+                oHomeEntity.IsDefault = Convert.ToInt32(home.IsDefault);
+                oHomeEntity.IsActive = Convert.ToInt32(home.IsActive);
+                oHomeEntity.IsJsonSynced = Convert.ToInt32(home.IsSynced);
+
+                oLoginObject.Home.Add(oHomeEntity);
+            }
+
         }
         [NonAction]
-        private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillUserHomeLinkInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
-            //need to work
-            //Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
-            //                            .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.HId))
-            //                            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.HId))
-            //                            .ForMember(dest => dest.Home, opt => opt.MapFrom(src => src.Home.Id))
-            //                            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id));
-            //IEnumerable<UserHomeLinkEntity> oUserHomeLinkEntity = Mapper.Map<IEnumerable<UserHomeLink>, IEnumerable<UserHomeLinkEntity>>(oUserHomeLink);
-            //oLoginObject.UserHomeLink.AddRange(oUserHomeLinkEntity);
+            Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
+                                        .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.AppsHomeId))
+                                        .ForMember(dest => dest.AppsUserHomeLinkId, opt => opt.MapFrom(src => src.AppsHomeId))
+                                        .ForMember(dest => dest.AppsHomeId, opt => opt.MapFrom(src => src.Home.AppsHomeId))
+                                        .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId));
+
+            foreach (UserHomeLink entity in homeViewModel.UserHomeLinks)
+            {
+                UserHomeLinkEntity linkEntity = Mapper.Map<UserHomeLink, UserHomeLinkEntity>(entity);
+                linkEntity.IsAdmin = Convert.ToInt32(entity.IsAdmin);
+                linkEntity.IsJsonSynced = Convert.ToInt32(entity.IsSynced);
+                oLoginObject.UserHomeLink.Add(linkEntity);
+            }
         }
 
         [NonAction]
-        private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillUserRoomLinkInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
-            //need to work
-
-            //var tempUserId = oUserHomeLink.Select(p => p.UserInfo.UserInfoId).First();
-            //List<UserRoomLink> oUserRoomLink = new List<UserRoomLink>();
-            ////need to modify and replace this code
-            //using (IDataContextAsync context = new SmartHomeDataContext())
-            //{
-            //    using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            //    {
-            //        IConfigurationParserManagerService serviceConfigure = new ConfigurationParserManagerService(unitOfWork);
-            //        try
-            //        {
-            //            foreach (var item in oUserHomeLink.SelectMany(p => p.Home.Rooms).ToList())
-            //            {
-            //                var temp = serviceConfigure.GetUserRoomLink(tempUserId, item.RoomId);
-            //                if (temp != null)
-            //                {
-            //                    oUserRoomLink.Add(temp);
-            //                }
-
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-
-            //        }
-            //    }
-            //}
-
-
-            //Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
-            //                            //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
-            //                            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.UserInfo.Id))
-            //                            .ForMember(dest => dest.Room, opt => opt.MapFrom(src => src.Room.Id));
-            ////IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserHomeLink.Select(x => x.Home).SelectMany(y => y.Rooms.SelectMany(z => z.UserRoomLinks).Where(p => p != null)));
-            //IEnumerable<UserRoomLinkEntity> oUserRoomLinkEntity = Mapper.Map<IEnumerable<UserRoomLink>, IEnumerable<UserRoomLinkEntity>>(oUserRoomLink);
-            //oLoginObject.UserRoomLink.AddRange(oUserRoomLinkEntity);
+            Mapper.CreateMap<UserRoomLink, UserRoomLinkEntity>()
+                                        //.ForMember(dest => dest.UserRoomLinkEntityId, opt => opt.MapFrom(src => src))
+                                        .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId))
+                                        .ForMember(dest => dest.AppsRoomId, opt => opt.MapFrom(src => src.Room.AppsRoomId));
+            foreach (UserRoomLink link in homeViewModel.UserRoomLinks)
+            {
+                UserRoomLinkEntity oUserRoomLinkEntity = Mapper.Map<UserRoomLink, UserRoomLinkEntity>(link);
+                oUserRoomLinkEntity.IsJsonSynced = Convert.ToInt32(link.IsSynced);
+                oLoginObject.UserRoomLink.Add(oUserRoomLinkEntity);
+            }
         }
         [NonAction]
-        private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, IEnumerable<UserHomeLink> oUserHomeLink)
+        private void FillUserInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
         {
-            //need to work
-            //Mapper.CreateMap<UserInfo, UserInfoEntity>()
-            //                            .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Gender))
-            //                            .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
+            Mapper.CreateMap<UserInfo, UserInfoEntity>()
+                                        .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.Sex))
+                                        .ForMember(dest => dest.LoginStatus, opt => opt.MapFrom(src => src.LoginStatus == true ? 1 : 0));
 
-            //IEnumerable<UserInfoEntity> oUserInfoEntity = Mapper.Map<IEnumerable<UserInfo>, IEnumerable<UserInfoEntity>>(oUserHomeLink.Select(x => x.UserInfo));
-            //oLoginObject.UserInfo.Add(oUserInfoEntity.First());
+            foreach (UserInfo user in homeViewModel.Users)
+            {
+                UserInfoEntity oUserInfoEntity = Mapper.Map<UserInfo, UserInfoEntity>(user);
+                oUserInfoEntity.LoginStatus = Convert.ToInt32(user.LoginStatus);
+                oUserInfoEntity.RegStatus = Convert.ToInt32(user.RegStatus);
+                oUserInfoEntity.IsJsonSynced = Convert.ToInt32(user.IsSynced);
+                oLoginObject.UserInfo.Add(oUserInfoEntity);
+            }
         }
 
         [NonAction]
@@ -497,7 +429,7 @@ namespace SmartHome.WebAPI.Controllers
             oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
             oLoginObject.UserRoomLink = new List<UserRoomLinkEntity>();
             oLoginObject.RgbwStatus = new List<RgbwStatusEntity>();
-            oLoginObject.Home = new List<HomeEntity>();
+            oLoginObject.Home = new List<Entity.HomeEntity>();
             oLoginObject.RouterInfo = new List<RouterInfoEntity>();
             oLoginObject.Room = new List<RoomEntity>();
             oLoginObject.ChannelStatus = new List<ChannelStatusEntity>();
@@ -507,9 +439,9 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         [NonAction]
-        private ResponseMessage SetResponseMessage(string message, HttpStatusCode code)
+        private LoginMessage SetLoginMessage(string message, HttpStatusCode code)
         {
-            ResponseMessage oLoginMessage = new ResponseMessage();
+            LoginMessage oLoginMessage = new LoginMessage();
             oLoginMessage.HTTP_MESSAGE = message;
             oLoginMessage.HTTP_STATUS = (int)code;
             return oLoginMessage;

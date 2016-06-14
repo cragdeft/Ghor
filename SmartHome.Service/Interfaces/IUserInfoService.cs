@@ -14,17 +14,13 @@ namespace SmartHome.Service.Interfaces
     {
         IEnumerable<UserInfo> GetsUserInfos();
 
-        IEnumerable<UserInfo> GetsUserInfos(string userEmail, string password);
+        IEnumerable<UserInfo> GetsUserInfos(string username, string password);
 
         IEnumerable<WebPagesRole> GetsWebPagesRoles();
         bool IsLoginIdUnique(string email);
-        string PasswordRecoveryByEmail(string email);
-
 
         bool IsValidLogin(string email, string pass);
-
-        UserInfoEntity Add(UserInfoEntity model);
-
         IEnumerable<UserInfo> GetUserInfos(string email, string pass);
+        UserInfoEntity Add(UserInfoEntity model);
     }
 }

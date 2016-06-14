@@ -28,58 +28,23 @@ namespace SmartHome.Service
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
         }
-
         public IEnumerable<UserInfo> GetsUserInfos()
         {
             return _userInfoRepository.Query().Select();
         }
-
-        public IEnumerable<UserInfo> GetsUserInfos(string userEmail, string password)
+        public IEnumerable<UserInfo> GetsUserInfos(string username, string password)
         {
-            return _userInfoRepository.Query(p => p.Email == userEmail && p.Password == password).Include(x => x.UserHomeLinks).Select();
+            return _userInfoRepository.Query(p => p.UserName == username && p.Password == password).Include(x => x.UserHomeLinks).Select();
 
         }
-
         public bool IsLoginIdUnique(string email)
         {
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
-
-        public string PasswordRecoveryByEmail(string email)
-        {
-            var tempPass = _userInfoRepository.Queryable()
-                    .Where(p => p.Email == email)
-                    .FirstOrDefault();
-
-            return tempPass != null ? tempPass.Password : string.Empty;
-        }
-
-
-
         public bool IsValidLogin(string email, string pass)
         {
             return _userInfoRepository.Query(p => p.Email == email && p.Password == pass).Select().Count() == 0 ? false : true;
         }
-
-
-        public UserInfoEntity Add(UserInfoEntity entity)
-        {
-            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
-            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
-            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
-            Model.Models.UserInfo model = Mapper.Map<Entity.UserInfoEntity, Model.Models.UserInfo>(entity);
-            _userInfoRepository.Insert(model);
-            return entity;
-
-        }
-
-
-        public IEnumerable<WebPagesRole> GetsWebPagesRoles()
-        {
-            return _webPagesRoleRepository.Query().Select();
-        }
-
         public IEnumerable<UserInfo> GetUserInfos(string email, string pass)
         {
             var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
@@ -91,6 +56,21 @@ namespace SmartHome.Service
 
             return temp;
         }
+        public UserInfoEntity Add(UserInfoEntity entity)
+        {
+            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
+            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
+            Model.Models.UserInfo model = Mapper.Map<Entity.UserInfoEntity, Model.Models.UserInfo>(entity);
 
+            _userInfoRepository.Insert(model);
+            return entity;
+
+        }
+        public IEnumerable<WebPagesRole> GetsWebPagesRoles()
+        {
+            return _webPagesRoleRepository.Query().Select();
+        }
     }
 }
