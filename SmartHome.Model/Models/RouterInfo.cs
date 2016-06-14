@@ -25,6 +25,7 @@ namespace SmartHome.Model.Models
         public string Ssid { get; set; }
         public string SsidPassword { get; set; }
         public bool IsSynced { get; set; }
+
         #endregion
 
         #region Complex Properties
