@@ -24,7 +24,7 @@ namespace SmartHome.Model.Models
         public string MacAddress { get; set; }
         public string Ssid { get; set; }
         public string SsidPassword { get; set; }
-        public bool IsDataSynced { get; set; }
+        public bool IsSynced { get; set; }
         #endregion
 
         #region Complex Properties

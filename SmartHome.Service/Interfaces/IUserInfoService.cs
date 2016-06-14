@@ -10,7 +10,7 @@ using SmartHome.Entity;
 namespace SmartHome.Service.Interfaces
 {
 
-    public interface IUserInfoService 
+    public interface IUserInfoService
     {
         IEnumerable<UserInfo> GetsUserInfos();
 
@@ -18,9 +18,13 @@ namespace SmartHome.Service.Interfaces
 
         IEnumerable<WebPagesRole> GetsWebPagesRoles();
         bool IsLoginIdUnique(string email);
+        string PasswordRecoveryByEmail(string email);
+
 
         bool IsValidLogin(string email, string pass);
-       
+
         UserInfoEntity Add(UserInfoEntity model);
+
+        IEnumerable<UserInfo> GetUserInfos(string email, string pass);
     }
 }
