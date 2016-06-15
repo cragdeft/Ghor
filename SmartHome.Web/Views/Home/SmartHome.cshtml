@@ -10,11 +10,11 @@
 <h2 class="padding-bottom-9">
     <span>
         Welcome to
-        @*@if (@Model.Count() != 0)
+        @if (@Model.Count() != 0)
         {
             <strong>@Model.FirstOrDefault().Home.Name </strong>
-        }*@
-         
+        }
+
     </span>
 </h2>
 <div id="tabs">
@@ -27,29 +27,29 @@
 
     <div id="tabs-1">
         <div class="row">
-            @*@if (appVersion != null && appVersion.Count() > 0)
+            @if (appVersion != null && appVersion.Count() > 0)
             {
                 @Html.Partial("_SmartHomeMain", appVersion)
-            }*@
+            }
 
         </div>
     </div>
 
     <div id="tabs-2">
         <div class="row">
-            @*@foreach (var item in Model)
-            {                
+            @foreach (var item in Model)
+            {
                 @Html.Partial("_SmartHomeRoom", item.Home.Rooms.ToList())
-            }*@
+            }
         </div>
     </div>
 
     <div id="tabs-3">
-            @*@Html.Partial("_SmartHomeDevice", Model)*@
-            
-        </div>
-        
+        @Html.Partial("_SmartHomeDevice", Model)
+
     </div>
+
+</div>
 
 </div>
 
@@ -66,8 +66,8 @@
             $("#tabs").tabs();
 
             $('.room').on('click', function (e) {
-               //alert($(this).html())
-                $("#tabs").tabs("option", "active", 2);                
+                //alert($(this).html())
+                $("#tabs").tabs("option", "active", 2);
                 e.preventDefault();
                 $("body, html").animate({
                     scrollTop: $($(this).attr('data-room-link')).offset().top

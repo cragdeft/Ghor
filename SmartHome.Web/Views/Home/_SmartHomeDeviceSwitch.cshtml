@@ -25,12 +25,27 @@
                         <div class="col-sm-4">
                         </div>
                         <div class="col-sm-4">
-                            <div class="row">
-                                <img src="~/Images/device/indicator_on.png" alt="bed room" />
-                            </div>
-                            <div class="row">
-                                <span class="font-size-10 text-grey">indicator</span>
-                            </div>
+                            @if (@Model.DeviceStatus.Any(p => p.StatusType == StatusType.SmartSwitchIndicator))
+                            {
+                                if (@Model.DeviceStatus.Where(p => p.StatusType == StatusType.SmartSwitchIndicator).FirstOrDefault().Value == "1")
+                                {
+                                    <div class="row">
+                                        <img src="~/Images/device/indicator_on.png" alt="indicator_on" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row">
+                                        <span class="font-size-10 text-grey">indicator off</span>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <span class="font-size-10 text-grey">indicator</span>
+                                </div>
+                            }
                         </div>
                     </div>
 

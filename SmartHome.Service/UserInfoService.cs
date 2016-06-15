@@ -21,12 +21,14 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
 
         public UserInfoService(IUnitOfWorkAsync unitOfWork)
         {
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
+            _userHomeLinkRepository = unitOfWork.RepositoryAsync<UserHomeLink>();
         }
         public IEnumerable<UserInfo> GetsUserInfos()
         {

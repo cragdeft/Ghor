@@ -20,7 +20,10 @@ namespace SmartHome.Web.CustomHtmlHelpers
             TagBuilder mainRow = new TagBuilder("div");
             if (tempChannel == null)
             {
-                return new MvcHtmlString(mainRow.ToString());
+                var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+                string imgUrl = urlHelper.Content("~/Images/device/" + "default_on.png");
+                string defaultChannel= "<div><div class=\"row\"><img alt=\"Dimlight\" src="+ imgUrl + " /></div><div class=\"row\"><span class=\"font-size-10 text-grey\"></span></div></div>";
+                return new MvcHtmlString(defaultChannel);
             }
 
             TagBuilder rowPic = new TagBuilder("div");

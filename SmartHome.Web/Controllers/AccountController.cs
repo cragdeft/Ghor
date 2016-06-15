@@ -50,21 +50,22 @@ namespace SmartHome.Web.Controllers
                         {
                             unitOfWork.BeginTransaction();
                             // string en = SecurityManager.PassEncrypt(model.Password.Trim());
-                            string de = SecurityManager.PassDecrypt("46tUX/XbJOPCnTLtU283wg==");
-                            var user = service.GetsUserInfos(model.Username, SecurityManager.PassEncrypt(model.Password.Trim())).FirstOrDefault();
+                            //pass=qwerty
+                            //string de = SecurityManager.PassDecrypt("46tUX/XbJOPCnTLtU283wg==");
+                            var user = service.GetsUserInfosByEmail(model.Username, SecurityManager.PassEncrypt(model.Password.Trim())).FirstOrDefault();
 
                             #region Login Logic
 
                             if (user != null)
                             {
-                                var roles = service.GetsWebPagesRoles().Select(p => p.RoleName).ToArray();//user.Roles.Select(m => m.RoleName).ToArray();
-
+                                //var roles = service.GetUserRole(user.UserInfoId).Select(p => p.RoleName).ToArray();//user.Roles.Select(m => m.RoleName).ToArray();
+                                var roles = new[] { user.UserHomeLinks.FirstOrDefault() == null ? "Normal" : user.UserHomeLinks.FirstOrDefault().IsAdmin == true ? "Admin" : "Normal" };
                                 CustomPrincipalSerializeModel serializeModel = new CustomPrincipalSerializeModel();
                                 serializeModel.UserInfoId = user.UserInfoId;
                                 serializeModel.FirstName = user.FirstName;
                                 serializeModel.LastName = user.LastName;
                                 serializeModel.Email = user.Email;
-                                serializeModel.IsAdmin = user.UserHomeLinks.FirstOrDefault()==null?false: user.UserHomeLinks.FirstOrDefault().IsAdmin;
+                                serializeModel.IsAdmin = user.UserHomeLinks.FirstOrDefault() == null ? false : user.UserHomeLinks.FirstOrDefault().IsAdmin;
                                 serializeModel.roles = roles;
 
                                 string userData = JsonConvert.SerializeObject(serializeModel);

@@ -14,7 +14,7 @@ using SmartHome.Model.Models;
 
 namespace SmartHome.Web.Controllers
 {
-    
+    [CustomAuthorize(Roles = "Admin")]
     public class HomeController : BaseController
     {
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -33,6 +33,7 @@ namespace SmartHome.Web.Controllers
         {
             return RedirectToAction("SmartHome");
         }
+        [AllowAnonymous]
         public ActionResult Configure()
         {
             ViewBag.Message = "Configure";
@@ -83,6 +84,7 @@ namespace SmartHome.Web.Controllers
                     try
                     {
                         var homeViewModel = service.GetsHomesAllInfo(User.UserInfoId);
+                        //var homeViewModel = service.GetsHomesAllInfo(1);
                         var oVersion = service.GetsAppVersionAllInfo();
 
                         ViewBag.AppVersion = oVersion;
