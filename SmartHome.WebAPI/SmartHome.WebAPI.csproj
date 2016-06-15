@@ -326,8 +326,11 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\appsmarthome - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\appsmarthome - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\pub-service.pubxml" />
-    <None Include="Properties\PublishProfiles\test-app.pubxml" />
     <None Include="Properties\PublishProfiles\test-service.pubxml" />
     <None Include="Properties\PublishProfiles\testWebApi.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

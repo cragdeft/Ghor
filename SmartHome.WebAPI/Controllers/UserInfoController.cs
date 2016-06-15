@@ -149,8 +149,6 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-
-        //working
         [Route("api/PasswordRecovery")]
         [HttpPost]
         public HttpResponseMessage PasswordRecovery(JObject encryptedString)
@@ -179,6 +177,15 @@ namespace SmartHome.WebAPI.Controllers
                 }
             }
             return response;
+        }
+
+        [Route("api/GetFirmwareUpdate")]
+        [HttpPost]
+        public HttpResponseMessage FirmwareUpdateInfo()
+        {
+            string firmwareMessage = "{\"SMSW6G\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRB12\":{\"version\":\"2\", \"file\":\"RGBW_Dynamic_DName_update.img\"}, \"SMCRTV\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMCRTH\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRWTR\":{\"version\":\"2\", \"file\":\"Switch.img\"}}";
+            //string msg = JsonConvert.SerializeObject(firmwareMessage);
+            return new HttpResponseMessage() { Content = new StringContent(firmwareMessage, Encoding.UTF8, "application/json") };
         }
 
         #region No Action Methods
