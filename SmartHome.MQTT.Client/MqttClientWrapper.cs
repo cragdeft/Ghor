@@ -56,7 +56,7 @@ namespace SmartHome.MQTT.Client
                         LocalBrokerConnection(BrokerAddress);
                     }
 
-                    else if (BrokerAddress == "192.168.2.1")
+                    else if (BrokerAddress == "103.232.102.253")
                     {
                         BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
                     }
@@ -176,7 +176,7 @@ namespace SmartHome.MQTT.Client
                         ushort msgId = SmartHomeMQTT.Publish(messgeTopic, // topic
                                           Encoding.UTF8.GetBytes(publishMessage), // message body
                                           MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
-                                          true);
+                                          false);
                     }
                 }
                 catch (Exception ex)
@@ -354,7 +354,7 @@ namespace SmartHome.MQTT.Client
         private void BrokerConnectionWithCertificate(string brokerAddress)
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(Resource.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
-            SmartHomeMQTT.Connect(ClientId, "mosharraf", "mosharraf", false, BrokerKeepAlivePeriod);
+            SmartHomeMQTT.Connect(ClientId, "kanok", "kanok", false, BrokerKeepAlivePeriod);
         }
 
         private void BrokerConnectionWithCertificateForWebBroker(string brokerAddress)
@@ -367,6 +367,7 @@ namespace SmartHome.MQTT.Client
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, BrokerPort, false, null, null, MqttSslProtocols.None, null);
             SmartHomeMQTT.Connect(ClientId, "kanok", "kanok", false, BrokerKeepAlivePeriod);
+            //SmartHomeMQTT.Connect(ClientId, "kanok", "kanok",false, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, true,,null,false, BrokerKeepAlivePeriod);
         }
 
         private void BrokerConnectionWithoutCertificate(string brokerAddress)

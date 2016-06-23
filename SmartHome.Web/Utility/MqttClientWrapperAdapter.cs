@@ -1,4 +1,6 @@
-﻿using SmartHome.Entity;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SmartHome.Entity;
 using SmartHome.Json;
 using SmartHome.Model.Enums;
 using SmartHome.MQTT.Client;
@@ -36,11 +38,15 @@ namespace SmartHome.Web.Utility
         }
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
-        {           
+        {
             if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
             {
-                JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
-                jsonManager.Save();
+                if (IsValidJson(customEventArgs.ReceivedMessage))
+                {
+                    JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
+                    jsonManager.Save();
+                }
+
             }
 
             if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
@@ -73,6 +79,36 @@ namespace SmartHome.Web.Utility
         static void SubscribedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             string msg = customEventArgs.ReceivedMessage;
+        }
+
+
+        private static bool IsValidJson(string strInput)
+        {
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {
+                    //Exception in parsing json
+                    Console.WriteLine(jex.Message);
+                    return false;
+                }
+                catch (Exception ex) //some other exception
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

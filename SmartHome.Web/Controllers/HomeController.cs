@@ -14,7 +14,7 @@ using SmartHome.Model.Models;
 
 namespace SmartHome.Web.Controllers
 {
-    [CustomAuthorize(Roles = "Admin")]
+    [CustomAuthorize(Roles = "Admin,Normal")]
     public class HomeController : BaseController
     {
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
