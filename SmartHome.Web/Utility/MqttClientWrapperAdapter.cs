@@ -7,6 +7,7 @@ using SmartHome.MQTT.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace SmartHome.Web.Utility
@@ -39,19 +40,21 @@ namespace SmartHome.Web.Utility
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
-            if (customEventArgs.ReceivedTopic == "configuration")// CommandType.Configuration.ToString()
+            //if (customEventArgs.ReceivedTopic == "configuration/00:0c:43:76:20:a3")// CommandType.Configuration.ToString()
+            if (customEventArgs.ReceivedTopic.Contains("configuration"))// CommandType.Configuration.ToString()
             {
                 if (IsValidJson(customEventArgs.ReceivedMessage))
                 {
                     JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage);
                     jsonManager.Save();
                 }
-
             }
 
-            if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
+            //if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
+            if (customEventArgs.ReceivedTopic.Contains("feedback"))
             {
-                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Feedback);
+
+                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, customEventArgs.ReceivedTopic.Split('/')[1], CommandType.Feedback);
                 CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
                 commandJsonManager.Parse();
                 //FeedbackCommandParse(jsonObject);
@@ -59,14 +62,14 @@ namespace SmartHome.Web.Utility
 
             if (customEventArgs.ReceivedTopic == "command/kanok")//CommandType.Command.ToString()
             {
-                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
-                new CommandJsonManager().CommandLog(jsonObject);
+                //   var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
+                //   new CommandJsonManager().CommandLog(jsonObject);
             }
 
             if (customEventArgs.ReceivedTopic == "json")//CommandType.Command.ToString()
             {
-                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
-                new CommandJsonManager().CommandLog(jsonObject);
+                // var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
+                //new CommandJsonManager().CommandLog(jsonObject);
             }
 
 
@@ -74,13 +77,11 @@ namespace SmartHome.Web.Utility
         static void PublishedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             string msg = customEventArgs.ReceivedMessage;
-
         }
         static void SubscribedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
             string msg = customEventArgs.ReceivedMessage;
         }
-
 
         private static bool IsValidJson(string strInput)
         {
