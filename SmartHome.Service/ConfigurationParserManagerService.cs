@@ -1171,6 +1171,9 @@ namespace SmartHome.Service
             if (userHomeLink.IsAdmin)
             {
                 users = _userInfoRepository.Queryable().ToList();
+                var tempUserHomeLink = _userHomeLinkRepository.Queryable().Where(p => p.Home.HomeId == userHomeLink.Home.HomeId).Select(p => p.UserInfo.UserInfoId);
+                var query = users.Where(p => tempUserHomeLink.Contains(p.UserInfoId));
+                users = query.ToList();
             }
             else
             {
