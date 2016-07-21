@@ -1088,8 +1088,11 @@ namespace SmartHome.Service
                 IList<Home> Homes = new List<Home>();
                 IList<UserHomeLink> userHomeLinks = new List<UserHomeLink>();
                 HomeViewModel homeViewModel = new HomeViewModel();
-                IList<int> roomIds = GetRoomIds(userInfoId);
                 UserHomeLink userHomeLink = GetUserHomeLink(userInfoId);
+                IList<UserInfo> userInfos = GetUserInfosForAdminUser(userInfoId);
+                IList<int> userIds = userInfos.Select(p => p.UserInfoId).ToList();
+                IList<int> roomIds = GetRoomIds(userInfoId, userHomeLink, userIds);
+
                 if (userHomeLink == null)
                 {
                     IList<UserInfo> users = GetUserInfoList(userInfoId);
@@ -1098,18 +1101,19 @@ namespace SmartHome.Service
                 }
                 else
                 {
-                    IList<UserInfo> users = GetUserInfoList(userHomeLink);
-                    userHomeLinks.Add(userHomeLink);
+                    IList<UserInfo> users = userInfos;//GetUserInfoList(userHomeLink);
+                    //userHomeLinks.Add(userHomeLink);//
                     Home home = userHomeLink.Home;
                     Homes.Add(home);
                     IList<RouterInfo> routers = home.SmartRouterInfos.ToList();
                     IList<Room> rooms = home.Rooms.Where(r => roomIds.Contains(r.RoomId)).ToList();
-                    IList<UserRoomLink> userrooms = GetUserRoomLinks(roomIds, userInfoId);
+                    IList<UserRoomLink> userrooms = GetUserRoomLinks(roomIds, userIds);
                     IList<SmartDevice> devices = GetDevices(roomIds);
                     IList<NextAssociatedDevice> aDevices = GetNextAssociatedDevices(userHomeLink, home.HomeId);
                     IList<int> deviceIds = devices.Select(s => s.DeviceId).ToList();
                     IList<Channel> channels = GetChannels(deviceIds);
                     IList<RgbwStatus> rgbStatuses = GetRgbStatuses(deviceIds);
+                    userHomeLinks = GetUserHomeLinks(userHomeLink);
 
 
                     homeViewModel = new HomeViewModel();
@@ -1137,17 +1141,69 @@ namespace SmartHome.Service
             return null;
         }
 
-        private IList<int> GetRoomIds(int userInfoId)
+        private IList<UserHomeLink> GetUserHomeLinks(UserHomeLink userHomeLink)
         {
-            IList<int> roomIds = _userRoomLinkRepository.Queryable()
+            IList<UserHomeLink> userHomeLinks = new List<UserHomeLink>();
+            if (userHomeLink.IsAdmin)
+            {
+                userHomeLinks = _userHomeLinkRepository.Queryable().Where(p => p.Home.HomeId == userHomeLink.Home.HomeId).ToList();
+            }
+            else
+            {
+                userHomeLinks.Add(userHomeLink);
+            }
+            return userHomeLinks;
+        }
+
+        private IList<int> GetRoomIds(int userInfoId, UserHomeLink userHomeLink, IList<int> userIds)
+        {
+            IList<int> roomIds = new List<int>();
+            if (userHomeLink.IsAdmin)
+            {
+                roomIds = _userRoomLinkRepository.Queryable()
+                    .Where(p => userIds.Contains(p.UserInfo.UserInfoId)).Select(s => s.Room.RoomId).ToList();
+            }
+            else
+            {
+                roomIds = _userRoomLinkRepository.Queryable()
                     .Where(p => p.UserInfo.UserInfoId == userInfoId).Select(s => s.Room.RoomId).ToList();
+            }
+
 
             return roomIds;
         }
+
+        private IList<UserInfo> GetUserInfosForAdminUser(int userInfoId)
+        {
+            IList<UserInfo> users = new List<UserInfo>();
+            UserHomeLink userHomeLink = GetUserHomeLinksByUserInfo(userInfoId);
+            if (userHomeLink.IsAdmin)
+            {
+                users = _userInfoRepository.Queryable().ToList();
+                var tempUserHomeLink = _userHomeLinkRepository.Queryable().Where(p => p.Home.HomeId == userHomeLink.Home.HomeId).Select(p => p.UserInfo.UserInfoId);
+                var query = users.Where(p => tempUserHomeLink.Contains(p.UserInfoId));
+                users = query.ToList();
+            }
+            else
+            {
+                users.Add(userHomeLink.UserInfo);
+            }
+            return users;
+        }
+
+        private UserHomeLink GetUserHomeLinksByUserInfo(int userInfoId)
+        {
+            return _userHomeLinkRepository.Queryable()
+                .Where(p => p.UserInfo.UserInfoId == userInfoId)
+                .FirstOrDefault();
+        }
+
+
         private UserHomeLink GetUserHomeLink(int userInfoId)
         {
             try
             {
+
                 UserHomeLink userHomeLink =
                   _userHomeLinkRepository.Queryable()
                       .Where(p => p.UserInfo.UserInfoId == userInfoId)
@@ -1188,11 +1244,11 @@ namespace SmartHome.Service
             return users;
         }
 
-        private IList<UserRoomLink> GetUserRoomLinks(IList<int> roomIds, int userInfoId)
+        private IList<UserRoomLink> GetUserRoomLinks(IList<int> roomIds, IList<int> userIds)
         {
             return _userRoomLinkRepository
                     .Queryable()
-                    .Where(w => roomIds.Contains(w.Room.RoomId) && w.UserInfo.UserInfoId == userInfoId)
+                    .Where(w => roomIds.Contains(w.Room.RoomId) && userIds.Contains(w.UserInfo.UserInfoId))
                     .ToList();
         }
         private IList<NextAssociatedDevice> GetNextAssociatedDevices(UserHomeLink userHomeLink, int homeId)
