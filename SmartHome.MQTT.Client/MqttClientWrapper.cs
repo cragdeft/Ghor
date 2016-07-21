@@ -39,7 +39,7 @@ namespace SmartHome.MQTT.Client
         public MqttClientWrapper()
         {
 
-            
+
         }
         public void MakeConnection()
         {
@@ -51,12 +51,12 @@ namespace SmartHome.MQTT.Client
             {
                 if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
-                    if (BrokerAddress == "192.168.11.113")
+                    if (BrokerAddress == "192.168.11.189")
                     {
                         LocalBrokerConnection(BrokerAddress);
                     }
 
-                    else if (BrokerAddress == "103.232.102.253")
+                    else if (BrokerAddress == "192.168.1.1")
                     {
                         BrokerConnectionWithoutCertificateForCommand(BrokerAddress);
                     }
@@ -233,28 +233,27 @@ namespace SmartHome.MQTT.Client
 
         public void client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            //var receivedMessage = Encoding.UTF8.GetString(e.Message);
-            #region MyRegion
-            //if (e.Topic == CommandType.Configuration.ToString())
-            //{
-            //    new JsonManager().JsonProcess(jsonString);
-            //}
+            if (e.Topic.ToString().Contains("feedback"))
+            {
+                FeedbackPublishReceivedMessage(e);
+            }
+            else
+            {
+                NotifyMessage("MqttMsgPublishReceived", Encoding.UTF8.GetString(e.Message), e.Topic.ToString());
+            }
 
-            //if (e.Topic == CommandType.Feedback.ToString())
-            //{
-             //   var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Feedback);
-            //    FeedbackCommandParse(jsonObject);
-            //}
-
-            //if (e.Topic == CommandType.Command.ToString())
-            //{
-            //    var jsonObject = ConvertToCommandJsonObject(jsonString, CommandType.Command);
-            //    CommandLog(jsonObject);
-            //} 
-            #endregion
-
-            NotifyMessage("MqttMsgPublishReceived", Encoding.UTF8.GetString(e.Message), e.Topic.ToString());
             Logger.Log(string.Format("Mqtt-Msg-Publish-Received to topic {0}", e.Topic.ToString()));
+        }
+
+        private void FeedbackPublishReceivedMessage(MqttMsgPublishEventArgs e)
+        {
+            List<string> feedback = new List<string>();
+            foreach (var item in e.Message)
+            {
+                feedback.Add(item.ToString());
+            }
+            string joinedFeedback = string.Join(",", feedback);
+            NotifyMessage("MqttMsgPublishReceived", joinedFeedback, e.Topic.ToString());
         }
 
         public void client_ConnectionClosed(object sender, EventArgs e)
@@ -267,12 +266,12 @@ namespace SmartHome.MQTT.Client
             Logger.Log("Connection has been closed");
         }
 
-    
+
         void HandleReconnect()
-        {            
+        {
             MakeConnection();
         }
-        
+
 
 
 
@@ -343,11 +342,11 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             SmartHomeMQTT.ConnectionClosed += client_ConnectionClosed;
 
-            var temp = new string[] { "configuration", "/command", "/feedback", "/command/kanok", "/feedback/kanok" };
+            var temp = new string[] { "configuration/#", "/command", "feedback/#" };
 
-            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "configuration", "/command", "/feedback","/command/kanok","/feedback/kanok" },
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "configuration/#", "/command", "feedback/#" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+                                      MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
         }
 
@@ -361,7 +360,7 @@ namespace SmartHome.MQTT.Client
         {
             SmartHomeMQTT = new MqttClient(brokerAddress, MqttSettings.MQTT_BROKER_DEFAULT_SSL_PORT, true, new X509Certificate(WebBrokerResouce.ca), null, MqttSslProtocols.TLSv1_2, client_RemoteCertificateValidationCallback);
             SmartHomeMQTT.Connect(ClientId, "kanok", "kanok", false, BrokerKeepAlivePeriod);
-        }        
+        }
 
         private void BrokerConnectionWithoutCertificateForCommand(string brokerAddress)
         {
