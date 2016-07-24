@@ -39,8 +39,6 @@ namespace SmartHome.WebAPI.Controllers
 
         }
 
-
-        // [Route("api/GetRegisteredUser")]
         [Route("api/RegisterUser")]
         public HttpResponseMessage RegisterUser(JObject encryptedString)
         {
@@ -115,7 +113,6 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        // [Route("api/IsUserExist")]
         [Route("api/IsUserExist")]
         [HttpPost]
         public HttpResponseMessage IsUserExist(JObject encryptedString)
@@ -489,7 +486,7 @@ namespace SmartHome.WebAPI.Controllers
         {
             Mapper.CreateMap<UserHomeLink, UserHomeLinkEntity>()
                             .ForMember(dest => dest.UserHomeLinkEntityId, opt => opt.MapFrom(src => src.AppsHomeId))
-                            .ForMember(dest => dest.AppsUserHomeLinkId, opt => opt.MapFrom(src => src.AppsHomeId))
+                            .ForMember(dest => dest.AppsUserHomeLinkId, opt => opt.MapFrom(src => src.AppsUserHomeLinkId))
                             .ForMember(dest => dest.AppsHomeId, opt => opt.MapFrom(src => src.Home.AppsHomeId))
                             .ForMember(dest => dest.AppsUserId, opt => opt.MapFrom(src => src.UserInfo.AppsUserId))
                             .ForMember(dest => dest.IsAdmin, opt => opt.MapFrom(src => src.IsAdmin == true ? 1 : 0))
