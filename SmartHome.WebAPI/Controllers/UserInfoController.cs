@@ -33,7 +33,6 @@ namespace SmartHome.WebAPI.Controllers
 {
     public class UserInfoController : ApiController
     {
-
         public UserInfoController()
         {
 
@@ -117,11 +116,10 @@ namespace SmartHome.WebAPI.Controllers
         [HttpPost]
         public HttpResponseMessage IsUserExist(JObject encryptedString)
         {
+
             #region Initialization
 
             HttpResponseMessage response;
-            LoginObjectEntity oLoginObject = new LoginObjectEntity();
-            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
             string msg = string.Empty;
 
             msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
@@ -129,9 +127,7 @@ namespace SmartHome.WebAPI.Controllers
             {
                 return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
             }
-
-            oLoginObject = JsonConvert.DeserializeObject<LoginObjectEntity>(msg);
-            var oUserInfo = oLoginObject.UserInfo.First();
+            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
 
             #endregion
 
@@ -140,7 +136,7 @@ namespace SmartHome.WebAPI.Controllers
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessIsUserExist(oRootObject, oUserInfo, service);
+                    response = ProcessIsUserExist(Convert.ToString(tempJsonObject.Email), service);
                 }
             }
             return response;
@@ -241,27 +237,29 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         [NonAction]
-        private HttpResponseMessage ProcessIsUserExist(LoginRootObjectEntity oRootObject, UserInfoEntity oUserInfo, IUserInfoService service)
+        private HttpResponseMessage ProcessIsUserExist(string userEmail, IUserInfoService service)
         {
             HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
             try
             {
-                oRootObject.data = new LoginObjectEntity();
-                var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                var isEmailExists = service.IsLoginIdUnique(userEmail);
                 if (isEmailExists)
                 {
-                    response = PrepareJsonResponse(oRootObject, "User already exist", HttpStatusCode.Conflict);
+                    FillPasswordRecoveryInfos("", "User already exist", HttpStatusCode.Conflict, oRootObject);
+                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
                 }
                 else
                 {
-                    response = PrepareJsonResponse(oRootObject, "User not exist", HttpStatusCode.OK);
+                    FillPasswordRecoveryInfos("", "User not exist", HttpStatusCode.OK, oRootObject);
+                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
                 }
             }
             catch (Exception ex)
             {
-                oRootObject.data = new LoginObjectEntity();
-                response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
-
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
 
             return response;
