@@ -1,4 +1,4 @@
-﻿@model List<SmartHome.Model.Models.UserHomeLink>
+﻿@model SmartHome.Model.ViewModels.HomeViewModel
 
 @{
     ViewBag.Title = "SmartHome";
@@ -10,9 +10,10 @@
 <h2 class="padding-bottom-9">
     <span>
         Welcome to
-        @if (@Model.Count() != 0)
+        @if (@Model.Homes.FirstOrDefault() != null)
         {
-            <strong>@Model.FirstOrDefault().Home.Name </strong>
+            <strong> @Model.Homes.FirstOrDefault().Name </strong>
+
         }
 
     </span>
@@ -37,15 +38,12 @@
 
     <div id="tabs-2">
         <div class="row">
-            @foreach (var item in Model)
-            {
-                @Html.Partial("_SmartHomeRoom", item.Home.Rooms.ToList())
-            }
+            @Html.Partial("_SmartHomeRoom", @Model.Rooms.ToList())
         </div>
     </div>
 
     <div id="tabs-3">
-        @Html.Partial("_SmartHomeDevice", Model)
+        @Html.Partial("_SmartHomeDevice", @Model.Rooms.ToList())
 
     </div>
 
@@ -64,7 +62,7 @@
         $(document).ready(function () {
             $("#tabs").show();
             $("#tabs").tabs();
-     
+
 
             $('.room').on('click', function (e) {
                 //alert($(this).html())

@@ -1,8 +1,7 @@
-﻿@model List<SmartHome.Model.Models.UserHomeLink>
+﻿@model List<SmartHome.Model.Models.Room>
 
-@foreach (var nextHome in Model)
-{
-    foreach (var nextRoom in nextHome.Home.Rooms)
+
+    @foreach (var nextRoom in Model)
     {
         @*@Html.Raw("<div id="+ @nextRoom.Name.Replace(" ", "_") + ">")*@
 
@@ -41,10 +40,6 @@
         @Html.Raw("</div>")
 
     }
-
-
-
-}
 
 
 

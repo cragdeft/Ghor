@@ -17,14 +17,11 @@ namespace SmartHome.Web
         protected void Application_Start()
         {
             MqttClientWrapperAdapter.WrapperInstance.MakeConnection();
-            MqttClientWrapperAdapter.WrapperInstance.Publish("configuration/00:0c:43:76:20:78", "{}");
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            // Database.SetInitializer<SmartHomeDataContext>(null);
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
