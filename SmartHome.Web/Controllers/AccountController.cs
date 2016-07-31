@@ -70,7 +70,7 @@ namespace SmartHome.Web.Controllers
 
                                 string userData = JsonConvert.SerializeObject(serializeModel);
                                 FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(
-                                         user.UserInfoId,
+                                         (int)user.UserInfoId,
                                         user.Email,
                                          DateTime.Now,
                                          DateTime.Now.AddMinutes(15),

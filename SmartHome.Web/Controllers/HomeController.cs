@@ -88,7 +88,7 @@ namespace SmartHome.Web.Controllers
                         var oVersion = service.GetsAppVersionAllInfo();
 
                         ViewBag.AppVersion = oVersion;
-                        return View(homeViewModel.UserHomeLinks.ToList());
+                        return View(homeViewModel);
                     }
                     catch (Exception ex)
                     {
