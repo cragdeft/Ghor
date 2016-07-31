@@ -26,7 +26,7 @@ namespace SmartHome.Web.Security
             this.Identity = new GenericIdentity(Username);
         }
 
-        public int UserInfoId { get; set; }
+        public long UserInfoId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -36,7 +36,7 @@ namespace SmartHome.Web.Security
 
     public class CustomPrincipalSerializeModel
     {
-        public int UserInfoId { get; set; }
+        public long UserInfoId { get; set; }
         public string FirstName { get; set; }
         public string Email { get; set; }
         public string LastName { get; set; }
