@@ -142,6 +142,40 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
+        #region working
+
+        [Route("api/ChangePassword")]
+        [HttpPost]
+        public HttpResponseMessage ChangePassword(JObject encryptedString)
+        {
+            #region Initialization
+
+            HttpResponseMessage response;
+            string msg = string.Empty;
+            //"{\"Email\":\"kk.test@apl.com\",\"Password\":\"6ZlPF3qG/+LcC5brkDMZgA==\"}"
+            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+            if (string.IsNullOrEmpty(msg))
+            {
+                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+            }
+            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
+
+            #endregion
+
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            {
+                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+                {
+                    IUserInfoService service = new UserInfoService(unitOfWork);
+                    response = ProcessPasswordUpdate(Convert.ToString(tempJsonObject.Email), Convert.ToString(tempJsonObject.Password), service);
+                }
+            }
+            return response;
+        }
+
+        #endregion
+
+
         [Route("api/PasswordRecovery")]
         [HttpPost]
         public HttpResponseMessage PasswordRecovery(JObject encryptedString)
@@ -196,6 +230,7 @@ namespace SmartHome.WebAPI.Controllers
                 {
 
                     FillPasswordRecoveryInfos(service.PasswordRecoveryByEmail(userEmail), "User password", HttpStatusCode.OK, oRootObject);
+                    oRootObject.data.UserName = service.GetsUserInfosByEmail(userEmail, oRootObject.data.Password).FirstOrDefault().UserName;
                     response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
                 }
                 else
@@ -253,6 +288,36 @@ namespace SmartHome.WebAPI.Controllers
                 else
                 {
                     FillPasswordRecoveryInfos("", "User not exist", HttpStatusCode.OK, oRootObject);
+                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+                }
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
+        [NonAction]
+        private HttpResponseMessage ProcessPasswordUpdate(string userEmail,string userPassword, IUserInfoService service)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                var isEmailExists = service.IsLoginIdUnique(userEmail);
+                if (isEmailExists)
+                {
+                    service.PasswordUpdate(userEmail, userPassword);
+                    FillPasswordRecoveryInfos("", "Successfully Password Update", HttpStatusCode.OK, oRootObject);
+                    response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", "Password not update", HttpStatusCode.BadRequest, oRootObject);
                     response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
                 }
             }
