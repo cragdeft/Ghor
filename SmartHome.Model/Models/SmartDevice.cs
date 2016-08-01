@@ -15,7 +15,7 @@ namespace SmartHome.Model.Models
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DeviceId { get; set; }
+        public long DeviceId { get; set; }
         public int AppsDeviceId { get; set; }
         public int AppsRoomId { get; set; }
         public int AppsBleId { get; set; }

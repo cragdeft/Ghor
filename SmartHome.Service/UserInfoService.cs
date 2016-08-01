@@ -18,6 +18,7 @@ namespace SmartHome.Service
 {
     public class UserInfoService : IUserInfoService
     {
+        private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<UserInfo> _userInfoRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
@@ -25,6 +26,7 @@ namespace SmartHome.Service
 
         public UserInfoService(IUnitOfWorkAsync unitOfWork)
         {
+            _unitOfWorkAsync = unitOfWork;
             _userInfoRepository = unitOfWork.RepositoryAsync<UserInfo>();
             _channelRepository = unitOfWork.RepositoryAsync<Channel>();
             _webPagesRoleRepository = unitOfWork.RepositoryAsync<WebPagesRole>();
@@ -48,6 +50,43 @@ namespace SmartHome.Service
         {
             return _userInfoRepository.Queryable().Any(p => p.Email == email);
         }
+
+        public bool PasswordUpdate(string email, string password)
+        {
+            
+
+            _unitOfWorkAsync.BeginTransaction();
+            
+            try
+            {
+                //SaveHomeAndRouter();
+                var entity = MapUserInfoProperty(email, password);
+                entity.ObjectState = ObjectState.Modified;
+                _userInfoRepository.Update(entity);
+
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+            }
+            catch (Exception ex)
+            {
+                _unitOfWorkAsync.Rollback();
+                return false;
+            }
+
+            return true;
+
+
+        }
+
+        private UserInfo MapUserInfoProperty(string email, string password)
+        {
+            UserInfo model = _userInfoRepository.Queryable().Where(p => p.Email == email).FirstOrDefault();
+            model.AuditField.LastUpdatedBy = "admin";
+            model.AuditField.LastUpdatedDateTime = DateTime.Now;
+            model.Password = password;
+            return model;
+        }
+
 
         public string PasswordRecoveryByEmail(string email)
         {

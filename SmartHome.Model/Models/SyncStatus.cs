@@ -10,7 +10,7 @@ namespace SmartHome.Model.Models
     public class SyncStatus : Entity
     {
         #region Primitive Properties
-        public int SyncStatusId { get; set; }
+        public long SyncStatusId { get; set; }
         public string Status { get; set; }
         public bool IsActive { get; set; }
         #endregion

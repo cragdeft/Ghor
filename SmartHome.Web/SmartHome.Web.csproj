@@ -359,6 +359,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\sinepulsegreenhouse - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\sinepulsegreenhouse - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\web-app.pubxml" />
     <None Include="Properties\PublishProfiles\web-site.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

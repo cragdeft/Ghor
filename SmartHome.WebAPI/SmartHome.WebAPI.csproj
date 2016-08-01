@@ -387,6 +387,10 @@
       <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
       <Name>SmartHome.Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Json\SmartHome.Json.csproj">
+      <Project>{c3c87ed1-3965-4be6-a92c-0a26ab4c84a8}</Project>
+      <Name>SmartHome.Json</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
       <Name>SmartHome.Model</Name>

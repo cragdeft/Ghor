@@ -15,7 +15,7 @@ namespace SmartHome.Model.Models
         #region  Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RgbwStatusId { get; set; }
+        public long RgbwStatusId { get; set; }
         public int AppsRgbtStatusId { get; set; }
         public int AppsDeviceId { get; set; }
         public RGBColorStatusType RGBColorStatusType { get; set; }

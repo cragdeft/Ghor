@@ -28,6 +28,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using SmartHome.Model.ViewModels;
+using SmartHome.Json;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -142,8 +143,6 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        #region working
-
         [Route("api/ChangePassword")]
         [HttpPost]
         public HttpResponseMessage ChangePassword(JObject encryptedString)
@@ -173,8 +172,40 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
-        #endregion
+        [Route("api/ConfigurationProcess")]
+        [HttpPost]
+        public HttpResponseMessage ConfigurationProcess(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
 
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg);
+                jsonManager.Save();
+
+                FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
 
         [Route("api/PasswordRecovery")]
         [HttpPost]
@@ -301,7 +332,7 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         [NonAction]
-        private HttpResponseMessage ProcessPasswordUpdate(string userEmail,string userPassword, IUserInfoService service)
+        private HttpResponseMessage ProcessPasswordUpdate(string userEmail, string userPassword, IUserInfoService service)
         {
             HttpResponseMessage response;
             PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();

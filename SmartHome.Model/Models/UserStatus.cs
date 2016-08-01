@@ -10,7 +10,7 @@ namespace SmartHome.Model.Models
     public class UserStatus : Entity
     {
         #region Primitive Properties
-        public int UserStatusId { get; set; }
+        public long UserStatusId { get; set; }
         public string Status { get; set; }
         public bool IsActive { get; set; }
         #endregion

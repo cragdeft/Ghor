@@ -17,6 +17,11 @@ namespace SmartHome.Service.Interfaces
         IEnumerable<UserInfo> GetsUserInfosByEmail(string username, string password);
         IEnumerable<WebPagesRole> GetsWebPagesRoles();
         bool IsLoginIdUnique(string email);
+
+        bool PasswordUpdate(string email,string password);
+
+        
+
         string PasswordRecoveryByEmail(string email);
         bool IsValidLogin(string email, string pass);
         IEnumerable<UserInfo> GetUserInfos(string email, string pass);

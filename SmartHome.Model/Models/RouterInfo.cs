@@ -14,7 +14,7 @@ namespace SmartHome.Model.Models
         #region Primitive Properties 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RouterInfoId { get; set; }
+        public long RouterInfoId { get; set; }
         public int AppsRouterInfoId { get; set; }
         public int AppsHomeId { get; set; }
         public string LocalBrokerIp { get; set; }

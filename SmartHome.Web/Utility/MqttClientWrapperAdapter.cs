@@ -54,23 +54,13 @@ namespace SmartHome.Web.Utility
             if (customEventArgs.ReceivedTopic.Contains("feedback"))
             {
 
-                var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, customEventArgs.ReceivedTopic.Split('/')[1], CommandType.Feedback);
-                CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
-                commandJsonManager.Parse();
+                //var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, customEventArgs.ReceivedTopic.Split('/')[1], CommandType.Feedback);
+                //CommandJsonManager commandJsonManager = new CommandJsonManager(jsonObject);
+                //commandJsonManager.Parse();
                 //FeedbackCommandParse(jsonObject);
             }
 
-            if (customEventArgs.ReceivedTopic == "command/kanok")//CommandType.Command.ToString()
-            {
-                //   var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
-                //   new CommandJsonManager().CommandLog(jsonObject);
-            }
-
-            if (customEventArgs.ReceivedTopic == "json")//CommandType.Command.ToString()
-            {
-                // var jsonObject = new CommandJsonManager().ConvertToCommandJsonObject(customEventArgs.ReceivedMessage, CommandType.Command);
-                //new CommandJsonManager().CommandLog(jsonObject);
-            }
+          
 
 
         }

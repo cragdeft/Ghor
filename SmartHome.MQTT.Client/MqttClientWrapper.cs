@@ -51,6 +51,8 @@ namespace SmartHome.MQTT.Client
             {
                 if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
+                    
+
                     if (BrokerAddress == "192.168.11.189")
                     {
                         LocalBrokerConnection(BrokerAddress);
@@ -383,6 +385,7 @@ namespace SmartHome.MQTT.Client
 
         private void MQTTConnectiobn()
         {
+            
             SmartHomeMQTT.Connect(ClientId, null, null, false, BrokerKeepAlivePeriod);
         }
         #endregion

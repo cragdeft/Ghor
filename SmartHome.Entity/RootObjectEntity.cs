@@ -96,9 +96,11 @@ namespace SmartHome.Entity
         public PasswordRecoveryObjectEntity()
         {
             Password = string.Empty;
+            UserName = string.Empty;
 
         }
         public string Password { get; set; }
+        public string UserName { get; set; }
 
 
 

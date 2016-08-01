@@ -15,7 +15,7 @@ namespace SmartHome.Model.Models
         #region  Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ChannelStatusId { get; set; }
+        public long ChannelStatusId { get; set; }
         public int AppsChannelStatusId { get; set; }
         public int AppsChannelId { get; set; }
         public ChannelStatusType StatusType { get; set; }

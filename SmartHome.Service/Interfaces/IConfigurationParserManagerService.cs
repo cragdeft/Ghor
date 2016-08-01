@@ -22,7 +22,7 @@ namespace SmartHome.Service.Interfaces
         IEnumerable<DeviceInfoEntity> GetsDeviceAllInfo();
         IEnumerable<VersionInfoEntity> GetsAllVersion();
 
-        HomeViewModel GetsHomesAllInfo(int userInfoId);
+        HomeViewModel GetsHomesAllInfo(long userInfoId);
         List<Version> GetsAppVersionAllInfo();
     }
 }

@@ -72,7 +72,7 @@ namespace SmartHome.Service
 
         }
 
-        private  void MapRouterInfo()
+        private void MapRouterInfo()
         {
             //map parent
             Mapper.CreateMap<Home, HomeEntity>()
@@ -108,6 +108,15 @@ namespace SmartHome.Service
         {
             Home home = _homeRepository
                 .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).FirstOrDefault();
+
+            Mapper.CreateMap<HomeEntity, Home>();
+            return Mapper.Map<Home, HomeEntity>(home);
+        }
+
+        public HomeEntity GetHomeByPassPhrase(string passPhrase)
+        {
+            Home home = _homeRepository
+                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).FirstOrDefault();
 
             Mapper.CreateMap<HomeEntity, Home>();
             return Mapper.Map<Home, HomeEntity>(home);
@@ -341,17 +350,28 @@ namespace SmartHome.Service
 
         private void SaveHomeAndRouter()
         {
-            RouterInfoEntity router = GetRouter(_homeJsonEntity.RouterInfo[0].MacAddress);
+            string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault() == null ? "" : _homeJsonEntity.RouterInfo[0].MacAddress;
+            RouterInfoEntity router = GetRouter(macAddress);
+
             HomeEntity homeEntity = null;
             if (router != null)
             {
                 homeEntity = GetHome(router.Parent.HomeId);
                 _homeJsonEntity.Home[0].HomeId = router.Parent.HomeId;
             }
+            else
+            {
+                homeEntity = GetHomeByPassPhrase(_homeJsonEntity.Home[0].PassPhrase);
+                _homeJsonEntity.Home[0].HomeId = homeEntity == null ? 0 : homeEntity.HomeId;
+            }
 
             Home model = SaveOrUpdateHome(homeEntity);
             IList<UserInfo> listOfUsers = SaveOrUpdateUser();
-            SaveOrUpdateRouter(router, model);
+            if (macAddress != "")
+            {
+                SaveOrUpdateRouter(router, model);
+            }
+
             model = SaveOrUpdateRoom(model, listOfUsers);
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
@@ -468,8 +488,8 @@ namespace SmartHome.Service
         }
         private void DeleteHomeUser(UserInfo entity)
         {
-            IList<int> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
-            foreach (var id in userHomeLinkIds)
+            IList<long> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
+            foreach (long id in userHomeLinkIds)
             {
                 UserHomeLink userHomeLink = _userHomeRepository.Find(id);
                 userHomeLink.ObjectState = ObjectState.Deleted;
@@ -478,8 +498,8 @@ namespace SmartHome.Service
         }
         private void DeleteRoomUser(UserInfo entity)
         {
-            IList<int> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
-            foreach (int userRoomLinkid in userHomeLinkIds)
+            IList<long> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
+            foreach (long userRoomLinkid in userHomeLinkIds)
             {
                 UserRoomLink userRoomLink = _userRoomRepository.Find(userRoomLinkid);
                 userRoomLink.ObjectState = ObjectState.Deleted;
@@ -513,7 +533,7 @@ namespace SmartHome.Service
         {
             if (model.Rooms != null)
             {
-                IList<int> roomIds = model.Rooms.Select(s => s.RoomId).ToList();
+                IList<long> roomIds = model.Rooms.Select(s => s.RoomId).ToList();
                 model.Rooms = new List<Room>();
                 DeleteAllRooms(roomIds);
             }
@@ -573,7 +593,7 @@ namespace SmartHome.Service
                 _userHomeRepository.Insert(userHome);
             }
         }
-        private void DeleteAllRooms(IList<int> roomIds)
+        private void DeleteAllRooms(IList<long> roomIds)
         {
             foreach (var roomId in roomIds)
             {

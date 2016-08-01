@@ -13,7 +13,7 @@ namespace SmartHome.Model.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserHomeLinkId { get; set; }
+        public long UserHomeLinkId { get; set; }
         public int AppsHomeId { get; set; }
         public int AppsUserId { get; set; }
         public int AppsUserHomeLinkId { get; set; }

@@ -470,7 +470,7 @@ namespace SmartHome.Service
             return _webPagesRoleRepository.Query(e => e.RoleId == roleId).Select().FirstOrDefault();
         }
 
-        private UserRole GetUserRole(int userInfoId)
+        private UserRole GetUserRole(long userInfoId)
         {
             return _userRoleRepository.Query(e => e.UserInfo.UserInfoId == userInfoId).Select().FirstOrDefault();
         }
@@ -1087,7 +1087,7 @@ namespace SmartHome.Service
 
         #region Gets homes infos
 
-        public HomeViewModel GetsHomesAllInfo(int userInfoId)
+        public HomeViewModel GetsHomesAllInfo(long userInfoId)
         {
             try
             {
@@ -1111,12 +1111,12 @@ namespace SmartHome.Service
             }
         }
 
-        private void GetHomeRelatedUserInfos(int userInfoId, UserHomeLink userHomeLink)
+        private void GetHomeRelatedUserInfos(long userInfoId, UserHomeLink userHomeLink)
         {
             IList<Home> Homes = new List<Home>();
             IList<UserInfo> userInfos = GetUserInfosByUserId(userInfoId);
-            IList<int> userIds = userInfos.Select(p => p.UserInfoId).ToList();
-            IList<int> roomIds = GetRoomIds(userInfoId, userHomeLink, userIds);
+            IList<long> userIds = userInfos.Select(p => p.UserInfoId).ToList();
+            IList<long> roomIds = GetRoomIds(userInfoId, userHomeLink, userIds);
             _userHomeLinks = new List<UserHomeLink>();
 
             IList<UserInfo> users = userInfos;
@@ -1127,7 +1127,7 @@ namespace SmartHome.Service
             IList<UserRoomLink> userrooms = GetUserRoomLinks(roomIds, userIds);
             IList<SmartDevice> devices = GetDevices(roomIds);
             IList<NextAssociatedDevice> aDevices = GetNextAssociatedDevices(home.HomeId);
-            IList<int> deviceIds = devices.Select(s => s.DeviceId).ToList();
+            IList<long> deviceIds = devices.Select(s => s.DeviceId).ToList();
             IList<Channel> channels = GetChannels(deviceIds);
             IList<RgbwStatus> rgbStatuses = GetRgbStatuses(deviceIds);
             _userHomeLinks = GetUserHomeLinks(userHomeLink);
@@ -1146,7 +1146,7 @@ namespace SmartHome.Service
             _homeViewModel.RgbwStatuses = rgbStatuses;
         }
 
-        private void GetHomeLessUserInfos(int userInfoId)
+        private void GetHomeLessUserInfos(long userInfoId)
         {
             IList<UserInfo> users = GetUserInfoList(userInfoId);
             _homeViewModel = new HomeViewModel();
@@ -1167,9 +1167,9 @@ namespace SmartHome.Service
             return userHomeLinks;
         }
 
-        private IList<int> GetRoomIds(int userInfoId, UserHomeLink userHomeLink, IList<int> userIds)
+        private IList<long> GetRoomIds(long userInfoId, UserHomeLink userHomeLink, IList<long> userIds)
         {
-            IList<int> roomIds = new List<int>();
+            IList<long> roomIds = new List<long>();
             if (userHomeLink.IsAdmin)
             {
                 roomIds = _userRoomLinkRepository.Queryable()
@@ -1185,7 +1185,7 @@ namespace SmartHome.Service
             return roomIds;
         }
 
-        private IList<UserInfo> GetUserInfosByUserId(int userInfoId)
+        private IList<UserInfo> GetUserInfosByUserId(long userInfoId)
         {
             IList<UserInfo> users = new List<UserInfo>();
             UserHomeLink userHomeLink = GetUserHomeLinksByUserInfo(userInfoId);
@@ -1203,7 +1203,7 @@ namespace SmartHome.Service
             return users;
         }
 
-        private UserHomeLink GetUserHomeLinksByUserInfo(int userInfoId)
+        private UserHomeLink GetUserHomeLinksByUserInfo(long userInfoId)
         {
             return _userHomeLinkRepository.Queryable()
                 .Where(p => p.UserInfo.UserInfoId == userInfoId)
@@ -1212,7 +1212,7 @@ namespace SmartHome.Service
         }
 
 
-        private UserHomeLink GetUserHomeLink(int userInfoId)
+        private UserHomeLink GetUserHomeLink(long userInfoId)
         {
             try
             {
@@ -1249,21 +1249,21 @@ namespace SmartHome.Service
             }
             return users;
         }
-        private IList<UserInfo> GetUserInfoList(int userInfoId)
+        private IList<UserInfo> GetUserInfoList(long userInfoId)
         {
             IList<UserInfo> users = new List<UserInfo>();
             users = _userInfoRepository.Queryable().Where(p => p.UserInfoId == userInfoId).ToList();
             return users;
         }
 
-        private IList<UserRoomLink> GetUserRoomLinks(IList<int> roomIds, IList<int> userIds)
+        private IList<UserRoomLink> GetUserRoomLinks(IList<long> roomIds, IList<long> userIds)
         {
             return _userRoomLinkRepository
                     .Queryable()
                     .Where(w => roomIds.Contains(w.Room.RoomId) && userIds.Contains(w.UserInfo.UserInfoId))
                     .ToList();
         }
-        private IList<NextAssociatedDevice> GetNextAssociatedDevices(int homeId)
+        private IList<NextAssociatedDevice> GetNextAssociatedDevices(long homeId)
         {
             return _associatedDeviceRepository
            .Queryable()
@@ -1271,7 +1271,7 @@ namespace SmartHome.Service
            .ToList();
         }
 
-        private IList<SmartDevice> GetDevices(IList<int> roomIds)
+        private IList<SmartDevice> GetDevices(IList<long> roomIds)
         {
             return _deviceRepository
                         .Queryable()
@@ -1279,7 +1279,7 @@ namespace SmartHome.Service
                         .Include(i => i.DeviceStatus)
                         .ToList();
         }
-        private IList<Channel> GetChannels(IList<int> deviceIds)
+        private IList<Channel> GetChannels(IList<long> deviceIds)
         {
             return _channelRepository
                         .Queryable()
@@ -1287,7 +1287,7 @@ namespace SmartHome.Service
                         .Include(i => i.ChannelStatuses)
                         .ToList();
         }
-        private IList<RgbwStatus> GetRgbStatuses(IList<int> deviceIds)
+        private IList<RgbwStatus> GetRgbStatuses(IList<long> deviceIds)
         {
             return _rgbStatusRepository
                         .Queryable()

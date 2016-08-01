@@ -14,7 +14,7 @@ namespace SmartHome.Model.Models
         #region Primitive Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AddressId { get; set; }
+        public long AddressId { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string Zone { get; set; }
