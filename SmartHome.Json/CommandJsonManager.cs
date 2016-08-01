@@ -12,6 +12,7 @@ using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Service;
 using SmartHome.Service.Interfaces;
+using System.Text;
 
 namespace SmartHome.Json
 {
@@ -42,7 +43,7 @@ namespace SmartHome.Json
 
         #region Constructor
 
-     
+
 
         public CommandJsonManager()
         {
@@ -67,7 +68,11 @@ namespace SmartHome.Json
         private void SetupCommandArrayAndLength()
         {
             //CommandArray = _commandJson.Command.Skip(2).ToString().Replace("[", string.Empty).Replace("]", string.Empty).Split(',');
-            CommandArray = _commandJson.Command.ToString().Replace("[", string.Empty).Replace("]", string.Empty).Split(',').Skip(2).ToArray();
+            //byte[] toBytes = Encoding.ASCII.GetBytes(_commandJson.Command.ToString());
+            //CommandArray = _commandJson.Command.ToString().Replace("[", string.Empty).Replace("]", string.Empty).Split(',').ToArray();
+            CommandArray = _commandJson.Command.Split(',').ToArray();
+
+            //var byteArray= System.Text.Encoding.Unicode.GetBytes(_commandJson.Command.ToString());
             Length = CommandArray.Length;
         }
 
@@ -78,6 +83,15 @@ namespace SmartHome.Json
             _commandPerserService = new CommandParserService(_unitOfWorkAsync, commandJson.EmailAddress);
             _commandJson = commandJson;
             SetupCommandArrayAndLength();
+            _commandJson.DeviceUUId = getDeviceUUId();
+
+        }
+
+        private int getDeviceUUId()
+        {
+            int deviceId = (GetValue(CommandArray[0]) * 256) + GetValue(CommandArray[1]);
+            CommandArray = CommandArray.Skip(2).ToArray();
+            return Convert.ToInt32(_commandPerserService.FindDeviceHash(_commandJson.Mac, deviceId));
 
         }
 
@@ -161,9 +175,14 @@ namespace SmartHome.Json
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
 
-        public CommandJsonEntity ConvertToCommandJsonObject(string jsonString, CommandType commandType)
+        public CommandJsonEntity ConvertToCommandJsonObject(string jsonString, string mac, CommandType commandType)
         {
-            CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
+            //CommandJsonEntity jsonObject = CommandJsonManager.JsonDesrialized<CommandJsonEntity>(jsonString);
+            //jsonObject.CommandType = commandType;
+
+            CommandJsonEntity jsonObject = new CommandJsonEntity();
+            jsonObject.Command = jsonString.ToString();
+            jsonObject.Mac = mac;
             jsonObject.CommandType = commandType;
             return jsonObject;
         }
@@ -383,6 +402,8 @@ namespace SmartHome.Json
                 //    SaveSingleChannelStatus(channelValue, device);
                 //    //UpdateAllChannelStatus(device, channelValue);
                 //}
+
+                SaveSingleChannelStatus(channelValue, device);
             }
         }
 

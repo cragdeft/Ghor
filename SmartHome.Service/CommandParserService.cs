@@ -24,6 +24,9 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<CommandJson> _commandJsonRepository;
+        private readonly IRepositoryAsync<RouterInfo> _routerInfoRepository;
+        private readonly IRepositoryAsync<Home> _homeRepository;
+        private readonly IRepositoryAsync<Room> _roomRepository;
         private string _email;
         #endregion
 
@@ -35,6 +38,9 @@ namespace SmartHome.Service
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
             _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
             _commandJsonRepository = _unitOfWorkAsync.RepositoryAsync<CommandJson>();
+            _routerInfoRepository = _unitOfWorkAsync.RepositoryAsync<RouterInfo>();
+            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
+            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _email = email;
         }
 
@@ -132,7 +138,7 @@ namespace SmartHome.Service
             var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
 
             var temp = _deviceRepository
-                .Queryable().Where(u => u.DeviceHash == deviceHash.ToString()).Include(x => x.DeviceStatus).ToList()              
+                .Queryable().Where(u => u.DeviceHash == deviceHash.ToString()).Include(x => x.DeviceStatus).ToList()
                 .FirstOrDefault();
 
             //var tempCha = _channelRepository.Queryable().Include(x => x.ChannelStatuses).ToList();
@@ -142,6 +148,26 @@ namespace SmartHome.Service
 
             return temp;
 
+        }
+
+
+        public string FindDeviceHash(string mac, int AppsDeviceId)
+        {
+            var tempDevice = _deviceRepository.Queryable().Where(p => p.AppsBleId == AppsDeviceId);
+            var tempHome = _homeRepository.Queryable();
+            var tempRoom = _roomRepository.Queryable();
+            var tempRouter = _routerInfoRepository.Queryable().Where(p => p.MacAddress == mac.ToString());
+
+            var query = from ri in tempRouter
+                        join h in tempHome on ri.Parent.HomeId equals h.HomeId
+                        join r in tempRoom on h.HomeId equals r.Home.HomeId
+                        join s in tempDevice on r.RoomId equals s.Room.RoomId
+                        select new
+                        {
+                            s.DeviceHash
+                        };
+
+            return query.ToList().FirstOrDefault() == null ? "0" : query.ToList().FirstOrDefault().DeviceHash;
         }
 
 

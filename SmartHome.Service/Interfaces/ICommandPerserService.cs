@@ -20,7 +20,9 @@ namespace SmartHome.Service.Interfaces
         ChannelStatus AddChannelStatus(ChannelStatus channelStatus);
 
         SmartDevice FindDevice(int deviceHash);
-        
+
+        string FindDeviceHash(string mac, int AppsDeviceId);
+
         void LogCommand(CommandJsonEntity command);
 
         void UpdateChannel(Channel channel);
