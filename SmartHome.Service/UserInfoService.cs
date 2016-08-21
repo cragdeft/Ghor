@@ -53,10 +53,10 @@ namespace SmartHome.Service
 
         public bool PasswordUpdate(string email, string password)
         {
-            
+
 
             _unitOfWorkAsync.BeginTransaction();
-            
+
             try
             {
                 //SaveHomeAndRouter();
@@ -115,10 +115,10 @@ namespace SmartHome.Service
         public UserInfoEntity Add(UserInfoEntity entity)
         {
             Mapper.CreateMap<UserInfoEntity, UserInfo>()
-            .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields("Admin",DateTime.Now,"Admin",DateTime.Now)))
+            //.ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields("Admin", DateTime.Now, "Admin", DateTime.Now)))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
-           UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
+            UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
 
             _userInfoRepository.Insert(model);
             return entity;
