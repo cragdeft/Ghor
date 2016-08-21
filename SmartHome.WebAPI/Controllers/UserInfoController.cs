@@ -45,12 +45,7 @@ namespace SmartHome.WebAPI.Controllers
             #region Initialization
 
             HttpResponseMessage response;
-            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
             LoginObjectEntity oLoginObject = new LoginObjectEntity();
-            oLoginObject.UserHomeLink = new List<UserHomeLinkEntity>();
-            oLoginObject.UserInfo = new List<UserInfoEntity>();
-            oLoginObject.Home = new List<Entity.HomeEntity>();
-            oLoginObject.Room = new List<RoomEntity>();
             string msg = string.Empty;
 
 
@@ -69,7 +64,7 @@ namespace SmartHome.WebAPI.Controllers
                 using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
                 {
                     IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessGetRegisteredUser(oRootObject, oUserInfo, unitOfWork, service);
+                    response = ProcessGetRegisteredUser(oUserInfo, unitOfWork, service);
                 }
             }
             return response;
@@ -362,9 +357,10 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         [NonAction]
-        private HttpResponseMessage ProcessGetRegisteredUser(LoginRootObjectEntity oRootObject, UserInfoEntity oUserInfo, IUnitOfWorkAsync unitOfWork, IUserInfoService service)
+        private HttpResponseMessage ProcessGetRegisteredUser(UserInfoEntity oUserInfo, IUnitOfWorkAsync unitOfWork, IUserInfoService service)
         {
             HttpResponseMessage response;
+            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
             try
             {
                 var isEmailExists = service.IsLoginIdUnique(oUserInfo.Email);
