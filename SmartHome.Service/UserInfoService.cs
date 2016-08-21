@@ -114,11 +114,11 @@ namespace SmartHome.Service
         }
         public UserInfoEntity Add(UserInfoEntity entity)
         {
-            Mapper.CreateMap<UserInfoEntity, Model.Models.UserInfo>()
+            Mapper.CreateMap<UserInfoEntity, UserInfo>()
             .ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
-            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields()))
+            .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields("Admin",DateTime.Now,"Admin",DateTime.Now)))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
-            Model.Models.UserInfo model = Mapper.Map<Entity.UserInfoEntity, Model.Models.UserInfo>(entity);
+           UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
 
             _userInfoRepository.Insert(model);
             return entity;
