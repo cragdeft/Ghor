@@ -40,8 +40,7 @@ namespace SmartHome.Web.Utility
 
         static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
         {
-            //if (customEventArgs.ReceivedTopic == "configuration/00:0c:43:76:20:a3")// CommandType.Configuration.ToString()
-            if (customEventArgs.ReceivedTopic.Contains("configuration"))// CommandType.Configuration.ToString()
+            if (customEventArgs.ReceivedTopic.Contains("configuration"))
             {
                 if (IsValidJson(customEventArgs.ReceivedMessage))
                 {
@@ -50,7 +49,6 @@ namespace SmartHome.Web.Utility
                 }
             }
 
-            //if (customEventArgs.ReceivedTopic == "feedback/kanok")//CommandType.Feedback.ToString()
             if (customEventArgs.ReceivedTopic.Contains("feedback"))
             {
 
