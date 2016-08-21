@@ -372,11 +372,26 @@ namespace SmartHome.Service
                 SaveOrUpdateRouter(router, model);
             }
 
+            if (macAddress == "")
+            {
+                DeleteHomeRouter(router, model);
+            }
+
             model = SaveOrUpdateRoom(model, listOfUsers);
             SaveHomeUser(model, listOfUsers);
             SaveOrUpdateDevice(model);
             SaveOrUpdateNextAssociatedDevice(model);
             SaveOrUpdateVersion(model);
+        }
+
+        private void DeleteHomeRouter(RouterInfoEntity router, Home home)
+        {
+            RouterInfo dbRouter = _routerInfoRepository.Queryable().Where(p => p.Parent.HomeId == home.HomeId).FirstOrDefault();
+            if (dbRouter != null)
+            {
+                _routerInfoRepository.Delete(dbRouter);
+            }
+
         }
         private void SaveOrUpdateVersion(Home home)
         {
