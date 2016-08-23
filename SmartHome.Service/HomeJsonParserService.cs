@@ -72,6 +72,15 @@ namespace SmartHome.Service
 
         }
 
+        public RouterInfoEntity GetRouterByHomeId(long homeId)
+        {
+            RouterInfo router = _routerInfoRepository
+                .Queryable().Include(x => x.Parent).Where(u => u.Parent.HomeId == homeId).FirstOrDefault();
+            MapRouterInfo();
+            return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
+
+        }
+
         private void MapRouterInfo()
         {
             //map parent
@@ -86,28 +95,10 @@ namespace SmartHome.Service
                  .ForMember(dest => dest.Parent, opt => opt.MapFrom(a => a.Parent));
         }
 
-        //private RouterInfoEntity MapRouterInfo(RouterInfo router)
-        //{
-        //    RouterInfoEntity routerEntity = new RouterInfoEntity();
-        //    routerEntity.AppsHomeId = router.AppsHomeId;
-        //    routerEntity.AppsRouterInfoId = router.AppsRouterInfoId;
-        //    routerEntity.IsSynced = Convert.ToInt32(router.IsSynced);
-        //    routerEntity.LocalBrokerIp = routerEntity.LocalBrokerIp;
-        //    routerEntity.LocalBrokerPassword = routerEntity.LocalBrokerPassword;
-        //    routerEntity.LocalBrokerPort = routerEntity.LocalBrokerPort;
-        //    routerEntity.LocalBrokerUsername = routerEntity.LocalBrokerUsername;
-        //    routerEntity.MacAddress = routerEntity.MacAddress;
-        //    routerEntity.Ssid = router.Ssid;
-        //    routerEntity.SsidPassword = router.SsidPassword;
-
-        //    //routerEntity.
-
-        //    return routerEntity;
-        //}
         public HomeEntity GetHome(int homeId)
         {
             Home home = _homeRepository
-                .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).FirstOrDefault();
+                .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).ToList().FirstOrDefault();
 
             Mapper.CreateMap<HomeEntity, Home>();
             return Mapper.Map<Home, HomeEntity>(home);
@@ -116,19 +107,21 @@ namespace SmartHome.Service
         public HomeEntity GetHomeByPassPhrase(string passPhrase)
         {
             Home home = _homeRepository
-                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).FirstOrDefault();
+                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).ToList().FirstOrDefault();
 
-            Mapper.CreateMap<HomeEntity, Home>();
+            Mapper.CreateMap<Home, HomeEntity>()
+            .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(a => a.IsInternet == true ? 1 : 0))
+            .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(a => a.IsDefault == true ? 1 : 0))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(a => a.IsActive == true ? 1 : 0))
+            .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0));
+
             return Mapper.Map<Home, HomeEntity>(home);
         }
 
         public UserInfo GetUser(string email)
         {
             UserInfo user = _userRepository
-                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
-
-            //Mapper.CreateMap<UserInfo, UserInfoEntity>();
-            //return Mapper.Map<UserInfo, UserInfoEntity>(user);
+                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).ToList().FirstOrDefault();
             return user;
         }
 
@@ -350,19 +343,21 @@ namespace SmartHome.Service
 
         private void SaveHomeAndRouter()
         {
-            string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault() == null ? "" : _homeJsonEntity.RouterInfo[0].MacAddress;
-            RouterInfoEntity router = GetRouter(macAddress);
 
             HomeEntity homeEntity = null;
-            if (router != null)
+            RouterInfoEntity router = null;
+
+            string passPhrase = _homeJsonEntity.Home.FirstOrDefault() == null ? "" : _homeJsonEntity.Home[0].PassPhrase;
+            string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault() == null ? "" : _homeJsonEntity.RouterInfo[0].MacAddress;
+
+            if (passPhrase != null)
             {
-                homeEntity = GetHome(router.Parent.HomeId);
-                _homeJsonEntity.Home[0].HomeId = router.Parent.HomeId;
-            }
-            else
-            {
-                homeEntity = GetHomeByPassPhrase(_homeJsonEntity.Home[0].PassPhrase);
+                homeEntity = GetHomeByPassPhrase(passPhrase);
                 _homeJsonEntity.Home[0].HomeId = homeEntity == null ? 0 : homeEntity.HomeId;
+                router = GetRouterByHomeId(_homeJsonEntity.Home[0].HomeId);
+                //user home
+                //user room
+                //room
             }
 
             Home model = SaveOrUpdateHome(homeEntity);
@@ -503,7 +498,7 @@ namespace SmartHome.Service
         }
         private void DeleteHomeUser(UserInfo entity)
         {
-            IList<long> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
+            IList<long> userHomeLinkIds = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == entity.UserInfoId).Select(s => s.UserHomeLinkId).ToList();
             foreach (long id in userHomeLinkIds)
             {
                 UserHomeLink userHomeLink = _userHomeRepository.Find(id);
@@ -513,7 +508,7 @@ namespace SmartHome.Service
         }
         private void DeleteRoomUser(UserInfo entity)
         {
-            IList<long> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
+            IList<long> userHomeLinkIds = _userRoomRepository.Queryable().Where(p => p.UserInfo.UserInfoId == entity.UserInfoId).Select(s => s.UserRoomLinkId).ToList();
             foreach (long userRoomLinkid in userHomeLinkIds)
             {
                 UserRoomLink userRoomLink = _userRoomRepository.Find(userRoomLinkid);
