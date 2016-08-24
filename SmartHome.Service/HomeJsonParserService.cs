@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -69,16 +70,6 @@ namespace SmartHome.Service
                 .Queryable().Include(x => x.Parent).Where(u => u.MacAddress == macAddress).FirstOrDefault();
             MapRouterInfo();
             return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
-
-        }
-
-        public RouterInfoEntity GetRouterByHomeId(long homeId)
-        {
-            RouterInfo router = _routerInfoRepository
-                .Queryable().Include(x => x.Parent).Where(u => u.Parent.HomeId == homeId).FirstOrDefault();
-            MapRouterInfo();
-            return Mapper.Map<RouterInfo, RouterInfoEntity>(router);
-
         }
 
         private void MapRouterInfo()
@@ -95,47 +86,31 @@ namespace SmartHome.Service
                  .ForMember(dest => dest.Parent, opt => opt.MapFrom(a => a.Parent));
         }
 
+        //private RouterInfoEntity MapRouterInfo(RouterInfo router)
+        //{
+        //    RouterInfoEntity routerEntity = new RouterInfoEntity();
+        //    routerEntity.AppsHomeId = router.AppsHomeId;
+        //    routerEntity.AppsRouterInfoId = router.AppsRouterInfoId;
+        //    routerEntity.IsSynced = Convert.ToInt32(router.IsSynced);
+        //    routerEntity.LocalBrokerIp = routerEntity.LocalBrokerIp;
+        //    routerEntity.LocalBrokerPassword = routerEntity.LocalBrokerPassword;
+        //    routerEntity.LocalBrokerPort = routerEntity.LocalBrokerPort;
+        //    routerEntity.LocalBrokerUsername = routerEntity.LocalBrokerUsername;
+        //    routerEntity.MacAddress = routerEntity.MacAddress;
+        //    routerEntity.Ssid = router.Ssid;
+        //    routerEntity.SsidPassword = router.SsidPassword;
+
+        //    //routerEntity.
+
+        //    return routerEntity;
+        //}
         public HomeEntity GetHome(int homeId)
         {
             Home home = _homeRepository
-                .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).ToList().FirstOrDefault();
+                .Queryable().Include(x => x.Rooms).Where(u => u.HomeId == homeId).FirstOrDefault();
 
             Mapper.CreateMap<HomeEntity, Home>();
             return Mapper.Map<Home, HomeEntity>(home);
-        }
-
-        public HomeEntity GetHomeByPassPhrase(string passPhrase)
-        {
-            Home home = _homeRepository
-                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).ToList().FirstOrDefault();
-
-            Mapper.CreateMap<Home, HomeEntity>()
-            .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(a => a.IsInternet == true ? 1 : 0))
-            .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(a => a.IsDefault == true ? 1 : 0))
-            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(a => a.IsActive == true ? 1 : 0))
-            .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0));
-
-            return Mapper.Map<Home, HomeEntity>(home);
-        }
-
-        public UserInfo GetUser(string email)
-        {
-            UserInfo user = _userRepository
-                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).ToList().FirstOrDefault();
-            return user;
-        }
-
-        public Home InsertHome(HomeEntity homeEntity)
-        {
-            Home model = Mapper.Map<HomeEntity, Home>(homeEntity);
-            model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
-            model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
-            model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
-            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
-            model.ObjectState = ObjectState.Added;
-            model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            _homeRepository.Insert(model);
-            return model;
         }
 
         public void InsertDevice(SmartDeviceEntity device, Room room)
@@ -296,32 +271,6 @@ namespace SmartHome.Service
 
         }
 
-        public Home UpdateHome(HomeEntity homeEntity)
-        {
-            Home model = MapHomeProperty(homeEntity);
-            model.ObjectState = ObjectState.Modified;
-            _homeRepository.Update(model);
-            return model;
-
-        }
-
-        public void InsertRouter(RouterInfoEntity router, Home home)
-        {
-            var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
-            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
-            entity.Parent = home;
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _routerInfoRepository.Insert(entity);
-        }
-
-        public void UpdateRouter(RouterInfoEntity router)
-        {
-            var entity = MapRouterProperty(router);
-            entity.ObjectState = ObjectState.Modified;
-            _routerInfoRepository.Update(entity);
-        }
-
         public bool SaveJsonData()
         {
             _unitOfWorkAsync.BeginTransaction();
@@ -343,40 +292,267 @@ namespace SmartHome.Service
 
         private void SaveHomeAndRouter()
         {
-
-            HomeEntity homeEntity = null;
-            RouterInfoEntity router = null;
-
-            string passPhrase = _homeJsonEntity.Home.FirstOrDefault() == null ? "" : _homeJsonEntity.Home[0].PassPhrase;
-            string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault() == null ? "" : _homeJsonEntity.RouterInfo[0].MacAddress;
-
-            if (passPhrase != null)
+            string passPhrase = _homeJsonEntity.Home[0].PassPhrase;
+            Home home = null;
+            HomeEntity homeEntity = GetHomeByPassPhrase(passPhrase);
+            if (homeEntity != null)
             {
-                homeEntity = GetHomeByPassPhrase(passPhrase);
-                _homeJsonEntity.Home[0].HomeId = homeEntity == null ? 0 : homeEntity.HomeId;
-                router = GetRouterByHomeId(_homeJsonEntity.Home[0].HomeId);
-                //user home
-                //user room
-                //room
+                _homeJsonEntity.Home[0].HomeId = homeEntity.HomeId;
+                home = UpdateHome(homeEntity);
+                RouterInfo router = GetRouterByHomeId(home);
+                InsertOrUpdateRouter(router, home);
+            }
+            else
+            {
+                _homeJsonEntity.Home[0].HomeId = 0;
+                home = InsertHome(_homeJsonEntity.Home[0]);
+                if (_homeJsonEntity.RouterInfo.Count > 0)
+                {
+                    InsertRouter(_homeJsonEntity.RouterInfo[0], home);
+                }
             }
 
-            Home model = SaveOrUpdateHome(homeEntity);
             IList<UserInfo> listOfUsers = SaveOrUpdateUser();
-            if (macAddress != "")
+            DeleteUser(home, listOfUsers);
+            home = SaveOrUpdateRoom(home, listOfUsers);
+            SaveHomeUser(home, listOfUsers);
+            SaveOrUpdateDevice(home);
+            SaveOrUpdateNextAssociatedDevice(home);
+            SaveOrUpdateVersion(home);
+        }
+        private HomeEntity GetHomeByPassPhrase(string passPhrase)
+        {
+            Home home = _homeRepository
+                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).FirstOrDefault();
+
+            Mapper.CreateMap<Home, HomeEntity>()
+            .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(a => a.IsInternet == true ? 1 : 0))
+            .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(a => a.IsDefault == true ? 1 : 0))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(a => a.IsActive == true ? 1 : 0))
+            .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0));
+
+
+            return Mapper.Map<Home, HomeEntity>(home);
+        }
+        private Home UpdateHome(HomeEntity homeEntity)
+        {
+            Home model = MapHomeProperty(homeEntity);
+            model.ObjectState = ObjectState.Modified;
+            _homeRepository.Update(model);
+            return model;
+
+        }
+        private Home InsertHome(HomeEntity homeEntity)
+        {
+            Home model = Mapper.Map<HomeEntity, Home>(homeEntity);
+            model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
+            model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);
+            model.IsActive = Convert.ToBoolean(homeEntity.IsActive);
+            model.IsSynced = Convert.ToBoolean(homeEntity.IsSynced);
+            model.ObjectState = ObjectState.Added;
+            model.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            _homeRepository.Insert(model);
+            return model;
+        }
+        private RouterInfo GetRouterByHomeId(Home home)
+        {
+            RouterInfo router = _routerInfoRepository
+                .Queryable().Include(x => x.Parent).Where(u => u.Parent.HomeId == home.HomeId).FirstOrDefault();
+            MapRouterInfo();
+            return router;
+        }
+        private void InsertOrUpdateRouter(RouterInfo router, Home home)
+        {
+            if (router == null)
             {
-                SaveOrUpdateRouter(router, model);
+                InsertRouter(_homeJsonEntity.RouterInfo[0], home);
+            }
+            else
+            {
+                UpdateRouter(_homeJsonEntity.RouterInfo[0], router);
+            }
+        }
+        private void InsertRouter(RouterInfoEntity router, Home home)
+        {
+            var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
+            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
+            entity.Parent = home;
+            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.ObjectState = ObjectState.Added;
+            _routerInfoRepository.Insert(entity);
+        }
+        private void UpdateRouter(RouterInfoEntity router, RouterInfo routerFromDb)
+        {
+            var entity = MapRouterProperty(router, routerFromDb);
+            entity.ObjectState = ObjectState.Modified;
+            _routerInfoRepository.Update(entity);
+        }
+        private IList<UserInfo> SaveOrUpdateUser()
+        {
+            IList<UserInfo> listOfUsers = new List<UserInfo>();
+            foreach (var userInfoEntity in _homeJsonEntity.UserInfo)
+            {
+                var dbUserEntity = GetUser(userInfoEntity.Email);
+                if (dbUserEntity == null)
+                {
+                    listOfUsers.Add(InsertUser(userInfoEntity));
+                }
+                else
+                {
+                    listOfUsers.Add(UpdateUser(userInfoEntity, dbUserEntity));
+                }
+            }
+            return listOfUsers;
+        }
+        public UserInfo GetUser(string email)
+        {
+            UserInfo user = _userRepository
+                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
+
+            return user;
+        }
+        private UserInfo InsertUser(UserInfoEntity userInfoEntity)
+        {
+            UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
+            entity.LoginStatus = Convert.ToBoolean(userInfoEntity.LoginStatus);
+            entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
+            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
+            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.ObjectState = ObjectState.Added;
+            _userRepository.Insert(entity);
+            return entity;
+        }
+        private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
+        {
+            var entity = MapUserProperty(userInfoEntity, dbUserEntity);
+            entity.ObjectState = ObjectState.Modified;
+            _userRepository.Update(entity);
+            DeleteRoomUser(entity);
+            DeleteHomeUser(entity);
+            return entity;
+        }
+        private void DeleteHomeUser(UserInfo entity)
+        {
+            IList<long> userHomeLinkIds = entity.UserHomeLinks.Select(s => s.UserHomeLinkId).ToList();
+            foreach (long id in userHomeLinkIds)
+            {
+                UserHomeLink userHomeLink = _userHomeRepository.Find(id);
+                userHomeLink.ObjectState = ObjectState.Deleted;
+                _userHomeRepository.Delete(userHomeLink);
+            }
+        }
+        private void DeleteRoomUser(UserInfo entity)
+        {
+            IList<long> userHomeLinkIds = entity.UserRoomLinks.Select(s => s.UserRoomLinkId).ToList();
+            foreach (long userRoomLinkid in userHomeLinkIds)
+            {
+                UserRoomLink userRoomLink = _userRoomRepository.Find(userRoomLinkid);
+                userRoomLink.ObjectState = ObjectState.Deleted;
+                _userRoomRepository.Delete(userRoomLink);
+            }
+        }
+        private void DeleteUser(Home home, IList<UserInfo> listOfUsersFromJson)
+        {
+            IList<long> userIdsFromJson = (from u in listOfUsersFromJson
+                                           select u.UserInfoId).ToList();
+
+            IList<long> needToDeleteUserIds =
+                _userHomeRepository.Queryable()
+                    .Where(w => w.Home.HomeId == home.HomeId && !userIdsFromJson.Contains(w.UserInfo.UserInfoId))
+                    .Select(s => s.UserInfo.UserInfoId)
+                    .ToList();
+
+            foreach (long id in needToDeleteUserIds)
+            {
+                UserInfo user =
+                    _userRepository.Queryable()
+                        .Include(x => x.UserRoomLinks)
+                        .Include(x => x.UserHomeLinks)
+                        .Where(u => u.UserInfoId == id)
+                        .FirstOrDefault();
+
+                if (user != null)
+                {
+                    DeleteRoomUser(user);
+                    DeleteHomeUser(user);
+                    user.ObjectState = ObjectState.Deleted;
+                    _userRepository.Delete(user);
+                }
+            }
+        }
+        private Home SaveOrUpdateRoom(Home model, IList<UserInfo> listOfUsers)
+        {
+            if (model.Rooms != null)
+            {
+                IList<long> roomIds = model.Rooms.Select(s => s.RoomId).ToList();
+                model.Rooms = new List<Room>();
+                DeleteAllRooms(roomIds);
+            }
+            return InsertAllRooms(model, listOfUsers);
+        }
+        private void DeleteAllRooms(IList<long> roomIds)
+        {
+            foreach (var roomId in roomIds)
+            {
+                Room dbRoom = _roomRepository
+                .Queryable().Where(u => u.RoomId == roomId).FirstOrDefault();
+                dbRoom.ObjectState = ObjectState.Deleted;
+                _roomRepository.Delete(dbRoom);
+            }
+        }
+        private Home InsertAllRooms(Home home, IList<UserInfo> listOfUsers)
+        {
+            home.Rooms = new List<Room>();
+            foreach (var room in _homeJsonEntity.Room)
+            {
+                var entity = Mapper.Map<RoomEntity, Room>(room);
+                entity.IsActive = Convert.ToBoolean(room.IsActive);
+                entity.IsSynced = Convert.ToBoolean(room.IsSynced);
+                entity.Home = home;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                entity.ObjectState = ObjectState.Added;
+                _roomRepository.Insert(entity);
+                SaveRoomUser(entity, listOfUsers);
             }
 
-            if (macAddress == "")
+            return home;
+        }
+        private void SaveRoomUser(Room entity, IList<UserInfo> listOfUsers)
+        {
+            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
+            foreach (var userRoomLinkEntity in roomLinkList)
             {
-                DeleteHomeRouter(router, model);
+                UserInfoEntity userentity =
+                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId.ToString() == userRoomLinkEntity.AppsUserId.ToString());
+                UserRoomLink userRoom = new UserRoomLink();
+                userRoom.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
+                userRoom.Room = entity;
+                userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
+                userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
+                userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
+                userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
+                userRoom.ObjectState = ObjectState.Added;
+                _userRoomLinkRepository.Insert(userRoom);
             }
-
-            model = SaveOrUpdateRoom(model, listOfUsers);
-            SaveHomeUser(model, listOfUsers);
-            SaveOrUpdateDevice(model);
-            SaveOrUpdateNextAssociatedDevice(model);
-            SaveOrUpdateVersion(model);
+        }
+        private void SaveHomeUser(Home home, IList<UserInfo> listOfUsers)
+        {
+            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
+            foreach (var userRoomLinkEntity in homeUserList)
+            {
+                UserInfoEntity userentity =
+                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
+                UserHomeLink userHome = new UserHomeLink();
+                userHome.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
+                userHome.Home = home;
+                userHome.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
+                userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
+                userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
+                userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
+                userHome.IsAdmin = Convert.ToBoolean(userRoomLinkEntity.IsAdmin);
+                userHome.ObjectState = ObjectState.Added;
+                _userHomeRepository.Insert(userHome);
+            }
         }
 
         private void DeleteHomeRouter(RouterInfoEntity router, Home home)
@@ -469,64 +645,7 @@ namespace SmartHome.Service
                 _nextAssociatedDeviceRepository.Update(nextDevice);
             }
         }
-        private IList<UserInfo> SaveOrUpdateUser()
-        {
-            IList<UserInfo> listOfUsers = new List<UserInfo>();
-            foreach (var userInfoEntity in _homeJsonEntity.UserInfo)
-            {
-                var dbUserEntity = GetUser(userInfoEntity.Email);
-                if (dbUserEntity == null)
-                {
-                    listOfUsers.Add(InsertUser(userInfoEntity));
-                }
-                else
-                {
-                    listOfUsers.Add(dbUserEntity);
-                    UpdateUser(userInfoEntity, dbUserEntity);
-                }
-            }
-            return listOfUsers;
-        }
-        private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
-        {
-            var entity = MapUserProperty(userInfoEntity, dbUserEntity);
-            entity.ObjectState = ObjectState.Modified;
-            _userRepository.Update(entity);
-            DeleteRoomUser(entity);
-            DeleteHomeUser(entity);
-            return entity;
-        }
-        private void DeleteHomeUser(UserInfo entity)
-        {
-            IList<long> userHomeLinkIds = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == entity.UserInfoId).Select(s => s.UserHomeLinkId).ToList();
-            foreach (long id in userHomeLinkIds)
-            {
-                UserHomeLink userHomeLink = _userHomeRepository.Find(id);
-                userHomeLink.ObjectState = ObjectState.Deleted;
-                _userHomeRepository.Delete(userHomeLink);
-            }
-        }
-        private void DeleteRoomUser(UserInfo entity)
-        {
-            IList<long> userHomeLinkIds = _userRoomRepository.Queryable().Where(p => p.UserInfo.UserInfoId == entity.UserInfoId).Select(s => s.UserRoomLinkId).ToList();
-            foreach (long userRoomLinkid in userHomeLinkIds)
-            {
-                UserRoomLink userRoomLink = _userRoomRepository.Find(userRoomLinkid);
-                userRoomLink.ObjectState = ObjectState.Deleted;
-                _userRoomRepository.Delete(userRoomLink);
-            }
-        }
-        private UserInfo InsertUser(UserInfoEntity userInfoEntity)
-        {
-            UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
-            entity.LoginStatus = Convert.ToBoolean(userInfoEntity.LoginStatus);
-            entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
-            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _userRepository.Insert(entity);
-            return entity;
-        }
+
         private void SaveOrUpdateDevice(Home model)
         {
             foreach (var room in model.Rooms)
@@ -537,102 +656,6 @@ namespace SmartHome.Service
                 {
                     InsertDevice(smartDevice, room);
                 }
-            }
-        }
-        private Home SaveOrUpdateRoom(Home model, IList<UserInfo> listOfUsers)
-        {
-            if (model.Rooms != null)
-            {
-                IList<long> roomIds = model.Rooms.Select(s => s.RoomId).ToList();
-                model.Rooms = new List<Room>();
-                DeleteAllRooms(roomIds);
-            }
-            return InsertAllRooms(model, listOfUsers);
-        }
-        private Home InsertAllRooms(Home home, IList<UserInfo> listOfUsers)
-        {
-            home.Rooms = new List<Room>();
-            foreach (var room in _homeJsonEntity.Room)
-            {
-                var entity = Mapper.Map<RoomEntity, Room>(room);
-                entity.IsActive = Convert.ToBoolean(room.IsActive);
-                entity.IsSynced = Convert.ToBoolean(room.IsSynced);
-                entity.Home = home;
-                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                entity.ObjectState = ObjectState.Added;
-                _roomRepository.Insert(entity);
-                SaveRoomUser(entity, listOfUsers);
-            }
-
-            return home;
-        }
-        private void SaveRoomUser(Room entity, IList<UserInfo> listOfUsers)
-        {
-            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
-            foreach (var userRoomLinkEntity in roomLinkList)
-            {
-                UserInfoEntity userentity =
-                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId.ToString() == userRoomLinkEntity.AppsUserId.ToString());
-                UserRoomLink userRoom = new UserRoomLink();
-                userRoom.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
-                userRoom.Room = entity;
-                userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-                userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
-                userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
-                userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
-                userRoom.ObjectState = ObjectState.Added;
-                _userRoomLinkRepository.Insert(userRoom);
-            }
-        }
-        private void SaveHomeUser(Home home, IList<UserInfo> listOfUsers)
-        {
-            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
-            foreach (var userRoomLinkEntity in homeUserList)
-            {
-                UserInfoEntity userentity =
-                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
-                UserHomeLink userHome = new UserHomeLink();
-                userHome.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
-                userHome.Home = home;
-                userHome.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-                userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
-                userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
-                userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
-                userHome.IsAdmin = Convert.ToBoolean(userRoomLinkEntity.IsAdmin);
-                userHome.ObjectState = ObjectState.Added;
-                _userHomeRepository.Insert(userHome);
-            }
-        }
-        private void DeleteAllRooms(IList<long> roomIds)
-        {
-            foreach (var roomId in roomIds)
-            {
-                Room dbRoom = _roomRepository
-                .Queryable().Where(u => u.RoomId == roomId).FirstOrDefault();
-                dbRoom.ObjectState = ObjectState.Deleted;
-                _roomRepository.Delete(dbRoom);
-            }
-        }
-        private void SaveOrUpdateRouter(RouterInfoEntity router, Home home)
-        {
-            if (router == null)
-            {
-                InsertRouter(_homeJsonEntity.RouterInfo[0], home);
-            }
-            else
-            {
-                UpdateRouter(_homeJsonEntity.RouterInfo[0]);
-            }
-        }
-        private Home SaveOrUpdateHome(HomeEntity homeEntity)
-        {
-            if (homeEntity == null)
-            {
-                return InsertHome(_homeJsonEntity.Home[0]);
-            }
-            else
-            {
-                return UpdateHome(_homeJsonEntity.Home[0]);
             }
         }
 
@@ -679,23 +702,20 @@ namespace SmartHome.Service
             return model;
         }
 
-        private RouterInfo MapRouterProperty(RouterInfoEntity router)
+        private RouterInfo MapRouterProperty(RouterInfoEntity router, RouterInfo routerFromDb)
         {
-            RouterInfo model = _routerInfoRepository
-               .Queryable().Where(u => u.MacAddress == router.MacAddress).FirstOrDefault();
+            routerFromDb.MacAddress = router.MacAddress;
+            routerFromDb.Ssid = router.Ssid;
+            routerFromDb.AppsRouterInfoId = router.AppsRouterInfoId;
+            routerFromDb.AuditField.LastUpdatedBy = "admin";
+            routerFromDb.AuditField.LastUpdatedDateTime = DateTime.Now;
+            routerFromDb.IsSynced = Convert.ToBoolean(router.IsSynced);
+            routerFromDb.LocalBrokerIp = router.LocalBrokerIp;
+            routerFromDb.LocalBrokerPassword = router.LocalBrokerPassword;
+            routerFromDb.LocalBrokerPort = router.LocalBrokerPort;
+            routerFromDb.LocalBrokerUsername = router.LocalBrokerUsername;
 
-            model.MacAddress = router.MacAddress;
-            model.Ssid = router.Ssid;
-            model.AppsRouterInfoId = router.AppsRouterInfoId;
-            model.AuditField.LastUpdatedBy = "admin";
-            model.AuditField.LastUpdatedDateTime = DateTime.Now;
-            model.IsSynced = Convert.ToBoolean(router.IsSynced);
-            model.LocalBrokerIp = router.LocalBrokerIp;
-            model.LocalBrokerPassword = router.LocalBrokerPassword;
-            model.LocalBrokerPort = router.LocalBrokerPort;
-            model.LocalBrokerUsername = router.LocalBrokerUsername;
-
-            return model;
+            return routerFromDb;
         }
 
         private UserInfo MapUserProperty(UserInfoEntity userEntity, UserInfo model)
