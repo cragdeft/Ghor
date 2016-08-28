@@ -136,4 +136,13 @@ namespace SmartHome.Model.Enums
         Configuration,
         Feedback
     }
+
+    public enum MessageReceivedFrom
+    {
+        [EnumMember]
+        MQTT = 1,
+        [EnumMember]
+        Api = 2
+
+    }
 }
