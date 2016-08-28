@@ -38,11 +38,18 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<VersionDetail> _versionDetailRepository;
+        private readonly IRepositoryAsync<MqttMessageLog> _mqttMessageLogRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
+        public string _homeJsonMessage { get; private set; }
+
+        public MessageReceivedFrom _receivedFrom { get; private set; }
+
+        public MqttMessageLog _messageLog { get; private set; }
+
         private string _email;
         #endregion
 
-        public HomeJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity)
+        public HomeJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _routerRepository = _unitOfWorkAsync.RepositoryAsync<SmartRouter>();
@@ -62,7 +69,11 @@ namespace SmartHome.Service
             _versionRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
             _versionDetailRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.VersionDetail>();
+            _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MqttMessageLog>();
             _homeJsonEntity = homeJsonEntity;
+            _homeJsonMessage = homeJsonMessage;
+            _receivedFrom = receivedFrom;
+            _messageLog = new MqttMessageLog();
         }
         public RouterInfoEntity GetRouter(string macAddress)
         {
@@ -273,6 +284,8 @@ namespace SmartHome.Service
 
         public bool SaveJsonData()
         {
+            SaveMessageLog();
+
             _unitOfWorkAsync.BeginTransaction();
             SetMapper();
             try
@@ -288,6 +301,35 @@ namespace SmartHome.Service
             }
 
             return true;
+        }
+
+        private void SaveMessageLog()
+        {
+            _unitOfWorkAsync.BeginTransaction();
+
+            try
+            {
+                DateTime processTime = DateTime.Now;
+                var entity = new MqttMessageLog();
+                entity.Message = _homeJsonMessage;
+                entity.ReceivedFrom = _receivedFrom;
+                entity.AuditField = new AuditFields("admin", processTime, "admin", processTime);
+                entity.ObjectState = ObjectState.Added;
+                _mqttMessageLogRepository.Insert(entity);
+
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+
+                _messageLog = entity;
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWorkAsync.Rollback();
+
+            }
+
+
         }
 
         private void SaveHomeAndRouter()
@@ -363,15 +405,31 @@ namespace SmartHome.Service
         }
         private void InsertOrUpdateRouter(RouterInfo router, Home home)
         {
-            if (router == null)
+            if (_homeJsonEntity.RouterInfo.Count > 0)
             {
-                InsertRouter(_homeJsonEntity.RouterInfo[0], home);
+                if (router == null)
+                {
+                    InsertRouter(_homeJsonEntity.RouterInfo[0], home);
+                }
+                else
+                {
+                    UpdateRouter(_homeJsonEntity.RouterInfo[0], router);
+                }
             }
-            else
+
+            if (_homeJsonEntity.RouterInfo.Count == 0 && router != null)
             {
-                UpdateRouter(_homeJsonEntity.RouterInfo[0], router);
+                DeleteRouter(router);
             }
+
         }
+
+        private void DeleteRouter(RouterInfo router)
+        {
+            router.ObjectState = ObjectState.Deleted;
+            _routerInfoRepository.Delete(router);
+        }
+
         private void InsertRouter(RouterInfoEntity router, Home home)
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
@@ -418,6 +476,7 @@ namespace SmartHome.Service
             entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
             entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.MqttMessageLog = _messageLog;
             entity.ObjectState = ObjectState.Added;
             _userRepository.Insert(entity);
             return entity;
@@ -425,6 +484,7 @@ namespace SmartHome.Service
         private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
         {
             var entity = MapUserProperty(userInfoEntity, dbUserEntity);
+            entity.MqttMessageLog = _messageLog;
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
             DeleteRoomUser(entity);
