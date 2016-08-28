@@ -43,6 +43,7 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<CommandJson> CommandJsons { get; set; }
         public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
 
+        public IDbSet<MqttMessageLog> MqttMessageLogs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
