@@ -29,6 +29,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using SmartHome.Model.ViewModels;
 using SmartHome.Json;
+using SmartHome.Model.Enums;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -179,6 +180,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 oRootObject.data = new PasswordRecoveryObjectEntity();
                 string msg = string.Empty;
+
                 msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
                 if (string.IsNullOrEmpty(msg))
                 {
@@ -187,7 +189,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg);
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
                 jsonManager.Save();
 
                 FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
