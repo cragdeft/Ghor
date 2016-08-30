@@ -51,9 +51,9 @@ namespace SmartHome.MQTT.Client
             {
                 if (SmartHomeMQTT == null || !SmartHomeMQTT.IsConnected)
                 {
-                    
 
-                    if (BrokerAddress == "192.168.11.189")
+
+                    if (BrokerAddress == "192.168.11.205")
                     {
                         LocalBrokerConnection(BrokerAddress);
                     }
@@ -83,7 +83,6 @@ namespace SmartHome.MQTT.Client
             }
             catch (Exception ex)
             {
-
                 //Logger.LogError(ex, string.Format("Could not stablished connection to MQ broker: {1}", ex.Message));
 
                 //don't leave the client connected
@@ -96,6 +95,7 @@ namespace SmartHome.MQTT.Client
                     {
                         Logger.LogError(ex, string.Format("Could not disconnect to MQ broker: {1}", ex.Message));
                     }
+                MakeConnection();
             }
             #endregion
 
@@ -344,9 +344,9 @@ namespace SmartHome.MQTT.Client
             SmartHomeMQTT.MqttMsgPublishReceived += client_MqttMsgPublishReceived;//received message.
             SmartHomeMQTT.ConnectionClosed += client_ConnectionClosed;
 
-            var temp = new string[] { "configuration/#", "/command", "feedback/#" };
+            var temp = new string[] { "sh/configuration/#", "sh/command", "sh/feedback/#" };
 
-            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "configuration/#", "/command", "feedback/#" },
+            ushort submsgId = SmartHomeMQTT.Subscribe(new string[] { "sh/configuration/#", "sh/command", "sh/feedback/#" },
                               new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
                                       MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
 
@@ -385,7 +385,7 @@ namespace SmartHome.MQTT.Client
 
         private void MQTTConnectiobn()
         {
-            
+
             SmartHomeMQTT.Connect(ClientId, null, null, false, BrokerKeepAlivePeriod);
         }
         #endregion
