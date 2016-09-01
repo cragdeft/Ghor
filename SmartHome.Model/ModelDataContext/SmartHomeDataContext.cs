@@ -14,7 +14,6 @@ namespace SmartHome.Model.ModelDataContext
     {
         static SmartHomeDataContext()
         {
-            //Database.SetInitializer<SmartHomeDataContext>(null);
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
         }
         public SmartHomeDataContext()
@@ -30,7 +29,7 @@ namespace SmartHome.Model.ModelDataContext
 
         public IDbSet<Models.Version> Versions { get; set; }
         public IDbSet<VersionDetail> VersionDetails { get; set; }
-        public IDbSet<SmartDevice> SmartDevices { get; set; }        
+        public IDbSet<SmartDevice> SmartDevices { get; set; }
         public IDbSet<DeviceStatus> DeviceStatuses { get; set; }
         public IDbSet<Home> Homes { get; set; }
         public IDbSet<RouterInfo> RouterInfos { get; set; }
@@ -43,7 +42,7 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<CommandJson> CommandJsons { get; set; }
         public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
 
-        public IDbSet<MqttMessageLog> MqttMessageLogs { get; set; }
+        public IDbSet<MessageLog> MessageLogs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
