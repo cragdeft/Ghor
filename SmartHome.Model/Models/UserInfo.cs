@@ -52,7 +52,7 @@ namespace SmartHome.Model.Models
         public virtual ICollection<SyncStatus> SyncStatuses { get; set; }
         public virtual ICollection<UserStatus> UserStatuses { get; set; }
                 
-        public virtual MqttMessageLog MqttMessageLog { get; set; }
+       // public virtual MessageLog MessageLog { get; set; }
 
         public virtual ICollection<UserHomeLink> UserHomeLinks { get; set; }
         //public virtual ICollection<Home> Homes { get; set; }
