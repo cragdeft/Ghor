@@ -62,7 +62,7 @@
     <Compile Include="Models\ChannelStatus.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\Home.cs" />
-    <Compile Include="Models\MqttMessageLog.cs" />
+    <Compile Include="Models\MessageLog.cs" />
     <Compile Include="Models\NextAssociatedDevice.cs" />
     <Compile Include="Models\RgbwStatus.cs" />
     <Compile Include="Models\Room.cs" />
