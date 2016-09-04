@@ -285,6 +285,46 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
+
+
+        [Route("api/NewUser")]
+        [HttpPost]
+        public HttpResponseMessage NewUser(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                //Debug.WriteLine(SecurityManager.Encrypt("{\"Room\":[{\"Id\":1,\"Home\":1,\"Name\":\"MyRoom\",\"RoomNumber\":0,\"IsActive\":1,\"IsSynced\":0}],\"Home\":[{\"PassPhrase\":\"4905a51c1b987b8f_O234AV\"}],\"UserRoomLink\":[{\"Id\":1,\"User\":1,\"Room\":1,\"IsSynced\":0}],\"UserInfo\":[{\"Email\":\"s@yopmail.com\"}]}"));
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
+                jsonManager.SaveNewRoom();
+
+                FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
         #region No Action Methods
 
         [NonAction]
