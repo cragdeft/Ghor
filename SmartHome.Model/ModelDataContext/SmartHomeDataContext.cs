@@ -14,7 +14,11 @@ namespace SmartHome.Model.ModelDataContext
     {
         static SmartHomeDataContext()
         {
+#if DEBUG
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SmartHomeDataContext>());
+#else
+            Database.SetInitializer<SmartHomeDataContext>(null);
+#endif
         }
         public SmartHomeDataContext()
             : base("SmartHome")
