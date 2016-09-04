@@ -288,7 +288,7 @@ namespace SmartHome.Service
             return true;
         }
 
-        private void SaveMessageLog()
+        public void SaveMessageLog()
         {
             _unitOfWorkAsync.BeginTransaction();
 
@@ -315,19 +315,19 @@ namespace SmartHome.Service
             }
         }
 
-        private void UpdateMessageLog()
+        public void UpdateMessageLog()
         {
             _unitOfWorkAsync.BeginTransaction();
 
             try
             {
                 DateTime processTime = DateTime.Now;
-                var entity = new MessageLog();
-                entity.Message = _homeJsonMessage;
-                entity.ReceivedFrom = _receivedFrom;
+                var entity = _messageLog;
+                //entity.Message = _homeJsonMessage;
+                //entity.ReceivedFrom = _receivedFrom;
                 entity.UserInfoIds = GetUserInfosByHomePassphase(_homeJsonEntity.Home[0].PassPhrase);
                 entity.AuditField = new AuditFields("admin", entity.AuditField.InsertedDateTime, "admin", processTime);
-                entity.ObjectState = ObjectState.Added;
+                entity.ObjectState = ObjectState.Modified;
                 _mqttMessageLogRepository.Insert(entity);
 
                 var changes = _unitOfWorkAsync.SaveChanges();
