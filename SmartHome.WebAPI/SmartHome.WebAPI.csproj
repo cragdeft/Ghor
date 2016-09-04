@@ -326,6 +326,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\apiroom.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\pub-service.pubxml" />
