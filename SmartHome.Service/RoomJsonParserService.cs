@@ -48,7 +48,7 @@ namespace SmartHome.Service
 
         public bool SaveJsonData()
         {
-            new HomeJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveMessageLog();
+            MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
             SetMapper();
@@ -64,7 +64,7 @@ namespace SmartHome.Service
                 return false;
             }
 
-            new HomeJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateMessageLog();
+            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
 
 
             return true;
@@ -78,20 +78,14 @@ namespace SmartHome.Service
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             Home home = null;
 
-            home = GetHome(passPhrase);
+            home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
             if (home != null)
             {
-                UserInfo userInfo = GetUser(_homeJsonEntity.UserInfo[0].Email);
-                home = SaveOrUpdateNewRoom(home, userInfo);
+                UserInfo userInfo = new CommonService(_unitOfWorkAsync).GetUser(_homeJsonEntity.UserInfo[0].Email);
+                home = SaveNewRoom(home, userInfo);
             }
-        }
-        private Home GetHome(string passPhrase)
-        {
-            Home home = _homeRepository
-                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).FirstOrDefault();
-            return home;
-        }
-        private Home SaveOrUpdateNewRoom(Home home, UserInfo userInfo)
+        }       
+        private Home SaveNewRoom(Home home, UserInfo userInfo)
         {
             RoomEntity room = _homeJsonEntity.Room[0];
 
@@ -129,14 +123,5 @@ namespace SmartHome.Service
             userRoom.ObjectState = ObjectState.Added;
             _userRoomLinkRepository.Insert(userRoom);
         }
-        public UserInfo GetUser(string email)
-        {
-            UserInfo user = _userRepository
-                .Queryable().Include(x => x.UserRoomLinks).Include(x => x.UserHomeLinks).Where(u => u.Email == email).FirstOrDefault();
-
-            return user;
-        }
-
-       
     }
 }

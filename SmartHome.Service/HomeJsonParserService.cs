@@ -267,7 +267,7 @@ namespace SmartHome.Service
 
         public bool SaveJsonData()
         {
-            SaveMessageLog();
+            MessageLog messageLog =new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
             SetMapper();
@@ -283,64 +283,14 @@ namespace SmartHome.Service
                 return false;
             }
 
-            UpdateMessageLog();
+            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog,_homeJsonEntity.Home[0].PassPhrase);
 
             return true;
         }
 
-        public void SaveMessageLog()
-        {
-            _unitOfWorkAsync.BeginTransaction();
+     
 
-            try
-            {
-                DateTime processTime = DateTime.Now;
-                var entity = new MessageLog();
-                entity.Message = _homeJsonMessage;
-                entity.ReceivedFrom = _receivedFrom;
-                entity.UserInfoIds = string.Empty;
-                entity.AuditField = new AuditFields("admin", processTime, "admin", processTime);
-                entity.ObjectState = ObjectState.Added;
-                _mqttMessageLogRepository.Insert(entity);
-
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
-
-                _messageLog = entity;
-
-            }
-            catch (Exception ex)
-            {
-                _unitOfWorkAsync.Rollback();
-            }
-        }
-
-        public void UpdateMessageLog()
-        {
-            _unitOfWorkAsync.BeginTransaction();
-
-            try
-            {
-                DateTime processTime = DateTime.Now;
-                var entity = _messageLog;
-                //entity.Message = _homeJsonMessage;
-                //entity.ReceivedFrom = _receivedFrom;
-                entity.UserInfoIds = GetUserInfosByHomePassphase(_homeJsonEntity.Home[0].PassPhrase);
-                entity.AuditField = new AuditFields("admin", entity.AuditField.InsertedDateTime, "admin", processTime);
-                entity.ObjectState = ObjectState.Modified;
-                _mqttMessageLogRepository.Insert(entity);
-
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
-
-                _messageLog = entity;
-
-            }
-            catch (Exception ex)
-            {
-                _unitOfWorkAsync.Rollback();
-            }
-        }
+       
 
         private void SaveHomeAndRouter()
         {
