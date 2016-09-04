@@ -64,7 +64,9 @@
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
     <Compile Include="HomeJsonParserService.cs" />
+    <Compile Include="IRoomJsonParserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoomJsonParserService.cs" />
     <Compile Include="UserInfoService.cs" />
     <Compile Include="VersionService.cs" />
   </ItemGroup>
