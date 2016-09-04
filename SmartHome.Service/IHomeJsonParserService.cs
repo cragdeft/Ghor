@@ -11,5 +11,6 @@ namespace SmartHome.Service
     public interface IHomeJsonParserService
     {
         bool SaveJsonData();
+        
     }
 }

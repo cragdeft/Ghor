@@ -38,13 +38,13 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
         private readonly IRepositoryAsync<Version> _versionRepository;
         private readonly IRepositoryAsync<VersionDetail> _versionDetailRepository;
-        private readonly IRepositoryAsync<MqttMessageLog> _mqttMessageLogRepository;
+        private readonly IRepositoryAsync<MessageLog> _mqttMessageLogRepository;
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
 
         public MessageReceivedFrom _receivedFrom { get; private set; }
 
-        public MqttMessageLog _messageLog { get; private set; }
+        public MessageLog _messageLog { get; private set; }
 
         private string _email;
         #endregion
@@ -69,11 +69,11 @@ namespace SmartHome.Service
             _versionRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.Version>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
             _versionDetailRepository = _unitOfWorkAsync.RepositoryAsync<SmartHome.Model.Models.VersionDetail>();
-            _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MqttMessageLog>();
+            _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MessageLog>();
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MqttMessageLog();
+            _messageLog = new MessageLog();
         }
         public RouterInfoEntity GetRouter(string macAddress)
         {
@@ -283,6 +283,8 @@ namespace SmartHome.Service
                 return false;
             }
 
+            UpdateMessageLog();
+
             return true;
         }
 
@@ -293,9 +295,10 @@ namespace SmartHome.Service
             try
             {
                 DateTime processTime = DateTime.Now;
-                var entity = new MqttMessageLog();
+                var entity = new MessageLog();
                 entity.Message = _homeJsonMessage;
                 entity.ReceivedFrom = _receivedFrom;
+                entity.UserInfoIds = string.Empty;
                 entity.AuditField = new AuditFields("admin", processTime, "admin", processTime);
                 entity.ObjectState = ObjectState.Added;
                 _mqttMessageLogRepository.Insert(entity);
@@ -309,10 +312,34 @@ namespace SmartHome.Service
             catch (Exception ex)
             {
                 _unitOfWorkAsync.Rollback();
+            }
+        }
+
+        private void UpdateMessageLog()
+        {
+            _unitOfWorkAsync.BeginTransaction();
+
+            try
+            {
+                DateTime processTime = DateTime.Now;
+                var entity = new MessageLog();
+                entity.Message = _homeJsonMessage;
+                entity.ReceivedFrom = _receivedFrom;
+                entity.UserInfoIds = GetUserInfosByHomePassphase(_homeJsonEntity.Home[0].PassPhrase);
+                entity.AuditField = new AuditFields("admin", entity.AuditField.InsertedDateTime, "admin", processTime);
+                entity.ObjectState = ObjectState.Added;
+                _mqttMessageLogRepository.Insert(entity);
+
+                var changes = _unitOfWorkAsync.SaveChanges();
+                _unitOfWorkAsync.Commit();
+
+                _messageLog = entity;
 
             }
-
-
+            catch (Exception ex)
+            {
+                _unitOfWorkAsync.Rollback();
+            }
         }
 
         private void SaveHomeAndRouter()
@@ -452,6 +479,21 @@ namespace SmartHome.Service
 
             return user;
         }
+        public string GetUserInfosByHomePassphase(string passPhrase)
+        {
+            string userInfos = string.Empty;
+
+            Home home = _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
+            if (home != null)
+            {
+                var temp = _userHomeRepository.Queryable().Where(p => p.Home.HomeId == home.HomeId).Select(q => q.UserInfo.UserInfoId);
+
+                userInfos = string.Join(",", temp);
+            }
+
+            return userInfos;
+        }
+
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
         {
             UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
@@ -459,7 +501,7 @@ namespace SmartHome.Service
             entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
             entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.MqttMessageLog = _messageLog;
+            //entity.MessageLog = _messageLog;
             entity.ObjectState = ObjectState.Added;
             _userRepository.Insert(entity);
             return entity;
@@ -467,7 +509,7 @@ namespace SmartHome.Service
         private UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUserEntity)
         {
             var entity = MapUserProperty(userInfoEntity, dbUserEntity);
-            entity.MqttMessageLog = _messageLog;
+            // entity.MessageLog = _messageLog;
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
             DeleteRoomUser(entity);
@@ -590,7 +632,7 @@ namespace SmartHome.Service
                     UserRoomLink userRoom = new UserRoomLink();
                     userRoom.UserInfo = dbUser;
 
-                    FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);                    
+                    FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
                 }
 
             }
@@ -833,7 +875,7 @@ namespace SmartHome.Service
 
         private UserInfo MapUserProperty(UserInfoEntity userEntity, UserInfo model)
         {
-          
+
             model.AppsUserId = userEntity.AppsUserId;
             model.LoginStatus = Convert.ToBoolean(userEntity.LoginStatus);
             model.Password = userEntity.Password;
@@ -849,5 +891,8 @@ namespace SmartHome.Service
             return model;
         }
         #endregion
+
+
+
     }
 }
