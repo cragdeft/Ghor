@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomJsonParserService : IRoomJsonParserService
+    public class RoomJsonParserService : IHomeJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -46,7 +46,7 @@ namespace SmartHome.Service
             _messageLog = new MessageLog();
         }
 
-        public bool SaveJsonNewRoomData()
+        public bool SaveJsonData()
         {
             new HomeJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveMessageLog();
 
@@ -136,5 +136,7 @@ namespace SmartHome.Service
 
             return user;
         }
+
+       
     }
 }
