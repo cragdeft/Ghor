@@ -311,7 +311,7 @@ namespace SmartHome.WebAPI.Controllers
                 #endregion
 
                 JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
-                jsonManager.SaveNewRoom();
+                jsonManager.SaveNewUser();
 
                 FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
                 response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
