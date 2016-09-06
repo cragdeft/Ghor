@@ -325,6 +325,51 @@ namespace SmartHome.WebAPI.Controllers
             return response;
         }
 
+
+        [Route("api/NewDevice")]
+        [HttpPost]
+        public HttpResponseMessage NewDevice(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
+                bool isSuccess = jsonManager.SaveNewDevice();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " New Device Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Add New Device.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
         #region No Action Methods
 
         [NonAction]
