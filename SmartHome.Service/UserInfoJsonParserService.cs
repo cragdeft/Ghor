@@ -126,10 +126,13 @@ namespace SmartHome.Service
             foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
             {
                 Room dbroom = home.Rooms.Where(p => p.AppsRoomId == userRoomLinkEntity.AppsRoomId).FirstOrDefault();
+                if (dbroom != null)
+                {
+                    UserRoomLink userRoom = new UserRoomLink();
+                    userRoom.UserInfo = userInfo;
+                    FillSaveRoomUser(dbroom, userRoomLinkEntity, userRoom);
+                }
 
-                UserRoomLink userRoom = new UserRoomLink();
-                userRoom.UserInfo = userInfo;
-                FillSaveRoomUser(dbroom, userRoomLinkEntity, userRoom);
             }
         }
 
