@@ -192,7 +192,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
                 jsonManager.Save();
 
                 FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
@@ -270,7 +270,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewRoom);
                 jsonManager.SaveNewRoom();
 
                 FillPasswordRecoveryInfos("", " New Room Add Successfully.", HttpStatusCode.OK, oRootObject);
@@ -310,10 +310,18 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
-                jsonManager.SaveNewUser();
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewUser);
+                bool isSuccess = jsonManager.SaveNewUser();
 
-                FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Add New User.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
                 response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
             catch (Exception ex)
@@ -357,6 +365,52 @@ namespace SmartHome.WebAPI.Controllers
                 else
                 {
                     FillPasswordRecoveryInfos("", " Can Not Add New Device.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
+
+
+        [Route("api/NewChannel")]
+        [HttpPost]
+        public HttpResponseMessage NewChannel(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewChannel);
+                bool isSuccess = jsonManager.SaveNewChannel();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " New Channel Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Add New Channel.", HttpStatusCode.BadRequest, oRootObject);
                 }
 
                 response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
