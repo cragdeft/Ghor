@@ -121,12 +121,14 @@ namespace SmartHome.Service
             foreach (var channelEntity in channels)
             {
                 Channel channel = SaveChannel(channelEntity);
-                SaveChannelStatus(channelEntity);
+                channel.ChannelStatuses = new List<ChannelStatus>();
+                SaveChannelStatus(channelEntity,channel);
+                sswitch.Channels.Add(channel);
             }
 
         }
 
-        private void SaveChannelStatus(ChannelEntity channelEntity)
+        private void SaveChannelStatus(ChannelEntity channelEntity, Channel channel)
         {
             List<ChannelStatusEntity> channelStatusEntities = _homeJsonEntity.ChannelStatus.FindAll(x => x.AppsChannelId == channelEntity.AppsChannelId);
 
@@ -139,6 +141,7 @@ namespace SmartHome.Service
                 channelStatus.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
 
                 _channelStatusRepository.Insert(channelStatus);
+                channel.ChannelStatuses.Add(channelStatus);
             }
         }
 
