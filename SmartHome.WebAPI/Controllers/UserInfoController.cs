@@ -355,7 +355,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.Api);
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewDevice);
                 bool isSuccess = jsonManager.SaveNewDevice();
 
                 if (isSuccess)
@@ -392,6 +392,8 @@ namespace SmartHome.WebAPI.Controllers
 
                 oRootObject.data = new PasswordRecoveryObjectEntity();
                 string msg = string.Empty;
+                string b = "{\"Home\":[{\"Id\":2,\"PassPhrase\":\"8bb3e5213209d8ae_6RVGXC\"}],\"Channel\":[{\"Id\":11,\"DeviceTableId\":4,\"ChannelNo\":1,\"LoadType\":3,\"LoadName\":\"Fan\",\"LoadWatt\":0,\"IsSynced\":0}],\"ChannelStatus\":[{\"Id\":31,\"ChannelTableId\":11,\"StatusType\":1,\"StatusValue\":0,\"IsSynced\":0},{\"Id\":32,\"ChannelTableId\":11,\"StatusType\":3,\"StatusValue\":0,\"IsSynced\":0},{\"Id\":33,\"ChannelTableId\":11,\"StatusType\":2,\"StatusValue\":100,\"IsSynced\":0}],\"Device\":[{\"Id\":4,\"DeviceHash\":711650360}]}";
+                Debug.WriteLine(SecurityManager.Encrypt(b));
 
                 msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
                 if (string.IsNullOrEmpty(msg))
