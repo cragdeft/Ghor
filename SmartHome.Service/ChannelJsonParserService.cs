@@ -18,6 +18,7 @@ namespace SmartHome.Service
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
+        private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
@@ -34,6 +35,7 @@ namespace SmartHome.Service
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
+            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
@@ -72,37 +74,22 @@ namespace SmartHome.Service
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
-            Home home = null;
-
-
-            home = new CommonService(_unitOfWorkAsync).GetHomeWithRooms(passPhrase);
-
-            if (home != null)
-            {
-                ProcessNewChannels(deviceHash, home);
-
-            }
-        }
-
-        private void ProcessNewChannels(string deviceHash, Home home)
-        {
             SmartSwitch sSwitch = null;
 
-            foreach (var room in home.Rooms)
+            sSwitch = GetSmartSwitchByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+
+            if (sSwitch != null)
             {
-                sSwitch = GetSmartSwitchByDeviceHashAndAppsRoomId(deviceHash, room.RoomId);
-
-                if (sSwitch != null)
-                {
-                    SaveNewChannel(sSwitch);
-                }
-
+                SaveNewChannel(sSwitch);
             }
         }
 
-        private SmartSwitch GetSmartSwitchByDeviceHashAndAppsRoomId(string deviceHash, long roomId)
+        private SmartSwitch GetSmartSwitchByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
         {
-            return _deviceRepository.Queryable().OfType<SmartSwitch>().Where(e => e.DeviceHash == deviceHash && e.Room.RoomId == roomId).FirstOrDefault();
+            return (from h in _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+                    join r in _roomRepository.Queryable() on h.HomeId equals r.Home.HomeId
+                    join d in _deviceRepository.Queryable().OfType<SmartSwitch>().Where(p => p.DeviceHash == deviceHash) on r.RoomId equals d.Room.RoomId
+                    select d).DefaultIfEmpty().FirstOrDefault();
         }
 
         private void SaveNewChannel(SmartSwitch device)
