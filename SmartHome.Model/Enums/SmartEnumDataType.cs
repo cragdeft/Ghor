@@ -36,7 +36,7 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         Camera = 5,
         [EnumMember]
-        SmartRouter=6
+        SmartRouter = 6
     }
 
     public enum MeshModeType
@@ -142,7 +142,36 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         MQTT = 1,
         [EnumMember]
-        Api = 2
+        Api = 2,
+        [EnumMember]
+        RegisterUser = 3,
+        [EnumMember]
+        GetUserInfo = 4,
+        [EnumMember]
+        IsUserExist = 5,
+        [EnumMember]
+        ChangePassword = 6,
+        [EnumMember]
+        ConfigurationProcess = 7,
+        [EnumMember]
+        PasswordRecovery = 8,
+        [EnumMember]
+        GetFirmwareUpdate = 9,
+        [EnumMember]
+        NewRoom = 10,
+        [EnumMember]
+        DeleteRoom = 11,
+        [EnumMember]
+        NewUser = 12,
+        [EnumMember]
+        NewDevice = 13,
+        [EnumMember]
+        DeleteDevice = 14,
+        [EnumMember]
+        NewChannel = 15,
+        [EnumMember]
+        DeleteChannel = 16,
+
 
     }
 }
