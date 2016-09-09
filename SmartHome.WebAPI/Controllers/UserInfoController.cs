@@ -271,9 +271,63 @@ namespace SmartHome.WebAPI.Controllers
                 #endregion
 
                 JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewRoom);
-                jsonManager.SaveNewRoom();
+                bool isSuccess = jsonManager.SaveNewRoom();
 
-                FillPasswordRecoveryInfos("", " New Room Add Successfully.", HttpStatusCode.OK, oRootObject);
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " New Room Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Add New Room.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+        [Route("api/DeleteRoom")]
+        [HttpPost]
+        public HttpResponseMessage DeleteRoom(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                //Debug.WriteLine(SecurityManager.Encrypt("{\"Room\":[{\"Id\":1,\"Home\":1,\"Name\":\"MyRoom\",\"RoomNumber\":0,\"IsActive\":1,\"IsSynced\":0}],\"Home\":[{\"PassPhrase\":\"4905a51c1b987b8f_O234AV\"}],\"UserRoomLink\":[{\"Id\":1,\"User\":1,\"Room\":1,\"IsSynced\":0}],\"UserInfo\":[{\"Email\":\"s@yopmail.com\"}]}"));
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteRoom);
+                bool isSuccess = jsonManager.DeleteRoom();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " Room Delete Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Delete Room.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
                 response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
             catch (Exception ex)
@@ -377,8 +431,6 @@ namespace SmartHome.WebAPI.Controllers
 
             return response;
         }
-
-
         [Route("api/DeleteDevice")]
         [HttpPost]
         public HttpResponseMessage DeleteDevice(JObject encryptedString)
@@ -472,8 +524,6 @@ namespace SmartHome.WebAPI.Controllers
 
             return response;
         }
-
-
         [Route("api/DeleteChannel")]
         [HttpPost]
         public HttpResponseMessage DeleteChannel(JObject encryptedString)
@@ -496,7 +546,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewChannel);
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteChannel);
                 bool isSuccess = jsonManager.DeleteChannel();
 
                 if (isSuccess)
