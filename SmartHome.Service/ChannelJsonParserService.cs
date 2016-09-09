@@ -86,10 +86,10 @@ namespace SmartHome.Service
 
         private SmartSwitch GetSmartSwitchByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
         {
-            return (from h in _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
-                    join r in _roomRepository.Queryable() on h.HomeId equals r.Home.HomeId
-                    join d in _deviceRepository.Queryable().OfType<SmartSwitch>().Where(p => p.DeviceHash == deviceHash) on r.RoomId equals d.Room.RoomId
-                    select d).DefaultIfEmpty().FirstOrDefault();
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+                   .SelectMany(p => p.Rooms)
+                   .SelectMany(q => q.SmartDevices.OfType<SmartSwitch>().Where(s => s.DeviceHash == deviceHash))
+                   .FirstOrDefault();
         }
 
         private void SaveNewChannel(SmartSwitch device)
@@ -110,7 +110,7 @@ namespace SmartHome.Service
 
             if (dbChannel == null)
             {
-                Channel channel = SaveChannel(channelEntity);                
+                Channel channel = SaveChannel(channelEntity);
                 SaveChannelStatus(channelEntity, channel);
                 sswitch.Channels.Add(channel);
             }

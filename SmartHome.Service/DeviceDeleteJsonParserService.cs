@@ -95,10 +95,10 @@ namespace SmartHome.Service
 
         private SmartDevice GetSmartSwitchByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
         {
-            return (from h in _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
-                    join r in _roomRepository.Queryable() on h.HomeId equals r.Home.HomeId
-                    join d in _deviceRepository.Queryable().Where(p => p.DeviceHash == deviceHash) on r.RoomId equals d.Room.RoomId
-                    select d).DefaultIfEmpty().FirstOrDefault();
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+              .SelectMany(p => p.Rooms)
+              .SelectMany(q => q.SmartDevices.Where(s => s.DeviceHash == deviceHash))
+              .FirstOrDefault();
         }
 
         private void SetMapper()
