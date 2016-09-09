@@ -379,6 +379,53 @@ namespace SmartHome.WebAPI.Controllers
         }
 
 
+        [Route("api/DeleteDevice")]
+        [HttpPost]
+        public HttpResponseMessage DeleteDevice(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+                
+                //msg = SecurityManager.Decrypt(SecurityManager.Encrypt("{\"Home\":[{\"Id\":6,\"PassPhrase\":\"8bb3e5213209d8ae_QFLKQL\"}],\"Device\":[{\"Id\":18,\"DeviceHash\":711650360}]}"));
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteDevice);
+                bool isSuccess = jsonManager.DeleteDevice();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " Device Delete Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Delete Device.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
+
 
         [Route("api/NewChannel")]
         [HttpPost]
