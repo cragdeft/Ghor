@@ -106,23 +106,19 @@ namespace SmartHome.Service
             SmartSwitch sswitch = model;
             sswitch.Channels = new List<Channel>();
 
-            //foreach (var channelEntity in channels)
-            //{
             Channel dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == model.DeviceId && p.AppsChannelId == channelEntity.AppsChannelId).FirstOrDefault();
 
             if (dbChannel == null)
             {
-                Channel channel = SaveChannel(channelEntity);
-                channel.ChannelStatuses = new List<ChannelStatus>();
+                Channel channel = SaveChannel(channelEntity);                
                 SaveChannelStatus(channelEntity, channel);
                 sswitch.Channels.Add(channel);
             }
-            // }
-
         }
 
         private void SaveChannelStatus(ChannelEntity channelEntity, Channel channel)
         {
+            channel.ChannelStatuses = new List<ChannelStatus>();
             List<ChannelStatusEntity> channelStatusEntities = _homeJsonEntity.ChannelStatus.FindAll(x => x.AppsChannelId == channelEntity.AppsChannelId);
 
             foreach (var channelStatusEntity in channelStatusEntities)
