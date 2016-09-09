@@ -391,7 +391,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 oRootObject.data = new PasswordRecoveryObjectEntity();
                 string msg = string.Empty;
-                
+
                 //msg = SecurityManager.Decrypt(SecurityManager.Encrypt("{\"Home\":[{\"Id\":6,\"PassPhrase\":\"8bb3e5213209d8ae_QFLKQL\"}],\"Device\":[{\"Id\":18,\"DeviceHash\":711650360}]}"));
 
                 msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
@@ -452,6 +452,52 @@ namespace SmartHome.WebAPI.Controllers
 
                 JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewChannel);
                 bool isSuccess = jsonManager.SaveNewChannel();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", " New Channel Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Add New Channel.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
+
+        [Route("api/DeleteChannel")]
+        [HttpPost]
+        public HttpResponseMessage DeleteChannel(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                //msg = SecurityManager.Decrypt(SecurityManager.Encrypt("{\"Home\":[{\"PassPhrase\":\"8bb3e5213209d8ae_6RVGXC\"}],\"Channel\":[{\"Id\":11}],\"Device\":[{\"DeviceHash\":711650360}]}"));
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewChannel);
+                bool isSuccess = jsonManager.DeleteChannel();
 
                 if (isSuccess)
                 {
