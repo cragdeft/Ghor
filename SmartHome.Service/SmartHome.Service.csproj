@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelDeleteJsonParserService.cs" />
     <Compile Include="ChannelJsonParserService.cs" />
     <Compile Include="CommandParserService.cs" />
     <Compile Include="CommonService.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="DeviceDeleteJsonParserService.cs" />
     <Compile Include="DeviceJsonParserService.cs" />
     <Compile Include="DeviceService.cs" />
+    <Compile Include="IHomeDeleteJsonParserService.cs" />
     <Compile Include="IHomeJsonParserService.cs" />
     <Compile Include="Interfaces\ICommandPerserService.cs" />
     <Compile Include="Interfaces\IConfigurationParserManagerService.cs" />

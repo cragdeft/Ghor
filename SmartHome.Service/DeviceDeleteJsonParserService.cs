@@ -17,7 +17,7 @@ namespace SmartHome.Service
     //{
     //}
 
-    public class DeviceDeleteJsonParserService : IHomeJsonParserService
+    public class DeviceDeleteJsonParserService : IHomeDeleteJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -51,7 +51,7 @@ namespace SmartHome.Service
             _messageLog = new MessageLog();
         }
 
-        public bool SaveJsonData()
+        public bool DeleteJsonData()
         {
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 

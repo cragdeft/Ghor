@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace SmartHome.Service
 {
-    public class ChannelDeleteJsonParserService : IHomeJsonParserService
+    public class ChannelDeleteJsonParserService : IHomeDeleteJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -45,7 +45,7 @@ namespace SmartHome.Service
             _messageLog = new MessageLog();
         }
 
-        public bool SaveJsonData()
+        public bool DeleteJsonData()
         {
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
