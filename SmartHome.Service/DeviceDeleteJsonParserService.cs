@@ -56,7 +56,6 @@ namespace SmartHome.Service
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
-            SetMapper();
             try
             {
                 DeleteSmartDevice();
@@ -101,10 +100,6 @@ namespace SmartHome.Service
               .FirstOrDefault();
         }
 
-        private void SetMapper()
-        {
-            Mapper.CreateMap<SmartDeviceEntity, SmartDevice>();
-            Mapper.CreateMap<DeviceStatusEntity, DeviceStatus>();
-        }
+
     }
 }

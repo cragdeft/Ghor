@@ -50,7 +50,6 @@ namespace SmartHome.Service
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
-            SetMapper();
             try
             {
                 DeleteSmartSwitchCannel();
@@ -98,10 +97,6 @@ namespace SmartHome.Service
 
         }
 
-        private void SetMapper()
-        {
-            Mapper.CreateMap<ChannelEntity, Channel>();
-            Mapper.CreateMap<ChannelStatusEntity, ChannelStatus>();
-        }
+
     }
 }
