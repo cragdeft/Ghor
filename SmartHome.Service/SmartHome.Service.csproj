@@ -58,6 +58,7 @@
     <Compile Include="CommandParserService.cs" />
     <Compile Include="CommonService.cs" />
     <Compile Include="ConfigurationParserManagerService.cs" />
+    <Compile Include="DeviceDeleteJsonParserService.cs" />
     <Compile Include="DeviceJsonParserService.cs" />
     <Compile Include="DeviceService.cs" />
     <Compile Include="IHomeJsonParserService.cs" />
