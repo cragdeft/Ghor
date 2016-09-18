@@ -551,11 +551,11 @@ namespace SmartHome.WebAPI.Controllers
 
                 if (isSuccess)
                 {
-                    FillPasswordRecoveryInfos("", " New Channel Add Successfully.", HttpStatusCode.OK, oRootObject);
+                    FillPasswordRecoveryInfos("", " Channel Delete Successfully.", HttpStatusCode.OK, oRootObject);
                 }
                 else
                 {
-                    FillPasswordRecoveryInfos("", " Can Not Add New Channel.", HttpStatusCode.BadRequest, oRootObject);
+                    FillPasswordRecoveryInfos("", " Can Not Delete New Channel.", HttpStatusCode.BadRequest, oRootObject);
                 }
 
                 response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
