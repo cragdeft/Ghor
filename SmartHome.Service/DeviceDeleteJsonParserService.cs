@@ -79,7 +79,7 @@ namespace SmartHome.Service
 
             SmartDevice smartDevice = null;
 
-            smartDevice = GetSmartSwitchByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+            smartDevice = GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
             if (smartDevice != null)
             {
                 DeleteDevice(smartDevice);
@@ -92,7 +92,7 @@ namespace SmartHome.Service
             _deviceRepository.Delete(smartDevice);
         }
 
-        private SmartDevice GetSmartSwitchByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
+        private SmartDevice GetSmartDeviceByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
         {
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
               .SelectMany(p => p.Rooms)
