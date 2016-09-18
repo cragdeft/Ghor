@@ -71,9 +71,10 @@ namespace SmartHome.Service
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
-            int appsChannelId = _homeJsonEntity.Channel.FirstOrDefault().AppsChannelId;
+            //int appsChannelId = _homeJsonEntity.Channel.FirstOrDefault().AppsChannelId;
+            int channelNo = _homeJsonEntity.Channel.FirstOrDefault().ChannelNo;
 
-            Channel channel = GetChannel(passPhrase, deviceHash, appsChannelId);
+            Channel channel = GetChannel(passPhrase, deviceHash, channelNo);
 
             if (channel != null)
             {
@@ -81,12 +82,12 @@ namespace SmartHome.Service
             }
         }
 
-        private Channel GetChannel(string passPhrase, string deviceHash, int appsChannelId)
+        private Channel GetChannel(string passPhrase, string deviceHash, int channelNo)
         {
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
                 .SelectMany(p => p.Rooms)
                 .SelectMany(q => q.SmartDevices.OfType<SmartSwitch>().Where(s => s.DeviceHash == deviceHash))
-                .SelectMany(d => d.Channels.Where(c => c.AppsChannelId == appsChannelId))
+                .SelectMany(d => d.Channels.Where(c => c.ChannelNo == channelNo))
                 .FirstOrDefault();
         }
 
