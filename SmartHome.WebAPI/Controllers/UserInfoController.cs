@@ -340,6 +340,50 @@ namespace SmartHome.WebAPI.Controllers
         }
 
 
+        [Route("api/DeviceRoomUpdate")]
+        [HttpPost]
+        public HttpResponseMessage DeviceRoomUpdate(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeviceRoomUpdate);
+                bool isSuccess = jsonManager.DeviceRoomUpdate();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", "Device Room Update Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", " Can Not Device Room Update.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
+            return response;
+        }
+
 
         [Route("api/NewUser")]
         [HttpPost]
