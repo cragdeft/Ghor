@@ -12,39 +12,33 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartHome.Service
-{ 
+{
     public class DeviceDeleteJsonParserService : IHomeDeleteJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
-        private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
-        private readonly IRepositoryAsync<DeviceStatus> _deviceStatusRepository;
-        private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
+        private readonly IRepositoryAsync<RouterInfo> _routerInfoRepository;
+        private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
-        public MessageLog _messageLog { get; private set; }
 
         #endregion
-
 
         public DeviceDeleteJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
-            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
-            _deviceStatusRepository = _unitOfWorkAsync.RepositoryAsync<DeviceStatus>();
-            _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
-
+            _routerInfoRepository = _unitOfWorkAsync.RepositoryAsync<RouterInfo>();
+            _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MessageLog();
         }
 
         public bool DeleteJsonData()
@@ -74,12 +68,40 @@ namespace SmartHome.Service
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
             SmartDevice smartDevice = null;
+            Home home = null;
 
             smartDevice = GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+            home = _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
+
             if (smartDevice != null)
             {
+                if (smartDevice.DeviceType == DeviceType.SmartRouter)
+                {
+                    DeleteRouterInfo(home, smartDevice.AppsBleId);
+                    UpdateUserHomeLink(home);
+                }
                 DeleteDevice(smartDevice);
             }
+        }
+
+        private void UpdateUserHomeLink(Home home)
+        {
+            IList<UserHomeLink> userHomeLinks = _userHomeRepository.Queryable().Where(p => p.Home.HomeId == home.HomeId).ToList();
+            foreach (var userHomeLink in userHomeLinks)
+            {
+                userHomeLink.IsAdmin = false;
+                userHomeLink.ObjectState = ObjectState.Modified;
+                _userHomeRepository.Update(userHomeLink);
+            }
+        }
+
+        private void DeleteRouterInfo(Home home, int appsBleId)
+        {
+
+            RouterInfo router = _routerInfoRepository.Queryable().Where(p => p.Parent.HomeId == home.HomeId && p.AppsBleId == appsBleId).FirstOrDefault();
+
+            router.ObjectState = ObjectState.Deleted;
+            _routerInfoRepository.Delete(router);
         }
 
         private void DeleteDevice(SmartDevice smartDevice)
@@ -87,7 +109,6 @@ namespace SmartHome.Service
             smartDevice.ObjectState = ObjectState.Deleted;
             _deviceRepository.Delete(smartDevice);
         }
-
         private SmartDevice GetSmartDeviceByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
         {
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
@@ -95,7 +116,5 @@ namespace SmartHome.Service
               .SelectMany(q => q.SmartDevices.Where(s => s.DeviceHash == deviceHash))
               .FirstOrDefault();
         }
-
-
     }
 }
