@@ -25,6 +25,14 @@ namespace SmartHome.Model.Models
         public string Ssid { get; set; }
         public string SsidPassword { get; set; }
         public bool IsSynced { get; set; }
+        public int AppsBleId { get; set; }
+        public string LocalBrokerExternalIp { get; set; }
+        public int LocalBrokerExternalPort { get; set; }
+        public bool IsExternal { get; set; }
+        public string HttpdUserName { get; set; }
+        public string HttpdPassword { get; set; }
+        public string HttpdIp { get; set; }
+        public int HttpdPort { get; set; }
 
         #endregion
 
