@@ -45,7 +45,8 @@ namespace SmartHome.Model.ModelDataContext
         public IDbSet<WebPagesRole> WebPagesRoles { get; set; }
         public IDbSet<CommandJson> CommandJsons { get; set; }
         public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
-
+        public IDbSet<WebBrokerInfo> WebBrokerInfoes { get; set; }
+        
         public IDbSet<MessageLog> MessageLogs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

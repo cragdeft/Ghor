@@ -171,6 +171,10 @@ namespace SmartHome.Model.Enums
         NewChannel = 15,
         [EnumMember]
         DeleteChannel = 16,
+        [EnumMember]
+        DeviceRoomUpdate = 17,
+        [EnumMember]
+        NewRouter = 18
 
 
     }
