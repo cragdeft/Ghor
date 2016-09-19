@@ -19,6 +19,7 @@ namespace SmartHome.Service
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<RouterInfo> _routerInfoRepository;
+        private readonly IRepositoryAsync<WebBrokerInfo> _webBrokerInfoRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
@@ -32,6 +33,7 @@ namespace SmartHome.Service
             _unitOfWorkAsync = unitOfWorkAsync;
             _routerInfoRepository = _unitOfWorkAsync.RepositoryAsync<RouterInfo>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _webBrokerInfoRepository = _unitOfWorkAsync.RepositoryAsync<WebBrokerInfo>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
@@ -43,6 +45,7 @@ namespace SmartHome.Service
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
+            SetMapper();
 
             try
             {
@@ -63,7 +66,6 @@ namespace SmartHome.Service
         private void SaveNewSmartRouterInfo()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
             string userEmail = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
             Home home = null;
@@ -75,10 +77,22 @@ namespace SmartHome.Service
             if (home != null && userInfo != null)
             {
                 InsertRouter(_homeJsonEntity.RouterInfo[0], home);
+                InsertWebBrokerInfo(_homeJsonEntity.WebBrokerInfo[0], home);
                 UpdateUserHomeLink(userInfo);
             }
 
         }
+
+        private void InsertWebBrokerInfo(WebBrokerInfoEntity webBrokerInfo, Home home)
+        {
+            var entity = Mapper.Map<WebBrokerInfoEntity, WebBrokerInfo>(webBrokerInfo);
+            entity.IsSynced = Convert.ToBoolean(webBrokerInfo.IsSynced);
+            entity.Parent = home;
+            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.ObjectState = ObjectState.Added;
+            _webBrokerInfoRepository.Insert(entity);
+        }
+
         private void UpdateUserHomeLink(UserInfo userInfo)
         {
             var entity = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).FirstOrDefault();
@@ -90,10 +104,17 @@ namespace SmartHome.Service
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
             entity.IsSynced = Convert.ToBoolean(router.IsSynced);
+            entity.IsExternal = Convert.ToBoolean(router.IsExternal);
             entity.Parent = home;
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
             _routerInfoRepository.Insert(entity);
+        }
+
+        private void SetMapper()
+        {
+            Mapper.CreateMap<RouterInfoEntity, RouterInfo>();
+            Mapper.CreateMap<WebBrokerInfoEntity, WebBrokerInfo>();
         }
     }
 }
