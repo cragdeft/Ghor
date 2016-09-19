@@ -51,6 +51,14 @@ namespace SmartHome.Service
             return user;
         }
 
+        public UserInfo GetUserByEmail(string email)
+        {
+            UserInfo user = _userRepository
+                .Queryable().Where(u => u.Email == email).FirstOrDefault();
+
+            return user;
+        }
+
 
         public MessageLog SaveMessageLog(string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
