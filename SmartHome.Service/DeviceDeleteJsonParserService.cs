@@ -12,11 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartHome.Service
-{
-    //class DeviceDeleteJsonParserService
-    //{
-    //}
-
+{ 
     public class DeviceDeleteJsonParserService : IHomeDeleteJsonParserService
     {
         #region PrivateProperty
