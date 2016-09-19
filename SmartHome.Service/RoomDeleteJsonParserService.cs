@@ -19,9 +19,7 @@ namespace SmartHome.Service
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
         private readonly IRepositoryAsync<Room> _roomRepository;
-        private readonly IRepositoryAsync<UserInfo> _userRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
-        private readonly IRepositoryAsync<MessageLog> _mqttMessageLogRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
@@ -34,14 +32,11 @@ namespace SmartHome.Service
             _unitOfWorkAsync = unitOfWorkAsync;
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Model.Models.Home>();
             _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
-            _userRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
-            _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MessageLog>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MessageLog();
         }
         public bool DeleteJsonData()
         {

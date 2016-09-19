@@ -17,35 +17,27 @@ namespace SmartHome.Service
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
-        private readonly IRepositoryAsync<Home> _homeRepository;
-        private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<UserInfo> _userRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
-        private readonly IRepositoryAsync<MessageLog> _mqttMessageLogRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
-        public MessageLog _messageLog { get; private set; }
 
         #endregion
 
         public UserInfoJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Model.Models.Home>();
-            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _userRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
-            _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MessageLog>();
+
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MessageLog();
         }
-
         public bool SaveJsonData()
         {
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
@@ -68,8 +60,6 @@ namespace SmartHome.Service
 
             return true;
         }
-
-
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
         {
             UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
@@ -81,7 +71,6 @@ namespace SmartHome.Service
             _userRepository.Insert(entity);
             return entity;
         }
-
         private void SaveNewUser()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
@@ -94,7 +83,6 @@ namespace SmartHome.Service
                 SaveHomeUser(home, userInfo);
             }
         }
-
         private void SaveHomeUser(Home home, UserInfo userInfo)
         {
             var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
@@ -107,7 +95,6 @@ namespace SmartHome.Service
                 FillSaveHomeUser(home, userRoomLinkEntity, userHome);
             }
         }
-
         private void FillSaveHomeUser(Home home, UserHomeLinkEntity userRoomLinkEntity, UserHomeLink userHome)
         {
             userHome.Home = home;
@@ -119,8 +106,6 @@ namespace SmartHome.Service
             userHome.ObjectState = ObjectState.Added;
             _userHomeRepository.Insert(userHome);
         }
-
-
         private void SaveRoomUser(Home home, UserInfo userInfo)
         {
             foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
@@ -135,7 +120,6 @@ namespace SmartHome.Service
 
             }
         }
-
         private void FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
         {
             userRoom.Room = entity;

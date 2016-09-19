@@ -17,13 +17,11 @@ namespace SmartHome.Service
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
-        private readonly IRepositoryAsync<Room> _roomRepository;
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
-        public MessageLog _messageLog { get; private set; }
 
         #endregion
 
@@ -31,14 +29,12 @@ namespace SmartHome.Service
         public DeviceRoomUpdateJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
-            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
+            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();         
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MessageLog();
         }
 
         public bool UpdateJsonData()
@@ -66,7 +62,7 @@ namespace SmartHome.Service
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
-            int appsRoomId = _homeJsonEntity.Room.FirstOrDefault().AppsRoomId;
+            int appsRoomId = _homeJsonEntity.Device.FirstOrDefault().AppsRoomId;
 
             SmartDevice smartDevice = null;
 

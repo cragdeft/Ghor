@@ -18,15 +18,12 @@ namespace SmartHome.Service
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
-        private readonly IRepositoryAsync<Room> _roomRepository;
-        private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
-        public MessageLog _messageLog { get; private set; }
 
         #endregion
 
@@ -35,15 +32,12 @@ namespace SmartHome.Service
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
-            _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
-            _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
             _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
-            _messageLog = new MessageLog();
         }
 
         public bool SaveJsonData()
