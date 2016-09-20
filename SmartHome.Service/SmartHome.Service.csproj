@@ -75,6 +75,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomDeleteJsonParserService.cs" />
     <Compile Include="RoomJsonParserService.cs" />
+    <Compile Include="RoomNewEntryJsonParserService.cs" />
+    <Compile Include="RoomUpdateJsonParserService.cs" />
+    <Compile Include="RoomUserNewEntryJsonParserService.cs" />
     <Compile Include="RouterInfoJsonParserService.cs" />
     <Compile Include="UserInfoDeleteJsonParserService.cs" />
     <Compile Include="UserInfoJsonParserService.cs" />
