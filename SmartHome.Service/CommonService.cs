@@ -38,6 +38,11 @@ namespace SmartHome.Service
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
         }
 
+        public Room GetRoomByPassPhaseAndAppsRoomId(string passPhrase, int appsRoomId)
+        {
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).SelectMany(x => x.Rooms.Where(q => q.AppsRoomId == appsRoomId)).FirstOrDefault();
+        }
+
         public Home GetHomeWithRooms(string passPhrase)
         {
             return _homeRepository.Queryable().Include(x => x.Rooms).Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
