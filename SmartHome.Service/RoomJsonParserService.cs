@@ -31,7 +31,6 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-
         public bool SaveJsonData()
         {
             IHomeJsonParserService service = null;
