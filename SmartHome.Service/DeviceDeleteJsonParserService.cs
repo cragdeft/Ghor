@@ -43,12 +43,14 @@ namespace SmartHome.Service
 
         public bool DeleteJsonData()
         {
+            bool isSuccess = false;
+
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
             try
             {
-                DeleteSmartDevice();
+                isSuccess = DeleteSmartDevice();
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
@@ -60,18 +62,19 @@ namespace SmartHome.Service
 
             new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
 
-            return true;
+            return isSuccess;
         }
-        private void DeleteSmartDevice()
+        private bool DeleteSmartDevice()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
+            bool isComplete = false;
 
             SmartDevice smartDevice = null;
             Home home = null;
 
             smartDevice = GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
-            home = _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
+            home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
 
             if (smartDevice != null)
             {
@@ -81,7 +84,9 @@ namespace SmartHome.Service
                     UpdateUserHomeLink(home);
                 }
                 DeleteDevice(smartDevice);
+                isComplete = true;
             }
+            return isComplete;
         }
 
         private void UpdateUserHomeLink(Home home)
