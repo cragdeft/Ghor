@@ -73,10 +73,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseJsonParser.cs" />
     <Compile Include="CommandJsonManager.cs" />
     <Compile Include="ConfigurationJsonManager.cs" />
+    <Compile Include="HomeJsonParser.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoomJsonParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -106,6 +109,10 @@
     <ProjectReference Include="..\SmartHome.Service\SmartHome.Service.csproj">
       <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>
       <Name>SmartHome.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Utility\SmartHome.Utility.csproj">
+      <Project>{84731c3c-32ee-4a7f-b31c-99deb598926d}</Project>
+      <Name>SmartHome.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
