@@ -192,7 +192,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
+                HomeJsonParser jsonManager = new HomeJsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
                 jsonManager.Save();
 
                 FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
@@ -260,8 +260,6 @@ namespace SmartHome.WebAPI.Controllers
                 oRootObject.data = new PasswordRecoveryObjectEntity();
                 string msg = string.Empty;
 
-                //Debug.WriteLine(SecurityManager.Encrypt("{\"Room\":[{\"Id\":1,\"Home\":1,\"Name\":\"MyRoom\",\"RoomNumber\":0,\"IsActive\":1,\"IsSynced\":0}],\"Home\":[{\"PassPhrase\":\"4905a51c1b987b8f_O234AV\"}],\"UserRoomLink\":[{\"Id\":1,\"User\":1,\"Room\":1,\"IsSynced\":0}],\"UserInfo\":[{\"Email\":\"s@yopmail.com\"}]}"));
-
                 msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
                 if (string.IsNullOrEmpty(msg))
                 {
@@ -270,7 +268,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewRoom);
+                RoomJsonParser jsonManager = new RoomJsonParser(msg, MessageReceivedFrom.NewRoom);
                 bool isSuccess = jsonManager.SaveNewRoom();
 
                 if (isSuccess)
@@ -316,7 +314,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteRoom);
+                RoomDeleteJsonParser jsonManager = new RoomDeleteJsonParser(msg, MessageReceivedFrom.DeleteRoom);
                 bool isSuccess = jsonManager.DeleteRoom();
 
                 if (isSuccess)
@@ -361,7 +359,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeviceRoomUpdate);
+                DeviceRoomJsonParser jsonManager = new DeviceRoomJsonParser(msg, MessageReceivedFrom.DeviceRoomUpdate);
                 bool isSuccess = jsonManager.DeviceRoomUpdate();
 
                 if (isSuccess)
@@ -408,7 +406,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewUser);
+                UserJsonParser jsonManager = new UserJsonParser(msg, MessageReceivedFrom.NewUser);
                 bool isSuccess = jsonManager.SaveNewUser();
 
                 if (isSuccess)
@@ -453,7 +451,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewDevice);
+                DeviceJsonParser jsonManager = new DeviceJsonParser(msg, MessageReceivedFrom.NewDevice);
                 bool isSuccess = jsonManager.SaveNewDevice();
 
                 if (isSuccess)
@@ -498,7 +496,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteDevice);
+                DeviceDeleteJsonParser jsonManager = new DeviceDeleteJsonParser(msg, MessageReceivedFrom.DeleteDevice);
                 bool isSuccess = jsonManager.DeleteDevice();
 
                 if (isSuccess)
@@ -546,7 +544,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewChannel);
+                ChannelJsonParser jsonManager = new ChannelJsonParser(msg, MessageReceivedFrom.NewChannel);
                 bool isSuccess = jsonManager.SaveNewChannel();
 
                 if (isSuccess)
@@ -590,7 +588,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.DeleteChannel);
+                ChannelDeleteJsonParser jsonManager = new ChannelDeleteJsonParser(msg, MessageReceivedFrom.DeleteChannel);
                 bool isSuccess = jsonManager.DeleteChannel();
 
                 if (isSuccess)
@@ -635,7 +633,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                JsonParser jsonManager = new JsonParser(msg, MessageReceivedFrom.NewRouter);
+                RouterJsonParser jsonManager = new RouterJsonParser(msg, MessageReceivedFrom.NewRouter);
                 bool isSuccess = jsonManager.SaveNewRouter();
 
                 if (isSuccess)
