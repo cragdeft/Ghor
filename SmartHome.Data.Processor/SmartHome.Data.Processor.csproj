@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>33284031-d563-43f2-b858-1289327d59e8</ProjectGuid>
+    <ProjectGuid>{33284031-D563-43F2-B858-1289327D59E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SmartHome.Data.Processor</RootNamespace>
@@ -30,24 +30,53 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDataProcessor.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="UserDatatProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frameworks\Repository.Pattern.Ef6\Repository.Pattern.Ef6.csproj">
+      <Project>{f68a1d19-93fb-47c1-a22b-42bea3e4fd8c}</Project>
+      <Name>Repository.Pattern.Ef6</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Frameworks\Repository.Pattern\Repository.Pattern.csproj">
+      <Project>{6e682a14-c872-4813-b620-76e108dea683}</Project>
+      <Name>Repository.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Frameworks\Service.Pattern\Service.Pattern.csproj">
+      <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
+      <Name>Service.Pattern</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
+      <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
+      <Name>SmartHome.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
+      <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
+      <Name>SmartHome.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Service\SmartHome.Service.csproj">
+      <Project>{403c5882-083c-481d-940d-aa9af198d26f}</Project>
+      <Name>SmartHome.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,5 +86,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
- </Project>
+</Project>
