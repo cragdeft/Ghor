@@ -109,6 +109,10 @@
       <Project>{d1269bfe-feef-4daf-81a5-e619e5f7b9c2}</Project>
       <Name>SmartHome.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Utility\SmartHome.Utility.csproj">
+      <Project>{84731c3c-32ee-4a7f-b31c-99deb598926d}</Project>
+      <Name>SmartHome.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
