@@ -47,3 +47,10 @@ E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\b
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.csprojResolveAssemblyReference.cache
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.dll
 E:\MHossain\Source\DotNet\SmartHomeWeb\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.pdb
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.dll
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Service.Pattern.pdb
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.dll
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\bin\Debug\Repository.Pattern.pdb
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.csprojResolveAssemblyReference.cache
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.dll
+D:\E\SmartHomeWork\SmartHomeWeb\Frameworks\Service.Pattern\obj\Debug\Service.Pattern.pdb

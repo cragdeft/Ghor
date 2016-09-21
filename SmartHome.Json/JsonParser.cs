@@ -17,13 +17,13 @@ using SmartHome.Model.Models;
 
 namespace SmartHome.Json
 {
-    public class JsonParser:BaseJsonParser
+    public class JsonParser : BaseJsonParser
     {
-        public HomeJsonEntity _homeJsonEntity { get; private set; }
-        public string _homeJsonMessage { get; private set; }
-        private IUnitOfWorkAsync _unitOfWorkAsync;
-        private IHomeJsonParserService _homeJsonParserService;
-        private MessageReceivedFrom _receivedFrom;
+        //public HomeJsonEntity _homeJsonEntity { get; private set; }
+        //public string _homeJsonMessage { get; private set; }
+        //private IUnitOfWorkAsync _unitOfWorkAsync;
+        //private IHomeJsonParserService _homeJsonParserService;
+        //private MessageReceivedFrom _receivedFrom;
 
         public JsonParser(string jsonString, MessageReceivedFrom receivedFrom)
         {
@@ -75,11 +75,6 @@ namespace SmartHome.Json
                     new RouterJsonParser(_homeJsonMessage, _receivedFrom).SaveNewRouter();
                     break;
             }
-        }       
-
-        //public static T JsonDesrialized<T>(string jsonString)
-        //{
-        //    return JsonConvert.DeserializeObject<T>(jsonString);
-        //}
+        }
     }
 }

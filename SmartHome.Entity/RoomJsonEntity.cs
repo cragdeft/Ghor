@@ -25,5 +25,6 @@ namespace SmartHome.Entity
         public List<VersionEntity> Version { get; set; }
         public List<DeviceStatusEntity> DeviceStatus { get; set; }
         public List<RgbwStatusEntity> RgbwStatus { get; set; }
+        public string Configuration { get; set; }
     }
 }

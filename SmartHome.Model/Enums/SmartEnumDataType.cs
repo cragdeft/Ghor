@@ -137,6 +137,20 @@ namespace SmartHome.Model.Enums
         Feedback
     }
 
+    public enum ConfigurationType
+    {
+        All,
+        NewRoom,
+        NewDevice,
+        NewChannel,
+        NewUser,
+        EditDevice,
+        DeleteChannel,
+        DeleteDevice,
+        DeleteRoom,
+        NewRouterInfo
+    }
+
     public enum MessageReceivedFrom
     {
         [EnumMember]
@@ -174,7 +188,11 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         DeviceRoomUpdate = 17,
         [EnumMember]
-        NewRouter = 18
+        NewRouter = 18,
+        [EnumMember]
+        UpdateRoom = 19,
+        [EnumMember]
+        NewRoomUser = 10
 
 
     }
