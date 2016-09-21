@@ -45,7 +45,7 @@ namespace SmartHome.Web.Utility
                 if (IsValidJson(customEventArgs.ReceivedMessage))
                 {
                     JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage,MessageReceivedFrom.MQTT);
-                    jsonManager.Save();
+                    jsonManager.ProcessJsonData();
                 }
             }
 
