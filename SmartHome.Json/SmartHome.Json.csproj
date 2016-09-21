@@ -74,12 +74,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseJsonParser.cs" />
+    <Compile Include="ChannelDeleteJsonParser.cs" />
+    <Compile Include="ChannelJsonParser.cs" />
     <Compile Include="CommandJsonManager.cs" />
     <Compile Include="ConfigurationJsonManager.cs" />
+    <Compile Include="DeviceDeleteJsonParser.cs" />
+    <Compile Include="DeviceJsonParser.cs" />
+    <Compile Include="DeviceRoomJsonParser.cs" />
     <Compile Include="HomeJsonParser.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoomDeleteJsonParser.cs" />
     <Compile Include="RoomJsonParser.cs" />
+    <Compile Include="RouterJsonParser.cs" />
+    <Compile Include="UserJsonParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

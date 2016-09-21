@@ -17,7 +17,7 @@ using SmartHome.Model.Models;
 
 namespace SmartHome.Json
 {
-    public class JsonParser
+    public class JsonParser:BaseJsonParser
     {
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
@@ -51,258 +51,35 @@ namespace SmartHome.Json
                     new RoomJsonParser(_homeJsonMessage, _receivedFrom).SaveNewRoom();
                     break;
                 case ConfigurationType.NewDevice:
-                    SaveNewDevice();
+                    new DeviceJsonParser(_homeJsonMessage, _receivedFrom).SaveNewDevice();
                     break;
                 case ConfigurationType.NewChannel:
-                    SaveNewChannel();
+                    new ChannelJsonParser(_homeJsonMessage, _receivedFrom).SaveNewChannel();
                     break;
                 case ConfigurationType.NewUser:
-                    SaveNewUser();
+                    new UserJsonParser(_homeJsonMessage, _receivedFrom).SaveNewUser();
                     break;
                 case ConfigurationType.EditDevice:
-                    DeviceRoomUpdate();
+                    new DeviceRoomJsonParser(_homeJsonMessage, _receivedFrom).DeviceRoomUpdate();
                     break;
                 case ConfigurationType.DeleteChannel:
-                    DeleteChannel();
+                    new ChannelDeleteJsonParser(_homeJsonMessage, _receivedFrom).DeleteChannel();
                     break;
                 case ConfigurationType.DeleteDevice:
-                    DeleteDevice();
+                    new DeviceDeleteJsonParser(_homeJsonMessage, _receivedFrom).DeleteDevice();
                     break;
                 case ConfigurationType.DeleteRoom:
-                    DeleteRoom();
+                    new RoomDeleteJsonParser(_homeJsonMessage, _receivedFrom).DeleteRoom();
                     break;
                 case ConfigurationType.NewRouterInfo:
-                    SaveNewRouter();
+                    new RouterJsonParser(_homeJsonMessage, _receivedFrom).SaveNewRouter();
                     break;
             }
-        }
+        }       
 
-        //public void Save()
+        //public static T JsonDesrialized<T>(string jsonString)
         //{
-        //    if (_homeJsonEntity == null)
-        //        return;
-
-        //    using (IDataContextAsync context = new SmartHomeDataContext())
-        //    using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-        //    {
-
-        //        IHomeJsonParserService service = new HomeJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-        //        try
-        //        {
-        //            service.SaveJsonData();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            unitOfWork.Rollback();
-        //        }
-        //    }
-
+        //    return JsonConvert.DeserializeObject<T>(jsonString);
         //}
-        //public bool SaveNewRoom()
-        //{
-        //    if (_homeJsonEntity == null)
-        //        return false;
-
-        //    using (IDataContextAsync context = new SmartHomeDataContext())
-        //    using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-        //    {
-        //        var service = new RoomJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-        //        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        //        MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
-
-        //        try
-        //        {
-        //            transactionRunner.RunTransaction(() => service.SaveJsonData());
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return false;
-        //        }
-        //        finally
-        //        {
-        //            transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
-        //        }
-        //    }
-        //    return true;
-        //}
-        public bool DeleteRoom()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeDeleteJsonParserService service = new RoomDeleteJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.DeleteJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-
-        }
-        public bool DeviceRoomUpdate()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeUpdateJsonParserService service = new DeviceRoomUpdateJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.UpdateJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-
-        }
-        public bool SaveNewUser()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-
-                IHomeJsonParserService service = new UserInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.SaveJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-
-            return true;
-
-        }
-        public bool SaveNewDevice()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeJsonParserService service = new DeviceJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.SaveJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-        }
-        public bool DeleteDevice()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeDeleteJsonParserService service = new DeviceDeleteJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.DeleteJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-        }
-        public bool SaveNewChannel()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeJsonParserService service = new ChannelJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.SaveJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-        }
-        public bool DeleteChannel()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeDeleteJsonParserService service = new ChannelDeleteJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.DeleteJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-        }
-        public bool SaveNewRouter()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                IHomeJsonParserService service = new RouterInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-                try
-                {
-                    service.SaveJsonData();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static T JsonDesrialized<T>(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(jsonString);
-        }
     }
 }
