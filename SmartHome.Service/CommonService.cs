@@ -67,7 +67,6 @@ namespace SmartHome.Service
 
         public MessageLog SaveMessageLog(string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
-            _unitOfWorkAsync.BeginTransaction();
             MessageLog messageLog = new MessageLog();
 
             try
@@ -81,8 +80,6 @@ namespace SmartHome.Service
                 entity.ObjectState = ObjectState.Added;
                 _mqttMessageLogRepository.Insert(entity);
 
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
 
                 messageLog = entity;
 
@@ -90,7 +87,6 @@ namespace SmartHome.Service
 
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
             }
 
             return messageLog;
@@ -99,7 +95,7 @@ namespace SmartHome.Service
 
         public MessageLog UpdateMessageLog(MessageLog entity, string passPhrase)
         {
-            _unitOfWorkAsync.BeginTransaction();
+
             MessageLog messageLog = new MessageLog();
 
             try
@@ -113,15 +109,11 @@ namespace SmartHome.Service
                 entity.ObjectState = ObjectState.Modified;
                 _mqttMessageLogRepository.Update(entity);
 
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
-
                 messageLog = entity;
 
             }
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
             }
             return messageLog;
         }

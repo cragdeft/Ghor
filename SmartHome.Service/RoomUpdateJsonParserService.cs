@@ -37,24 +37,17 @@ namespace SmartHome.Service
         }
         public bool SaveJsonData()
         {
-            MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
             bool isSuccess = false;
 
-            _unitOfWorkAsync.BeginTransaction();
             try
             {
                 UpdateRoomInfo();
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
                 isSuccess = true;
             }
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
                 return false;
             }
-            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
-
             return isSuccess;
         }
         private void UpdateRoomInfo()
