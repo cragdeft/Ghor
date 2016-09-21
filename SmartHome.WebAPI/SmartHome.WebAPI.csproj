@@ -383,6 +383,10 @@
       <Project>{561f0d0c-eb7b-4fa6-9a54-2d06e34a7f58}</Project>
       <Name>Service.Pattern</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Data.Processor\SmartHome.Data.Processor.csproj">
+      <Project>{33284031-d563-43f2-b858-1289327d59e8}</Project>
+      <Name>SmartHome.Data.Processor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartHome.Entity\SmartHome.Entity.csproj">
       <Project>{e032d63a-0690-4334-a610-634a59d767c2}</Project>
       <Name>SmartHome.Entity</Name>
