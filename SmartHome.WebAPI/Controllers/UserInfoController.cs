@@ -31,6 +31,7 @@ using SmartHome.Model.ViewModels;
 using SmartHome.Json;
 using SmartHome.Model.Enums;
 using System.Diagnostics;
+using SmartHome.Data.Processor;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -114,58 +115,87 @@ namespace SmartHome.WebAPI.Controllers
         [HttpPost]
         public HttpResponseMessage IsUserExist(JObject encryptedString)
         {
-
-            #region Initialization
-
             HttpResponseMessage response;
-            string msg = string.Empty;
-
-            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-            if (string.IsNullOrEmpty(msg))
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-            }
-            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
+                #region Initialization
 
-            #endregion
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
 
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            {
-                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
                 {
-                    IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessIsUserExist(Convert.ToString(tempJsonObject.Email), service);
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
                 }
+
+                #endregion
+
+                UserDatatProcessor userData = new UserDatatProcessor(msg, MessageReceivedFrom.IsUserExist);
+                bool isSuccess = userData.IsUserExist();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", "User already exist", HttpStatusCode.Conflict, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", "User not exist", HttpStatusCode.OK, oRootObject);
+                }
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
             return response;
+
+
         }
 
         [Route("api/ChangePassword")]
         [HttpPost]
         public HttpResponseMessage ChangePassword(JObject encryptedString)
         {
-            #region Initialization
-
             HttpResponseMessage response;
-            string msg = string.Empty;
-            //"{\"Email\":\"kk.test@apl.com\",\"Password\":\"6ZlPF3qG/+LcC5brkDMZgA==\"}"
-            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-            if (string.IsNullOrEmpty(msg))
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-            }
-            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
+                #region Initialization
 
-            #endregion
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
 
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            {
-                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
                 {
-                    IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessPasswordUpdate(Convert.ToString(tempJsonObject.Email), Convert.ToString(tempJsonObject.Password), service);
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
                 }
+
+                #endregion
+
+                PasswordDataProcessor passwordData = new PasswordDataProcessor(msg, MessageReceivedFrom.ChangePassword);
+                bool isSuccess = passwordData.ChangePassword();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos("", "Successfully Password Update", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos("", "Password not update", HttpStatusCode.BadRequest, oRootObject);
+                }
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
             return response;
         }
 
@@ -211,29 +241,42 @@ namespace SmartHome.WebAPI.Controllers
         [HttpPost]
         public HttpResponseMessage PasswordRecovery(JObject encryptedString)
         {
-            #region Initialization
-
             HttpResponseMessage response;
-            string msg = string.Empty;
-
-            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-            if (string.IsNullOrEmpty(msg))
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-            }
-            var tempJsonObject = JsonConvert.DeserializeObject<dynamic>(msg);
+                #region Initialization
 
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
 
-            #endregion
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            {
-                using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
                 {
-                    IUserInfoService service = new UserInfoService(unitOfWork);
-                    response = ProcessPasswordRecovery(Convert.ToString(tempJsonObject.Email), service);
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
                 }
+
+                #endregion
+
+                PasswordRecoveryDataProcessor passworRecoverydData = new PasswordRecoveryDataProcessor(msg, MessageReceivedFrom.ChangePassword, oRootObject);
+                bool isSuccess = passworRecoverydData.PasswordRecovery();
+
+                if (isSuccess)
+                {
+                    FillPasswordRecoveryInfos(oRootObject.data.Password, "User password", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    FillPasswordRecoveryInfos(string.Empty, "User not exist", HttpStatusCode.BadRequest, oRootObject);
+                }
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
+            catch (Exception ex)
+            {
+                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
             return response;
         }
 
@@ -242,7 +285,6 @@ namespace SmartHome.WebAPI.Controllers
         public HttpResponseMessage FirmwareUpdateInfo()
         {
             string firmwareMessage = "{\"SMSW6G\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRB12\":{\"version\":\"2\", \"file\":\"RGBW_Dynamic_DName_update.img\"}, \"SMCRTV\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMCRTH\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRWTR\":{\"version\":\"2\", \"file\":\"Switch.img\"}}";
-            //string msg = JsonConvert.SerializeObject(firmwareMessage);
             return new HttpResponseMessage() { Content = new StringContent(firmwareMessage, Encoding.UTF8, "application/json") };
         }
 
