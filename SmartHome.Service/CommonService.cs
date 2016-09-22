@@ -33,6 +33,11 @@ namespace SmartHome.Service
             _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MessageLog>();
         }
 
+        public bool IsLoginIdUnique(string email)
+        {
+            return _userRepository.Queryable().Any(p => p.Email == email);
+        }
+
         public Home GetHome(string passPhrase)
         {
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase).FirstOrDefault();
@@ -132,6 +137,30 @@ namespace SmartHome.Service
                 }
             }
             return userInfos;
+        }
+
+        public bool PasswordUpdate(string email, string password)
+        {
+            try
+            {
+                var entity = MapUserInfoProperty(email, password);
+                entity.ObjectState = ObjectState.Modified;
+                _userRepository.Update(entity);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private UserInfo MapUserInfoProperty(string email, string password)
+        {
+            UserInfo model = _userRepository.Queryable().Where(p => p.Email == email).FirstOrDefault();
+            model.AuditField.LastUpdatedBy = "admin";
+            model.AuditField.LastUpdatedDateTime = DateTime.Now;
+            model.Password = password;
+            return model;
         }
     }
 }
