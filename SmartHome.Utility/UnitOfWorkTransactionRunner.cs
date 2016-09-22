@@ -52,5 +52,21 @@ namespace SmartHome.Utility
                 throw;
             }
         }
+
+        public T RunSelectTransaction<T>(Func<T> action)
+        {
+            if (action == null) return default(T);
+
+            
+            try
+            {
+                var result = action.Invoke();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }
