@@ -162,5 +162,21 @@ namespace SmartHome.Service
             model.Password = password;
             return model;
         }
+
+        public SmartDevice GetSmartDeviceByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
+        {
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+              .SelectMany(p => p.Rooms)
+              .SelectMany(q => q.SmartDevices.Where(s => s.DeviceHash == deviceHash))
+              .FirstOrDefault();
+        }
+
+        public T GetSmartSwitchByDeviceHashAndPassPhrase<T>(string deviceHash, string passPhrase) where T : SmartDevice
+        {
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+                   .SelectMany(p => p.Rooms)
+                   .SelectMany(q => q.SmartDevices.OfType<T>().Where(s => s.DeviceHash == deviceHash))
+                   .FirstOrDefault();
+        }
     }
 }
