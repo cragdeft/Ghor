@@ -70,21 +70,13 @@ namespace SmartHome.Service
 
             SmartSwitch sSwitch = null;
 
-            sSwitch = GetSmartSwitchByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+            sSwitch =new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartSwitch>(deviceHash, passPhrase);
 
             if (sSwitch != null)
             {
                 SaveNewChannel(sSwitch);
             }
-        }
-
-        private SmartSwitch GetSmartSwitchByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
-        {
-            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
-                   .SelectMany(p => p.Rooms)
-                   .SelectMany(q => q.SmartDevices.OfType<SmartSwitch>().Where(s => s.DeviceHash == deviceHash))
-                   .FirstOrDefault();
-        }
+        }      
 
         private void SaveNewChannel(SmartSwitch device)
         {
