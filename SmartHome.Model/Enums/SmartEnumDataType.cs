@@ -192,7 +192,8 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         UpdateRoom = 19,
         [EnumMember]
-        NewRoomUser = 10
+        NewRoomUser = 20,
+        
 
 
     }
