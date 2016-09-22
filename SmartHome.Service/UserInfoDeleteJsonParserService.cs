@@ -60,9 +60,10 @@ namespace SmartHome.Service
         private void DeleteUser()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            int appsUserId = _homeJsonEntity.UserInfo.FirstOrDefault().AppsUserId;
+            //int appsUserId = _homeJsonEntity.UserInfo.FirstOrDefault().AppsUserId;
+            string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
-            UserInfo userInfo = GetUserInfo(appsUserId);
+            UserInfo userInfo = GetUserInfo(email);
             if (userInfo != null)
             {
                 DeleteHomeUser(userInfo);
@@ -90,9 +91,9 @@ namespace SmartHome.Service
             dbHomeUser.ObjectState = ObjectState.Deleted;
             _userHomeRepository.Delete(dbHomeUser);
         }
-        private UserInfo GetUserInfo(int appsUserId)
+        private UserInfo GetUserInfo(string email)
         {
-            return _userRepository.Queryable().Where(p => p.AppsUserId == appsUserId).FirstOrDefault();
+            return _userRepository.Queryable().Where(p => p.Email == email).FirstOrDefault();
         }
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
         {
