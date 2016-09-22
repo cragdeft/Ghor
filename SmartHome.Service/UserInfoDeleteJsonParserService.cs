@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SmartHome.Service
 {
-    class UserInfoDeleteJsonParserService : IHomeDeleteJsonParserService
+    public class UserInfoDeleteJsonParserService : IHomeDeleteJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -78,7 +78,7 @@ namespace SmartHome.Service
         }
         private void DeleteRoomUser(UserInfo userInfo)
         {
-            var dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.AppsUserId == userInfo.AppsUserId);
+            var dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId);
             foreach (var roomUser in dbRoomUser)
             {
                 roomUser.ObjectState = ObjectState.Deleted;
@@ -87,7 +87,7 @@ namespace SmartHome.Service
         }
         private void DeleteHomeUser(UserInfo userInfo)
         {
-            var dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.AppsUserId == userInfo.AppsUserId).FirstOrDefault();
+            var dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).FirstOrDefault();
             dbHomeUser.ObjectState = ObjectState.Deleted;
             _userHomeRepository.Delete(dbHomeUser);
         }

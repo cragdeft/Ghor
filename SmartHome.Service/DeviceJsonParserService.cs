@@ -45,13 +45,15 @@ namespace SmartHome.Service
 
                 if (dbDevice != null)
                 {
-                    service = new DeviceUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateDevice);
+                    var updateService = new DeviceUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateDevice);
+                    isSuccess = updateService.UpdateJsonData();
                 }
                 else
                 {
                     service = new DeviceNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewDevice);
+                    isSuccess = service.SaveJsonData();
                 }
-                isSuccess = service.SaveJsonData();
+                
 
             }
             catch (Exception ex)

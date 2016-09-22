@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceUpdateJsonParserService : IHomeJsonParserService
+    public class DeviceUpdateJsonParserService : IHomeUpdateJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,7 +38,7 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool SaveJsonData()
+        public bool UpdateJsonData()
         {
             MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
@@ -116,19 +116,6 @@ namespace SmartHome.Service
 
             _deviceRepository.Update(router);
         }
-        private void UpdateSmartSwitch(SmartDeviceEntity entity, SmartSwitch device)
-        {
-            SmartSwitch sswitch = MapSmartDeviceProperties<SmartSwitch>(entity, device);
-            device.ObjectState = ObjectState.Modified;
-            device.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            _deviceRepository.Update(sswitch);
-
-            DeleteSwitchDeviceStatus(sswitch);
-
-            List<DeviceStatusEntity> deviceStatuses = _homeJsonEntity.DeviceStatus.FindAll(x => x.AppsDeviceId == entity.AppsDeviceId.ToString());
-            InsertSwitchDeviceStatus(sswitch, deviceStatuses);
-        }
-
         private void UpdateSmartRainbow(SmartDeviceEntity entity, SmartRainbow device)
         {
             SmartRainbow rainbow = MapSmartDeviceProperties<SmartRainbow>(entity, device);//MapToSmartRainbow(device);
@@ -168,31 +155,9 @@ namespace SmartHome.Service
             }
         }
 
-        private void InsertSwitchDeviceStatus(SmartSwitch sswitch, List<DeviceStatusEntity> deviceStatuses)
-        {
-            foreach (var deviceStatusEntity in deviceStatuses)
-            {
-                var deviceStatus = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
-                deviceStatus.IsSynced = Convert.ToBoolean(deviceStatusEntity.IsSynced);
-                deviceStatus.ObjectState = ObjectState.Added;
-                deviceStatus.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                _deviceStatusRepository.Insert(deviceStatus);
-                sswitch.DeviceStatus.Add(deviceStatus);
-            }
-        }
 
-        private void DeleteSwitchDeviceStatus(SmartSwitch sswitch)
-        {
-            IList<DeviceStatus> dbDeviceStatuses = _deviceStatusRepository.Queryable().Where(p => p.SmartDevice.DeviceId == sswitch.DeviceId).ToList();
 
-            foreach (var deviceStatus in dbDeviceStatuses)
-            {
-                deviceStatus.ObjectState = ObjectState.Deleted;
-                _deviceStatusRepository.Delete(deviceStatus);
 
-                sswitch.DeviceStatus.Remove(deviceStatus);
-            }
-        }
 
         private void SetMapper()
         {

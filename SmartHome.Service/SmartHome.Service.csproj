@@ -84,7 +84,9 @@
     <Compile Include="SmartSwitchUpdateJsonParserService.cs" />
     <Compile Include="UserInfoDeleteJsonParserService.cs" />
     <Compile Include="UserInfoJsonParserService.cs" />
+    <Compile Include="UserInfoNewEntryJsonParserService.cs" />
     <Compile Include="UserInfoService.cs" />
+    <Compile Include="UserInfoUpdateJsonParserService.cs" />
     <Compile Include="VersionService.cs" />
   </ItemGroup>
   <ItemGroup>

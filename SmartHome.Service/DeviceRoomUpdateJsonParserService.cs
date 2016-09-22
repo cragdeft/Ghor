@@ -29,7 +29,7 @@ namespace SmartHome.Service
         public DeviceRoomUpdateJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();         
+            _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
 
             _homeJsonEntity = homeJsonEntity;
@@ -67,9 +67,11 @@ namespace SmartHome.Service
             SmartDevice smartDevice = null;
 
             smartDevice = GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+
             Room room = GetRoom(passPhrase, appsRoomId);
             if (smartDevice != null)
             {
+                smartDevice.AppsRoomId = appsRoomId;
                 UpdateDevice(smartDevice, room);
             }
         }
