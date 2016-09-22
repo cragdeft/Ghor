@@ -61,8 +61,10 @@
     <Compile Include="ConfigurationParserManagerService.cs" />
     <Compile Include="DeviceDeleteJsonParserService.cs" />
     <Compile Include="DeviceJsonParserService.cs" />
+    <Compile Include="DeviceNewEntryJsonParserService.cs" />
     <Compile Include="DeviceRoomUpdateJsonParserService.cs" />
     <Compile Include="DeviceService.cs" />
+    <Compile Include="DeviceUpdateJsonParserService.cs" />
     <Compile Include="IHomeDeleteJsonParserService.cs" />
     <Compile Include="IHomeJsonParserService.cs" />
     <Compile Include="IHomeUpdateJsonParserService.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="RoomUpdateJsonParserService.cs" />
     <Compile Include="RoomUserNewEntryJsonParserService.cs" />
     <Compile Include="RouterInfoJsonParserService.cs" />
+    <Compile Include="SmartSwitchUpdateJsonParserService.cs" />
     <Compile Include="UserInfoDeleteJsonParserService.cs" />
     <Compile Include="UserInfoJsonParserService.cs" />
     <Compile Include="UserInfoService.cs" />
