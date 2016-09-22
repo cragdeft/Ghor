@@ -10,5 +10,6 @@ namespace SmartHome.Utility
     {
         void RunTransaction(Action action);
         T RunTransaction<T>(Func<T> action);
+        T RunSelectTransaction<T>(Func<T> action);
     }
 }
