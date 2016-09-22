@@ -73,7 +73,7 @@ namespace SmartHome.Service
             SmartDevice smartDevice = null;
             Home home = null;
 
-            smartDevice = GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+            smartDevice = new CommonService(_unitOfWorkAsync).GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
             home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
 
             if (smartDevice != null)
@@ -114,12 +114,6 @@ namespace SmartHome.Service
             smartDevice.ObjectState = ObjectState.Deleted;
             _deviceRepository.Delete(smartDevice);
         }
-        private SmartDevice GetSmartDeviceByDeviceHashAndPassPhrase(string deviceHash, string passPhrase)
-        {
-            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
-              .SelectMany(p => p.Rooms)
-              .SelectMany(q => q.SmartDevices.Where(s => s.DeviceHash == deviceHash))
-              .FirstOrDefault();
-        }
+      
     }
 }
