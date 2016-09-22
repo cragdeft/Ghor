@@ -23,7 +23,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<Channel> _channelRepository;
         private readonly IRepositoryAsync<WebPagesRole> _webPagesRoleRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeLinkRepository;
-
+                
         public UserInfoService(IUnitOfWorkAsync unitOfWork)
         {
             _unitOfWorkAsync = unitOfWork;
@@ -44,6 +44,11 @@ namespace SmartHome.Service
         public IEnumerable<UserInfo> GetsUserInfosByEmail(string email, string password)
         {
             return _userInfoRepository.Query(p => p.Email == email && p.Password == password).Include(x => x.UserHomeLinks).Select();
+        }
+
+        public UserInfo GetsUserInfosByEmailAndPassword(string email, string password)
+        {
+            return _userInfoRepository.Queryable().Where(p => p.Email == email && p.Password == password).FirstOrDefault();
         }
 
         public bool IsLoginIdUnique(string email)
@@ -115,7 +120,6 @@ namespace SmartHome.Service
         public UserInfoEntity Add(UserInfoEntity entity)
         {
             Mapper.CreateMap<UserInfoEntity, UserInfo>()
-            //.ForMember(dest => dest.DateOfBirth, opt => opt.UseValue(DateTime.Now))
             .ForMember(dest => dest.AuditField, opt => opt.UseValue(new AuditFields("Admin", DateTime.Now, "Admin", DateTime.Now)))
             .ForMember(dest => dest.ObjectState, opt => opt.UseValue(ObjectState.Added));//state                                                                                         
             UserInfo model = Mapper.Map<UserInfoEntity, UserInfo>(entity);
