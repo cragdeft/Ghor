@@ -178,5 +178,12 @@ namespace SmartHome.Service
                    .SelectMany(q => q.SmartDevices.OfType<T>().Where(s => s.DeviceHash == deviceHash))
                    .FirstOrDefault();
         }
+
+
+        public RouterInfo GetRouterInfoByPassPhraseAndAppsBleId(string passPhrase, int appsBleId)
+        {
+            return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
+              .SelectMany(x => x.SmartRouterInfos.Where(q => q.AppsBleId == appsBleId)).FirstOrDefault();
+        }
     }
 }
