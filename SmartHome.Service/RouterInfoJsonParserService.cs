@@ -40,81 +40,40 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
             _messageLog = new MessageLog();
         }
+     
+
         public bool SaveJsonData()
         {
-            MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
-
-            _unitOfWorkAsync.BeginTransaction();
-            SetMapper();
-
+            IHomeJsonParserService service = null;
+            bool isSuccess = false;
             try
             {
-                SaveNewSmartRouterInfo();
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+                string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
+                int appsBleId = _homeJsonEntity.RouterInfo.FirstOrDefault().AppsBleId;
+                RouterInfo dbRouterInfo = null;
+
+                dbRouterInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByPassPhraseAndAppsBleId(passPhrase, appsBleId);
+
+                if (dbRouterInfo != null)
+                {
+                    var updateService = new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRouter);
+                    isSuccess = updateService.UpdateJsonData();
+                }
+                else
+                {
+                    service = new RouterInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRouter);
+                    isSuccess = service.SaveJsonData();
+                }
+
+
             }
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
                 return false;
             }
-
-            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
-
-            return true;
-        }
-        private void SaveNewSmartRouterInfo()
-        {
-            string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            string userEmail = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
-
-            Home home = null;
-            UserInfo userInfo = null;
-
-            home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
-            userInfo = new CommonService(_unitOfWorkAsync).GetUserByEmail(userEmail);
-
-            if (home != null && userInfo != null)
-            {
-                InsertRouter(_homeJsonEntity.RouterInfo[0], home);
-                InsertWebBrokerInfo(_homeJsonEntity.WebBrokerInfo[0], home);
-                UpdateUserHomeLink(userInfo);
-            }
-
+            return isSuccess;
         }
 
-        private void InsertWebBrokerInfo(WebBrokerInfoEntity webBrokerInfo, Home home)
-        {
-            var entity = Mapper.Map<WebBrokerInfoEntity, WebBrokerInfo>(webBrokerInfo);
-            entity.IsSynced = Convert.ToBoolean(webBrokerInfo.IsSynced);
-            entity.Parent = home;
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _webBrokerInfoRepository.Insert(entity);
-        }
 
-        private void UpdateUserHomeLink(UserInfo userInfo)
-        {
-            var entity = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).FirstOrDefault();
-            entity.IsAdmin = true;
-            entity.ObjectState = ObjectState.Modified;
-            _userHomeRepository.Update(entity);
-        }
-        private void InsertRouter(RouterInfoEntity router, Home home)
-        {
-            var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
-            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
-            entity.IsExternal = Convert.ToBoolean(router.IsExternal);
-            entity.Parent = home;
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _routerInfoRepository.Insert(entity);
-        }
-
-        private void SetMapper()
-        {
-            Mapper.CreateMap<RouterInfoEntity, RouterInfo>();
-            Mapper.CreateMap<WebBrokerInfoEntity, WebBrokerInfo>();
-        }
     }
 }
