@@ -200,6 +200,8 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         DeleteUser = 23,
         [EnumMember]
-        UpdateChannel = 24
+        UpdateChannel = 24,
+        [EnumMember]
+        UpdateRouter = 25
     }
 }
