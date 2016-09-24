@@ -6,6 +6,7 @@ using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmartHome.Service
@@ -60,7 +61,6 @@ namespace SmartHome.Service
         private void DeleteUser()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            //int appsUserId = _homeJsonEntity.UserInfo.FirstOrDefault().AppsUserId;
             string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
             UserInfo userInfo = GetUserInfo(email);
@@ -78,7 +78,8 @@ namespace SmartHome.Service
         }
         private void DeleteRoomUser(UserInfo userInfo)
         {
-            var dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId);
+            IList<UserRoomLink> dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).ToList();
+
             foreach (var roomUser in dbRoomUser)
             {
                 roomUser.ObjectState = ObjectState.Deleted;
@@ -87,9 +88,13 @@ namespace SmartHome.Service
         }
         private void DeleteHomeUser(UserInfo userInfo)
         {
-            var dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).FirstOrDefault();
-            dbHomeUser.ObjectState = ObjectState.Deleted;
-            _userHomeRepository.Delete(dbHomeUser);
+            IList<UserHomeLink> dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).ToList();
+            foreach (var usreHome in dbHomeUser)
+            {
+                usreHome.ObjectState = ObjectState.Deleted;
+                _userHomeRepository.Delete(usreHome);
+            }
+
         }
         private UserInfo GetUserInfo(string email)
         {
