@@ -193,8 +193,13 @@ namespace SmartHome.Model.Enums
         UpdateRoom = 19,
         [EnumMember]
         NewRoomUser = 20,
-        
-
-
+        [EnumMember]
+        UpdateDevice = 21,
+        [EnumMember]
+        UpdateUser = 22,
+        [EnumMember]
+        DeleteUser = 23,
+        [EnumMember]
+        UpdateChannel = 24
     }
 }
