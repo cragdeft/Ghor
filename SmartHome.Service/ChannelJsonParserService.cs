@@ -42,100 +42,43 @@ namespace SmartHome.Service
 
         public bool SaveJsonData()
         {
-            MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
-
-            _unitOfWorkAsync.BeginTransaction();
-            SetMapper();
+            IHomeJsonParserService service = null;
+            bool isSuccess = false;
             try
             {
-                SaveNewSmartSwitchCannel();
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+                string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
+                string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
+                int appsChannelId = _homeJsonEntity.Channel.FirstOrDefault().AppsChannelId;
+
+                SmartSwitch sSwitch = null;
+                Channel dbChannel = null;
+
+                sSwitch = new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartSwitch>(deviceHash, passPhrase);
+                if (sSwitch != null)
+                {
+                    //    dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == sSwitch.DeviceId).FirstOrDefault();
+                    dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == sSwitch.DeviceId && p.AppsChannelId == appsChannelId).FirstOrDefault();
+
+                    if (dbChannel != null)
+                    {
+                        var updateService = new ChannelUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateChannel);
+                        isSuccess = updateService.UpdateJsonData();
+                    }
+                    else
+                    {
+                        service = new ChannelNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewChannel);
+                        isSuccess = service.SaveJsonData();
+                    }
+                }
+
             }
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
                 return false;
             }
-
-            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
-
-            return true;
+            return isSuccess;
         }
 
-        private void SaveNewSmartSwitchCannel()
-        {
-            string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
-            SmartSwitch sSwitch = null;
-
-            sSwitch =new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartSwitch>(deviceHash, passPhrase);
-
-            if (sSwitch != null)
-            {
-                SaveNewChannel(sSwitch);
-            }
-        }      
-
-        private void SaveNewChannel(SmartSwitch device)
-        {
-            List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
-            if (channelList.Count > 0)
-            {
-                InsertChannel(device, channelList.First());
-            }
-
-        }
-        public void InsertChannel(SmartSwitch model, ChannelEntity channelEntity)
-        {
-            SmartSwitch sswitch = model;
-            sswitch.Channels = new List<Channel>();
-
-            Channel dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == model.DeviceId && p.AppsChannelId == channelEntity.AppsChannelId).FirstOrDefault();
-
-            if (dbChannel == null)
-            {
-                Channel channel = SaveChannel(channelEntity);
-                SaveChannelStatus(channelEntity, channel);
-                sswitch.Channels.Add(channel);
-            }
-        }
-
-        private void SaveChannelStatus(ChannelEntity channelEntity, Channel channel)
-        {
-            channel.ChannelStatuses = new List<ChannelStatus>();
-            List<ChannelStatusEntity> channelStatusEntities = _homeJsonEntity.ChannelStatus.FindAll(x => x.AppsChannelId == channelEntity.AppsChannelId);
-
-            foreach (var channelStatusEntity in channelStatusEntities)
-            {
-                var channelStatus = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
-
-                channelStatus.IsSynced = Convert.ToBoolean(channelStatusEntity.IsSynced);
-                channelStatus.ObjectState = ObjectState.Added;
-                channelStatus.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-
-                _channelStatusRepository.Insert(channelStatus);
-                channel.ChannelStatuses.Add(channelStatus);
-            }
-        }
-
-        private Channel SaveChannel(ChannelEntity entity)
-        {
-            var channel = Mapper.Map<ChannelEntity, Channel>(entity);
-
-            channel.IsSynced = Convert.ToBoolean(channel.IsSynced);
-            channel.ObjectState = ObjectState.Added;
-            channel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            _channelRepository.Insert(channel);
-
-            return channel;
-        }
-
-        private void SetMapper()
-        {
-            Mapper.CreateMap<ChannelEntity, Channel>();
-            Mapper.CreateMap<ChannelStatusEntity, ChannelStatus>();
-        }
     }
 }
