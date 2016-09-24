@@ -53,7 +53,7 @@ namespace SmartHome.Service
                     service = new DeviceNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewDevice);
                     isSuccess = service.SaveJsonData();
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -62,9 +62,6 @@ namespace SmartHome.Service
             }
             return isSuccess;
         }
-
-
-
 
     }
 }
