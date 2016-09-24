@@ -32,5 +32,15 @@ namespace SmartHome.Utility
 
             return Mapper.Map<UserInfoEntity, UserInfo>(entity, userInfo);
         }
+
+        public static Channel MapChannelInfoProperties(ChannelEntity entity, Channel channel)
+        {
+            Mapper.CreateMap<ChannelEntity, Channel>()
+              .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+              .ForMember(x => x.ChannelStatuses, y => y.Ignore())
+              .ForMember(x => x.ChannelId, y => y.Ignore());
+
+            return Mapper.Map<ChannelEntity, Channel>(entity, channel);
+        }
     }
 }
