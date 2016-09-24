@@ -83,6 +83,8 @@
     <Compile Include="RoomUpdateJsonParserService.cs" />
     <Compile Include="RoomUserNewEntryJsonParserService.cs" />
     <Compile Include="RouterInfoJsonParserService.cs" />
+    <Compile Include="RouterInfoNewEntryJsonParserService.cs" />
+    <Compile Include="RouterInfoUpdateJsonParserService.cs" />
     <Compile Include="SmartSwitchUpdateJsonParserService.cs" />
     <Compile Include="UserInfoDeleteJsonParserService.cs" />
     <Compile Include="UserInfoJsonParserService.cs" />
