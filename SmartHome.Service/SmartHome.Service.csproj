@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="ChannelDeleteJsonParserService.cs" />
     <Compile Include="ChannelJsonParserService.cs" />
+    <Compile Include="ChannelNewEntryJsonParserService.cs" />
+    <Compile Include="ChannelUpdateJsonParserService.cs" />
     <Compile Include="CommandParserService.cs" />
     <Compile Include="CommonService.cs" />
     <Compile Include="ConfigurationParserManagerService.cs" />
