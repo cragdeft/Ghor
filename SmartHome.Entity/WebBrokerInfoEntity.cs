@@ -16,6 +16,6 @@ namespace SmartHome.Entity
         public string BrokerUsername { get; set; }
         public string BrokerPassword { get; set; }
         public string SslCertificatePassword { get; set; }
-        public bool IsSynced { get; set; }
+        public int IsSynced { get; set; }
     }
 }
