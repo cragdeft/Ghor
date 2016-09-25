@@ -4,7 +4,9 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
+using SmartHome.Model.Models;
 using SmartHome.Service;
+using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,6 @@ namespace SmartHome.Json
             _homeJsonMessage = jsonString;
             _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
         }
-
         public bool SaveNewUser()
         {
             if (_homeJsonEntity == null)
@@ -30,21 +31,25 @@ namespace SmartHome.Json
             using (IDataContextAsync context = new SmartHomeDataContext())
             using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
             {
+                var service = new UserInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+                var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
 
-                IHomeJsonParserService service = new UserInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+                MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+
                 try
                 {
-                    service.SaveJsonData();
+                    transactionRunner.RunTransaction(() => service.SaveJsonData());
                 }
                 catch (Exception ex)
                 {
-                    unitOfWork.Rollback();
                     return false;
                 }
+                finally
+                {
+                    transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
+                }
             }
-
             return true;
-
         }
 
 
