@@ -278,7 +278,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ChannelInfoController.cs" />
+    <Compile Include="Controllers\DeviceInfoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RoomInfoController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Filter\ValidateAntiForgeryTokenAttribute.cs" />
@@ -292,6 +295,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utility\MessageResponseUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -326,7 +330,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\apiroom.pubxml" />
+    <None Include="Properties\PublishProfiles\api-check.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\pub-service.pubxml" />
