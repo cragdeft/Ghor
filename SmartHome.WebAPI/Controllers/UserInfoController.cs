@@ -32,6 +32,7 @@ using SmartHome.Json;
 using SmartHome.Model.Enums;
 using System.Diagnostics;
 using SmartHome.Data.Processor;
+using SmartHome.WebAPI.Utility;
 
 namespace SmartHome.WebAPI.Controllers
 {
@@ -42,28 +43,94 @@ namespace SmartHome.WebAPI.Controllers
 
         }
 
-        [Route("api/RegisterUser")]
-        public HttpResponseMessage RegisterUser(JObject encryptedString)
+        [Route("api/NewUser")]
+        [HttpPost]
+        public HttpResponseMessage NewUser(JObject encryptedString)
         {
-            #region Initialization
-
             HttpResponseMessage response;
-            LoginObjectEntity oLoginObject = new LoginObjectEntity();
-            string msg = string.Empty;
-
-
-            msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-            if (string.IsNullOrEmpty(msg))
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
             {
-                return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                #region Initialization
+
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                UserJsonParser jsonManager = new UserJsonParser(msg, MessageReceivedFrom.NewUser);
+                bool isSuccess = jsonManager.SaveNewUser();
+
+                if (isSuccess)
+                {
+                    MessageResponseUtility.FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    MessageResponseUtility.FillPasswordRecoveryInfos("", " Can Not Add New User.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                MessageResponseUtility.FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
 
-            #endregion
+            return response;
+        }
 
-            RegisterUserDataProcessor registerUser = new RegisterUserDataProcessor(msg, MessageReceivedFrom.RegisterUser);
-            bool isRegisterSucces = registerUser.RegisterUser();
+        [Route("api/DeleteUser")]
+        [HttpPost]
+        public HttpResponseMessage DeleteUser(JObject encryptedString)
+        {
+            HttpResponseMessage response;
+            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+            try
+            {
+                #region Initialization
 
-            response = ProcessGetRegisteredUser(isRegisterSucces);
+                oRootObject.data = new PasswordRecoveryObjectEntity();
+                string msg = string.Empty;
+
+
+
+                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+
+                if (string.IsNullOrEmpty(msg))
+                {
+                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+                }
+
+                #endregion
+
+                UserDeleteJsonParser jsonManager = new UserDeleteJsonParser(msg, MessageReceivedFrom.DeleteUser);
+                bool isSuccess = jsonManager.DeleteUser();
+
+                if (isSuccess)
+                {
+                    MessageResponseUtility.FillPasswordRecoveryInfos("", " User Delete Successfully.", HttpStatusCode.OK, oRootObject);
+                }
+                else
+                {
+                    MessageResponseUtility.FillPasswordRecoveryInfos("", " Can Not Delete User.", HttpStatusCode.BadRequest, oRootObject);
+                }
+
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+            catch (Exception ex)
+            {
+                MessageResponseUtility.FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+            }
+
             return response;
         }
 
@@ -90,102 +157,14 @@ namespace SmartHome.WebAPI.Controllers
 
             if (isUserExist)
             {
-                response = PrepareJsonResponseForGetUserInfos(oRootObject, "Success", HttpStatusCode.OK);
+                response = MessageResponseUtility.PrepareJsonResponseForGetUserInfos(oRootObject, "Success", HttpStatusCode.OK);
             }
             else
             {
                 oRootObject.data = new LoginObjectEntity();
-                response = PrepareJsonResponse(oRootObject, "User not found", HttpStatusCode.NotFound);
+                response = MessageResponseUtility.PrepareJsonResponse(oRootObject, "User not found", HttpStatusCode.NotFound);
             }
             #endregion
-
-            return response;
-        }
-
-        [Route("api/IsUserExist")]
-        [HttpPost]
-        public HttpResponseMessage IsUserExist(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                UserDatatProcessor userData = new UserDatatProcessor(msg, MessageReceivedFrom.IsUserExist);
-                bool isSuccess = userData.IsUserExist();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", "User already exist", HttpStatusCode.Conflict, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", "User not exist", HttpStatusCode.OK, oRootObject);
-                }
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-
-
-        }
-
-        [Route("api/ChangePassword")]
-        [HttpPost]
-        public HttpResponseMessage ChangePassword(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                PasswordDataProcessor passwordData = new PasswordDataProcessor(msg, MessageReceivedFrom.ChangePassword);
-                bool isSuccess = passwordData.ChangePassword();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", "Successfully Password Update", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", "Password not update", HttpStatusCode.BadRequest, oRootObject);
-                }
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
 
             return response;
         }
@@ -216,56 +195,13 @@ namespace SmartHome.WebAPI.Controllers
                 HomeJsonParser jsonManager = new HomeJsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
                 jsonManager.Save();
 
-                FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+                MessageResponseUtility.FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
             catch (Exception ex)
             {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-        [Route("api/PasswordRecovery")]
-        [HttpPost]
-        public HttpResponseMessage PasswordRecovery(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                PasswordRecoveryDataProcessor passworRecoverydData = new PasswordRecoveryDataProcessor(msg, MessageReceivedFrom.PasswordRecovery, oRootObject);
-                bool isSuccess = passworRecoverydData.PasswordRecovery();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos(oRootObject.data.Password, "User password", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos(string.Empty, "User not exist", HttpStatusCode.BadRequest, oRootObject);
-                }
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+                MessageResponseUtility.FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+                response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
             }
 
             return response;
@@ -278,537 +214,6 @@ namespace SmartHome.WebAPI.Controllers
             string firmwareMessage = "{\"SMSW6G\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRB12\":{\"version\":\"2\", \"file\":\"RGBW_Dynamic_DName_update.img\"}, \"SMCRTV\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMCRTH\":{\"version\":\"2\", \"file\":\"Switch.img\"}, \"SMRWTR\":{\"version\":\"2\", \"file\":\"Switch.img\"}}";
             return new HttpResponseMessage() { Content = new StringContent(firmwareMessage, Encoding.UTF8, "application/json") };
         }
-
-
-        [Route("api/NewRoom")]
-        [HttpPost]
-        public HttpResponseMessage NewRoom(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                RoomJsonParser jsonManager = new RoomJsonParser(msg, MessageReceivedFrom.NewRoom);
-                bool isSuccess = jsonManager.SaveNewRoom();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " New Room Add Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Add New Room.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-        [Route("api/DeleteUser")]
-        [HttpPost]
-        public HttpResponseMessage DeleteUser(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-                
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                UserDeleteJsonParser jsonManager = new UserDeleteJsonParser(msg, MessageReceivedFrom.DeleteUser);
-                bool isSuccess = jsonManager.DeleteUser();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " User Delete Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Delete User.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-
-        [Route("api/DeleteRoom")]
-        [HttpPost]
-        public HttpResponseMessage DeleteRoom(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                //Debug.WriteLine(SecurityManager.Encrypt("{\"Room\":[{\"Id\":1,\"Home\":1,\"Name\":\"MyRoom\",\"RoomNumber\":0,\"IsActive\":1,\"IsSynced\":0}],\"Home\":[{\"PassPhrase\":\"4905a51c1b987b8f_O234AV\"}],\"UserRoomLink\":[{\"Id\":1,\"User\":1,\"Room\":1,\"IsSynced\":0}],\"UserInfo\":[{\"Email\":\"s@yopmail.com\"}]}"));
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                RoomDeleteJsonParser jsonManager = new RoomDeleteJsonParser(msg, MessageReceivedFrom.DeleteRoom);
-                bool isSuccess = jsonManager.DeleteRoom();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " Room Delete Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Delete Room.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-
-        [Route("api/DeviceRoomUpdate")]
-        [HttpPost]
-        public HttpResponseMessage DeviceRoomUpdate(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                DeviceRoomJsonParser jsonManager = new DeviceRoomJsonParser(msg, MessageReceivedFrom.DeviceRoomUpdate);
-                bool isSuccess = jsonManager.DeviceRoomUpdate();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", "Device Room Update Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Device Room Update.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-
-        [Route("api/NewUser")]
-        [HttpPost]
-        public HttpResponseMessage NewUser(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                UserJsonParser jsonManager = new UserJsonParser(msg, MessageReceivedFrom.NewUser);
-                bool isSuccess = jsonManager.SaveNewUser();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " New User Add Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Add New User.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-
-        [Route("api/NewDevice")]
-        [HttpPost]
-        public HttpResponseMessage NewDevice(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                DeviceJsonParser jsonManager = new DeviceJsonParser(msg, MessageReceivedFrom.NewDevice);
-                bool isSuccess = jsonManager.SaveNewDevice();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " New Device Add Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Add New Device.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-        [Route("api/DeleteDevice")]
-        [HttpPost]
-        public HttpResponseMessage DeleteDevice(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                //msg = SecurityManager.Decrypt(SecurityManager.Encrypt("{\"Home\":[{\"Id\":6,\"PassPhrase\":\"8bb3e5213209d8ae_QFLKQL\"}],\"Device\":[{\"Id\":18,\"DeviceHash\":711650360}]}"));
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                DeviceDeleteJsonParser jsonManager = new DeviceDeleteJsonParser(msg, MessageReceivedFrom.DeleteDevice);
-                bool isSuccess = jsonManager.DeleteDevice();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " Device Delete Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Delete Device.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-        [Route("api/NewChannel")]
-        [HttpPost]
-        public HttpResponseMessage NewChannel(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-                string b = "{\"Home\":[{\"Id\":2,\"PassPhrase\":\"8bb3e5213209d8ae_6RVGXC\"}],\"Channel\":[{\"Id\":11,\"DeviceTableId\":4,\"ChannelNo\":1,\"LoadType\":3,\"LoadName\":\"Fan\",\"LoadWatt\":0,\"IsSynced\":0}],\"ChannelStatus\":[{\"Id\":31,\"ChannelTableId\":11,\"StatusType\":1,\"StatusValue\":0,\"IsSynced\":0},{\"Id\":32,\"ChannelTableId\":11,\"StatusType\":3,\"StatusValue\":0,\"IsSynced\":0},{\"Id\":33,\"ChannelTableId\":11,\"StatusType\":2,\"StatusValue\":100,\"IsSynced\":0}],\"Device\":[{\"Id\":4,\"DeviceHash\":711650360}]}";
-                Debug.WriteLine(SecurityManager.Encrypt(b));
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                ChannelJsonParser jsonManager = new ChannelJsonParser(msg, MessageReceivedFrom.NewChannel);
-                bool isSuccess = jsonManager.SaveNewChannel();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " New Channel Add Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Add New Channel.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-        [Route("api/DeleteChannel")]
-        [HttpPost]
-        public HttpResponseMessage DeleteChannel(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                //msg = SecurityManager.Decrypt(SecurityManager.Encrypt("{\"Home\":[{\"PassPhrase\":\"8bb3e5213209d8ae_6RVGXC\"}],\"Channel\":[{\"Id\":11}],\"Device\":[{\"DeviceHash\":711650360}]}"));
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                ChannelDeleteJsonParser jsonManager = new ChannelDeleteJsonParser(msg, MessageReceivedFrom.DeleteChannel);
-                bool isSuccess = jsonManager.DeleteChannel();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " Channel Delete Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Delete New Channel.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-
-        [Route("api/NewRouter")]
-        [HttpPost]
-        public HttpResponseMessage NewRouter(JObject encryptedString)
-        {
-            HttpResponseMessage response;
-            PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
-            try
-            {
-                #region Initialization
-
-                oRootObject.data = new PasswordRecoveryObjectEntity();
-                string msg = string.Empty;
-
-                msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
-                if (string.IsNullOrEmpty(msg))
-                {
-                    return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
-                }
-
-                #endregion
-
-                RouterJsonParser jsonManager = new RouterJsonParser(msg, MessageReceivedFrom.NewRouter);
-                bool isSuccess = jsonManager.SaveNewRouter();
-
-                if (isSuccess)
-                {
-                    FillPasswordRecoveryInfos("", " New Router Add Successfully.", HttpStatusCode.OK, oRootObject);
-                }
-                else
-                {
-                    FillPasswordRecoveryInfos("", " Can Not Add New Router.", HttpStatusCode.BadRequest, oRootObject);
-                }
-
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-            catch (Exception ex)
-            {
-                FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
-                response = PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
-            }
-
-            return response;
-        }
-
-        #region No Action Methods
-
-
-
-        private void FillPasswordRecoveryInfos(string userPassword, string message, HttpStatusCode code, PasswordRecoveryRootObjectEntity oRootObject)
-        {
-            oRootObject.data.Password = userPassword;
-            oRootObject.MESSAGE = new LoginMessage();
-            oRootObject.MESSAGE = SetResponseMessage(message, code);
-        }
-
-        [NonAction]
-        private LoginMessage SetResponseMessage(string message, HttpStatusCode code)
-        {
-            LoginMessage oLoginMessage = new LoginMessage();
-            oLoginMessage.HTTP_MESSAGE = message;
-            oLoginMessage.HTTP_STATUS = (int)code;
-            return oLoginMessage;
-        }
-        [NonAction]
-        private HttpResponseMessage PrepareJsonResponse<T>(T oRootObject)
-        {
-            string msg = JsonConvert.SerializeObject(oRootObject);
-            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-        }
-        [NonAction]
-        private HttpResponseMessage ProcessGetRegisteredUser(bool isRegisterSucces)
-        {
-            HttpResponseMessage response;
-            LoginRootObjectEntity oRootObject = new LoginRootObjectEntity();
-            try
-            {
-
-                if (isRegisterSucces)
-                {
-                    oRootObject.data = new LoginObjectEntity();
-                    response = PrepareJsonResponse(oRootObject, "Unique user", HttpStatusCode.OK);
-                }
-                else
-                {
-                    oRootObject.data = new LoginObjectEntity();
-                    response = PrepareJsonResponse(oRootObject, "User already exist", HttpStatusCode.Conflict);
-                }
-            }
-            catch (Exception ex)
-            {
-                oRootObject.data = new LoginObjectEntity();
-                response = PrepareJsonResponse(oRootObject, ex.ToString(), HttpStatusCode.BadRequest);
-            }
-
-            return response;
-        }
-        [NonAction]
-        private HttpResponseMessage PrepareJsonResponseForGetUserInfos(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
-        {
-            oRootObject.MESSAGE = new LoginMessage();
-            oRootObject.MESSAGE = SetLoginMessage(message, code);
-            string msg = JsonConvert.SerializeObject(oRootObject);
-            msg = msg.Replace("false", "0");
-            msg = msg.Replace("true", "1");
-            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-        }
-        [NonAction]
-        private HttpResponseMessage PrepareJsonResponse(LoginRootObjectEntity oRootObject, string message, HttpStatusCode code)
-        {
-            oRootObject.MESSAGE = new LoginMessage();
-            oRootObject.MESSAGE = SetLoginMessage(message, code);
-            string msg = JsonConvert.SerializeObject(oRootObject);
-            return new HttpResponseMessage() { Content = new StringContent(msg, Encoding.UTF8, "application/json") };
-        }
-        [NonAction]
-        private LoginMessage SetLoginMessage(string message, HttpStatusCode code)
-        {
-            LoginMessage oLoginMessage = new LoginMessage();
-            oLoginMessage.HTTP_MESSAGE = message;
-            oLoginMessage.HTTP_STATUS = (int)code;
-            return oLoginMessage;
-        }
-        #endregion
     }
 }
 
