@@ -42,5 +42,27 @@ namespace SmartHome.Utility
 
             return Mapper.Map<ChannelEntity, Channel>(entity, channel);
         }
+
+        public static RouterInfo MapRouterInfoProperties(RouterInfoEntity entity, RouterInfo router)
+        {
+            Mapper.CreateMap<RouterInfoEntity, RouterInfo>()
+              .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+              .ForMember(dest => dest.IsExternal, opt => opt.MapFrom(src => src.IsExternal == 1 ? true : false))
+              .ForMember(x => x.Parent, y => y.Ignore())
+              .ForMember(x => x.RouterInfoId, y => y.Ignore());
+
+            return Mapper.Map<RouterInfoEntity, RouterInfo>(entity, router);
+        }
+
+
+        public static WebBrokerInfo MapWebBrokerInfoProperties(WebBrokerInfoEntity entity, WebBrokerInfo webBroker)
+        {
+            Mapper.CreateMap<WebBrokerInfoEntity, WebBrokerInfo>()
+              .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+              .ForMember(x => x.Parent, y => y.Ignore())
+              .ForMember(x => x.WebBrokerInfoId, y => y.Ignore());
+
+            return Mapper.Map<WebBrokerInfoEntity, WebBrokerInfo>(entity, webBroker);
+        }
     }
 }
