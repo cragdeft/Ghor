@@ -39,27 +39,21 @@ namespace SmartHome.Service
 
         public bool DeleteJsonData()
         {
-            MessageLog messageLog = new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
-
-            _unitOfWorkAsync.BeginTransaction();
+            bool isSuccess = false;
             try
             {
-                DeleteUser();
-                var changes = _unitOfWorkAsync.SaveChanges();
-                _unitOfWorkAsync.Commit();
+                isSuccess = DeleteUser();
             }
             catch (Exception ex)
             {
-                _unitOfWorkAsync.Rollback();
                 return false;
             }
 
-            new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase);
-
-            return true;
+            return isSuccess;
         }
-        private void DeleteUser()
+        private bool DeleteUser()
         {
+            bool isComplete = false;
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
@@ -69,7 +63,9 @@ namespace SmartHome.Service
                 DeleteHomeUser(userInfo);
                 DeleteRoomUser(userInfo);
                 DeleteUser(userInfo);
+                isComplete = true;
             }
+            return isComplete;
         }
         private void DeleteUser(UserInfo userInfo)
         {
