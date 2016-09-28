@@ -44,6 +44,11 @@ namespace SmartHome.Service
             bool isSuccess = false;
             try
             {
+                if (_homeJsonEntity.UserInfo.Count == 0)
+                {
+                    return isSuccess;
+                }
+
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
                 string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
