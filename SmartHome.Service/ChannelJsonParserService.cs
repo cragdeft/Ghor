@@ -46,6 +46,11 @@ namespace SmartHome.Service
             bool isSuccess = false;
             try
             {
+                if (_homeJsonEntity.Channel.Count == 0)
+                {
+                    return isSuccess;
+                }
+
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
                 string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
                 int appsChannelId = _homeJsonEntity.Channel.FirstOrDefault().AppsChannelId;
