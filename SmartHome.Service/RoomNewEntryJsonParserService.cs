@@ -86,9 +86,6 @@ namespace SmartHome.Service
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Added;
             _roomRepository.Insert(entity);
-
-            //SaveRoomUser(entity, userInfo);
-
             return entity;
         }
     }
