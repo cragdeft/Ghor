@@ -18,7 +18,7 @@ using Version = SmartHome.Model.Models.Version;
 
 namespace SmartHome.Service
 {
-    public class HomeJsonParserService : IHomeJsonParserService
+    public class HomeJsonParserService : IHomeJsonParserService<Home>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -265,34 +265,35 @@ namespace SmartHome.Service
 
         }
 
-        public bool SaveJsonData()
+        public Home SaveJsonData()
         {
+            Home home = null;
             MessageLog messageLog =new CommonService(_unitOfWorkAsync).SaveMessageLog(_homeJsonMessage, _receivedFrom);
 
             _unitOfWorkAsync.BeginTransaction();
             SetMapper();
             try
             {
-                SaveHomeAndRouter();
+                home=SaveHomeAndRouter();
                 var changes = _unitOfWorkAsync.SaveChanges();
                 _unitOfWorkAsync.Commit();
             }
             catch (Exception ex)
             {
                 _unitOfWorkAsync.Rollback();
-                return false;
+                return null;
             }
 
             new CommonService(_unitOfWorkAsync).UpdateMessageLog(messageLog,_homeJsonEntity.Home[0].PassPhrase);
 
-            return true;
+            return home;
         }
 
      
 
        
 
-        private void SaveHomeAndRouter()
+        private Home SaveHomeAndRouter()
         {
             string passPhrase = _homeJsonEntity.Home[0].PassPhrase;
             Home home = null;
@@ -321,6 +322,7 @@ namespace SmartHome.Service
             SaveOrUpdateDevice(home);
             SaveOrUpdateNextAssociatedDevice(home);
             SaveOrUpdateVersion(home);
+            return home;
         }
         private HomeEntity GetHomeByPassPhrase(string passPhrase)
         {

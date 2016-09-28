@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class UserInfoNewEntryJsonParserService : IHomeJsonParserService
+    public class UserInfoNewEntryJsonParserService : IHomeJsonParserService<UserInfo>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,19 +38,20 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool SaveJsonData()
+        public UserInfo SaveJsonData()
         {
+            UserInfo userInfo = null;
             SetMapper();
             try
             {
-                SaveNewUser();
+                userInfo=SaveNewUser();
             }
             catch (Exception ex)
             {
                 _unitOfWorkAsync.Rollback();
-                return false;
+                return null;
             }
-            return true;
+            return userInfo;
         }
         private UserInfo InsertUser(UserInfoEntity userInfoEntity)
         {
@@ -63,7 +64,7 @@ namespace SmartHome.Service
             _userRepository.Insert(entity);
             return entity;
         }
-        private void SaveNewUser()
+        private UserInfo SaveNewUser()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             Home home = null;
@@ -73,7 +74,9 @@ namespace SmartHome.Service
                 UserInfo userInfo = InsertUser(_homeJsonEntity.UserInfo[0]);
                 SaveRoomUser(home, userInfo);
                 SaveHomeUser(home, userInfo);
+                return userInfo;
             }
+            return null;
         }
         private void SaveHomeUser(Home home, UserInfo userInfo)
         {

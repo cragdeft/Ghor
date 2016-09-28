@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RouterInfoJsonParserService : IHomeJsonParserService
+    public class RouterInfoJsonParserService : IHomeJsonParserService<RouterInfo>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -42,14 +42,11 @@ namespace SmartHome.Service
         }
 
 
-        public bool SaveJsonData()
+        public RouterInfo SaveJsonData()
         {
-            IHomeJsonParserService service = null;
-            bool isSuccess = false;
+            RouterInfo routerInfo = null;
             try
             {
-
-
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
                 int appsBleId = _homeJsonEntity.RouterInfo.FirstOrDefault().AppsBleId;
                 RouterInfo dbRouterInfo = null;
@@ -62,28 +59,28 @@ namespace SmartHome.Service
 
                     dbRouterInfo.ObjectState = ObjectState.Deleted;
                     _routerInfoRepository.Delete(dbRouterInfo);
-                    return isSuccess;
+                    return routerInfo;
                 }
 
 
                 if (dbRouterInfo != null)
                 {
-                    var updateService = new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRouter);
-                    isSuccess = updateService.UpdateJsonData();
+                     IHomeUpdateJsonParserService<RouterInfo> updateService = new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRouter);
+                    routerInfo = updateService.UpdateJsonData();
                 }
                 else
                 {
-                    service = new RouterInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRouter);
-                    isSuccess = service.SaveJsonData();
+                    IHomeJsonParserService<RouterInfo> service = new RouterInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRouter);
+                    routerInfo = service.SaveJsonData();
                 }
 
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return routerInfo;
         }
 
 

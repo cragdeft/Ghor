@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class ChannelJsonParserService : IHomeJsonParserService
+    public class ChannelJsonParserService : IHomeJsonParserService<Channel>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -40,15 +40,15 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool SaveJsonData()
+        public Channel SaveJsonData()
         {
-            IHomeJsonParserService service = null;
-            bool isSuccess = false;
+            //IHomeJsonParserService service = null;
+            Channel channel = null;
             try
             {
                 if (_homeJsonEntity.Channel.Count == 0)
                 {
-                    return isSuccess;
+                    return channel;
                 }
 
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
@@ -61,27 +61,26 @@ namespace SmartHome.Service
                 sSwitch = new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartSwitch>(deviceHash, passPhrase);
                 if (sSwitch != null)
                 {
-                    //    dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == sSwitch.DeviceId).FirstOrDefault();
                     dbChannel = _channelRepository.Queryable().Where(p => p.SmartSwitch.DeviceId == sSwitch.DeviceId && p.AppsChannelId == appsChannelId).FirstOrDefault();
 
                     if (dbChannel != null)
                     {
-                        var updateService = new ChannelUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateChannel);
-                        isSuccess = updateService.UpdateJsonData();
+                        IHomeUpdateJsonParserService<Channel> updateService = new ChannelUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateChannel);
+                        channel = updateService.UpdateJsonData();
                     }
                     else
                     {
-                        service = new ChannelNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewChannel);
-                        isSuccess = service.SaveJsonData();
+                        IHomeJsonParserService<Channel> service = new ChannelNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewChannel);
+                        channel = service.SaveJsonData();
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return channel;
         }
 
 

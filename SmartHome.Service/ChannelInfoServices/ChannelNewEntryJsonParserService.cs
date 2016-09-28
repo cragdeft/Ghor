@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class ChannelNewEntryJsonParserService : IHomeJsonParserService
+    public class ChannelNewEntryJsonParserService : IHomeJsonParserService<Channel>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -40,21 +40,22 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool SaveJsonData()
+        public Channel SaveJsonData()
         {
+            Channel channel = null;
             SetMapper();
             try
             {
-                SaveNewSmartSwitchCannel();
+                channel = SaveNewSmartSwitchCannel();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return channel;
         }
 
-        private void SaveNewSmartSwitchCannel()
+        private Channel SaveNewSmartSwitchCannel()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
@@ -65,20 +66,22 @@ namespace SmartHome.Service
 
             if (sSwitch != null)
             {
-                SaveNewChannel(sSwitch);
+                return SaveNewChannel(sSwitch);
             }
+            return null;
         }
 
-        private void SaveNewChannel(SmartSwitch device)
+        private Channel SaveNewChannel(SmartSwitch device)
         {
             List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
             if (channelList.Count > 0)
             {
-                InsertChannel(device, channelList.First());
+                return InsertChannel(device, channelList.First());
             }
+            return null;
 
         }
-        public void InsertChannel(SmartSwitch model, ChannelEntity channelEntity)
+        public Channel InsertChannel(SmartSwitch model, ChannelEntity channelEntity)
         {
             SmartSwitch sswitch = model;
             sswitch.Channels = new List<Channel>();
@@ -90,7 +93,9 @@ namespace SmartHome.Service
                 Channel channel = SaveChannel(channelEntity);
                 SaveChannelStatus(channelEntity, channel);
                 sswitch.Channels.Add(channel);
+                return channel;
             }
+            return null;
         }
 
         private void SaveChannelStatus(ChannelEntity channelEntity, Channel channel)

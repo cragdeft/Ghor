@@ -5,7 +5,6 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
-using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RouterInfoUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class RouterInfoNewEntryJsonParserService : IHomeJsonParserService<RouterInfo>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -29,7 +28,7 @@ namespace SmartHome.Service
         public MessageLog _messageLog { get; private set; }
 
         #endregion
-        public RouterInfoUpdateJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
+        public RouterInfoNewEntryJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _routerInfoRepository = _unitOfWorkAsync.RepositoryAsync<RouterInfo>();
@@ -41,53 +40,49 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
             _messageLog = new MessageLog();
         }
-        public bool UpdateJsonData()
+        public RouterInfo SaveJsonData()
         {
+            RouterInfo routerInfo = null;
             SetMapper();
             try
             {
-                UpdateSmartRouterInfo();
+                routerInfo = SaveNewSmartRouterInfo();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return routerInfo;
         }
-        private void UpdateSmartRouterInfo()
+        private RouterInfo SaveNewSmartRouterInfo()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string userEmail = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
-            RouterInfoEntity routerEntity = _homeJsonEntity.RouterInfo.FirstOrDefault();
 
             Home home = null;
             UserInfo userInfo = null;
-            RouterInfo routerInfo = null;
 
             home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
             userInfo = new CommonService(_unitOfWorkAsync).GetUserByEmail(userEmail);
-            routerInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByPassPhraseAndAppsBleId(passPhrase, routerEntity.AppsBleId);
 
-            if (routerInfo != null)
+            if (home != null && userInfo != null)
             {
-                UpdateRouter(routerEntity, routerInfo);
-                UpdateWebBrokerInfo(_homeJsonEntity.WebBrokerInfo[0], home);
+                InsertWebBrokerInfo(_homeJsonEntity.WebBrokerInfo[0], home);
                 UpdateUserHomeLink(userInfo);
+                return InsertRouter(_homeJsonEntity.RouterInfo[0], home);
             }
+            return null;
 
         }
 
-        private void UpdateWebBrokerInfo(WebBrokerInfoEntity webBrokerInfo, Home home)
+        private void InsertWebBrokerInfo(WebBrokerInfoEntity webBrokerInfo, Home home)
         {
-            WebBrokerInfo dbWebBrokerInfo = _webBrokerInfoRepository.Queryable().Where(p => p.Parent.HomeId == home.HomeId).FirstOrDefault();
-            if (dbWebBrokerInfo != null)
-            {
-                WebBrokerInfo entity = SmartHomeTranslater.MapWebBrokerInfoProperties(webBrokerInfo, dbWebBrokerInfo);
-
-                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                entity.ObjectState = ObjectState.Modified;
-                _webBrokerInfoRepository.Update(entity);
-            }
+            var entity = Mapper.Map<WebBrokerInfoEntity, WebBrokerInfo>(webBrokerInfo);
+            entity.IsSynced = Convert.ToBoolean(webBrokerInfo.IsSynced);
+            entity.Parent = home;
+            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+            entity.ObjectState = ObjectState.Added;
+            _webBrokerInfoRepository.Insert(entity);
         }
 
         private void UpdateUserHomeLink(UserInfo userInfo)
@@ -97,15 +92,16 @@ namespace SmartHome.Service
             entity.ObjectState = ObjectState.Modified;
             _userHomeRepository.Update(entity);
         }
-        private void UpdateRouter(RouterInfoEntity routerEntity, RouterInfo router)
+        private RouterInfo InsertRouter(RouterInfoEntity router, Home home)
         {
-            var entity = SmartHomeTranslater.MapRouterInfoProperties(routerEntity, router);
-            //entity.IsSynced = Convert.ToBoolean(routerEntity.IsSynced);
-            //entity.IsExternal = Convert.ToBoolean(routerEntity.IsExternal);
-            //entity.Parent = home;
+            var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
+            entity.IsSynced = Convert.ToBoolean(router.IsSynced);
+            entity.IsExternal = Convert.ToBoolean(router.IsExternal);
+            entity.Parent = home;
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Modified;
-            _routerInfoRepository.Update(entity);
+            entity.ObjectState = ObjectState.Added;
+            _routerInfoRepository.Insert(entity);
+            return entity;
         }
 
         private void SetMapper()

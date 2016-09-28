@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SmartHome.Service
 {
-    public class UserInfoDeleteJsonParserService : IHomeDeleteJsonParserService
+    public class UserInfoDeleteJsonParserService : IHomeDeleteJsonParserService<UserInfo>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -37,23 +37,22 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool DeleteJsonData()
+        public UserInfo DeleteJsonData()
         {
-            bool isSuccess = false;
+            UserInfo userInfo = null;
             try
             {
-                isSuccess = DeleteUser();
+                userInfo = DeleteUser();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
 
-            return isSuccess;
+            return userInfo;
         }
-        private bool DeleteUser()
+        private UserInfo DeleteUser()
         {
-            bool isComplete = false;
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
@@ -62,15 +61,15 @@ namespace SmartHome.Service
             {
                 DeleteHomeUser(userInfo);
                 DeleteRoomUser(userInfo);
-                DeleteUser(userInfo);
-                isComplete = true;
+                return DeleteUser(userInfo);
             }
-            return isComplete;
+            return null;
         }
-        private void DeleteUser(UserInfo userInfo)
+        private UserInfo DeleteUser(UserInfo userInfo)
         {
             userInfo.ObjectState = ObjectState.Deleted;
             _userRepository.Delete(userInfo);
+            return userInfo;
         }
         private void DeleteRoomUser(UserInfo userInfo)
         {

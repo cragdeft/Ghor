@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class DeviceUpdateJsonParserService : IHomeUpdateJsonParserService<SmartDevice>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,41 +38,44 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool UpdateJsonData()
+        public SmartDevice UpdateJsonData()
         {
+            SmartDevice smartDevice = null;
             SetMapper();
             try
             {
-                UpdateSmartDeviceInfos();
+                smartDevice = UpdateSmartDeviceInfos();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return smartDevice;
         }
-        private void UpdateSmartDeviceInfos()
+        private SmartDevice UpdateSmartDeviceInfos()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
-            UpdateDevice(_homeJsonEntity.Device.FirstOrDefault(), passPhrase, deviceHash);
+            return UpdateDevice(_homeJsonEntity.Device.FirstOrDefault(), passPhrase, deviceHash);
         }
 
-        public void UpdateDevice(SmartDeviceEntity entity, string passPhrase, string deviceHash)
+        public SmartDevice UpdateDevice(SmartDeviceEntity entity, string passPhrase, string deviceHash)
         {
+            SmartDevice smartDevice = null;
+
             switch (entity.DeviceType)
             {
                 case DeviceType.SmartSwitch6g:
                     SmartSwitch dbswitch = new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartSwitch>(deviceHash, passPhrase);
 
-                    IHomeUpdateJsonParserService updateSwitch = new SmartSwitchUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, dbswitch);
-                    updateSwitch.UpdateJsonData();
+                    IHomeUpdateJsonParserService<SmartSwitch> updateSwitch = new SmartSwitchUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, dbswitch);
+                    smartDevice = updateSwitch.UpdateJsonData();
                     break;
                 case DeviceType.SmartRainbow12:
 
                     SmartRainbow dbRainbow = new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartRainbow>(deviceHash, passPhrase);
-                    UpdateSmartRainbow(entity, dbRainbow);
+                    smartDevice = UpdateSmartRainbow(entity, dbRainbow);
 
                     break;
                 case DeviceType.CurtainV:
@@ -83,9 +86,10 @@ namespace SmartHome.Service
                     break;
                 case DeviceType.SmartRouter:
                     SmartRouter dbRouter = new CommonService(_unitOfWorkAsync).GetSmartSwitchByDeviceHashAndPassPhrase<SmartRouter>(deviceHash, passPhrase);
-                    UpdateSmartRouter(entity, dbRouter);
+                    smartDevice = UpdateSmartRouter(entity, dbRouter);
                     break;
             }
+            return smartDevice;
         }
 
         private T MapSmartDeviceProperties<T>(SmartDeviceEntity entity, T smartDevice) where T : SmartDevice
@@ -99,15 +103,16 @@ namespace SmartHome.Service
             return Mapper.Map<SmartDeviceEntity, T>(entity, smartDevice);
         }
 
-        private void UpdateSmartRouter(SmartDeviceEntity entity, SmartRouter device)
+        private SmartRouter UpdateSmartRouter(SmartDeviceEntity entity, SmartRouter device)
         {
             SmartRouter router = MapSmartDeviceProperties<SmartRouter>(entity, device);
             router.ObjectState = ObjectState.Modified;
             router.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
 
             _deviceRepository.Update(router);
+            return router;
         }
-        private void UpdateSmartRainbow(SmartDeviceEntity entity, SmartRainbow device)
+        private SmartRainbow UpdateSmartRainbow(SmartDeviceEntity entity, SmartRainbow device)
         {
             SmartRainbow rainbow = MapSmartDeviceProperties<SmartRainbow>(entity, device);//MapToSmartRainbow(device);
             rainbow.ObjectState = ObjectState.Modified;
@@ -118,6 +123,7 @@ namespace SmartHome.Service
 
             List<RgbwStatusEntity> rgbtStatusList = _homeJsonEntity.RgbwStatus.FindAll(x => x.AppsDeviceId == entity.AppsDeviceId);
             InsertRgbwStatus(rainbow, rgbtStatusList);
+            return rainbow;
         }
 
         private void InsertRgbwStatus(SmartRainbow rainbow, List<RgbwStatusEntity> rgbtStatusList)

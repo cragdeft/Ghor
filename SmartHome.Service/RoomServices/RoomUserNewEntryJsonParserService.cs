@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomUserNewEntryJsonParserService : IHomeJsonParserService
+    public class RoomUserNewEntryJsonParserService : IHomeJsonParserService<UserRoomLink>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -35,36 +35,34 @@ namespace SmartHome.Service
 
         }
 
-        public bool SaveJsonData()
+        public UserRoomLink SaveJsonData()
         {
-            bool isSuccess = false;
+            UserRoomLink userRoomLink = null;
             try
             {
-                isSuccess = SaveNewRoomUser();
+                userRoomLink = SaveNewRoomUser();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return userRoomLink;
         }
-        private bool SaveNewRoomUser()
+        private UserRoomLink SaveNewRoomUser()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             int appsRoomId = _homeJsonEntity.Room.FirstOrDefault().AppsRoomId;
 
             UserInfo userInfo = null;
-            bool isComplete = false;
 
             userInfo = new CommonService(_unitOfWorkAsync).GetUser(_homeJsonEntity.UserInfo[0].Email);
             if (_dbRoom != null)
             {
-                SaveRoomUser(userInfo);
-                isComplete = true;
+                return SaveRoomUser(userInfo);
             }
-            return isComplete;
+            return null;
         }
-        private void SaveRoomUser(UserInfo userInfo)
+        private UserRoomLink SaveRoomUser(UserInfo userInfo)
         {
             Room entity = _dbRoom;
             var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
@@ -74,10 +72,11 @@ namespace SmartHome.Service
                 UserRoomLink userRoom = new UserRoomLink();
                 userRoom.UserInfo = userInfo;
 
-                FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
+                return FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
             }
+            return null;
         }
-        private void FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
+        private UserRoomLink FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
         {
             userRoom.Room = entity;
             userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
@@ -86,6 +85,8 @@ namespace SmartHome.Service
             userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
             userRoom.ObjectState = ObjectState.Added;
             _userRoomLinkRepository.Insert(userRoom);
+
+            return userRoom;
         }
     }
 }

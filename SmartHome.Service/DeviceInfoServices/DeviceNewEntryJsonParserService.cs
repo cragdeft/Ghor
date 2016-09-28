@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceNewEntryJsonParserService : IHomeJsonParserService
+    public class DeviceNewEntryJsonParserService : IHomeJsonParserService<SmartDevice>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,38 +38,39 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool SaveJsonData()
+        public SmartDevice SaveJsonData()
         {
+            SmartDevice smartDevice = null;
             SetMapper();
             try
             {
-                SaveNewSmartDevice();
+                smartDevice=SaveNewSmartDevice();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return smartDevice;
         }
-        private void SaveNewSmartDevice()
+        private SmartDevice SaveNewSmartDevice()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             Home home = null;
             home = new CommonService(_unitOfWorkAsync).GetHomeWithRooms(passPhrase);
             if (home != null)
             {
-                SaveNewDevice(home);
+                return SaveNewDevice(home);
             }
+            return null;
         }
-        private void SaveNewDevice(Home home)
+        private SmartDevice SaveNewDevice(Home home)
         {
-            foreach (var smartDevice in _homeJsonEntity.Device)
-            {
-                Room room = home.Rooms.Where(p => p.AppsRoomId == smartDevice.AppsRoomId).FirstOrDefault();
-                InsertDevice(smartDevice, room);
-            }
+            SmartDeviceEntity smartDevice = _homeJsonEntity.Device.FirstOrDefault();
+
+            Room room = home.Rooms.Where(p => p.AppsRoomId == smartDevice.AppsRoomId).FirstOrDefault();
+            return InsertDevice(smartDevice, room);
         }
-        public void InsertDevice(SmartDeviceEntity entity, Room room)
+        public SmartDevice InsertDevice(SmartDeviceEntity entity, Room room)
         {
             SmartDevice device = Mapper.Map<SmartDeviceEntity, SmartDevice>(entity);
             device.IsDeleted = Convert.ToBoolean(entity.IsDeleted);
@@ -87,6 +88,7 @@ namespace SmartHome.Service
             {
                 InsertSmartRouter(device, room);
             }
+            return device;
         }
         private void InsertSmartRouter(SmartDevice device, Room room)
         {

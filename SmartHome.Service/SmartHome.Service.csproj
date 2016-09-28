@@ -54,43 +54,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelDeleteJsonParserService.cs" />
-    <Compile Include="ChannelJsonParserService.cs" />
-    <Compile Include="ChannelNewEntryJsonParserService.cs" />
-    <Compile Include="ChannelUpdateJsonParserService.cs" />
+    <Compile Include="ChannelInfoServices\ChannelDeleteJsonParserService.cs" />
+    <Compile Include="ChannelInfoServices\ChannelJsonParserService.cs" />
+    <Compile Include="ChannelInfoServices\ChannelNewEntryJsonParserService.cs" />
+    <Compile Include="ChannelInfoServices\ChannelUpdateJsonParserService.cs" />
     <Compile Include="CommandParserService.cs" />
     <Compile Include="CommonService.cs" />
+    <Compile Include="ConfigurationJsonParserService.cs" />
     <Compile Include="ConfigurationParserManagerService.cs" />
-    <Compile Include="DeviceDeleteJsonParserService.cs" />
-    <Compile Include="DeviceJsonParserService.cs" />
-    <Compile Include="DeviceNewEntryJsonParserService.cs" />
-    <Compile Include="DeviceRoomUpdateJsonParserService.cs" />
-    <Compile Include="DeviceService.cs" />
-    <Compile Include="DeviceUpdateJsonParserService.cs" />
-    <Compile Include="IHomeDeleteJsonParserService.cs" />
-    <Compile Include="IHomeJsonParserService.cs" />
-    <Compile Include="IHomeUpdateJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceDeleteJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceNewEntryJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceRoomUpdateJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceService.cs" />
+    <Compile Include="DeviceInfoServices\DeviceUpdateJsonParserService.cs" />
+    <Compile Include="HomeInfoServices\HomeInfoJsonParserService.cs" />
+    <Compile Include="HomeInfoServices\HomeInfoNewEntryJsonParserService.cs" />
+    <Compile Include="HomeInfoServices\HomeInfoUpdateJsonParserService.cs" />
+    <Compile Include="Interfaces\IHomeDeleteJsonParserService.cs" />
+    <Compile Include="Interfaces\IHomeJsonParserService.cs" />
+    <Compile Include="Interfaces\IHomeUpdateJsonParserService.cs" />
     <Compile Include="Interfaces\ICommandPerserService.cs" />
     <Compile Include="Interfaces\IConfigurationParserManagerService.cs" />
     <Compile Include="Interfaces\IDeviceService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
-    <Compile Include="HomeJsonParserService.cs" />
+    <Compile Include="HomeInfoServices\HomeJsonParserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoomDeleteJsonParserService.cs" />
-    <Compile Include="RoomJsonParserService.cs" />
-    <Compile Include="RoomNewEntryJsonParserService.cs" />
-    <Compile Include="RoomUpdateJsonParserService.cs" />
-    <Compile Include="RoomUserNewEntryJsonParserService.cs" />
-    <Compile Include="RouterInfoJsonParserService.cs" />
-    <Compile Include="RouterInfoNewEntryJsonParserService.cs" />
-    <Compile Include="RouterInfoUpdateJsonParserService.cs" />
-    <Compile Include="SmartSwitchUpdateJsonParserService.cs" />
-    <Compile Include="UserInfoDeleteJsonParserService.cs" />
-    <Compile Include="UserInfoJsonParserService.cs" />
-    <Compile Include="UserInfoNewEntryJsonParserService.cs" />
-    <Compile Include="UserInfoService.cs" />
-    <Compile Include="UserInfoUpdateJsonParserService.cs" />
+    <Compile Include="RoomServices\RoomDeleteJsonParserService.cs" />
+    <Compile Include="RoomServices\RoomJsonParserService.cs" />
+    <Compile Include="RoomServices\RoomNewEntryJsonParserService.cs" />
+    <Compile Include="RoomServices\RoomUpdateJsonParserService.cs" />
+    <Compile Include="RoomServices\RoomUserNewEntryJsonParserService.cs" />
+    <Compile Include="RouterInfoServices\RouterInfoJsonParserService.cs" />
+    <Compile Include="RouterInfoServices\RouterInfoNewEntryJsonParserService.cs" />
+    <Compile Include="RouterInfoServices\RouterInfoUpdateJsonParserService.cs" />
+    <Compile Include="DeviceInfoServices\SmartSwitchUpdateJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserInfoDeleteJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserInfoJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserInfoNewEntryJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserInfoService.cs" />
+    <Compile Include="UserInfoServices\UserInfoUpdateJsonParserService.cs" />
     <Compile Include="VersionService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +131,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

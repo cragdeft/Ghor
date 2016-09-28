@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomJsonParserService : IHomeJsonParserService
+    public class RoomJsonParserService : IHomeJsonParserService<Room>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -31,15 +31,14 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool SaveJsonData()
+        public Room SaveJsonData()
         {
-            IHomeJsonParserService service = null;
-            bool isSuccess = false;
+            Room room = null;
             try
             {
                 if (_homeJsonEntity.Room.Count == 0)
                 {
-                    return isSuccess;
+                    return room;
                 }
 
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
@@ -49,23 +48,23 @@ namespace SmartHome.Service
 
                 if (dbRoom != null)
                 {
-                    var updateService = new RoomUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRoom);
-                    isSuccess = updateService.UpdateJsonData();
+                    IHomeUpdateJsonParserService<Room> updateService = new RoomUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRoom);
+                    room = updateService.UpdateJsonData();
 
                 }
                 else
                 {
-                    service = new RoomNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRoom);
-                    isSuccess = service.SaveJsonData();
+                    IHomeJsonParserService<Room> service = new RoomNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRoom);
+                    room = service.SaveJsonData();
                 }
 
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return room;
         }
     }
 }

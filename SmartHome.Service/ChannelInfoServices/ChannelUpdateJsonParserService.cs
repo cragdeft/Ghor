@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class ChannelUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class ChannelUpdateJsonParserService : IHomeUpdateJsonParserService<Channel>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -41,20 +41,21 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool UpdateJsonData()
+        public Channel UpdateJsonData()
         {
+            Channel channel = null;
             SetMapper();
             try
             {
-                UpdateSmartSwitchCannel();
+                channel=UpdateSmartSwitchCannel();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return channel;
         }
-        private void UpdateSmartSwitchCannel()
+        private Channel UpdateSmartSwitchCannel()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
@@ -72,7 +73,9 @@ namespace SmartHome.Service
                 DeleteChannelStatus(channel);
                 SaveChannelStatus(channelEntity, channel);
                 sSwitch.Channels.Add(channel);
+                return channel;
             }
+            return null;
         }
         private Channel UpdateChannel(ChannelEntity channelEntity, SmartSwitch dbSmartSwitch)
         {

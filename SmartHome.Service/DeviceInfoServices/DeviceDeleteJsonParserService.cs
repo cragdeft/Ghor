@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceDeleteJsonParserService : IHomeDeleteJsonParserService
+    public class DeviceDeleteJsonParserService : IHomeDeleteJsonParserService<SmartDevice>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -41,24 +41,23 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool DeleteJsonData()
+        public SmartDevice DeleteJsonData()
         {
-            bool isSuccess = false;
+            SmartDevice smartDevice = null;
             try
             {
-                isSuccess = DeleteSmartDevice();
+                smartDevice = DeleteSmartDevice();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return smartDevice;
         }
-        private bool DeleteSmartDevice()
+        private SmartDevice DeleteSmartDevice()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
-            bool isComplete = false;
 
             SmartDevice smartDevice = null;
             Home home = null;
@@ -73,10 +72,10 @@ namespace SmartHome.Service
                     DeleteRouterInfo(home, smartDevice.AppsBleId);
                     UpdateUserHomeLink(home);
                 }
-                DeleteDevice(smartDevice);
-                isComplete = true;
+                return DeleteDevice(smartDevice);
+
             }
-            return isComplete;
+            return null;
         }
 
         private void UpdateUserHomeLink(Home home)
@@ -99,10 +98,11 @@ namespace SmartHome.Service
             _routerInfoRepository.Delete(router);
         }
 
-        private void DeleteDevice(SmartDevice smartDevice)
+        private SmartDevice DeleteDevice(SmartDevice smartDevice)
         {
             smartDevice.ObjectState = ObjectState.Deleted;
             _deviceRepository.Delete(smartDevice);
+            return smartDevice;
         }
 
     }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class UserInfoJsonParserService : IHomeJsonParserService
+    public class UserInfoJsonParserService : IHomeJsonParserService<UserInfo>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,15 +38,14 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool SaveJsonData()
+        public UserInfo SaveJsonData()
         {
-            IHomeJsonParserService service = null;
-            bool isSuccess = false;
+            UserInfo userInfo = null;
             try
             {
                 if (_homeJsonEntity.UserInfo.Count == 0)
                 {
-                    return isSuccess;
+                    return userInfo;
                 }
 
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
@@ -56,22 +55,22 @@ namespace SmartHome.Service
 
                 if (userinfo != null)
                 {
-                    var updateService = new UserInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateUser);
-                    isSuccess = updateService.UpdateJsonData();
+                    IHomeUpdateJsonParserService<UserInfo> updateService = new UserInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateUser);
+                    userInfo = updateService.UpdateJsonData();
                 }
                 else
                 {
-                    service = new UserInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewUser);
-                    isSuccess = service.SaveJsonData();
+                    IHomeJsonParserService<UserInfo> service = new UserInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewUser);
+                    userInfo = service.SaveJsonData();
                 }
 
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return userInfo;
         }
     }
 }

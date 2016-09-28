@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace SmartHome.Service
 {
-    public class ChannelDeleteJsonParserService : IHomeDeleteJsonParserService
+    public class ChannelDeleteJsonParserService : IHomeDeleteJsonParserService<Channel>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -37,20 +37,21 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool DeleteJsonData()
+        public Channel DeleteJsonData()
         {
+            Channel channel = null;
             try
             {
-                DeleteSmartSwitchCannel();
+                channel = DeleteSmartSwitchCannel();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return channel;
         }
 
-        private void DeleteSmartSwitchCannel()
+        private Channel DeleteSmartSwitchCannel()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
@@ -61,8 +62,9 @@ namespace SmartHome.Service
 
             if (channel != null)
             {
-                DeleteChannel(channel);
+                return DeleteChannel(channel);
             }
+            return null;
         }
 
         private Channel GetChannel(string passPhrase, string deviceHash, int channelNo)
@@ -74,10 +76,11 @@ namespace SmartHome.Service
                 .FirstOrDefault();
         }
 
-        private void DeleteChannel(Channel channel)
+        private Channel DeleteChannel(Channel channel)
         {
             channel.ObjectState = ObjectState.Deleted;
             _channelRepository.Delete(channel);
+            return channel;
 
         }
 

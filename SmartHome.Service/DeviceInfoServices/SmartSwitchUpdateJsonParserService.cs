@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class SmartSwitchUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class SmartSwitchUpdateJsonParserService : IHomeUpdateJsonParserService<SmartSwitch>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -35,19 +35,20 @@ namespace SmartHome.Service
             _dbSmartSwitch = smartSwitch;
         }
 
-        public bool UpdateJsonData()
+        public SmartSwitch UpdateJsonData()
         {
+            SmartSwitch smartSwitch = null;
             try
             {
-                UpdateSmartSwitch(_homeJsonEntity.Device.FirstOrDefault(), _dbSmartSwitch);
+                smartSwitch=UpdateSmartSwitch(_homeJsonEntity.Device.FirstOrDefault(), _dbSmartSwitch);
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return smartSwitch;
         }
-        private void UpdateSmartSwitch(SmartDeviceEntity entity, SmartSwitch device)
+        private SmartSwitch UpdateSmartSwitch(SmartDeviceEntity entity, SmartSwitch device)
         {
             SmartSwitch sswitch = SmartHomeTranslater.MapSmartDeviceProperties<SmartSwitch>(entity, device);
             sswitch.ObjectState = ObjectState.Modified;
@@ -58,6 +59,7 @@ namespace SmartHome.Service
 
             List<DeviceStatusEntity> deviceStatuses = _homeJsonEntity.DeviceStatus.FindAll(x => x.AppsDeviceId == entity.AppsDeviceId.ToString());
             InsertSwitchDeviceStatus(sswitch, deviceStatuses);
+            return sswitch;
         }
         private void InsertSwitchDeviceStatus(SmartSwitch sswitch, List<DeviceStatusEntity> deviceStatuses)
         {

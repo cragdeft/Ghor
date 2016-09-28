@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomDeleteJsonParserService : IHomeDeleteJsonParserService
+    public class RoomDeleteJsonParserService : IHomeDeleteJsonParserService<Room>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -38,21 +38,22 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool DeleteJsonData()
+        public Room DeleteJsonData()
         {
+            Room room = null;
             try
             {
-                DeleteRoom();
+                room = DeleteRoom();
 
             }
             catch (Exception ex)
             {
 
-                return false;
+                return null;
             }
-            return true;
+            return room;
         }
-        private void DeleteRoom()
+        private Room DeleteRoom()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             int appsRoomId = _homeJsonEntity.Room.FirstOrDefault().AppsRoomId;
@@ -61,8 +62,9 @@ namespace SmartHome.Service
             if (room != null)
             {
                 DeleteUserRooms(room);
-                DeleteRoom(room);
+                return DeleteRoom(room);
             }
+            return null;
         }
         private void DeleteUserRooms(Room room)
         {
@@ -77,10 +79,11 @@ namespace SmartHome.Service
         {
             return _userRoomLinkRepository.Queryable().Where(p => p.Room.RoomId == roomId).ToList();
         }
-        private void DeleteRoom(Room room)
+        private Room DeleteRoom(Room room)
         {
             room.ObjectState = ObjectState.Deleted;
             _roomRepository.Delete(room);
+            return room;
         }
         private Room GetRoom(string passPhrase, int appsRoomId)
         {

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceRoomUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class DeviceRoomUpdateJsonParserService : IHomeUpdateJsonParserService<SmartDevice>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -37,19 +37,21 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool UpdateJsonData()
+        public SmartDevice UpdateJsonData()
         {
+            SmartDevice smartDevice = null;
+
             try
             {
-                UpdateSmartDeviceRoom();
+                smartDevice = UpdateSmartDeviceRoom();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return true;
+            return smartDevice;
         }
-        private void UpdateSmartDeviceRoom()
+        private SmartDevice UpdateSmartDeviceRoom()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
@@ -63,8 +65,9 @@ namespace SmartHome.Service
             if (smartDevice != null)
             {
                 smartDevice.AppsRoomId = appsRoomId;
-                UpdateDevice(smartDevice, room);
+                return UpdateDevice(smartDevice, room);
             }
+            return null;
         }
 
         private Room GetRoom(string passPhrase, int appsRoomId)
@@ -73,11 +76,12 @@ namespace SmartHome.Service
                                   .SelectMany(q => q.Rooms.Where(r => r.AppsRoomId == appsRoomId)).FirstOrDefault();
         }
 
-        private void UpdateDevice(SmartDevice smartDevice, Room room)
+        private SmartDevice UpdateDevice(SmartDevice smartDevice, Room room)
         {
             smartDevice.Room = room;
             smartDevice.ObjectState = ObjectState.Modified;
             _deviceRepository.Update(smartDevice);
+            return smartDevice;
         }
 
 

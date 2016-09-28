@@ -13,17 +13,18 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class DeviceJsonParserService : IHomeJsonParserService
+    public class HomeInfoJsonParserService : IHomeJsonParserService<Home>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Home> _homeRepository;
+
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
 
         #endregion
-        public DeviceJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
+        public HomeInfoJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, string homeJsonMessage, MessageReceivedFrom receivedFrom)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _homeRepository = _unitOfWorkAsync.RepositoryAsync<Home>();
@@ -32,40 +33,39 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool SaveJsonData()
+        public Home SaveJsonData()
         {
-            IHomeJsonParserService service = null;
-            bool isSuccess = false;
+            Home home = null;
             try
             {
-                if (_homeJsonEntity.Device.Count == 0)
+                if (_homeJsonEntity.Home.Count == 0)
                 {
-                    return isSuccess;
+                    return home;
                 }
 
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-                string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
-                SmartDevice dbDevice = new CommonService(_unitOfWorkAsync).GetSmartDeviceByDeviceHashAndPassPhrase(deviceHash, passPhrase);
+                HomeEntity homeEntity = _homeJsonEntity.Home.FirstOrDefault();
+                Home dbHome = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
 
-                if (dbDevice != null)
+                if (dbHome != null)
                 {
-                    var updateService = new DeviceUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateDevice);
-                    isSuccess = updateService.UpdateJsonData();
+                    IHomeUpdateJsonParserService<Home> service = new HomeInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateHome);
+                    home = service.UpdateJsonData();
                 }
                 else
                 {
-                    service = new DeviceNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewDevice);
-                    isSuccess = service.SaveJsonData();
+                    IHomeJsonParserService<Home> service = new HomeInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewHome);
+                    home = service.SaveJsonData();
                 }
 
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return home;
         }
 
     }

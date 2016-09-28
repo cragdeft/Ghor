@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomUpdateJsonParserService : IHomeUpdateJsonParserService
+    public class RoomUpdateJsonParserService : IHomeUpdateJsonParserService<Room>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -35,28 +35,27 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool UpdateJsonData()
+        public Room UpdateJsonData()
         {
-            bool isSuccess = false;
+            Room room = null;
 
             try
             {
-                UpdateRoomInfo();
-                isSuccess = true;
+                room=UpdateRoomInfo();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
-            return isSuccess;
+            return room;
         }
-        private void UpdateRoomInfo()
+        private Room UpdateRoomInfo()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-            UpdateRoom(passPhrase);
+            return UpdateRoom(passPhrase);
 
         }
-        private void UpdateRoom(string passPhrase)
+        private Room UpdateRoom(string passPhrase)
         {
             RoomEntity roomEntity = _homeJsonEntity.Room[0];
             Room dbRoom = new CommonService(_unitOfWorkAsync).GetRoomByPassPhaseAndAppsRoomId(passPhrase, roomEntity.AppsRoomId);
@@ -68,7 +67,9 @@ namespace SmartHome.Service
                 entity.AuditField = new AuditFields(dbRoom.AuditField.InsertedBy, dbRoom.AuditField.InsertedDateTime, "admin", DateTime.Now);
                 entity.ObjectState = ObjectState.Modified;
                 _roomRepository.Update(entity);
+                return entity;
             }
+            return null;
         }
         private Room MapRoomProperties(RoomEntity roomEntity, Room dbRoom)
         {

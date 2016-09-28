@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomNewEntryJsonParserService : IHomeJsonParserService
+    public class RoomNewEntryJsonParserService : IHomeJsonParserService<Room>
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -34,27 +34,27 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
         }
 
-        public bool SaveJsonData()
+        public Room SaveJsonData()
         {
-            bool isSuccess = false;
+            Room room = null;
 
             SetMapper();
             try
             {
-                isSuccess = SaveNewRoom();
+                room = SaveNewRoom();
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
 
-            return isSuccess;
+            return room;
         }
         private void SetMapper()
         {
             Mapper.CreateMap<RoomEntity, Room>();
         }
-        private bool SaveNewRoom()
+        private Room SaveNewRoom()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
 
@@ -62,18 +62,17 @@ namespace SmartHome.Service
             Room room = null;
             UserInfo userInfo = null;
 
-            bool isComplete = false;
-
             home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
             userInfo = new CommonService(_unitOfWorkAsync).GetUser(_homeJsonEntity.UserInfo[0].Email);
             if (home != null && userInfo != null)
             {
                 room = SaveNewRoom(home);
 
-                IHomeJsonParserService service = new RoomUserNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, room);
-                isComplete = service.SaveJsonData();
+                IHomeJsonParserService<UserRoomLink> service = new RoomUserNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, room);
+                service.SaveJsonData();
+                return room;
             }
-            return isComplete;
+            return null;
         }
         private Room SaveNewRoom(Home home)
         {
