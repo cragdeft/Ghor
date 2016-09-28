@@ -40,7 +40,7 @@ namespace SmartHome.Service
             _receivedFrom = receivedFrom;
             _messageLog = new MessageLog();
         }
-     
+
 
         public bool SaveJsonData()
         {
@@ -48,11 +48,23 @@ namespace SmartHome.Service
             bool isSuccess = false;
             try
             {
+
+
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
                 int appsBleId = _homeJsonEntity.RouterInfo.FirstOrDefault().AppsBleId;
                 RouterInfo dbRouterInfo = null;
 
                 dbRouterInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByPassPhraseAndAppsBleId(passPhrase, appsBleId);
+
+
+                if (_homeJsonEntity.RouterInfo.Count == 0 && dbRouterInfo != null)
+                {
+
+                    dbRouterInfo.ObjectState = ObjectState.Deleted;
+                    _routerInfoRepository.Delete(dbRouterInfo);
+                    return isSuccess;
+                }
+
 
                 if (dbRouterInfo != null)
                 {
