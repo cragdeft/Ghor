@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public interface IHomeDeleteJsonParserService
+    public interface IHomeUpdateJsonParserService<T> where T : class
     {
-        bool DeleteJsonData();
+        T UpdateJsonData();
 
     }
 }
