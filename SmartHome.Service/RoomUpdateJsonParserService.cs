@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Service
 {
-    public class RoomUpdateJsonParserService : IHomeJsonParserService
+    public class RoomUpdateJsonParserService : IHomeUpdateJsonParserService
     {
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
@@ -35,7 +35,7 @@ namespace SmartHome.Service
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
         }
-        public bool SaveJsonData()
+        public bool UpdateJsonData()
         {
             bool isSuccess = false;
 
