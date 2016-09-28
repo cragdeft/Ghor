@@ -38,6 +38,11 @@ namespace SmartHome.Service
             bool isSuccess = false;
             try
             {
+                if (_homeJsonEntity.Device.Count == 0)
+                {
+                    return isSuccess;
+                }
+
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
                 string deviceHash = _homeJsonEntity.Device.FirstOrDefault().DeviceHash;
 
