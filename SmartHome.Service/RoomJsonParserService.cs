@@ -37,6 +37,11 @@ namespace SmartHome.Service
             bool isSuccess = false;
             try
             {
+                if (_homeJsonEntity.Room.Count == 0)
+                {
+                    return isSuccess;
+                }
+
                 string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
 
                 RoomEntity roomEntity = _homeJsonEntity.Room.FirstOrDefault();
@@ -44,13 +49,16 @@ namespace SmartHome.Service
 
                 if (dbRoom != null)
                 {
-                    service = new RoomUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRoom);
+                    var updateService = new RoomUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRoom);
+                    isSuccess = updateService.UpdateJsonData();
+
                 }
                 else
                 {
                     service = new RoomNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.NewRoom);
+                    isSuccess = service.SaveJsonData();
                 }
-                isSuccess = service.SaveJsonData();
+
 
             }
             catch (Exception ex)
