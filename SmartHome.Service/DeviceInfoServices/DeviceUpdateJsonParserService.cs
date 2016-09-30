@@ -20,6 +20,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<SmartDevice> _deviceRepository;
         private readonly IRepositoryAsync<DeviceStatus> _deviceStatusRepository;
         private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
+        private readonly IRepositoryAsync<SmartRouter> _routerStatusRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
@@ -32,6 +33,7 @@ namespace SmartHome.Service
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _deviceStatusRepository = _unitOfWorkAsync.RepositoryAsync<DeviceStatus>();
             _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
+            _routerStatusRepository = _unitOfWorkAsync.RepositoryAsync<SmartRouter>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
@@ -103,6 +105,7 @@ namespace SmartHome.Service
             return Mapper.Map<SmartDeviceEntity, T>(entity, smartDevice);
         }
 
+
         private SmartRouter UpdateSmartRouter(SmartDeviceEntity entity, SmartRouter device)
         {
             SmartRouter router = MapSmartDeviceProperties<SmartRouter>(entity, device);
@@ -110,8 +113,44 @@ namespace SmartHome.Service
             router.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
 
             _deviceRepository.Update(router);
+
+
+            DeleteRouterStatus(router);
+
+            List<DeviceStatusEntity> deviceStatuses = _homeJsonEntity.DeviceStatus.FindAll(x => x.AppsDeviceId == entity.AppsDeviceId.ToString());
+            InsertRouterStatus(router, deviceStatuses);
+
+
             return router;
         }
+
+        private void InsertRouterStatus(SmartRouter router, List<DeviceStatusEntity> deviceStatuses)
+        {
+            foreach (var deviceStatusEntity in deviceStatuses)
+            {
+                var deviceStatus = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
+                deviceStatus.IsSynced = Convert.ToBoolean(deviceStatusEntity.IsSynced);
+                deviceStatus.ObjectState = ObjectState.Added;
+                deviceStatus.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceStatusRepository.Insert(deviceStatus);
+                router.DeviceStatus.Add(deviceStatus);
+            }
+        }
+
+        private void DeleteRouterStatus(SmartRouter router)
+        {
+            IList<DeviceStatus> dbDeviceStatuses = _deviceStatusRepository.Queryable().Where(p => p.SmartDevice.DeviceId == router.DeviceId).ToList();
+
+            foreach (var deviceStatus in dbDeviceStatuses)
+            {
+                deviceStatus.ObjectState = ObjectState.Deleted;
+                _deviceStatusRepository.Delete(deviceStatus);
+
+                router.DeviceStatus.Remove(deviceStatus);
+            }
+        }
+
+
         private SmartRainbow UpdateSmartRainbow(SmartDeviceEntity entity, SmartRainbow device)
         {
             SmartRainbow rainbow = MapSmartDeviceProperties<SmartRainbow>(entity, device);//MapToSmartRainbow(device);
