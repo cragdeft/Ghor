@@ -47,11 +47,10 @@ namespace SmartHome.Service
             RouterInfo routerInfo = null;
             try
             {
-                string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
-                int appsBleId = _homeJsonEntity.RouterInfo.FirstOrDefault().AppsBleId;
+                string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault().MacAddress;
                 RouterInfo dbRouterInfo = null;
 
-                dbRouterInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByPassPhraseAndAppsBleId(passPhrase, appsBleId);
+                dbRouterInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByMacAddress(macAddress);
 
 
                 if (_homeJsonEntity.RouterInfo.Count == 0 && dbRouterInfo != null)
@@ -65,7 +64,7 @@ namespace SmartHome.Service
 
                 if (dbRouterInfo != null)
                 {
-                     IHomeUpdateJsonParserService<RouterInfo> updateService = new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRouter);
+                    IHomeUpdateJsonParserService<RouterInfo> updateService = new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, MessageReceivedFrom.UpdateRouter);
                     routerInfo = updateService.UpdateJsonData();
                 }
                 else

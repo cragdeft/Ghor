@@ -58,6 +58,7 @@ namespace SmartHome.Service
         private RouterInfo UpdateSmartRouterInfo()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
+            string macAddress = _homeJsonEntity.RouterInfo.FirstOrDefault().MacAddress;
             string userEmail = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
             RouterInfoEntity routerEntity = _homeJsonEntity.RouterInfo.FirstOrDefault();
 
@@ -67,7 +68,7 @@ namespace SmartHome.Service
 
             home = new CommonService(_unitOfWorkAsync).GetHome(passPhrase);
             userInfo = new CommonService(_unitOfWorkAsync).GetUserByEmail(userEmail);
-            routerInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByPassPhraseAndAppsBleId(passPhrase, routerEntity.AppsBleId);
+            routerInfo = new CommonService(_unitOfWorkAsync).GetRouterInfoByMacAddress(macAddress);
 
             if (routerInfo != null)
             {
