@@ -20,6 +20,7 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<UserInfo> _userRepository;
         private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
         private readonly IRepositoryAsync<UserHomeLink> _userHomeRepository;
+        private readonly IRepositoryAsync<RouterInfo> _routerRepository;
         private readonly IRepositoryAsync<MessageLog> _mqttMessageLogRepository;
 
         public CommonService(IUnitOfWorkAsync unitOfWorkAsync)
@@ -30,6 +31,8 @@ namespace SmartHome.Service
             _userRepository = _unitOfWorkAsync.RepositoryAsync<UserInfo>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
             _userHomeRepository = _unitOfWorkAsync.RepositoryAsync<UserHomeLink>();
+            _routerRepository = _unitOfWorkAsync.RepositoryAsync<RouterInfo>();
+
             _mqttMessageLogRepository = _unitOfWorkAsync.RepositoryAsync<MessageLog>();
         }
 
@@ -184,6 +187,11 @@ namespace SmartHome.Service
         {
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
               .SelectMany(x => x.SmartRouterInfos.Where(q => q.AppsBleId == appsBleId)).FirstOrDefault();
+        }
+
+        public RouterInfo GetRouterInfoByMacAddress(string macAddress)
+        {
+            return _routerRepository.Queryable().Where(p => p.MacAddress == macAddress).FirstOrDefault();
         }
     }
 }
