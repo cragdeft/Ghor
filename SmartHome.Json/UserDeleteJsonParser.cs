@@ -23,12 +23,12 @@ namespace SmartHome.Json
             _homeJsonMessage = jsonString;
             _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
         }
-        public bool DeleteUser()
+        public UserInfo DeleteUser()
         {
-            bool isSucccess = false;
+            UserInfo userInfo = null;
 
             if (_homeJsonEntity == null)
-                return isSucccess;
+                return userInfo;
 
             using (IDataContextAsync context = new SmartHomeDataContext())
             using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
@@ -40,18 +40,18 @@ namespace SmartHome.Json
 
                 try
                 {
-                    isSucccess=transactionRunner.RunTransaction(() => service.DeleteJsonData());
+                    userInfo=transactionRunner.RunTransaction(() => service.DeleteJsonData());
                 }
                 catch (Exception ex)
                 {
-                    return isSucccess=false;
+                    return null;
                 }
                 finally
                 {
                     transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
                 }
             }
-            return isSucccess;
+            return userInfo;
         }
 
     }

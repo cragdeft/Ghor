@@ -71,7 +71,10 @@ namespace SmartHome.Json
                 case ConfigurationType.DeleteRoom:
                     new RoomDeleteJsonParser(_homeJsonMessage, _receivedFrom).DeleteRoom();
                     break;
-                case ConfigurationType.NewRouterInfo:
+                case ConfigurationType.DeleteUser:
+                    new UserDeleteJsonParser(_homeJsonMessage, _receivedFrom).DeleteUser();
+                    break;
+                case ConfigurationType.NewRouter:
                     new RouterJsonParser(_homeJsonMessage, _receivedFrom).SaveNewRouter();
                     break;
             }
