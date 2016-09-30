@@ -126,16 +126,30 @@ namespace SmartHome.Service
             }
             if (device.DeviceType == DeviceType.SmartRouter)
             {
-                InsertSmartRouter(device, model, room);
+                InsertSmartRouter(device, model, room, deviceStatuses);
             }
         }
-        private void InsertSmartRouter(SmartDeviceEntity device, SmartDevice model, Room room)
+        private void InsertSmartRouter(SmartDeviceEntity device, SmartDevice model, Room room, List<DeviceStatusEntity> deviceStatuses)
         {
             SmartRouter router = MapToSmartRouter(model);
             router.Room = room;
             router.ObjectState = ObjectState.Added;
             router.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _deviceRepository.Insert(router);
+
+            InsertRouterDeviceStatus(router, deviceStatuses);
+        }
+        private void InsertRouterDeviceStatus(SmartRouter sswitch, List<DeviceStatusEntity> deviceStatuses)
+        {
+            foreach (var deviceStatusEntity in deviceStatuses)
+            {
+                var entity = Mapper.Map<DeviceStatusEntity, DeviceStatus>(deviceStatusEntity);
+                entity.IsSynced = Convert.ToBoolean(deviceStatusEntity.IsSynced);
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _deviceStatusRepository.Insert(entity);
+                sswitch.DeviceStatus.Add(entity);
+            }
         }
         private void InsertSmartDevices(SmartDeviceEntity device, Room room, SmartDevice model, List<DeviceStatusEntity> deviceStatuses)
         {
