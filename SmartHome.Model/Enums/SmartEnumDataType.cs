@@ -166,7 +166,7 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         ChangePassword = 6,
         [EnumMember]
-        ConfigurationProcess = 7,
+        ConfigurationProcessFromApi = 7,
         [EnumMember]
         PasswordRecovery = 8,
         [EnumMember]
@@ -202,6 +202,10 @@ namespace SmartHome.Model.Enums
         [EnumMember]
         UpdateChannel = 24,
         [EnumMember]
-        UpdateRouter = 25
+        UpdateRouter = 25,
+        [EnumMember]
+        NewHome = 26,
+        [EnumMember]
+        UpdateHome = 27
     }
 }
