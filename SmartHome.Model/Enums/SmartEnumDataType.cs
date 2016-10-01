@@ -148,7 +148,9 @@ namespace SmartHome.Model.Enums
         DeleteChannel,
         DeleteDevice,
         DeleteRoom,
-        NewRouterInfo
+        NewRouterInfo,
+        DeleteUser,
+        NewRouter
     }
 
     public enum MessageReceivedFrom

@@ -64,5 +64,18 @@ namespace SmartHome.Utility
 
             return Mapper.Map<WebBrokerInfoEntity, WebBrokerInfo>(entity, webBroker);
         }
+
+        public static Home MapHomeInfoProperties(HomeEntity entity, Home home)
+        {
+            Mapper.CreateMap<HomeEntity, Home>()
+              .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(src => src.IsInternet == 1 ? true : false))
+              .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(src => src.IsDefault == 1 ? true : false))
+              .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive == 1 ? true : false))
+              .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+              .ForMember(x => x.HomeId, y => y.Ignore())
+              .ForMember(x => x.Rooms, y => y.Ignore());
+
+            return Mapper.Map<HomeEntity, Home>(entity, home);
+        }
     }
 }

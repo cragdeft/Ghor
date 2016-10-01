@@ -112,9 +112,9 @@ namespace SmartHome.WebAPI.Controllers
                 #endregion
 
                 UserDeleteJsonParser jsonManager = new UserDeleteJsonParser(msg, MessageReceivedFrom.DeleteUser);
-                bool isSuccess = jsonManager.DeleteUser();
+                UserInfo userInfo = jsonManager.DeleteUser();
 
-                if (isSuccess)
+                if (userInfo != null)
                 {
                     MessageResponseUtility.FillPasswordRecoveryInfos("", " User Delete Successfully.", HttpStatusCode.OK, oRootObject);
                 }
@@ -192,7 +192,7 @@ namespace SmartHome.WebAPI.Controllers
 
                 #endregion
 
-                HomeJsonParser jsonManager = new HomeJsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
+                HomeJsonParser jsonManager = new HomeJsonParser(msg, MessageReceivedFrom.ConfigurationProcessFromApi);
                 jsonManager.Save();
 
                 MessageResponseUtility.FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
