@@ -144,7 +144,7 @@ namespace SmartHome.Model.Enums
         NewDevice,
         NewChannel,
         NewUser,
-        EditDevice,
+        DeviceRoomUpdate,
         DeleteChannel,
         DeleteDevice,
         DeleteRoom,
