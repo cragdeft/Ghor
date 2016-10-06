@@ -28,6 +28,7 @@ namespace SmartHome.WebAPI.Controllers
                 string msg = string.Empty;
 
                 msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+                //msg = "{\"Home\":[{\"Block\":\"Block\",\"PassPhrase\":\"6DCA8A\",\"Name\":\"MyHome\",\"Id\":1,\"IsDefault\":1,\"IsActive\":1,\"City\":\"City\",\"Address1\":\"address1\",\"Country\":\"Country\",\"Address2\":\"address2\",\"IsSynced\":1,\"TimeZone\":\"123\",\"Zone\":\"123\",\"IsInternet\":1,\"ZipCode\":\"1215\",\"Phone\":\"Phone\",\"MeshMode\":0}],\"DeviceStatus\":[{\"Id\":1,\"DeviceTableId\":1,\"StatusValue\":1,\"StatusType\":53},{\"Id\":2,\"DeviceTableId\":1,\"StatusValue\":0,\"StatusType\":55},{\"Id\":3,\"DeviceTableId\":1,\"StatusValue\":1,\"StatusType\":5}],\"Configuration\":\"NewDevice\",\"Device\":[{\"DeviceType\":1,\"Id\":1,\"DeviceName\":\"SMSW6G-01 704855792\",\"DeviceId\":32769,\"Version\":1,\"DeviceHash\":704855792,\"Room\":1,\"IsDeleted\":0,\"Watt\":0}]}";
                 if (string.IsNullOrEmpty(msg))
                 {
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
