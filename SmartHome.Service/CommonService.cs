@@ -1,6 +1,8 @@
-﻿using Repository.Pattern.Infrastructure;
+﻿using AutoMapper;
+using Repository.Pattern.Infrastructure;
 using Repository.Pattern.Repositories;
 using Repository.Pattern.UnitOfWork;
+using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
 using System;
@@ -192,6 +194,36 @@ namespace SmartHome.Service
         public RouterInfo GetRouterInfoByMacAddress(string macAddress)
         {
             return _routerRepository.Queryable().Where(p => p.MacAddress == macAddress).FirstOrDefault();
+        }
+
+
+        public Home GetHomeByPassPhrase(string passPhrase)
+        {
+            Home home = _homeRepository
+                .Queryable().Include(x => x.Rooms).Where(u => u.PassPhrase == passPhrase).FirstOrDefault();
+            return (home);
+        }
+
+        public RouterInfo GetRouterByHomeId(Home home)
+        {
+            RouterInfo router = _routerRepository
+                .Queryable().Include(x => x.Parent).Where(u => u.Parent.HomeId == home.HomeId).FirstOrDefault();
+            MapRouterInfo();
+            return router;
+        }
+
+        private void MapRouterInfo()
+        {
+            //map parent
+            Mapper.CreateMap<Home, HomeEntity>()
+            .ForMember(dest => dest.IsInternet, opt => opt.MapFrom(a => a.IsInternet == true ? 1 : 0))
+            .ForMember(dest => dest.IsDefault, opt => opt.MapFrom(a => a.IsDefault == true ? 1 : 0))
+            .ForMember(dest => dest.IsActive, opt => opt.MapFrom(a => a.IsActive == true ? 1 : 0))
+            .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0));
+            //map router
+            Mapper.CreateMap<RouterInfo, RouterInfoEntity>()
+                 .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(a => a.IsSynced == true ? 1 : 0))
+                 .ForMember(dest => dest.Parent, opt => opt.MapFrom(a => a.Parent));
         }
     }
 }
