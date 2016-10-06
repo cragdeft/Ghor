@@ -59,7 +59,7 @@ namespace SmartHome.Json
                 case ConfigurationType.NewUser:
                     new UserJsonParser(_homeJsonMessage, _receivedFrom).SaveNewUser();
                     break;
-                case ConfigurationType.EditDevice:
+                case ConfigurationType.DeviceRoomUpdate:
                     new DeviceRoomJsonParser(_homeJsonMessage, _receivedFrom).DeviceRoomUpdate();
                     break;
                 case ConfigurationType.DeleteChannel:
