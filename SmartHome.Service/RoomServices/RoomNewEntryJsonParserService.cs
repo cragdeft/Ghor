@@ -18,6 +18,7 @@ namespace SmartHome.Service
         #region PrivateProperty
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IRepositoryAsync<Room> _roomRepository;
+        private readonly IRepositoryAsync<UserRoomLink> _userRoomLinkRepository;
 
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
@@ -28,17 +29,19 @@ namespace SmartHome.Service
         {
             _unitOfWorkAsync = unitOfWorkAsync;
             _roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
+            _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
+            SetMapper();
         }
 
         public Room SaveJsonData()
         {
             Room room = null;
 
-            SetMapper();
+            //SetMapper();
             try
             {
                 room = SaveNewRoom();
@@ -87,5 +90,73 @@ namespace SmartHome.Service
             _roomRepository.Insert(entity);
             return entity;
         }
+
+        public Home InsertAllRooms(Home home, IList<UserInfo> listOfUsers, IList<UserInfo> listOfExistingDbUsers)
+        {
+            
+            home.Rooms = new List<Room>();
+            foreach (var room in _homeJsonEntity.Room)
+            {
+                var entity = Mapper.Map<RoomEntity, Room>(room);
+                entity.IsActive = Convert.ToBoolean(room.IsActive);
+                entity.IsSynced = Convert.ToBoolean(room.IsSynced);
+                entity.Home = home;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                entity.ObjectState = ObjectState.Added;
+                _roomRepository.Insert(entity);
+
+                SaveRoomUser(entity, listOfUsers);
+
+                if (listOfExistingDbUsers.Count > 0)
+                {
+                    SaveRoomForExistingDbUser(entity, listOfExistingDbUsers);
+                }
+
+            }
+
+            return home;
+        }
+
+        private void SaveRoomUser(Room entity, IList<UserInfo> listOfUsers)
+        {
+            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
+            foreach (var userRoomLinkEntity in roomLinkList)
+            {
+                UserInfoEntity userentity =
+                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId.ToString() == userRoomLinkEntity.AppsUserId.ToString());
+                UserRoomLink userRoom = new UserRoomLink();
+                userRoom.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
+
+                FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
+            }
+        }
+
+        private void SaveRoomForExistingDbUser(Room entity, IList<UserInfo> listOfExistingDbUsers)
+        {
+            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
+            foreach (var userRoomLinkEntity in roomLinkList)
+            {
+                foreach (var dbUser in listOfExistingDbUsers)
+                {
+                    UserRoomLink userRoom = new UserRoomLink();
+                    userRoom.UserInfo = dbUser;
+
+                    FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
+                }
+
+            }
+        }
+
+        private void FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
+        {
+            userRoom.Room = entity;
+            userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
+            userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
+            userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
+            userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
+            userRoom.ObjectState = ObjectState.Added;
+            _userRoomLinkRepository.Insert(userRoom);
+        }
+
     }
 }

@@ -69,7 +69,7 @@ namespace SmartHome.Service
             }
             return home;
         }
-        private Home UpdateHome(HomeEntity homeEntity, Home dbHome)
+        public Home UpdateHome(HomeEntity homeEntity, Home dbHome)
         {
             Home model = SmartHomeTranslater.MapHomeInfoProperties(homeEntity, dbHome);
             model.ObjectState = ObjectState.Modified;

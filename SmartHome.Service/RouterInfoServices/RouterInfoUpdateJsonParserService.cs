@@ -100,7 +100,7 @@ namespace SmartHome.Service
             entity.ObjectState = ObjectState.Modified;
             _userHomeRepository.Update(entity);
         }
-        private RouterInfo UpdateRouter(RouterInfoEntity routerEntity, RouterInfo router)
+        public RouterInfo UpdateRouter(RouterInfoEntity routerEntity, RouterInfo router)
         {
             var entity = SmartHomeTranslater.MapRouterInfoProperties(routerEntity, router);
             //entity.IsSynced = Convert.ToBoolean(routerEntity.IsSynced);
@@ -111,6 +111,12 @@ namespace SmartHome.Service
             _routerInfoRepository.Update(entity);
 
             return entity;
+        }
+
+        public void DeleteRouter(RouterInfo router)
+        {
+            router.ObjectState = ObjectState.Deleted;
+            _routerInfoRepository.Delete(router);
         }
 
         private void SetMapper()

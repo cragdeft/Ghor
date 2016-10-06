@@ -92,7 +92,7 @@ namespace SmartHome.Service
             entity.ObjectState = ObjectState.Modified;
             _userHomeRepository.Update(entity);
         }
-        private RouterInfo InsertRouter(RouterInfoEntity router, Home home)
+        public RouterInfo InsertRouter(RouterInfoEntity router, Home home)
         {
             var entity = Mapper.Map<RouterInfoEntity, RouterInfo>(router);
             entity.IsSynced = Convert.ToBoolean(router.IsSynced);

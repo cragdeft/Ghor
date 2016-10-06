@@ -32,13 +32,14 @@ namespace SmartHome.Service
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
+            SetMapper();
         }
 
         public Home SaveJsonData()
         {
             Home home = null;
 
-            SetMapper();
+            //SetMapper();
             try
             {
                 home = SaveNewHome();
@@ -65,8 +66,10 @@ namespace SmartHome.Service
             }
             return home;
         }
-        private Home InsertHome(HomeEntity homeEntity)
+        public Home InsertHome(HomeEntity homeEntity)
         {
+            //Mapper.CreateMap<HomeEntity, Home>();
+
             Home model = Mapper.Map<HomeEntity, Home>(homeEntity);
             model.IsInternet = Convert.ToBoolean(homeEntity.IsInternet);
             model.IsDefault = Convert.ToBoolean(homeEntity.IsDefault);

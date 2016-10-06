@@ -73,7 +73,7 @@ namespace SmartHome.Service
             UserInfo dbUser = new CommonService(_unitOfWorkAsync).GetUserByEmail(email);
             home = new CommonService(_unitOfWorkAsync).GetHomeWithRooms(passPhrase);
 
-            UserInfo entity = UpdateUser(dbUser);
+            UserInfo entity = UpdateUser(_homeJsonEntity.UserInfo.FirstOrDefault(), dbUser);
 
             DeleteHomeUser(entity);
             DeleteRoomUser(entity);
@@ -87,8 +87,12 @@ namespace SmartHome.Service
         private void DeleteHomeUser(UserInfo userInfo)
         {
             var dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.AppsUserId == userInfo.AppsUserId).FirstOrDefault();
-            dbHomeUser.ObjectState = ObjectState.Deleted;
-            _userHomeRepository.Delete(dbHomeUser);
+            if (dbHomeUser !=null)
+            {
+                dbHomeUser.ObjectState = ObjectState.Deleted;
+                _userHomeRepository.Delete(dbHomeUser);
+            }
+            
         }
         private void DeleteRoomUser(UserInfo userInfo)
         {
@@ -99,12 +103,14 @@ namespace SmartHome.Service
                 _userRoomLinkRepository.Delete(roomUser);
             }
         }
-        private UserInfo UpdateUser(UserInfo dbUser)
+        public UserInfo UpdateUser(UserInfoEntity userInfoEntity,UserInfo dbUser)
         {
-            UserInfo entity = SmartHomeTranslater.MapUserInfoProperties(_homeJsonEntity.UserInfo.FirstOrDefault(), dbUser);
+            UserInfo entity = SmartHomeTranslater.MapUserInfoProperties(userInfoEntity, dbUser);
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
+            DeleteRoomUser(entity);
+            DeleteHomeUser(entity);
             return entity;
         }
         private void SaveHomeUser(Home home, UserInfo userInfo)

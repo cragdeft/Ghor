@@ -36,12 +36,13 @@ namespace SmartHome.Service
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
+            SetMapper();
         }
 
         public SmartDevice SaveJsonData()
         {
             SmartDevice smartDevice = null;
-            SetMapper();
+          
             try
             {
                 smartDevice=SaveNewSmartDevice();

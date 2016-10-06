@@ -90,5 +90,17 @@ namespace SmartHome.Service
             return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
                                   .SelectMany(q => q.Rooms.Where(r => r.AppsRoomId == appsRoomId)).FirstOrDefault();
         }
+        public void DeleteAllRooms(Home home)
+        {
+            IList<long> roomIds = home.Rooms.Select(s => s.RoomId).ToList();
+            home.Rooms = new List<Room>();
+            foreach (var roomId in roomIds)
+            {
+                Room dbRoom = _roomRepository
+                .Queryable().Where(u => u.RoomId == roomId).FirstOrDefault();
+                dbRoom.ObjectState = ObjectState.Deleted;
+                _roomRepository.Delete(dbRoom);
+            }
+        }
     }
 }
