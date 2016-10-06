@@ -78,6 +78,7 @@
     <Compile Include="ChannelJsonParser.cs" />
     <Compile Include="CommandJsonManager.cs" />
     <Compile Include="ConfigurationJsonManager.cs" />
+    <Compile Include="ConfigurationJsonParser.cs" />
     <Compile Include="DeviceDeleteJsonParser.cs" />
     <Compile Include="DeviceJsonParser.cs" />
     <Compile Include="DeviceRoomJsonParser.cs" />
