@@ -77,5 +77,16 @@ namespace SmartHome.Utility
 
             return Mapper.Map<HomeEntity, Home>(entity, home);
         }
+
+        public static Room MapRoomInfoProperties(RoomEntity roomEntity, Room dbRoom)
+        {
+            Mapper.CreateMap<RoomEntity, Room>()
+                .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive == 1 ? true : false))
+                .ForMember(x => x.Home, y => y.Ignore())
+                .ForMember(x => x.RoomId, y => y.Ignore());
+
+            return Mapper.Map<RoomEntity, Room>(roomEntity, dbRoom);
+        }
     }
 }
