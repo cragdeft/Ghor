@@ -5,6 +5,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.UserInfoServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +41,9 @@ namespace SmartHome.Service
         public Room SaveJsonData()
         {
             Room room = null;
-
-            //SetMapper();
             try
             {
-                room = SaveNewRoom();
+                room = SaveRoomInfo();
             }
             catch (Exception ex)
             {
@@ -57,7 +56,8 @@ namespace SmartHome.Service
         {
             Mapper.CreateMap<RoomEntity, Room>();
         }
-        private Room SaveNewRoom()
+
+        private Room SaveRoomInfo()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
 
@@ -69,7 +69,7 @@ namespace SmartHome.Service
             userInfo = new CommonService(_unitOfWorkAsync).GetUser(_homeJsonEntity.UserInfo[0].Email);
             if (home != null && userInfo != null)
             {
-                room = SaveNewRoom(home);
+                room = SaveNewRoom(home, _homeJsonEntity.Room[0]);
 
                 IHomeJsonParserService<UserRoomLink> service = new RoomUserNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, room);
                 service.SaveJsonData();
@@ -77,10 +77,9 @@ namespace SmartHome.Service
             }
             return null;
         }
-        private Room SaveNewRoom(Home home)
-        {
-            RoomEntity room = _homeJsonEntity.Room[0];
 
+        private Room SaveNewRoom(Home home, RoomEntity room)
+        {
             var entity = Mapper.Map<RoomEntity, Room>(room);
             entity.IsActive = Convert.ToBoolean(room.IsActive);
             entity.IsSynced = Convert.ToBoolean(room.IsSynced);
@@ -89,74 +88,26 @@ namespace SmartHome.Service
             entity.ObjectState = ObjectState.Added;
             _roomRepository.Insert(entity);
             return entity;
-        }
-
+        }        
+        
         public Home InsertAllRooms(Home home, IList<UserInfo> listOfUsers, IList<UserInfo> listOfExistingDbUsers)
         {
-            
+
             home.Rooms = new List<Room>();
             foreach (var room in _homeJsonEntity.Room)
             {
-                var entity = Mapper.Map<RoomEntity, Room>(room);
-                entity.IsActive = Convert.ToBoolean(room.IsActive);
-                entity.IsSynced = Convert.ToBoolean(room.IsSynced);
-                entity.Home = home;
-                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-                entity.ObjectState = ObjectState.Added;
-                _roomRepository.Insert(entity);
+                var entity = SaveNewRoom(home, room);
 
-                SaveRoomUser(entity, listOfUsers);
+                new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveRoomUserFromJson(entity, listOfUsers);
 
                 if (listOfExistingDbUsers.Count > 0)
                 {
-                    SaveRoomForExistingDbUser(entity, listOfExistingDbUsers);
+                    new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveRoomForExistingDbUser(entity, listOfExistingDbUsers);
                 }
 
             }
 
             return home;
-        }
-
-        private void SaveRoomUser(Room entity, IList<UserInfo> listOfUsers)
-        {
-            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
-            foreach (var userRoomLinkEntity in roomLinkList)
-            {
-                UserInfoEntity userentity =
-                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId.ToString() == userRoomLinkEntity.AppsUserId.ToString());
-                UserRoomLink userRoom = new UserRoomLink();
-                userRoom.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
-
-                FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
-            }
-        }
-
-        private void SaveRoomForExistingDbUser(Room entity, IList<UserInfo> listOfExistingDbUsers)
-        {
-            var roomLinkList = _homeJsonEntity.UserRoomLink.FindAll(x => x.AppsRoomId == entity.AppsRoomId);
-            foreach (var userRoomLinkEntity in roomLinkList)
-            {
-                foreach (var dbUser in listOfExistingDbUsers)
-                {
-                    UserRoomLink userRoom = new UserRoomLink();
-                    userRoom.UserInfo = dbUser;
-
-                    FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
-                }
-
-            }
-        }
-
-        private void FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
-        {
-            userRoom.Room = entity;
-            userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-            userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
-            userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
-            userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
-            userRoom.ObjectState = ObjectState.Added;
-            _userRoomLinkRepository.Insert(userRoom);
-        }
-
+        }     
     }
 }

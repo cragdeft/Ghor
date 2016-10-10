@@ -5,6 +5,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace SmartHome.Service
 
             try
             {
-                room=UpdateRoomInfo();
+                room = UpdateRoomInfo();
             }
             catch (Exception ex)
             {
@@ -62,7 +63,7 @@ namespace SmartHome.Service
 
             if (dbRoom != null)
             {
-                var entity = MapRoomProperties(roomEntity, dbRoom);
+                var entity = SmartHomeTranslater.MapRoomInfoProperties(roomEntity, dbRoom);
 
                 entity.AuditField = new AuditFields(dbRoom.AuditField.InsertedBy, dbRoom.AuditField.InsertedDateTime, "admin", DateTime.Now);
                 entity.ObjectState = ObjectState.Modified;
@@ -70,16 +71,6 @@ namespace SmartHome.Service
                 return entity;
             }
             return null;
-        }
-        private Room MapRoomProperties(RoomEntity roomEntity, Room dbRoom)
-        {
-            Mapper.CreateMap<RoomEntity, Room>()
-                .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive == 1 ? true : false))
-                .ForMember(x => x.Home, y => y.Ignore())
-                .ForMember(x => x.RoomId, y => y.Ignore());
-
-            return Mapper.Map<RoomEntity, Room>(roomEntity, dbRoom);
         }
     }
 }

@@ -91,6 +91,7 @@
     <Compile Include="RouterInfoServices\RouterInfoUpdateJsonParserService.cs" />
     <Compile Include="DeviceInfoServices\SmartSwitchUpdateJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoDeleteJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserInfoInteractionWithHomeAndRoomService.cs" />
     <Compile Include="UserInfoServices\UserInfoJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoNewEntryJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoService.cs" />

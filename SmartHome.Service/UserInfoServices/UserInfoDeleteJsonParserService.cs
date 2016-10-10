@@ -5,8 +5,10 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.UserInfoServices;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace SmartHome.Service
@@ -56,11 +58,11 @@ namespace SmartHome.Service
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
             string email = _homeJsonEntity.UserInfo.FirstOrDefault().Email;
 
-            UserInfo userInfo = GetUserInfo(email);
+            UserInfo userInfo = new CommonService(_unitOfWorkAsync).GetUserByEmail(email);
             if (userInfo != null)
             {
-                DeleteHomeUser(userInfo);
-                DeleteRoomUser(userInfo);
+                new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteHomeUser(userInfo);
+                new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteRoomUser(userInfo);
                 return DeleteUser(userInfo);
             }
             return null;
@@ -70,41 +72,6 @@ namespace SmartHome.Service
             userInfo.ObjectState = ObjectState.Deleted;
             _userRepository.Delete(userInfo);
             return userInfo;
-        }
-        private void DeleteRoomUser(UserInfo userInfo)
-        {
-            IList<UserRoomLink> dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).ToList();
-
-            foreach (var roomUser in dbRoomUser)
-            {
-                roomUser.ObjectState = ObjectState.Deleted;
-                _userRoomLinkRepository.Delete(roomUser);
-            }
-        }
-        private void DeleteHomeUser(UserInfo userInfo)
-        {
-            IList<UserHomeLink> dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.UserInfoId == userInfo.UserInfoId).ToList();
-            foreach (var usreHome in dbHomeUser)
-            {
-                usreHome.ObjectState = ObjectState.Deleted;
-                _userHomeRepository.Delete(usreHome);
-            }
-
-        }
-        private UserInfo GetUserInfo(string email)
-        {
-            return _userRepository.Queryable().Where(p => p.Email == email).FirstOrDefault();
-        }
-        private UserInfo InsertUser(UserInfoEntity userInfoEntity)
-        {
-            UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
-            entity.LoginStatus = Convert.ToBoolean(userInfoEntity.LoginStatus);
-            entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
-            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _userRepository.Insert(entity);
-            return entity;
         }
     }
 }

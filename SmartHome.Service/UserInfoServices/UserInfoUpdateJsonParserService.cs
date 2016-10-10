@@ -5,6 +5,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.UserInfoServices;
 using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace SmartHome.Service
             SetMapper();
             try
             {
-                userInfo=UpdateUserInfos();
+                userInfo = UpdateUserInfos();
             }
             catch (Exception ex)
             {
@@ -53,17 +54,7 @@ namespace SmartHome.Service
             }
             return userInfo;
         }
-        private UserInfo InsertUser(UserInfoEntity userInfoEntity)
-        {
-            UserInfo entity = Mapper.Map<UserInfoEntity, UserInfo>(userInfoEntity);
-            entity.LoginStatus = Convert.ToBoolean(userInfoEntity.LoginStatus);
-            entity.RegStatus = Convert.ToBoolean(userInfoEntity.RegStatus);
-            entity.IsSynced = Convert.ToBoolean(userInfoEntity.IsSynced);
-            entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
-            entity.ObjectState = ObjectState.Added;
-            _userRepository.Insert(entity);
-            return entity;
-        }
+
         private UserInfo UpdateUserInfos()
         {
             string passPhrase = _homeJsonEntity.Home.FirstOrDefault().PassPhrase;
@@ -75,90 +66,24 @@ namespace SmartHome.Service
 
             UserInfo entity = UpdateUser(_homeJsonEntity.UserInfo.FirstOrDefault(), dbUser);
 
-            DeleteHomeUser(entity);
-            DeleteRoomUser(entity);
-
-            SaveHomeUser(home, entity);
-            SaveRoomUser(home, entity);
+            new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveHomeUser(home, entity);
+            new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveRoomUser(home, entity);
 
             return entity;
+        }
 
-        }
-        private void DeleteHomeUser(UserInfo userInfo)
-        {
-            var dbHomeUser = _userHomeRepository.Queryable().Where(p => p.UserInfo.AppsUserId == userInfo.AppsUserId).FirstOrDefault();
-            if (dbHomeUser !=null)
-            {
-                dbHomeUser.ObjectState = ObjectState.Deleted;
-                _userHomeRepository.Delete(dbHomeUser);
-            }
-            
-        }
-        private void DeleteRoomUser(UserInfo userInfo)
-        {
-            var dbRoomUser = _userRoomLinkRepository.Queryable().Where(p => p.UserInfo.AppsUserId == userInfo.AppsUserId);
-            foreach (var roomUser in dbRoomUser)
-            {
-                roomUser.ObjectState = ObjectState.Deleted;
-                _userRoomLinkRepository.Delete(roomUser);
-            }
-        }
-        public UserInfo UpdateUser(UserInfoEntity userInfoEntity,UserInfo dbUser)
+        public UserInfo UpdateUser(UserInfoEntity userInfoEntity, UserInfo dbUser)
         {
             UserInfo entity = SmartHomeTranslater.MapUserInfoProperties(userInfoEntity, dbUser);
             entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             entity.ObjectState = ObjectState.Modified;
             _userRepository.Update(entity);
-            DeleteRoomUser(entity);
-            DeleteHomeUser(entity);
+
+            new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteHomeUser(entity);
+            new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteRoomUser(entity);
             return entity;
         }
-        private void SaveHomeUser(Home home, UserInfo userInfo)
-        {
-            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
 
-            foreach (var userRoomLinkEntity in homeUserList)
-            {
-                UserHomeLink userHome = new UserHomeLink();
-                userHome.UserInfo = userInfo;
-
-                FillSaveHomeUser(home, userRoomLinkEntity, userHome);
-            }
-        }
-        private void SaveRoomUser(Home home, UserInfo userInfo)
-        {
-            foreach (var userRoomLinkEntity in _homeJsonEntity.UserRoomLink)
-            {
-                Room dbroom = home.Rooms.Where(p => p.AppsRoomId == userRoomLinkEntity.AppsRoomId).FirstOrDefault();
-                if (dbroom != null)
-                {
-                    UserRoomLink userRoom = new UserRoomLink();
-                    userRoom.UserInfo = userInfo;
-                    FillSaveRoomUser(dbroom, userRoomLinkEntity, userRoom);
-                }
-            }
-        }
-        private void FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
-        {
-            userRoom.Room = entity;
-            userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-            userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
-            userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
-            userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
-            userRoom.ObjectState = ObjectState.Added;
-            _userRoomLinkRepository.Insert(userRoom);
-        }
-        private void FillSaveHomeUser(Home home, UserHomeLinkEntity userRoomLinkEntity, UserHomeLink userHome)
-        {
-            userHome.Home = home;
-            userHome.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-            userHome.AppsUserHomeLinkId = userRoomLinkEntity.AppsUserHomeLinkId;
-            userHome.AppsHomeId = userRoomLinkEntity.AppsHomeId;
-            userHome.AppsUserId = userRoomLinkEntity.AppsUserId;
-            userHome.IsAdmin = Convert.ToBoolean(userRoomLinkEntity.IsAdmin);
-            userHome.ObjectState = ObjectState.Added;
-            _userHomeRepository.Insert(userHome);
-        }
         private void SetMapper()
         {
             Mapper.CreateMap<UserInfoEntity, UserInfo>();

@@ -5,6 +5,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.UserInfoServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,6 @@ namespace SmartHome.Service
         public RoomUserNewEntryJsonParserService(IUnitOfWorkAsync unitOfWorkAsync, HomeJsonEntity homeJsonEntity, Room room)
         {
             _unitOfWorkAsync = unitOfWorkAsync;
-            //_roomRepository = _unitOfWorkAsync.RepositoryAsync<Room>();
             _userRoomLinkRepository = _unitOfWorkAsync.RepositoryAsync<UserRoomLink>();
 
             _homeJsonEntity = homeJsonEntity;
@@ -71,22 +71,12 @@ namespace SmartHome.Service
             {
                 UserRoomLink userRoom = new UserRoomLink();
                 userRoom.UserInfo = userInfo;
+                new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, "", MessageReceivedFrom.NewRoom).FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
 
-                return FillSaveRoomUser(entity, userRoomLinkEntity, userRoom);
+                return userRoom;
             }
             return null;
         }
-        private UserRoomLink FillSaveRoomUser(Room entity, UserRoomLinkEntity userRoomLinkEntity, UserRoomLink userRoom)
-        {
-            userRoom.Room = entity;
-            userRoom.IsSynced = Convert.ToBoolean(userRoomLinkEntity.IsSynced);
-            userRoom.AppsUserRoomLinkId = userRoomLinkEntity.AppsUserRoomLinkId;
-            userRoom.AppsRoomId = userRoomLinkEntity.AppsRoomId;
-            userRoom.AppsUserId = userRoomLinkEntity.AppsUserId;
-            userRoom.ObjectState = ObjectState.Added;
-            _userRoomLinkRepository.Insert(userRoom);
-
-            return userRoom;
-        }
+       
     }
 }
