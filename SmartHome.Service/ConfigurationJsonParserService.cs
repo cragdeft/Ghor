@@ -4,6 +4,7 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
+using SmartHome.Service.UserInfoServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,10 +86,10 @@ namespace SmartHome.Service
         private Home SaveUsersAndRelatedInfos(Home home)
         {
             IList<UserInfo> listOfUsers = SaveOrUpdateUser();
-            IList<UserInfo> listOfExistingDbUsers = new UserInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteUser(home, listOfUsers);
+            IList<UserInfo> listOfExistingDbUsers = new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteDBRemainingUsersNotInJson(home, listOfUsers);
 
             home = SaveOrUpdateRoom(home, listOfUsers, listOfExistingDbUsers);
-            SaveHomeUser(home, listOfUsers, listOfExistingDbUsers);
+            new UserInfoInteractionWithHomeAndRoomService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveHomeUsers(home, listOfUsers, listOfExistingDbUsers);
             return home;
         }
 
@@ -100,13 +101,13 @@ namespace SmartHome.Service
             }
             else
             {
-                home = new HomeInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateHome(homeEntity, home); 
+                home = new HomeInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateHome(homeEntity, home);
             }
 
             return home;
         }
 
-        private void SaveOrUpdateNextAssociatedDevice(Model.Models.Home home)
+        private void SaveOrUpdateNextAssociatedDevice(Home home)
         {
             var nextDevice = _nextAssociatedDeviceRepository
                 .Queryable().Where(w => w.Home.HomeId == home.HomeId).FirstOrDefault();
@@ -140,27 +141,6 @@ namespace SmartHome.Service
             }
         }
 
-        private void SaveHomeUser(Home home, IList<UserInfo> listOfUsers, IList<UserInfo> listOfExistingDbUsers)
-        {
-            var homeUserList = _homeJsonEntity.UserHomeLink.FindAll(x => x.AppsHomeId == home.AppsHomeId);
-
-            foreach (var userRoomLinkEntity in homeUserList)
-            {
-                UserInfoEntity userentity =
-                    _homeJsonEntity.UserInfo.Find(x => x.AppsUserId == userRoomLinkEntity.AppsUserId);
-
-                UserHomeLink userHome = new UserHomeLink();
-                userHome.UserInfo = listOfUsers.Where(u => u.Email == userentity.Email).FirstOrDefault();
-
-                new UserInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).FillSaveHomeUser(home, userRoomLinkEntity, userHome);
-            }
-            if (listOfExistingDbUsers.Count > 0)
-            {
-                new UserInfoNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).SaveHomeForExistingDbUsers(home, listOfExistingDbUsers, homeUserList);
-            }
-
-        }
-
         private Home SaveOrUpdateRoom(Home model, IList<UserInfo> listOfUsers, IList<UserInfo> listOfExistingDbUsers)
         {
             if (model.Rooms != null)
@@ -169,8 +149,6 @@ namespace SmartHome.Service
             }
             return new RoomNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertAllRooms(model, listOfUsers, listOfExistingDbUsers);
         }
-
-
 
         private void InsertOrUpdateRouter(Home home)
         {
