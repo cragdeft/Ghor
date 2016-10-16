@@ -88,6 +88,8 @@ namespace SmartHome.Data.Processor
             FillUserRoomLinkInfoToLoginObject(oLoginObject, homeViewModel);
             //smart router
             FillSmartRouterInfoToLoginObject(oLoginObject, homeViewModel);
+
+            FillWebBrokerInfoToLoginObject(oLoginObject, homeViewModel);
             //room
             FillRoomInfoToLoginObject(oLoginObject, homeViewModel);
             //smart device
@@ -159,6 +161,15 @@ namespace SmartHome.Data.Processor
                 .ForMember(dest => dest.IsExternal, opt => opt.MapFrom(src => src.IsExternal == true ? 1 : 0));
             IEnumerable<RouterInfoEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<RouterInfo>, IEnumerable<RouterInfoEntity>>(homeViewModel.Routers);
             oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
+        }
+
+        private void FillWebBrokerInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
+        {
+            Mapper.CreateMap<WebBrokerInfo, WebBrokerInfoEntity>()
+                .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == true ? 1 : 0));
+            //.ForMember(dest => dest.IsExternal, opt => opt.MapFrom(src => src.IsExternal == true ? 1 : 0));
+            IEnumerable<WebBrokerInfoEntity> oWebBrokerInfoEntity = Mapper.Map<IEnumerable<WebBrokerInfo>, IEnumerable<WebBrokerInfoEntity>>(homeViewModel.WebBrokerInfoes);
+            oLoginObject.WebBrokerInfo.AddRange(oWebBrokerInfoEntity);
         }
 
         private void FillRoomInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
