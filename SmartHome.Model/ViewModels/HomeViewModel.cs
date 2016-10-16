@@ -16,6 +16,7 @@ namespace SmartHome.Model.ViewModels
             Users = new List<UserInfo>();
             UserHomeLinks = new List<UserHomeLink>();
             Routers = new List<RouterInfo>();
+            WebBrokerInfoes = new List<WebBrokerInfo>();
             Rooms = new List<Room>();
             UserRoomLinks = new List<UserRoomLink>();
             SmartDevices = new List<SmartDevice>();
@@ -28,6 +29,8 @@ namespace SmartHome.Model.ViewModels
         public IList<UserInfo> Users { get; set; }
         public IList<UserHomeLink> UserHomeLinks { get; set; }
         public IList<RouterInfo> Routers { get; set; }
+        public IList<WebBrokerInfo> WebBrokerInfoes { get; set; }
+
         public IList<Room> Rooms { get; set; }
         public IList<UserRoomLink> UserRoomLinks { get; set; }
         public IList<SmartDevice> SmartDevices { get; set; }
