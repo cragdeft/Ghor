@@ -4501,7 +4501,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-inverse {
-  background-color: #222222;
+  background-color: #33691e;
   border-color: #080808;
 }
 
@@ -4925,6 +4925,17 @@ a.list-group-item.active > .badge,
 
 .nav-pills > li > a > .badge {
   margin-left: 3px;
+}
+
+.jumbotron-color {
+  padding: 30px;
+  margin-bottom: 30px;
+  font-size: 21px;
+  font-weight: 200;
+  line-height: 2.1428571435;
+  color: inherit;
+  background-color: #8bc34a;
+  border-radius: 10px;
 }
 
 .jumbotron {
