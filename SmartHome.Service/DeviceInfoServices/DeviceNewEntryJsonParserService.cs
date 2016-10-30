@@ -21,6 +21,9 @@ namespace SmartHome.Service
         private readonly IRepositoryAsync<DeviceStatus> _deviceStatusRepository;
         private readonly IRepositoryAsync<RgbwStatus> _rgbwStatusRepository;
 
+        private readonly IRepositoryAsync<Channel> _channelRepository;
+        private readonly IRepositoryAsync<ChannelStatus> _channelStatusRepository;
+
         public HomeJsonEntity _homeJsonEntity { get; private set; }
         public string _homeJsonMessage { get; private set; }
         public MessageReceivedFrom _receivedFrom { get; private set; }
@@ -32,6 +35,9 @@ namespace SmartHome.Service
             _deviceRepository = _unitOfWorkAsync.RepositoryAsync<SmartDevice>();
             _deviceStatusRepository = _unitOfWorkAsync.RepositoryAsync<DeviceStatus>();
             _rgbwStatusRepository = _unitOfWorkAsync.RepositoryAsync<RgbwStatus>();
+            _channelRepository = _unitOfWorkAsync.RepositoryAsync<Channel>();
+            _channelStatusRepository = _unitOfWorkAsync.RepositoryAsync<ChannelStatus>();
+
 
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
@@ -42,10 +48,10 @@ namespace SmartHome.Service
         public SmartDevice SaveJsonData()
         {
             SmartDevice smartDevice = null;
-          
+
             try
             {
-                smartDevice=SaveNewSmartDevice();
+                smartDevice = SaveNewSmartDevice();
             }
             catch (Exception ex)
             {
@@ -91,7 +97,7 @@ namespace SmartHome.Service
             }
             return device;
         }
-        private void InsertSmartRouter(SmartDeviceEntity entity,SmartDevice device, Room room)
+        private void InsertSmartRouter(SmartDeviceEntity entity, SmartDevice device, Room room)
         {
             SmartRouter router = MapToSmartRouter(device);
             router.Room = room;
@@ -142,6 +148,47 @@ namespace SmartHome.Service
 
             List<DeviceStatusEntity> deviceStatuses = _homeJsonEntity.DeviceStatus.FindAll(x => x.AppsDeviceId == entity.AppsDeviceId.ToString());
             InsertDeviceStatus(sswitch, deviceStatuses);
+
+            if (_homeJsonEntity.Configuration == "All")
+            {
+                List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == entity.AppsDeviceId);
+                InsertChannel(sswitch, channelList);
+            }
+
+        }
+
+        public void InsertChannel(SmartSwitch model, List<ChannelEntity> channels)
+        {
+            SmartSwitch sswitch = model;
+            Mapper.CreateMap<ChannelEntity, Channel>();
+            Mapper.CreateMap<ChannelStatusEntity, ChannelStatus>();
+
+            sswitch.Channels = new List<Channel>();
+            foreach (var channel in channels)
+            {
+
+                var entity = Mapper.Map<ChannelEntity, Channel>(channel);
+                entity.IsSynced = Convert.ToBoolean(channel.IsSynced);
+                entity.ObjectState = ObjectState.Added;
+                entity.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                _channelRepository.Insert(entity);
+                entity.ChannelStatuses = new List<ChannelStatus>();
+                List<ChannelStatusEntity> channelStatuses =
+                    _homeJsonEntity.ChannelStatus.FindAll(x => x.AppsChannelId == channel.AppsChannelId);
+
+                foreach (var channelStatusEntity in channelStatuses)
+                {
+                    var channelStatusModel = Mapper.Map<ChannelStatusEntity, ChannelStatus>(channelStatusEntity);
+                    channelStatusModel.IsSynced = Convert.ToBoolean(channelStatusEntity.IsSynced);
+                    channelStatusModel.ObjectState = ObjectState.Added;
+                    channelStatusModel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
+                    _channelStatusRepository.Insert(channelStatusModel);
+                    entity.ChannelStatuses.Add(channelStatusModel);
+                }
+
+                sswitch.Channels.Add(entity);
+            }
+
         }
         private void InsertSmartRainbow(SmartDeviceEntity entity, SmartDevice device, Room room)
         {
@@ -215,6 +262,7 @@ namespace SmartHome.Service
         {
             Mapper.CreateMap<SmartDeviceEntity, SmartDevice>();
             Mapper.CreateMap<DeviceStatusEntity, DeviceStatus>();
+            Mapper.CreateMap<RgbwStatusEntity, RgbwStatus>();
         }
     }
 }
