@@ -32,6 +32,7 @@ namespace SmartHome.WebAPI.Controllers
                 {
                     return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
                 }
+                //msg = "{\"Device\":[{\"Version\":0,\"Id\":1,\"Watt\":0,\"IsDeleted\":0,\"DeviceType\":1,\"DeviceName\":\"SMSW6G-00 890236793\",\"DeviceId\":32803,\"DeviceHash\":890236793,\"Room\":3}],\"Configuration\":\"NewChannel\",\"ChannelStatus\":[{\"StatusType\":2,\"ChannelTableId\":3,\"StatusValue\":0,\"Id\":1},{\"StatusType\":1,\"ChannelTableId\":3,\"StatusValue\":0,\"Id\":2},{\"StatusType\":3,\"ChannelTableId\":3,\"StatusValue\":0,\"Id\":3}],\"Channel\":[{\"LoadType\":2,\"LoadName\":\"Dimmable Light\",\"LoadWatt\":0,\"ChannelNo\":3,\"DeviceTableId\":1,\"Id\":3}],\"Home\":[{\"Block\":\"Block\",\"Country\":\"Country\",\"Address1\":\"address1\",\"Address2\":\"address2\",\"Id\":1,\"Name\":\"MyHome\",\"City\":\"City\",\"IsSynced\":1,\"Zone\":\"123\",\"Phone\":\"Phone\",\"TimeZone\":\"123\",\"IsDefault\":1,\"IsInternet\":1,\"IsActive\":1,\"ZipCode\":\"1215\",\"MeshMode\":0,\"PassPhrase\":\"64565C\"}]}";
 
                 #endregion
 
