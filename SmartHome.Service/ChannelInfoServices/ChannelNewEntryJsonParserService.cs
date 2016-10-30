@@ -38,12 +38,13 @@ namespace SmartHome.Service
             _homeJsonEntity = homeJsonEntity;
             _homeJsonMessage = homeJsonMessage;
             _receivedFrom = receivedFrom;
+            SetMapper();
         }
 
         public Channel SaveJsonData()
         {
             Channel channel = null;
-            SetMapper();
+
             try
             {
                 channel = SaveNewSmartSwitchCannel();
@@ -73,7 +74,9 @@ namespace SmartHome.Service
 
         private Channel SaveNewChannel(SmartSwitch device)
         {
-            List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
+            // List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == device.AppsDeviceId);
+
+            List<ChannelEntity> channelList = _homeJsonEntity.Channel;//for ios
             if (channelList.Count > 0)
             {
                 return InsertChannel(device, channelList.First());
@@ -90,7 +93,7 @@ namespace SmartHome.Service
 
             if (dbChannel == null)
             {
-                Channel channel = SaveChannel(channelEntity);
+                Channel channel = SaveChannel(channelEntity, model);
                 SaveChannelStatus(channelEntity, channel);
                 sswitch.Channels.Add(channel);
                 return channel;
@@ -116,17 +119,17 @@ namespace SmartHome.Service
             }
         }
 
-        private Channel SaveChannel(ChannelEntity entity)
+        private Channel SaveChannel(ChannelEntity entity, SmartSwitch model)
         {
             var channel = Mapper.Map<ChannelEntity, Channel>(entity);
-
+            channel.AppsDeviceTableId = model.AppsDeviceId;//for ios
             channel.IsSynced = Convert.ToBoolean(channel.IsSynced);
             channel.ObjectState = ObjectState.Added;
             channel.AuditField = new AuditFields("admin", DateTime.Now, "admin", DateTime.Now);
             _channelRepository.Insert(channel);
 
             return channel;
-        }
+        }        
 
         private void SetMapper()
         {
