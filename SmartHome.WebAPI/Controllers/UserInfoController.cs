@@ -151,7 +151,7 @@ namespace SmartHome.WebAPI.Controllers
                 return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
             }
 
-            msg = "{\"Email\":\"qa2600@yopmail.com\",\"Password\":\"46tUX\\/XbJOPCnTLtU283wg==\"}";
+           // msg = "{\"Email\":\"er@yopmail.com\",\"Password\":\"46tUX/XbJOPCnTLtU283wg==\"}";
 
             RetrivedUserRelatedDataProcessor userData = new RetrivedUserRelatedDataProcessor(msg, MessageReceivedFrom.GetUserInfo, oLoginObject, oRootObject);
             bool isUserExist = userData.GetUserInfo();
