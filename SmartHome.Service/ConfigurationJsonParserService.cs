@@ -136,7 +136,14 @@ namespace SmartHome.Service
 
                 foreach (var smartDevice in deviceList)
                 {
-                    new DeviceNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertDevice(smartDevice, room);
+                    var device = new DeviceNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertDevice(smartDevice, room);
+
+                    //SmartSwitch sw= device.Entity<OnlineCourse>().ToTable("OnlineCourse "); device.<SmartSwitch>()
+                    //List<ChannelEntity> channelList = _homeJsonEntity.Channel.FindAll(x => x.AppsDeviceTableId == smartDevice.AppsDeviceId);
+                    //if (smartDevice.DeviceType == DeviceType.SmartSwitch6g)
+                    //{
+                    //    new ChannelNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertChannels(device, channelList);
+                    //}
                 }
             }
         }
