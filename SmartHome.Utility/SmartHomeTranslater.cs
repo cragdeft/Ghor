@@ -88,5 +88,16 @@ namespace SmartHome.Utility
 
             return Mapper.Map<RoomEntity, Room>(roomEntity, dbRoom);
         }
+
+
+    public static CameraConfigInfo MapCameraConfigInfoProperties(CameraConfigInfoEntity entity, CameraConfigInfo cameraConfig)
+    {
+      Mapper.CreateMap<CameraConfigInfoEntity, CameraConfigInfo>()
+        .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == 1 ? true : false))
+        .ForMember(x => x.Parent, y => y.Ignore())
+        .ForMember(x => x.CameraConfigInfoId, y => y.Ignore());
+
+      return Mapper.Map<CameraConfigInfoEntity, CameraConfigInfo>(entity, cameraConfig);
     }
+  }
 }
