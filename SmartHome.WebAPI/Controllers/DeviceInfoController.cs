@@ -145,5 +145,51 @@ namespace SmartHome.WebAPI.Controllers
 
             return response;
         }
+
+
+    [Route("api/NewCameraConfigInfo")]
+    [HttpPost]
+    public HttpResponseMessage NewCameraConfigInfo(JObject encryptedString)
+    {
+      HttpResponseMessage response;
+      PasswordRecoveryRootObjectEntity oRootObject = new PasswordRecoveryRootObjectEntity();
+      try
+      {
+        #region Initialization
+
+        oRootObject.data = new PasswordRecoveryObjectEntity();
+        string msg = string.Empty;
+
+        msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
+       // msg = "{\"Configuration\":\"CameraConfigInfo\",\"Home\":[{\"Id\":1,\"PassPhrase\":\"4905a51c1b987b8f_U4BXUO\"}],\"CameraConfigInfo\":[{\"Id\":1,\"Ip\":\"192.168.11.201\",\"Port\":8002,\"UserName\":\"smarthometest\",\"Password\":\"123456\",\"Home\":1,\"IsSynced\":0}]}";
+        if (string.IsNullOrEmpty(msg))
+        {
+          return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
+        }
+
+        #endregion
+
+        CameraConfigInfoJsonParser jsonManager = new CameraConfigInfoJsonParser(msg, MessageReceivedFrom.NewCameraConfigInfo);
+        bool isSuccess = jsonManager.SaveNewDevice();
+
+        if (isSuccess)
+        {
+          MessageResponseUtility.FillPasswordRecoveryInfos("", " New Camera Config Info Add Successfully.", HttpStatusCode.OK, oRootObject);
+        }
+        else
+        {
+          MessageResponseUtility.FillPasswordRecoveryInfos("", " Can Not Add New Camera Config Info.", HttpStatusCode.BadRequest, oRootObject);
+        }
+
+        response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+      }
+      catch (Exception ex)
+      {
+        MessageResponseUtility.FillPasswordRecoveryInfos(string.Empty, ex.ToString(), HttpStatusCode.BadRequest, oRootObject);
+        response = MessageResponseUtility.PrepareJsonResponse<PasswordRecoveryRootObjectEntity>(oRootObject);
+      }
+
+      return response;
     }
+  }
 }
