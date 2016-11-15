@@ -57,6 +57,7 @@
     <Compile Include="ModelDataContext\SmartHomeDataContextDbInitializer.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AuditFields.cs" />
+    <Compile Include="Models\CameraConfigInfo.cs" />
     <Compile Include="Models\CommandJson.cs" />
     <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\ChannelStatus.cs" />
