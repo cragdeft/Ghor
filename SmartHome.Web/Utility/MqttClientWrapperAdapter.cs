@@ -50,14 +50,10 @@ namespace SmartHome.Web.Utility
     static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
     {
 
-      #region Log
-
-      LogMqttRequestMessages(customEventArgs);
-
-      #endregion
-
       if (customEventArgs.ReceivedTopic.Contains("configuration") && Counter < 4)
       {
+        LogMqttRequestMessages(customEventArgs);
+
         Counter = Counter + 1;
         if (IsValidJson(customEventArgs.ReceivedMessage))
         {

@@ -169,7 +169,7 @@ namespace SmartHome.Model.Enums
     [EnumMember]
     ChangePassword = 6,
     [EnumMember]
-    ConfigurationProcessFromApi = 7,
+    ConfigurationProcess = 7,
     [EnumMember]
     PasswordRecovery = 8,
     [EnumMember]

@@ -198,7 +198,7 @@ namespace SmartHome.WebAPI.Controllers
                 //jsonManager.Save();
 
 
-                ConfigurationJsonParser jsonManager = new ConfigurationJsonParser(msg, MessageReceivedFrom.ConfigurationProcessFromApi);
+                ConfigurationJsonParser jsonManager = new ConfigurationJsonParser(msg, MessageReceivedFrom.ConfigurationProcess);
                 jsonManager.SaveNewConfiguration();
 
                 MessageResponseUtility.FillPasswordRecoveryInfos("", " Configuration Successfully Process.", HttpStatusCode.OK, oRootObject);
