@@ -31,18 +31,14 @@ namespace SmartHome.Json
       if (_homeJsonEntity == null)
         return null;
 
-     // new MessageLogJsonParser(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
-
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
       {
         //var service = new HomeJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
         var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
 
-        
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
 
-        //MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
 
         try
         {
@@ -54,7 +50,6 @@ namespace SmartHome.Json
         }
         finally
         {
-        //  transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
         }
       }
       return home;
@@ -72,9 +67,7 @@ namespace SmartHome.Json
       {
         var service = new HomeInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
-
+        
         try
         {
           home = transactionRunner.RunTransaction(() => service.SaveJsonData());
@@ -85,7 +78,6 @@ namespace SmartHome.Json
         }
         finally
         {
-          transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
         }
       }
       return home;

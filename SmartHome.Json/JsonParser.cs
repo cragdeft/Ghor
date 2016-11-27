@@ -77,9 +77,6 @@ namespace SmartHome.Json
         case ConfigurationType.NewRouter:
           new RouterJsonParser(_homeJsonMessage, _receivedFrom).SaveNewRouter();
           break;
-        case ConfigurationType.TestMQTT:
-          new TestMQTTJsonParser(_homeJsonMessage, _receivedFrom).SaveMqttTestInfo();
-          break;
       }
     }
   }

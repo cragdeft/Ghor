@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Json
 {
-
   public class ConfigurationJsonParser : BaseJsonParser
   {
     public ConfigurationJsonParser(string jsonString, MessageReceivedFrom receivedFrom)
@@ -28,18 +27,13 @@ namespace SmartHome.Json
     {
       if (_homeJsonEntity == null)
         return false;
-      //new MessageLogJsonParser(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
       {
-        //var service = new ChannelJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
 
         var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        // MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
         try
         {
@@ -51,7 +45,6 @@ namespace SmartHome.Json
         }
         finally
         {
-          // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
         }
       }
       return true;

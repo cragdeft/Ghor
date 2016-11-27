@@ -16,13 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-//namespace SmartHome.Json
-//{
-//    class ConfigurationJsonManager
-//    {
-//    }
-//}
-
 namespace SmartHome.Json
 {
     public class ConfigurationJsonManager
