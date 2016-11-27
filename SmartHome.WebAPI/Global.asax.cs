@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartHome.WebAPI.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Formatting;
@@ -10,17 +11,20 @@ using System.Web.Routing;
 
 namespace SmartHome.WebAPI
 {
-    public class WebApiApplication : System.Web.HttpApplication
+  public class WebApiApplication : System.Web.HttpApplication
+  {
+    protected void Application_Start()
     {
-        protected void Application_Start()
-        {
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+      AreaRegistration.RegisterAllAreas();
+      GlobalConfiguration.Configure(WebApiConfig.Register);
+      FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+      RouteConfig.RegisterRoutes(RouteTable.Routes);
+      BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new QueryStringMapping("json", "true", "application/json"));
-        }
+      var config = GlobalConfiguration.Configuration;
+      config.Filters.Add(new LogActionFilterAttribute());
+
+      GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new QueryStringMapping("json", "true", "application/json"));
     }
+  }
 }
