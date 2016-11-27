@@ -20,7 +20,6 @@ namespace SmartHome.Data.Processor
 {
   public class RetrivedUserRelatedDataProcessor : BaseDataProcessor
   {
-
     public dynamic _userEntity { get; private set; }
     public LoginObjectEntity _loginObject { get; private set; }
     public LoginRootObjectEntity _rootObject { get; private set; }
@@ -34,17 +33,13 @@ namespace SmartHome.Data.Processor
       _rootObject = oRootObject;
     }
 
-
-
     public bool GetUserInfo()
     {
-      MessageLog messageLog = null;
+
       bool isUserExist = false;
 
       if (_userEntity == null)
         return false;
-
-      //new DbMessageLogger(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
@@ -53,7 +48,6 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          // messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
           UserInfo dbUser = transactionRunner.RunSelectTransaction(() => new UserInfoService(unitOfWork).GetsUserInfosByEmailAndPassword(Convert.ToString(_userEntity.Email), Convert.ToString(_userEntity.Password)));
           if (dbUser != null)
@@ -61,7 +55,6 @@ namespace SmartHome.Data.Processor
             var homeViewModel = transactionRunner.RunSelectTransaction(() => new ConfigurationParserManagerService(unitOfWork).GetsHomesAllInfo(dbUser.UserInfoId));
             FillLoginObjectByData(homeViewModel);
 
-            //_rootObject = new LoginRootObjectEntity();
             _rootObject.data = new LoginObjectEntity();
             _rootObject.data = _loginObject;
             isUserExist = true;
@@ -73,7 +66,6 @@ namespace SmartHome.Data.Processor
         }
         finally
         {
-          // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
         }
       }
       return isUserExist;

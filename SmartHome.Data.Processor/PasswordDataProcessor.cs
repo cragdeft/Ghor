@@ -26,7 +26,6 @@ namespace SmartHome.Data.Processor
       _userEntity = JsonDesrialized<dynamic>(jsonString);
     }
 
-
     public bool ChangePassword()
     {
       bool isSuccess = false;

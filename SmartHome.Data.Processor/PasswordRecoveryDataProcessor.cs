@@ -21,7 +21,6 @@ namespace SmartHome.Data.Processor
     public dynamic _userEntity { get; private set; }
     public PasswordRecoveryRootObjectEntity _oRootObject { get; set; }
 
-
     public PasswordRecoveryDataProcessor(string jsonString, MessageReceivedFrom receivedFrom, PasswordRecoveryRootObjectEntity oRootObject)
     {
       _receivedFrom = receivedFrom;

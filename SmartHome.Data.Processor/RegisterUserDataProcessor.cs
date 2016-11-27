@@ -28,13 +28,10 @@ namespace SmartHome.Data.Processor
     }
     public bool RegisterUser()
     {
-      //MessageLog messageLog = null;
       bool isRegisterSucces = false;
 
       if (_userEntity == null)
         return false;
-
-      //new DbMessageLogger(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
@@ -43,7 +40,6 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          //messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
           bool isUserExist = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(_userEntity.UserInfo.FirstOrDefault().Email));
 
@@ -63,7 +59,6 @@ namespace SmartHome.Data.Processor
         }
         finally
         {
-          // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
         }
       }
       return isRegisterSucces;

@@ -9,16 +9,15 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Data.Processor
 {
-    public class BaseDataProcessor
-    {
-        //public HomeJsonEntity _homeJsonEntity { get; set; }
-        public string _homeJsonMessage { get; set; }
-        public IUnitOfWorkAsync _unitOfWorkAsync { get; set; }
-        public MessageReceivedFrom _receivedFrom { get; set; }
+  public class BaseDataProcessor
+  {
+    public string _homeJsonMessage { get; set; }
+    public IUnitOfWorkAsync _unitOfWorkAsync { get; set; }
+    public MessageReceivedFrom _receivedFrom { get; set; }
 
-        public static T JsonDesrialized<T>(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<T>(jsonString);
-        }
+    public static T JsonDesrialized<T>(string jsonString)
+    {
+      return JsonConvert.DeserializeObject<T>(jsonString);
     }
+  }
 }
