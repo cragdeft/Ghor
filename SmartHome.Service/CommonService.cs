@@ -191,9 +191,9 @@ namespace SmartHome.Service
         .SelectMany(x => x.SmartRouterInfos.Where(q => q.AppsBleId == appsBleId)).FirstOrDefault();
     }
 
-    public RouterInfo GetRouterInfoByMacAddress(string macAddress)
+    public RouterInfo GetRouterInfoByMacAddressAndHomeId(string macAddress, long HomeId)
     {
-      return _routerRepository.Queryable().Where(p => p.MacAddress == macAddress).FirstOrDefault();
+      return _routerRepository.Queryable().Where(p => p.MacAddress == macAddress && p.Parent.HomeId == HomeId).FirstOrDefault();
     }
 
 
