@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using SmartHome.Entity;
 using SmartHome.Model.ViewModels;
 using AutoMapper;
+using SmartHome.Logging;
 
 namespace SmartHome.Data.Processor
 {
@@ -43,6 +44,8 @@ namespace SmartHome.Data.Processor
       if (_userEntity == null)
         return false;
 
+      //new DbMessageLogger(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
+
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
       {
@@ -50,7 +53,7 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+         // messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
           UserInfo dbUser = transactionRunner.RunSelectTransaction(() => new UserInfoService(unitOfWork).GetsUserInfosByEmailAndPassword(Convert.ToString(_userEntity.Email), Convert.ToString(_userEntity.Password)));
           if (dbUser != null)
@@ -70,7 +73,7 @@ namespace SmartHome.Data.Processor
         }
         finally
         {
-          transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
+         // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
         }
       }
       return isUserExist;
