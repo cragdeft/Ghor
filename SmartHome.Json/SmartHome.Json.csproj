@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseJsonParser.cs" />
-    <Compile Include="CameraConfigInfoJsonParser.cs" />
     <Compile Include="ChannelDeleteJsonParser.cs" />
     <Compile Include="ChannelJsonParser.cs" />
     <Compile Include="CommandJsonManager.cs" />
