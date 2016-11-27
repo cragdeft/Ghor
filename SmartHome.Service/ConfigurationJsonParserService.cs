@@ -73,7 +73,7 @@ namespace SmartHome.Service
       HomeEntity homeEntity = _homeJsonEntity.Home.FirstOrDefault();
 
       home = InsertOrUpdateHome(home, homeEntity);
-      InsertOrUpdateCameraInfo(home);
+     // InsertOrUpdateCameraInfo(home);
 
       InsertOrUpdateRouter(home);
 
@@ -171,7 +171,7 @@ namespace SmartHome.Service
         }
         else
         {
-          new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateRouter(_homeJsonEntity.RouterInfo[0], router);
+          new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateRouter(_homeJsonEntity.RouterInfo[0], router, home);
         }
       }
 
@@ -185,18 +185,19 @@ namespace SmartHome.Service
     private void InsertOrUpdateCameraInfo(Home home)
     {
 
-      IList<CameraConfigInfo> listOfCameraInfos = new List<CameraConfigInfo>();
+      //IList<CameraConfigInfo> listOfCameraInfos = new List<CameraConfigInfo>();
+
       foreach (var cameraInfoEntity in _homeJsonEntity.CameraConfigInfo)
       {
         var dbcameraInfoEntity = new CommonService(_unitOfWorkAsync).GetCameraConfigInfoByPassPhraseAndAppsCameraConfigInfoId(home.PassPhrase, cameraInfoEntity.AppsCameraConfigInfoId);
 
         if (dbcameraInfoEntity == null)
         {
-          listOfCameraInfos.Add(new CameraConfigNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertCameraInfo(cameraInfoEntity, home));
+          new CameraConfigNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertCameraInfo(cameraInfoEntity, home);
         }
         else
         {
-          listOfCameraInfos.Add(new CameraConfigUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateCameraInfo(cameraInfoEntity, dbcameraInfoEntity));
+          new CameraConfigUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateCameraInfo(cameraInfoEntity, dbcameraInfoEntity);
         }
       }
       //return listOfCameraInfos;
