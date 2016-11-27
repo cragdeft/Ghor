@@ -53,7 +53,7 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-         // messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+          // messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
           UserInfo dbUser = transactionRunner.RunSelectTransaction(() => new UserInfoService(unitOfWork).GetsUserInfosByEmailAndPassword(Convert.ToString(_userEntity.Email), Convert.ToString(_userEntity.Password)));
           if (dbUser != null)
@@ -73,7 +73,7 @@ namespace SmartHome.Data.Processor
         }
         finally
         {
-         // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
+          // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, string.Empty));
         }
       }
       return isUserExist;
@@ -91,8 +91,6 @@ namespace SmartHome.Data.Processor
       FillUserRoomLinkInfoToLoginObject(oLoginObject, homeViewModel);
       //smart router
       FillSmartRouterInfoToLoginObject(oLoginObject, homeViewModel);
-
-      FillCameraConfigInfoToLoginObject(oLoginObject, homeViewModel);
 
       FillWebBrokerInfoToLoginObject(oLoginObject, homeViewModel);
       //room
@@ -166,15 +164,6 @@ namespace SmartHome.Data.Processor
           .ForMember(dest => dest.IsExternal, opt => opt.MapFrom(src => src.IsExternal == true ? 1 : 0));
       IEnumerable<RouterInfoEntity> oSmartRouterEntity = Mapper.Map<IEnumerable<RouterInfo>, IEnumerable<RouterInfoEntity>>(homeViewModel.Routers);
       oLoginObject.RouterInfo.AddRange(oSmartRouterEntity);
-    }
-
-    private void FillCameraConfigInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)
-    {
-      Mapper.CreateMap<CameraConfigInfo, CameraConfigInfoEntity>()
-          .ForMember(dest => dest.IsSynced, opt => opt.MapFrom(src => src.IsSynced == true ? 1 : 0));
-      //.ForMember(dest => dest.IsExternal, opt => opt.MapFrom(src => src.IsExternal == true ? 1 : 0));
-      IEnumerable<CameraConfigInfoEntity> oCameraConfigInfoEntity = Mapper.Map<IEnumerable<CameraConfigInfo>, IEnumerable<CameraConfigInfoEntity>>(homeViewModel.CameraConfigInfoes);
-      oLoginObject.CameraConfigInfo.AddRange(oCameraConfigInfoEntity);
     }
 
     private void FillWebBrokerInfoToLoginObject(LoginObjectEntity oLoginObject, HomeViewModel homeViewModel)

@@ -1123,8 +1123,7 @@ namespace SmartHome.Service
       Home home = userHomeLink.Home;
 
       IList<RouterInfo> routers = home.SmartRouterInfos.ToList();
-      IList<WebBrokerInfo> webBrokerInfoes = home.WebBrokerInfoes.ToList();
-      IList<CameraConfigInfo> cameraConfigInfoes = home.CameraConfigInfoes.ToList();
+      IList<WebBrokerInfo> webBrokerInfoes = home.WebBrokerInfoes.ToList();      
       IList<Room> rooms = home.Rooms.Where(r => roomIds.Contains(r.RoomId)).ToList();
       IList<UserRoomLink> userrooms = GetUserRoomLinks(roomIds, userIds);
       IList<SmartDevice> devices = GetDevices(roomIds);
@@ -1140,8 +1139,7 @@ namespace SmartHome.Service
       _homeViewModel.Users = users;
       _homeViewModel.UserHomeLinks = _userHomeLinks;
       _homeViewModel.Routers = routers;
-      _homeViewModel.WebBrokerInfoes = webBrokerInfoes;
-      _homeViewModel.CameraConfigInfoes = cameraConfigInfoes;
+      _homeViewModel.WebBrokerInfoes = webBrokerInfoes;      
       _homeViewModel.Rooms = rooms;
       _homeViewModel.UserRoomLinks = userrooms;
       _homeViewModel.SmartDevices = devices;
@@ -1227,7 +1225,6 @@ namespace SmartHome.Service
               .Include(x => x.Home)
               .Include(x => x.Home.SmartRouterInfos)
               .Include(x => x.Home.WebBrokerInfoes)
-              .Include(x => x.Home.CameraConfigInfoes)
               .Include(x => x.Home.Rooms)
               .Include(x => x.Home.Rooms.Select(y => y.SmartDevices.Select(z => z.DeviceStatus)))
               .FirstOrDefault();

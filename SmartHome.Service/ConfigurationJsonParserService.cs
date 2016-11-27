@@ -4,7 +4,6 @@ using Repository.Pattern.UnitOfWork;
 using SmartHome.Entity;
 using SmartHome.Model.Enums;
 using SmartHome.Model.Models;
-using SmartHome.Service.CameraInfoServices;
 using SmartHome.Service.UserInfoServices;
 using System;
 using System.Collections.Generic;
@@ -73,7 +72,6 @@ namespace SmartHome.Service
       HomeEntity homeEntity = _homeJsonEntity.Home.FirstOrDefault();
 
       home = InsertOrUpdateHome(home, homeEntity);
-     // InsertOrUpdateCameraInfo(home);
 
       InsertOrUpdateRouter(home);
 
@@ -180,27 +178,6 @@ namespace SmartHome.Service
         new RouterInfoUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).DeleteRouter(router);
       }
 
-    }
-
-    private void InsertOrUpdateCameraInfo(Home home)
-    {
-
-      //IList<CameraConfigInfo> listOfCameraInfos = new List<CameraConfigInfo>();
-
-      foreach (var cameraInfoEntity in _homeJsonEntity.CameraConfigInfo)
-      {
-        var dbcameraInfoEntity = new CommonService(_unitOfWorkAsync).GetCameraConfigInfoByPassPhraseAndAppsCameraConfigInfoId(home.PassPhrase, cameraInfoEntity.AppsCameraConfigInfoId);
-
-        if (dbcameraInfoEntity == null)
-        {
-          new CameraConfigNewEntryJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).InsertCameraInfo(cameraInfoEntity, home);
-        }
-        else
-        {
-          new CameraConfigUpdateJsonParserService(_unitOfWorkAsync, _homeJsonEntity, _homeJsonMessage, _receivedFrom).UpdateCameraInfo(cameraInfoEntity, dbcameraInfoEntity);
-        }
-      }
-      //return listOfCameraInfos;
     }
 
     private IList<UserInfo> SaveOrUpdateUser()

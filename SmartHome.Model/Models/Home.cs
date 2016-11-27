@@ -57,7 +57,7 @@ namespace SmartHome.Model.Models
     public virtual ICollection<Room> Rooms { get; set; }
     public virtual ICollection<RouterInfo> SmartRouterInfos { get; set; }
     public virtual ICollection<WebBrokerInfo> WebBrokerInfoes { get; set; }
-    public virtual ICollection<CameraConfigInfo> CameraConfigInfoes { get; set; }
+    //public virtual ICollection<CameraConfigInfo> CameraConfigInfoes { get; set; }
     #endregion
   }
 }

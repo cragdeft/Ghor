@@ -69,7 +69,7 @@ namespace SmartHome.Entity
       RgbwStatus = new List<RgbwStatusEntity>();
       RouterInfo = new List<RouterInfoEntity>();
       WebBrokerInfo = new List<WebBrokerInfoEntity>();
-      CameraConfigInfo = new List<CameraConfigInfoEntity>();
+      
       DeviceStatus = new List<DeviceStatusEntity>();
       NextAssociatedDeviceId = new List<NextAssociatedDeviceEntity>();
     }
@@ -85,7 +85,7 @@ namespace SmartHome.Entity
     public List<RgbwStatusEntity> RgbwStatus { get; set; }
     public List<RouterInfoEntity> RouterInfo { get; set; }
     public List<WebBrokerInfoEntity> WebBrokerInfo { get; set; }
-    public List<CameraConfigInfoEntity> CameraConfigInfo { get; set; }
+    
     public List<NextAssociatedDeviceEntity> NextAssociatedDeviceId { get; set; }
   }
 

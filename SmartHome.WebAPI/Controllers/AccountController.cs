@@ -20,12 +20,9 @@ namespace SmartHome.WebAPI.Controllers
     {
       #region Initialization
 
-
-
       HttpResponseMessage response;
       LoginObjectEntity oLoginObject = new LoginObjectEntity();
       string msg = string.Empty;
-
 
       msg = SecurityManager.Decrypt(encryptedString["encryptedString"].ToString());
       if (string.IsNullOrEmpty(msg))

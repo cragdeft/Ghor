@@ -212,13 +212,6 @@ namespace SmartHome.Service
       return router;
     }
 
-    public CameraConfigInfo GetCameraConfigInfoByPassPhraseAndAppsCameraConfigInfoId(string passPhrase, int appsCameraConfigInfoId)
-    {
-      return _homeRepository.Queryable().Where(p => p.PassPhrase == passPhrase)
-        .SelectMany(x => x.CameraConfigInfoes.Where(q => q.AppsCameraConfigInfoId == appsCameraConfigInfoId)).FirstOrDefault();
-    }
-
-
     private void MapRouterInfo()
     {
       //map parent

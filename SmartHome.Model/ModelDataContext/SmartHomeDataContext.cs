@@ -46,7 +46,7 @@ namespace SmartHome.Model.ModelDataContext
     public IDbSet<CommandJson> CommandJsons { get; set; }
     public IDbSet<NextAssociatedDevice> NextAssociatedDevices { get; set; }
     public IDbSet<WebBrokerInfo> WebBrokerInfoes { get; set; }
-    public IDbSet<CameraConfigInfo> CameraConfigInfoes { get; set; }
+    //public IDbSet<CameraConfigInfo> CameraConfigInfoes { get; set; }
 
     public IDbSet<MessageLog> MessageLogs { get; set; }
 

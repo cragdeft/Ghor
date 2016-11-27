@@ -30,9 +30,6 @@ namespace SmartHome.Model.ViewModels
     public IList<UserHomeLink> UserHomeLinks { get; set; }
     public IList<RouterInfo> Routers { get; set; }
     public IList<WebBrokerInfo> WebBrokerInfoes { get; set; }
-
-    public IList<CameraConfigInfo> CameraConfigInfoes { get; set; }
-
     public IList<Room> Rooms { get; set; }
     public IList<UserRoomLink> UserRoomLinks { get; set; }
     public IList<SmartDevice> SmartDevices { get; set; }

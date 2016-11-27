@@ -17,7 +17,6 @@ namespace SmartHome.Entity
     public List<NextAssociatedDeviceEntity> NextAssociatedDeviceId { get; set; }
     public List<RouterInfoEntity> RouterInfo { get; set; }
     public List<WebBrokerInfoEntity> WebBrokerInfo { get; set; }
-    public List<CameraConfigInfoEntity> CameraConfigInfo { get; set; }
     public List<ChannelStatusEntity> ChannelStatus { get; set; }
     public List<RoomEntity> Room { get; set; }
     public int DatabaseVersion { get; set; }

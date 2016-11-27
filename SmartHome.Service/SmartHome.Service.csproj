@@ -54,10 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CameraInfoServices\CameraConfigDeleteJsonParserService.cs" />
-    <Compile Include="CameraInfoServices\CameraConfigJsonParserService.cs" />
-    <Compile Include="CameraInfoServices\CameraConfigNewEntryJsonParserService.cs" />
-    <Compile Include="CameraInfoServices\CameraConfigUpdateJsonParserService.cs" />
     <Compile Include="ChannelInfoServices\ChannelDeleteJsonParserService.cs" />
     <Compile Include="ChannelInfoServices\ChannelJsonParserService.cs" />
     <Compile Include="ChannelInfoServices\ChannelNewEntryJsonParserService.cs" />
