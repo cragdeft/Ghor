@@ -89,6 +89,7 @@
     <Compile Include="RoomDeleteJsonParser.cs" />
     <Compile Include="RoomJsonParser.cs" />
     <Compile Include="RouterJsonParser.cs" />
+    <Compile Include="TestMQTTJsonParser.cs" />
     <Compile Include="UserDeleteJsonParser.cs" />
     <Compile Include="UserJsonParser.cs" />
   </ItemGroup>

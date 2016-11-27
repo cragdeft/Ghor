@@ -6,7 +6,7 @@ using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Service;
-using SmartHome.Service.CameraInfoServices;
+//using SmartHome.Service.CameraInfoServices;
 using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
@@ -29,27 +29,28 @@ namespace SmartHome.Json
     {
       if (_homeJsonEntity == null)
         return false;
+      //new MessageLogJsonParser(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
       {
-        var service = new CameraConfigJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+        //var service = new CameraConfigJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+        //var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
 
-        MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+        ////MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
 
-        try
-        {
-          transactionRunner.RunTransaction(() => service.SaveJsonData());
-        }
-        catch (Exception ex)
-        {
-          return false;
-        }
-        finally
-        {
-          transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
-        }
+        //try
+        //{
+        //  transactionRunner.RunTransaction(() => service.SaveJsonData());
+        //}
+        //catch (Exception ex)
+        //{
+        //  return false;
+        //}
+        //finally
+        //{
+        ////  transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
+        //}
       }
       return true;
     }

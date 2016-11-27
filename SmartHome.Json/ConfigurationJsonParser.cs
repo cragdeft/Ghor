@@ -15,46 +15,47 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Json
 {
- 
-    public class ConfigurationJsonParser : BaseJsonParser
+
+  public class ConfigurationJsonParser : BaseJsonParser
+  {
+    public ConfigurationJsonParser(string jsonString, MessageReceivedFrom receivedFrom)
     {
-        public ConfigurationJsonParser(string jsonString, MessageReceivedFrom receivedFrom)
-        {
-            _receivedFrom = receivedFrom;
-            _homeJsonMessage = jsonString;
-            _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
-        }
-        public bool SaveNewConfiguration()
-        {
-            if (_homeJsonEntity == null)
-                return false;
-
-            using (IDataContextAsync context = new SmartHomeDataContext())
-            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-            {
-                //var service = new ChannelJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-
-                var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-
-                var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-                MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
-
-                try
-                {
-                    transactionRunner.RunTransaction(() => service.SaveJsonData());
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-                finally
-                {
-                    transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
-                }
-            }
-            return true;
-        }
-
+      _receivedFrom = receivedFrom;
+      _homeJsonMessage = jsonString;
+      _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
     }
+    public bool SaveNewConfiguration()
+    {
+      if (_homeJsonEntity == null)
+        return false;
+      //new MessageLogJsonParser(_homeJsonMessage, _receivedFrom).SaveNewMessageLog();
+
+      using (IDataContextAsync context = new SmartHomeDataContext())
+      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+      {
+        //var service = new ChannelJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+
+        var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+
+        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+
+        // MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+
+        try
+        {
+          transactionRunner.RunTransaction(() => service.SaveJsonData());
+        }
+        catch (Exception ex)
+        {
+          return false;
+        }
+        finally
+        {
+          // transactionRunner.RunTransaction(() => new CommonService(unitOfWork).UpdateMessageLog(messageLog, _homeJsonEntity.Home[0].PassPhrase));
+        }
+      }
+      return true;
+    }
+
+  }
 }
