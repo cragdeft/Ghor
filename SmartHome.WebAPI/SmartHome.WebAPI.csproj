@@ -284,6 +284,7 @@
     <Compile Include="Controllers\RoomInfoController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Filter\LogActionFilterAttribute.cs" />
     <Compile Include="Filter\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -331,7 +332,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\api-check.pubxml" />
-    <None Include="Properties\PublishProfiles\apicheck.pubxml" />
+    <None Include="Properties\PublishProfiles\apiCheck.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\pub-service.pubxml" />
@@ -401,6 +402,10 @@
     <ProjectReference Include="..\SmartHome.Json\SmartHome.Json.csproj">
       <Project>{c3c87ed1-3965-4be6-a92c-0a26ab4c84a8}</Project>
       <Name>SmartHome.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartHome.Logging\SmartHome.Logging.csproj">
+      <Project>{621f56a4-f36b-410d-ad8e-43154b2d7231}</Project>
+      <Name>SmartHome.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartHome.Model\SmartHome.Model.csproj">
       <Project>{56fe5655-e41d-4dca-964a-ab04dc82e0e9}</Project>
