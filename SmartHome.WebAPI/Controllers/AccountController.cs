@@ -12,6 +12,7 @@ using SmartHome.Logging;
 
 namespace SmartHome.WebAPI.Controllers
 {
+
   public class AccountController : ApiController
   {
     [Route("api/RegisterUser")]
