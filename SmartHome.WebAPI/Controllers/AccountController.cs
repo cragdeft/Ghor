@@ -58,9 +58,7 @@ namespace SmartHome.WebAPI.Controllers
           return response = Request.CreateResponse(HttpStatusCode.BadRequest, "Not have sufficient information to process.");
         }
 
-        #endregion
-
-        //new MessageLogger(msg, MessageReceivedFrom.IsUserExist).SaveNewMessageLog();
+        #endregion       
 
         UserDatatProcessor userData = new UserDatatProcessor(msg, MessageReceivedFrom.IsUserExist);
         bool isSuccess = userData.IsUserExist();
@@ -107,8 +105,6 @@ namespace SmartHome.WebAPI.Controllers
 
         #endregion
 
-        //new MessageLogger(msg, MessageReceivedFrom.ChangePassword).SaveNewMessageLog();
-
         PasswordDataProcessor passwordData = new PasswordDataProcessor(msg, MessageReceivedFrom.ChangePassword);
         bool isSuccess = passwordData.ChangePassword();
 
@@ -151,9 +147,7 @@ namespace SmartHome.WebAPI.Controllers
         }
 
         #endregion
-
-        //new MessageLogger(msg, MessageReceivedFrom.PasswordRecovery).SaveNewMessageLog();
-
+        
         PasswordRecoveryDataProcessor passworRecoverydData = new PasswordRecoveryDataProcessor(msg, MessageReceivedFrom.PasswordRecovery, oRootObject);
         bool isSuccess = passworRecoverydData.PasswordRecovery();
 

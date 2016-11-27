@@ -150,8 +150,7 @@ namespace SmartHome.Model.Enums
     DeleteRoom,
     NewRouterInfo,
     DeleteUser,
-    NewRouter,
-    TestMQTT
+    NewRouter
   }
 
   public enum MessageReceivedFrom
