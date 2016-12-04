@@ -75,7 +75,7 @@ namespace SmartHome.Service
     }
 
 
-    public MessageLog SaveMessageLog(string homeJsonMessage, MessageReceivedFrom receivedFrom)
+    public MessageLog SaveMessageLog(string homeJsonMessage, string homeEncryptJsonMessage, MessageReceivedFrom receivedFrom)
     {
       MessageLog messageLog = new MessageLog();
 
@@ -84,6 +84,7 @@ namespace SmartHome.Service
         DateTime processTime = DateTime.Now;
         var entity = new MessageLog();
         entity.Message = homeJsonMessage;
+        //entity.EncryptMessage = homeEncryptJsonMessage;
         entity.ReceivedFrom = receivedFrom;
         entity.UserInfoIds = string.Empty;
         entity.AuditField = new AuditFields("admin", processTime, "admin", processTime);

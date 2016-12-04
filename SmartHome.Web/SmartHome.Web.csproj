@@ -361,7 +361,6 @@
     </Content>
     <None Include="Properties\PublishProfiles\web-app.pubxml" />
     <None Include="Properties\PublishProfiles\web-site.pubxml" />
-    <None Include="Properties\PublishProfiles\web.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\colorWheelPicker\farbtastic.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

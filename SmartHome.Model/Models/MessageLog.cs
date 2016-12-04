@@ -10,22 +10,23 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Model.Models
 {
-    public class MessageLog : Entity
-    {
-        #region Primitive Properties
+  public class MessageLog : Entity
+  {
+    #region Primitive Properties
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long MessageLogId { get; set; }
-        public string Message { get; set; }
-        public MessageReceivedFrom ReceivedFrom { get; set; }
-        public string UserInfoIds { get; set; }
-        #endregion
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long MessageLogId { get; set; }
+    //public string EncryptMessage { get; set; }
+    public string Message { get; set; }    
+    public MessageReceivedFrom ReceivedFrom { get; set; }
+    public string UserInfoIds { get; set; }
+    #endregion
 
-        #region Complex Properties
-        public AuditFields AuditField { get; set; }
-        #endregion
+    #region Complex Properties
+    public AuditFields AuditField { get; set; }
+    #endregion
 
-        //public virtual ICollection<UserInfo> UserInfoes { get; set; }
-    }
+    //public virtual ICollection<UserInfo> UserInfoes { get; set; }
+  }
 }

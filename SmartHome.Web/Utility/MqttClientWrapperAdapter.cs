@@ -79,7 +79,7 @@ namespace SmartHome.Web.Utility
     private static void LogMqttRequestMessages(CustomEventArgs customEventArgs)
     {
       string msg = customEventArgs.ReceivedMessage.ToString();
-      new MessageLogger(msg, MessageReceivedFrom.MQTT).SaveNewMessageLog();
+      new MessageLogger(msg, string.Empty, MessageReceivedFrom.MQTT).SaveNewMessageLog();
     }
 
     static void PublishedMessage_NotifyEvent(CustomEventArgs customEventArgs)

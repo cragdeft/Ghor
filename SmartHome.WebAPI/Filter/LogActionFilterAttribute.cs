@@ -25,7 +25,7 @@ namespace SmartHome.WebAPI.Filter
       JObject json = GetActionArgumentJson(filterContext);
       msg = SecurityManager.Decrypt(json["encryptedString"].ToString());
 
-      new MessageLogger(msg, messageReceivedFrom).SaveNewMessageLog();
+      new MessageLogger(msg, json["encryptedString"].ToString(), messageReceivedFrom).SaveNewMessageLog();
     }
 
     private JObject GetActionArgumentJson(HttpActionContext filterContext)

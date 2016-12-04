@@ -332,7 +332,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\api-check.pubxml" />
-    <None Include="Properties\PublishProfiles\apiCheck.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\appsmarthome - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\pub-service.pubxml" />
