@@ -9,6 +9,7 @@ namespace SmartHome.Entity
 {
     public class ChannelEntity
     {
+
         #region Primitive Properties
         [JsonProperty("Id")]
         public int AppsChannelId { get; set; }
