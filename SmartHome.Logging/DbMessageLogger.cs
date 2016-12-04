@@ -17,12 +17,14 @@ namespace SmartHome.Logging
   public class DbMessageLogger : IMessageLogger
   {
     public string _homeJsonMessage { get; set; }
+    public string _homeJsonEncryptMessage { get; set; }
     public MessageReceivedFrom _receivedFrom { get; set; }
 
-    public DbMessageLogger(string jsonString, MessageReceivedFrom receivedFrom)
+    public DbMessageLogger(string jsonString, string encryptJsonString, MessageReceivedFrom receivedFrom)
     {
-      _receivedFrom = receivedFrom;
       _homeJsonMessage = jsonString;
+      _homeJsonEncryptMessage = encryptJsonString;
+      _receivedFrom = receivedFrom;
     }
 
     public bool SaveNewMessageLog()
@@ -34,7 +36,7 @@ namespace SmartHome.Logging
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage, _receivedFrom));
+          MessageLog messageLog = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).SaveMessageLog(_homeJsonMessage,_homeJsonEncryptMessage, _receivedFrom));
         }
         catch (Exception ex)
         {
