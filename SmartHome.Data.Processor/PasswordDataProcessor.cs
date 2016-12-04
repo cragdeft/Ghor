@@ -33,6 +33,7 @@ namespace SmartHome.Data.Processor
       if (_userEntity == null)
         return false;
 
+      isSuccess = IsUserAlreadyExist();
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
@@ -41,7 +42,7 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          isSuccess = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(Convert.ToString(_userEntity.Email)));
+          //isSuccess = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(Convert.ToString(_userEntity.Email)));
 
           if (isSuccess)
           {
@@ -57,6 +58,21 @@ namespace SmartHome.Data.Processor
         }
       }
       return isSuccess;
+    }
+
+    private bool IsUserAlreadyExist()
+    {
+      bool isUserExist;
+      using (IDataContextAsync context = new SmartHomeDataContext())
+      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+      {
+
+        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+
+        isUserExist = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(Convert.ToString(_userEntity.Email)));
+      }
+
+      return isUserExist;
     }
   }
 }
