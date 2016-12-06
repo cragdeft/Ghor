@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Web", "SmartHome.Web\SmartHome.Web.csproj", "{69A2D207-511A-469A-BE2D-89B970FDF1D1}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.MailApi", "SmartHome.MailApi\SmartHome.MailApi.csproj", "{47200F34-6501-40B8-A86C-1CE42B814A0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.Data.Processor", "SmartHome.Data.Processor\SmartHome.Data.Processor.csproj", "{33284031-D563-43F2-B858-1289327D59E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHome.MQTT.Windows.Client", "SmartHome.MQTT.Windows.Client\SmartHome.MQTT.Windows.Client.csproj", "{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,14 @@ Global
 		{33284031-D563-43F2-B858-1289327D59E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{33284031-D563-43F2-B858-1289327D59E8}.Release|x86.ActiveCfg = Release|Any CPU
 		{33284031-D563-43F2-B858-1289327D59E8}.Release|x86.Build.0 = Release|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F9F97CD-D69E-41DF-A67F-8CFC938E155B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
