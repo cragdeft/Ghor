@@ -50,17 +50,17 @@ namespace SmartHome.Web.Utility
     static void PublishReceivedMessage_NotifyEvent(CustomEventArgs customEventArgs)
     {
 
-      if (customEventArgs.ReceivedTopic.Contains("configuration") && Counter < 4)
-      {
-        LogMqttRequestMessages(customEventArgs);
+      //if (customEventArgs.ReceivedTopic.Contains("configuration") && Counter < 4)
+      //{
+      //  LogMqttRequestMessages(customEventArgs);
 
-        Counter = Counter + 1;
-        if (IsValidJson(customEventArgs.ReceivedMessage))
-        {
-          JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage, MessageReceivedFrom.MQTT);
-          jsonManager.ProcessJsonData();
-        }
-      }
+      //  Counter = Counter + 1;
+      //  if (IsValidJson(customEventArgs.ReceivedMessage))
+      //  {
+      //    JsonParser jsonManager = new JsonParser(customEventArgs.ReceivedMessage, MessageReceivedFrom.MQTT);
+      //    jsonManager.ProcessJsonData();
+      //  }
+      //}
 
       if (customEventArgs.ReceivedTopic.Contains("feedback"))
       {

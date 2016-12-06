@@ -16,7 +16,7 @@ namespace SmartHome.Web
     {
         protected void Application_Start()
         {
-            MqttClientWrapperAdapter.WrapperInstance.MakeConnection();
+            //MqttClientWrapperAdapter.WrapperInstance.MakeConnection();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
