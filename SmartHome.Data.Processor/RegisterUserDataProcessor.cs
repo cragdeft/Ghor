@@ -7,6 +7,7 @@ using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Service;
+using SmartHome.Service.UserInfoServices;
 using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
@@ -29,13 +30,10 @@ namespace SmartHome.Data.Processor
     }
     public bool RegisterUser()
     {
-      bool isRegisterSucces = false;
-      bool isUserExist = false;
+      bool isRegisterSucces = true;      
 
       if (_userEntity == null)
-        return false;
-
-      isUserExist = IsUserAlreadyExist();
+        return false;      
 
       using (IDataContextAsync context = new SmartHomeDataContext())
       using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
@@ -44,14 +42,10 @@ namespace SmartHome.Data.Processor
         var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
         try
         {
-          if (isUserExist)
+          UserInfo oUserInfo = transactionRunner.RunTransaction(() => new UserInfoRegisterService(unitOfWork, _userEntity).SaveData());
+          if (oUserInfo ==null)
           {
             isRegisterSucces = false;
-          }
-          else
-          {
-            transactionRunner.RunTransaction(() => new UserInfoService(unitOfWork).Add(_userEntity.UserInfo.FirstOrDefault()));
-            isRegisterSucces = true;
           }
         }
         catch (Exception ex)
@@ -65,20 +59,7 @@ namespace SmartHome.Data.Processor
       return isRegisterSucces;
     }
 
-    private bool IsUserAlreadyExist()
-    {
-      bool isUserExist;
-      using (IDataContextAsync context = new SmartHomeDataContext())
-      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-      {
-
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        isUserExist = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(_userEntity.UserInfo.FirstOrDefault().Email));
-      }
-
-      return isUserExist;
-    }
+    
   }
 
 

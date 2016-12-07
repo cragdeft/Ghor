@@ -6,6 +6,7 @@ using SmartHome.Model.Enums;
 using SmartHome.Model.ModelDataContext;
 using SmartHome.Model.Models;
 using SmartHome.Service;
+using SmartHome.Service.UserInfoServices;
 using SmartHome.Utility;
 using System;
 using System.Collections.Generic;
@@ -15,64 +16,47 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Data.Processor
 {
-  public class PasswordDataProcessor : BaseDataProcessor
-  {
-    public dynamic _userEntity { get; private set; }
-
-    public PasswordDataProcessor(string jsonString, MessageReceivedFrom receivedFrom)
+    public class PasswordDataProcessor : BaseDataProcessor
     {
-      _receivedFrom = receivedFrom;
-      _homeJsonMessage = jsonString;
-      _userEntity = JsonDesrialized<dynamic>(jsonString);
-    }
+        public dynamic _userEntity { get; private set; }
 
-    public bool ChangePassword()
-    {
-      bool isSuccess = false;
-
-      if (_userEntity == null)
-        return false;
-
-      isSuccess = IsUserAlreadyExist();
-
-      using (IDataContextAsync context = new SmartHomeDataContext())
-      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-      {
-
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-        try
+        public PasswordDataProcessor(string jsonString, MessageReceivedFrom receivedFrom)
         {
-          //isSuccess = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(Convert.ToString(_userEntity.Email)));
-
-          if (isSuccess)
-          {
-            isSuccess = transactionRunner.RunTransaction(() => new CommonService(unitOfWork).PasswordUpdate(Convert.ToString(_userEntity.Email), Convert.ToString(_userEntity.Password)));
-          }
+            _receivedFrom = receivedFrom;
+            _homeJsonMessage = jsonString;
+            _userEntity = JsonDesrialized<dynamic>(jsonString);
         }
-        catch (Exception ex)
+
+        public bool ChangePassword()
         {
-          return false;
+            bool isSuccess = false;
+
+            if (_userEntity == null)
+                return false;
+
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            {
+
+                var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+                try
+                {
+                    var userInfo = transactionRunner.RunTransaction(() => new UserAccountChangePasswordService(unitOfWork, _userEntity).UpdateData());
+                    if (userInfo != null)
+                    {
+                        isSuccess = true;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                finally
+                {
+                }
+            }
+            return isSuccess;
         }
-        finally
-        {
-        }
-      }
-      return isSuccess;
     }
-
-    private bool IsUserAlreadyExist()
-    {
-      bool isUserExist;
-      using (IDataContextAsync context = new SmartHomeDataContext())
-      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-      {
-
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        isUserExist = transactionRunner.RunSelectTransaction(() => new CommonService(unitOfWork).IsLoginIdUnique(Convert.ToString(_userEntity.Email)));
-      }
-
-      return isUserExist;
-    }
-  }
 }
