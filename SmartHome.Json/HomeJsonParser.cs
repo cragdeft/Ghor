@@ -16,71 +16,69 @@ using System.Threading.Tasks;
 
 namespace SmartHome.Json
 {
-  public class HomeJsonParser : BaseJsonParser
-  {
-    public HomeJsonParser(string jsonString, MessageReceivedFrom receivedFrom)
+    public class HomeJsonParser : BaseJsonParser
     {
-      _receivedFrom = receivedFrom;
-      _homeJsonMessage = jsonString;
-      _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
+        public HomeJsonParser(string jsonString, MessageReceivedFrom receivedFrom)
+        {
+            _receivedFrom = receivedFrom;
+            _homeJsonMessage = jsonString;
+            _homeJsonEntity = JsonDesrialized<HomeJsonEntity>(jsonString);
+        }
+
+        public Home Save()
+        {
+            Home home = null;
+            if (_homeJsonEntity == null)
+                return null;
+
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            {
+                var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+
+                var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+
+                try
+                {
+                    home = transactionRunner.RunTransaction(() => service.SaveJsonData());
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+                finally
+                {
+                }
+            }
+            return home;
+        }
+
+        public Home SaveNewHome()
+        {
+            Home home = null;
+
+            if (_homeJsonEntity == null)
+                return home;
+
+            using (IDataContextAsync context = new SmartHomeDataContext())
+            using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
+            {
+                var service = new HomeInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
+                var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
+
+                try
+                {
+                    home = transactionRunner.RunTransaction(() => service.SaveJsonData());
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+                finally
+                {
+                }
+            }
+            return home;
+        }
     }
-
-    public Home Save()
-    {
-      Home home = null;
-      if (_homeJsonEntity == null)
-        return null;
-
-      using (IDataContextAsync context = new SmartHomeDataContext())
-      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-      {
-        //var service = new HomeJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-        var service = new ConfigurationJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-
-
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-
-        try
-        {
-          home = transactionRunner.RunTransaction(() => service.SaveJsonData());
-        }
-        catch (Exception ex)
-        {
-          return null;
-        }
-        finally
-        {
-        }
-      }
-      return home;
-    }
-
-    public Home SaveNewHome()
-    {
-      Home home = null;
-
-      if (_homeJsonEntity == null)
-        return home;
-
-      using (IDataContextAsync context = new SmartHomeDataContext())
-      using (IUnitOfWorkAsync unitOfWork = new UnitOfWork(context))
-      {
-        var service = new HomeInfoJsonParserService(unitOfWork, _homeJsonEntity, _homeJsonMessage, _receivedFrom);
-        var transactionRunner = new UnitOfWorkTransactionRunner(unitOfWork);
-        
-        try
-        {
-          home = transactionRunner.RunTransaction(() => service.SaveJsonData());
-        }
-        catch (Exception ex)
-        {
-          return null;
-        }
-        finally
-        {
-        }
-      }
-      return home;
-    }
-  }
 }
