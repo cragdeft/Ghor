@@ -77,6 +77,9 @@
     <Compile Include="Interfaces\ICommandPerserService.cs" />
     <Compile Include="Interfaces\IConfigurationParserManagerService.cs" />
     <Compile Include="Interfaces\IDeviceService.cs" />
+    <Compile Include="Interfaces\IUserInfoAdditionService.cs" />
+    <Compile Include="Interfaces\IUserInfoModificationService.cs" />
+    <Compile Include="Interfaces\IUserInfoRetrieverService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IVersionService.cs" />
     <Compile Include="HomeInfoServices\HomeJsonParserService.cs" />
@@ -90,12 +93,17 @@
     <Compile Include="RouterInfoServices\RouterInfoNewEntryJsonParserService.cs" />
     <Compile Include="RouterInfoServices\RouterInfoUpdateJsonParserService.cs" />
     <Compile Include="DeviceInfoServices\SmartSwitchUpdateJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserAccountChangePasswordService.cs" />
+    <Compile Include="UserInfoServices\UserInfoRegisterService.cs" />
+    <Compile Include="UserInfoServices\UserInfoRetrieverService.cs" />
+    <Compile Include="UserInfoServices\UserLoginInfoRetrieverService.cs" />
     <Compile Include="UserInfoServices\UserInfoDeleteJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoInteractionWithHomeAndRoomService.cs" />
     <Compile Include="UserInfoServices\UserInfoJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoNewEntryJsonParserService.cs" />
     <Compile Include="UserInfoServices\UserInfoService.cs" />
     <Compile Include="UserInfoServices\UserInfoUpdateJsonParserService.cs" />
+    <Compile Include="UserInfoServices\UserUniquenessCheckService.cs" />
     <Compile Include="VersionInfoJsonParserService.cs" />
     <Compile Include="VersionService.cs" />
   </ItemGroup>
