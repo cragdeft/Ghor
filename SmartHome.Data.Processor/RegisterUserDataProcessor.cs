@@ -58,7 +58,6 @@ namespace SmartHome.Data.Processor
       }
       return isRegisterSucces;
     }
-
     
   }
 
